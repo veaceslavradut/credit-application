@@ -1,0 +1,3 @@
+com\creditapp\CreditApplicationApplication.class
+com\creditapp\shared\config\RedisConfig.class
+com\creditapp\shared\controller\HealthController.class
