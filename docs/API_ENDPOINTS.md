@@ -743,6 +743,116 @@ curl -X GET https://api.creditapp.com/api/borrower/applications/550e8400-e29b-41
 
 ---
 
+### POST /api/borrower/applications/{applicationId}/withdraw
+
+**Description:** Withdraw a borrower application from the review process. Once withdrawn, the application status changes to WITHDRAWN and banks stop evaluating it.
+
+**Authentication:** Required (BORROWER role)
+
+**Path Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| applicationId | UUID | The ID of the application to withdraw |
+
+**Request Headers:**
+```
+Authorization: Bearer {jwt_token}
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "withdrawalReason": "Found better offer elsewhere"
+}
+```
+
+**Request Fields:**
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| withdrawalReason | String | No | Optional reason for withdrawal (max 500 characters) |
+
+**Success Response (200 OK):**
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "status": "WITHDRAWN",
+  "withdrawnAt": "2026-01-16T14:25:30Z",
+  "withdrawalReason": "Found better offer elsewhere",
+  "message": "Your application has been withdrawn successfully."
+}
+```
+
+**Response Fields:**
+| Field | Type | Description |
+|-------|------|-------------|
+| id | UUID | Application ID |
+| status | String | Will always be "WITHDRAWN" |
+| withdrawnAt | String | ISO-8601 timestamp when application was withdrawn |
+| withdrawalReason | String | The reason provided (if any) |
+| message | String | Confirmation message |
+
+**Error Responses:**
+
+**403 Forbidden** - Not the application owner
+```json
+{
+  "error": "Forbidden",
+  "message": "You do not have permission to withdraw this application",
+  "timestamp": "2026-01-16T14:25:30Z"
+}
+```
+
+**404 Not Found** - Application not found
+```json
+{
+  "error": "Not Found",
+  "message": "Application not found with ID: 550e8400-e29b-41d4-a716-446655440000",
+  "timestamp": "2026-01-16T14:25:30Z"
+}
+```
+
+**409 Conflict** - Application cannot be withdrawn (terminal state)
+```json
+{
+  "error": "Cannot Withdraw",
+  "message": "Cannot withdraw application in status: ACCEPTED",
+  "currentStatus": "ACCEPTED",
+  "timestamp": "2026-01-16T14:25:30Z"
+}
+```
+
+**Notes:**
+- Can only withdraw applications in: DRAFT, SUBMITTED, UNDER_REVIEW, or OFFERS_AVAILABLE states
+- Cannot withdraw applications in terminal states: ACCEPTED, REJECTED, EXPIRED, COMPLETED, WITHDRAWN
+- Withdrawal records audit trail with status transition history
+- Borrower receives confirmation email after withdrawal (async)
+- Withdrawal reason is optional but recommended for analytics
+- Once withdrawn, application status cannot be changed back
+
+**Withdrawable States:**
+- **DRAFT**: Cancel application before submission
+- **SUBMITTED**: Withdraw after submission but before underwriting
+- **UNDER_REVIEW**: Withdraw during bank review process
+- **OFFERS_AVAILABLE**: Withdraw after receiving offers but before acceptance
+
+**Terminal States (Cannot Withdraw):**
+- **ACCEPTED**: Loan already accepted
+- **REJECTED**: Application already rejected by banks
+- **EXPIRED**: Offers already expired
+- **COMPLETED**: Loan process completed
+- **WITHDRAWN**: Already withdrawn
+
+**cURL Example:**
+```bash
+curl -X POST https://api.creditapp.com/api/borrower/applications/550e8400-e29b-41d4-a716-446655440000/withdraw \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -H "Content-Type: application/json" \
+  -d '{"withdrawalReason":"Found better offer elsewhere"}'
+```
+
+---
+
 ## Authorization Matrix
 
 | Endpoint | Method | Public | Borrower | Bank Admin | Compliance |
@@ -754,6 +864,7 @@ curl -X GET https://api.creditapp.com/api/borrower/applications/550e8400-e29b-41
 | /api/borrower/applications/{id}/documents | GET |  | ✓ |  |  |
 | /api/borrower/applications/{id}/documents/{docId} | DELETE |  | ✓ |  |  |
 | /api/borrower/applications/{id}/status | GET |  | ✓ |  |  |
+| /api/borrower/applications/{id}/withdraw | POST |  | ✓ |  |  |
 | /api/health | GET |  |  |  |  |
 
 ---
@@ -770,6 +881,7 @@ This API uses path-based versioning. Future versions will be available at /api/v
 
 | Date | Version | Changes | Story |
 |------|---------|---------|-------|
+| 2026-01-16 | 1.4 | Added application withdrawal endpoint allowing borrowers to cancel applications | Story 2.8 |
 | 2026-01-16 | 1.3 | Added application status tracking endpoint with status history timeline | Story 2.7 |
 | 2026-01-16 | 1.2 | Added document upload, list, and delete endpoints with file size limits and soft-delete pattern | Story 2.6 |
 | 2026-01-16 | 1.1 | Added borrower application creation endpoint with validation and rate limiting | Story 2.2 |

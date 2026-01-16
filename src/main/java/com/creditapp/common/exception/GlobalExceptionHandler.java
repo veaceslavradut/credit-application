@@ -10,6 +10,7 @@ import com.creditapp.borrower.exception.ApplicationAlreadySubmittedException;
 import com.creditapp.borrower.exception.ApplicationCreationException;
 import com.creditapp.borrower.exception.ApplicationLockedException;
 import com.creditapp.borrower.exception.ApplicationNotEditableException;
+import com.creditapp.borrower.exception.ApplicationNotWithdrawableException;
 import com.creditapp.borrower.exception.ApplicationStaleException;
 import com.creditapp.borrower.exception.DocumentNotFoundException;
 import com.creditapp.borrower.exception.DocumentStorageException;
@@ -194,6 +195,17 @@ public class GlobalExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("error", "Application Already Submitted");
         response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler(ApplicationNotWithdrawableException.class)
+    public ResponseEntity<?> handleApplicationNotWithdrawable(ApplicationNotWithdrawableException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Cannot Withdraw");
+        response.put("message", ex.getMessage());
+        response.put("currentStatus", ex.getCurrentStatus());
         response.put("timestamp", LocalDateTime.now().toString());
         response.put("path", request.getDescription(false).replace("uri=", ""));
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);

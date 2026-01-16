@@ -9,10 +9,13 @@ import com.creditapp.borrower.dto.SubmitApplicationRequest;
 import com.creditapp.borrower.dto.SubmitApplicationResponse;
 import com.creditapp.borrower.dto.UpdateApplicationRequest;
 import com.creditapp.borrower.dto.UpdateApplicationResponse;
+import com.creditapp.borrower.dto.WithdrawApplicationRequest;
+import com.creditapp.borrower.dto.WithdrawApplicationResponse;
 import com.creditapp.borrower.model.DocumentType;
 import com.creditapp.borrower.service.ApplicationDocumentService;
 import com.creditapp.borrower.service.ApplicationService;
 import com.creditapp.borrower.service.ApplicationStatusTrackingService;
+import com.creditapp.borrower.service.WithdrawApplicationService;
 import com.creditapp.shared.security.AuthorizationService;
 import com.creditapp.shared.security.RateLimited;
 import jakarta.validation.Valid;
@@ -42,6 +45,7 @@ public class BorrowerApplicationController {
     private final ApplicationService applicationService;
     private final ApplicationDocumentService documentService;
     private final ApplicationStatusTrackingService statusTrackingService;
+    private final WithdrawApplicationService withdrawApplicationService;
     private final AuthorizationService authorizationService;
 
     /**
@@ -218,5 +222,26 @@ public class BorrowerApplicationController {
                 applicationId, status.getCurrentStatus());
         
         return ResponseEntity.ok(status);
+    }
+
+    /**
+     * Withdraw an application.
+     * Can only withdraw applications in DRAFT, SUBMITTED, UNDER_REVIEW, or OFFERS_AVAILABLE states.
+     */
+    @PostMapping("/{applicationId}/withdraw")
+    @PreAuthorize("hasAuthority('BORROWER')")
+    public ResponseEntity<WithdrawApplicationResponse> withdrawApplication(
+            @PathVariable UUID applicationId,
+            @Valid @RequestBody WithdrawApplicationRequest request) {
+        UUID borrowerId = authorizationService.getCurrentUserId();
+        
+        log.info("Withdrawing application: {} by borrower: {}", applicationId, borrowerId);
+        
+        WithdrawApplicationResponse response = withdrawApplicationService.withdrawApplication(
+                applicationId, borrowerId, request);
+        
+        log.info("Application withdrawn successfully: {}", applicationId);
+        
+        return ResponseEntity.ok(response);
     }
 }

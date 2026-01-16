@@ -72,8 +72,10 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\r
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\RegistrationResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\SubmissionValidationException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\StatusTransitionDTO.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\WithdrawApplicationService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\listener\EntityAuditListener.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\BankStatus.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\WithdrawApplicationResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\RateLimited.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\dto\EmailMetricsDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\ApplicationStatusDTO.java
@@ -85,6 +87,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\PasswordChangeEmailService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\service\BankRegistrationService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\RequiresComplianceOfficer.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\WithdrawApplicationRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\DocumentType.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\dto\AuditLogDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\ApplicationNotEditableException.java
@@ -115,6 +118,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\RequiresBorrowerRole.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\PasswordValidationService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\service\PasswordHasher.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\ApplicationNotWithdrawableException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\exception\BankNotActivatedException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\repository\ApplicationDocumentRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\util\LoginRateLimiter.java

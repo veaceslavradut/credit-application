@@ -64,6 +64,12 @@ public class Application {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(name = "withdrawn_at")
+    private LocalDateTime withdrawnAt;
+
+    @Column(name = "withdrawal_reason", length = 500)
+    private String withdrawalReason;
+
     @Version
     @Column(name = "version")
     private Long version;

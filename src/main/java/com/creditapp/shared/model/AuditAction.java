@@ -12,6 +12,7 @@ public enum AuditAction {
     APPLICATION_UPDATED("Application updated"),
     APPLICATION_SUBMITTED("Application submitted"),
     APPLICATION_STATUS_CHANGED("Application status changed"),
+    APPLICATION_WITHDRAWN("Application withdrawn"),
     DOCUMENT_UPLOADED("Document uploaded"),
     DOCUMENT_DELETED("Document deleted"),
     OFFER_CREATED("Offer created"),
