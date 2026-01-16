@@ -66,3 +66,8 @@ notification:
   retry:
     backoff-minutes: 1,5,15
 
+# Document storage configuration
+app:
+  document-storage:
+    path: ${DOCUMENT_STORAGE_PATH:uploads/documents}
+    type: filesystem  # filesystem or s3

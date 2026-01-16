@@ -8,9 +8,14 @@ import com.creditapp.auth.exception.BankNotActivatedException;
 import com.creditapp.auth.service.InvalidPasswordException;
 import com.creditapp.borrower.exception.ApplicationAlreadySubmittedException;
 import com.creditapp.borrower.exception.ApplicationCreationException;
-import com.creditapp.borrower.exception.InvalidApplicationException;
+import com.creditapp.borrower.exception.ApplicationLockedException;
 import com.creditapp.borrower.exception.ApplicationNotEditableException;
 import com.creditapp.borrower.exception.ApplicationStaleException;
+import com.creditapp.borrower.exception.DocumentNotFoundException;
+import com.creditapp.borrower.exception.DocumentStorageException;
+import com.creditapp.borrower.exception.FileSizeExceededException;
+import com.creditapp.borrower.exception.InvalidApplicationException;
+import com.creditapp.borrower.exception.InvalidDocumentException;
 import com.creditapp.borrower.exception.SubmissionValidationException;
 import com.creditapp.shared.exception.LoginRateLimitExceededException;
 import com.creditapp.shared.exception.NotFoundException;
@@ -214,6 +219,57 @@ public class GlobalExceptionHandler {
         response.put("timestamp", LocalDateTime.now().toString());
         response.put("path", request.getDescription(false).replace("uri=", ""));
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(response);
+    }
+
+    @ExceptionHandler(InvalidDocumentException.class)
+    public ResponseEntity<?> handleInvalidDocument(InvalidDocumentException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Invalid Document");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(FileSizeExceededException.class)
+    public ResponseEntity<?> handleFileSizeExceeded(FileSizeExceededException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Payload Too Large");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(response);
+    }
+
+    @ExceptionHandler(ApplicationLockedException.class)
+    public ResponseEntity<?> handleApplicationLocked(ApplicationLockedException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Application Locked");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler(DocumentStorageException.class)
+    public ResponseEntity<?> handleDocumentStorage(DocumentStorageException ex, WebRequest request) {
+        logger.error("Document storage error", ex);
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Storage Error");
+        response.put("message", "Failed to store document. Please try again.");
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
+
+    @ExceptionHandler(DocumentNotFoundException.class)
+    public ResponseEntity<?> handleDocumentNotFound(DocumentNotFoundException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Not Found");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
     // DO NOT handle AccessDeniedException here - let Spring Security's CustomAccessDeniedHandler handle it

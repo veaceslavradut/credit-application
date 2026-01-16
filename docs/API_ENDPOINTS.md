@@ -374,6 +374,265 @@ curl -X POST https://api.creditapp.com/api/borrower/applications \
 
 ---
 
+## Document Upload & Management API
+
+### POST /api/borrower/applications/{applicationId}/documents
+**Description:** Upload a document to support a loan application.
+
+**Authentication:** Required (BORROWER role)
+
+**Request Method:** POST
+
+**Request Headers:**
+- Content-Type: multipart/form-data
+- Authorization: Bearer {jwt_token}
+
+**Path Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| applicationId | UUID | Yes | Unique identifier of the application |
+
+**Request Body (multipart/form-data):**
+
+| Field | Type | Required | Validation | Description |
+|-------|------|----------|-----------|-------------|
+| file | File (binary) | Yes | Max 10 MB, specific MIME types | The document file to upload |
+| documentType | String (enum) | Yes | One of: INCOME_STATEMENT, EMPLOYMENT_VERIFICATION, IDENTIFICATION, BANK_STATEMENT, OTHER | Type classification for the document |
+
+**Supported MIME Types:**
+- application/pdf
+- image/jpeg
+- image/png
+- application/msword
+- application/vnd.openxmlformats-officedocument.wordprocessingml.document
+
+**Response (201 Created):**
+```json
+{
+  "id": "770e8400-e29b-41d4-a716-446655440002",
+  "applicationId": "550e8400-e29b-41d4-a716-446655440000",
+  "documentType": "INCOME_STATEMENT",
+  "originalFilename": "income_2025.pdf",
+  "fileSize": 2048576,
+  "uploadDate": "2026-01-16T10:30:00Z",
+  "uploadedByUserId": "660e8400-e29b-41d4-a716-446655440001"
+}
+```
+
+**Response Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | UUID | Unique identifier for the uploaded document |
+| applicationId | UUID | Associated application ID |
+| documentType | String | Type of document (enum value) |
+| originalFilename | String | Original name of the uploaded file |
+| fileSize | Long | File size in bytes |
+| uploadDate | ISO-8601 DateTime | Timestamp when document was uploaded |
+| uploadedByUserId | UUID | User ID of the borrower who uploaded the document |
+
+**Error Responses:**
+
+**400 Bad Request** - Invalid document or format
+```json
+{
+  "error": "Invalid Document",
+  "message": "File type '.exe' is not supported. Supported types: PDF, JPG, PNG, DOC, DOCX",
+  "timestamp": "2026-01-16T10:30:00Z"
+}
+```
+
+**403 Forbidden** - Not the application owner
+```json
+{
+  "error": "Forbidden",
+  "message": "You do not have permission to upload documents to this application",
+  "timestamp": "2026-01-16T10:30:00Z"
+}
+```
+
+**404 Not Found** - Application not found
+```json
+{
+  "error": "Not Found",
+  "message": "Application not found",
+  "timestamp": "2026-01-16T10:30:00Z"
+}
+```
+
+**409 Conflict** - Application status prevents uploads
+```json
+{
+  "error": "Application Locked",
+  "message": "Cannot upload documents to applications in UNDER_REVIEW or later status",
+  "timestamp": "2026-01-16T10:30:00Z"
+}
+```
+
+**413 Payload Too Large** - File or total size exceeded
+```json
+{
+  "error": "File Size Exceeded",
+  "message": "Total document size for this application cannot exceed 50 MB (current: 45 MB, attempted: 8 MB)",
+  "timestamp": "2026-01-16T10:30:00Z"
+}
+```
+
+**500 Internal Server Error** - Storage failure
+```json
+{
+  "error": "Document Storage Error",
+  "message": "Failed to store document. Please try again later.",
+  "timestamp": "2026-01-16T10:30:00Z"
+}
+```
+
+**Constraints:**
+- Maximum file size: 10 MB per document
+- Maximum total per application: 50 MB
+- Application status must be DRAFT or SUBMITTED (UNDER_REVIEW and later statuses block uploads with 409)
+- Borrower can only upload to their own applications
+- Only specific MIME types allowed (see list above)
+
+**cURL Example:**
+```bash
+curl -X POST https://api.creditapp.com/api/borrower/applications/550e8400-e29b-41d4-a716-446655440000/documents \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -F "file=@income_statement.pdf" \
+  -F "documentType=INCOME_STATEMENT"
+```
+
+---
+
+### GET /api/borrower/applications/{applicationId}/documents
+**Description:** List all documents for a loan application (excluding soft-deleted documents).
+
+**Authentication:** Required (BORROWER role)
+
+**Request Method:** GET
+
+**Request Headers:**
+- Authorization: Bearer {jwt_token}
+
+**Path Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| applicationId | UUID | Yes | Unique identifier of the application |
+
+**Response (200 OK):**
+```json
+[
+  {
+    "id": "770e8400-e29b-41d4-a716-446655440002",
+    "applicationId": "550e8400-e29b-41d4-a716-446655440000",
+    "documentType": "INCOME_STATEMENT",
+    "originalFilename": "income_2025.pdf",
+    "fileSize": 2048576,
+    "uploadDate": "2026-01-16T10:30:00Z",
+    "uploadedByUserId": "660e8400-e29b-41d4-a716-446655440001"
+  },
+  {
+    "id": "880e8400-e29b-41d4-a716-446655440003",
+    "applicationId": "550e8400-e29b-41d4-a716-446655440000",
+    "documentType": "BANK_STATEMENT",
+    "originalFilename": "bank_statement_jan.pdf",
+    "fileSize": 1524288,
+    "uploadDate": "2026-01-16T11:15:00Z",
+    "uploadedByUserId": "660e8400-e29b-41d4-a716-446655440001"
+  }
+]
+```
+
+**Error Responses:**
+
+**403 Forbidden** - Not the application owner
+```json
+{
+  "error": "Forbidden",
+  "message": "You do not have permission to view documents for this application",
+  "timestamp": "2026-01-16T10:30:00Z"
+}
+```
+
+**404 Not Found** - Application not found
+```json
+{
+  "error": "Not Found",
+  "message": "Application not found",
+  "timestamp": "2026-01-16T10:30:00Z"
+}
+```
+
+**Notes:**
+- Returns only active documents (soft-deleted documents are excluded)
+- Results are ordered by uploadDate descending (newest first)
+- Borrower can only view documents for their own applications
+
+**cURL Example:**
+```bash
+curl -X GET https://api.creditapp.com/api/borrower/applications/550e8400-e29b-41d4-a716-446655440000/documents \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."
+```
+
+---
+
+### DELETE /api/borrower/applications/{applicationId}/documents/{documentId}
+**Description:** Soft-delete a document from a loan application. Document is marked for deletion but not physically removed from storage.
+
+**Authentication:** Required (BORROWER role)
+
+**Request Method:** DELETE
+
+**Request Headers:**
+- Authorization: Bearer {jwt_token}
+
+**Path Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| applicationId | UUID | Yes | Unique identifier of the application |
+| documentId | UUID | Yes | Unique identifier of the document to delete |
+
+**Response (204 No Content):**
+No response body. HTTP status 204 indicates successful soft-deletion.
+
+**Error Responses:**
+
+**403 Forbidden** - Not the application owner
+```json
+{
+  "error": "Forbidden",
+  "message": "You do not have permission to delete documents from this application",
+  "timestamp": "2026-01-16T10:30:00Z"
+}
+```
+
+**404 Not Found** - Document or application not found
+```json
+{
+  "error": "Not Found",
+  "message": "Document not found",
+  "timestamp": "2026-01-16T10:30:00Z"
+}
+```
+
+**Notes:**
+- Documents are soft-deleted using a deleted_at timestamp (not physically removed)
+- Soft-deleted documents are excluded from GET /documents list
+- Only active documents can be deleted
+- Borrower can only delete documents from their own applications
+- Audit log entry created with DOCUMENT_DELETED event
+
+**cURL Example:**
+```bash
+curl -X DELETE https://api.creditapp.com/api/borrower/applications/550e8400-e29b-41d4-a716-446655440000/documents/770e8400-e29b-41d4-a716-446655440002 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."
+```
+
+---
+
 ## Authorization Matrix
 
 | Endpoint | Method | Public | Borrower | Bank Admin | Compliance |
@@ -381,6 +640,9 @@ curl -X POST https://api.creditapp.com/api/borrower/applications \
 | /api/auth/register-bank | POST | ✓ |  |  |  |
 | /api/auth/activate | GET | ✓ |  |  |  |
 | /api/borrower/applications | POST |  | ✓ |  |  |
+| /api/borrower/applications/{id}/documents | POST |  | ✓ |  |  |
+| /api/borrower/applications/{id}/documents | GET |  | ✓ |  |  |
+| /api/borrower/applications/{id}/documents/{docId} | DELETE |  | ✓ |  |  |
 | /api/health | GET |  |  |  |  |
 
 ---
@@ -397,5 +659,6 @@ This API uses path-based versioning. Future versions will be available at /api/v
 
 | Date | Version | Changes | Story |
 |------|---------|---------|-------|
+| 2026-01-16 | 1.2 | Added document upload, list, and delete endpoints with file size limits and soft-delete pattern | Story 2.6 |
 | 2026-01-16 | 1.1 | Added borrower application creation endpoint with validation and rate limiting | Story 2.2 |
 | 2026-01-15 | 1.0 | Initial API documentation - Bank registration and activation endpoints | Story 1.4 |

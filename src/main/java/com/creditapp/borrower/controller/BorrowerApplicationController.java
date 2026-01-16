@@ -3,10 +3,13 @@ package com.creditapp.borrower.controller;
 import com.creditapp.borrower.dto.ApplicationDTO;
 import com.creditapp.borrower.dto.ApplicationHistoryDTO;
 import com.creditapp.borrower.dto.CreateApplicationRequest;
+import com.creditapp.borrower.dto.DocumentDTO;
 import com.creditapp.borrower.dto.SubmitApplicationRequest;
 import com.creditapp.borrower.dto.SubmitApplicationResponse;
 import com.creditapp.borrower.dto.UpdateApplicationRequest;
 import com.creditapp.borrower.dto.UpdateApplicationResponse;
+import com.creditapp.borrower.model.DocumentType;
+import com.creditapp.borrower.service.ApplicationDocumentService;
 import com.creditapp.borrower.service.ApplicationService;
 import com.creditapp.shared.security.AuthorizationService;
 import com.creditapp.shared.security.RateLimited;
@@ -16,9 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -33,6 +38,7 @@ import java.util.UUID;
 public class BorrowerApplicationController {
 
     private final ApplicationService applicationService;
+    private final ApplicationDocumentService documentService;
     private final AuthorizationService authorizationService;
 
     /**
@@ -131,5 +137,64 @@ public class BorrowerApplicationController {
         log.info("Application submitted successfully: {} by borrower: {}", applicationId, borrowerId);
         
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Upload a document to an application.
+     * Accepts multipart/form-data with file and documentType.
+     */
+    @PostMapping(value = "/{applicationId}/documents", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAuthority('BORROWER')")
+    public ResponseEntity<DocumentDTO> uploadDocument(
+            @PathVariable UUID applicationId,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("documentType") DocumentType documentType) {
+        UUID borrowerId = authorizationService.getCurrentUserId();
+        
+        log.info("Uploading document to application: {} by borrower: {}, type: {}", 
+                applicationId, borrowerId, documentType);
+        
+        DocumentDTO document = documentService.uploadDocument(applicationId, borrowerId, file, documentType);
+        
+        log.info("Document uploaded successfully: {} for application: {}", document.getId(), applicationId);
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(document);
+    }
+
+    /**
+     * List all active documents for an application.
+     */
+    @GetMapping("/{applicationId}/documents")
+    @PreAuthorize("hasAuthority('BORROWER')")
+    public ResponseEntity<List<DocumentDTO>> listDocuments(@PathVariable UUID applicationId) {
+        UUID borrowerId = authorizationService.getCurrentUserId();
+        
+        log.info("Listing documents for application: {} by borrower: {}", applicationId, borrowerId);
+        
+        List<DocumentDTO> documents = documentService.listDocuments(applicationId, borrowerId);
+        
+        log.info("Found {} documents for application: {}", documents.size(), applicationId);
+        
+        return ResponseEntity.ok(documents);
+    }
+
+    /**
+     * Delete a document (soft delete).
+     */
+    @DeleteMapping("/{applicationId}/documents/{documentId}")
+    @PreAuthorize("hasAuthority('BORROWER')")
+    public ResponseEntity<Void> deleteDocument(
+            @PathVariable UUID applicationId,
+            @PathVariable UUID documentId) {
+        UUID borrowerId = authorizationService.getCurrentUserId();
+        
+        log.info("Deleting document: {} from application: {} by borrower: {}", 
+                documentId, applicationId, borrowerId);
+        
+        documentService.deleteDocument(applicationId, borrowerId, documentId);
+        
+        log.info("Document deleted successfully: {} from application: {}", documentId, applicationId);
+        
+        return ResponseEntity.noContent().build();
     }
 }
