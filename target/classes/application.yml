@@ -3,6 +3,11 @@
     name: credit-application
   profiles:
     active: local
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    schemas: public
   jpa:
     hibernate:
       ddl-auto: validate

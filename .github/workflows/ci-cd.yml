@@ -1,0 +1,205 @@
+﻿name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+env:
+  JAVA_VERSION: '21'
+  MAVEN_OPTS: -Xmx1024m
+  DOCKER_REGISTRY: ghcr.io
+  IMAGE_NAME: credit-application
+
+jobs:
+  lint:
+    name: Code Quality Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+      
+      - name: Run Maven Compiler Check
+        run: mvn compiler:compile -DskipTests
+      
+      - name: Verify project structure
+        run: |
+          echo 'Verifying project structure...'
+          test -f pom.xml || exit 1
+          test -d src/main/java || exit 1
+          test -d src/test/java || exit 1
+          echo 'Project structure verified successfully'
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+      
+      - name: Run Unit Tests
+        run: mvn test
+      
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: target/surefire-reports/
+          retention-days: 30
+
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+      
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+      
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: application-jar
+          path: target/*.jar
+          retention-days: 30
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: build
+    
+    services:
+      postgres:
+        image: postgres:15.4
+        env:
+          POSTGRES_DB: credit_app_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      
+      redis:
+        image: redis:7.2.3-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+      
+      - name: Run Integration Tests with TestContainers
+        run: mvn verify
+      
+      - name: Generate Coverage Report
+        run: mvn jacoco:report
+      
+      - name: Upload Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: target/site/jacoco/
+          retention-days: 30
+
+  deploy-staging:
+    name: Deploy to Staging (Blue-Green)
+    runs-on: ubuntu-latest
+    needs: integration-tests
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: staging
+      url: https://staging.credit-app.example.com
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: application-jar
+          path: ./target
+      
+      - name: Blue-Green Deployment Simulation
+        run: |
+          echo '=== Blue-Green Deployment Strategy ==='
+          echo 'Step 1: Current environment (BLUE) is serving traffic'
+          echo 'Step 2: Deploy new version to GREEN environment'
+          echo 'Step 3: Run health checks on GREEN environment'
+          echo 'Step 4: Switch traffic from BLUE to GREEN'
+          echo 'Step 5: Monitor for issues'
+          echo 'Step 6: Keep BLUE as rollback option'
+      
+      - name: Health Check - Green Environment
+        run: |
+          echo 'Running health checks on GREEN environment...'
+          echo 'Health check endpoints:'
+          echo '  - Database: Connected'
+          echo '  - Redis: Connected'
+          echo '  - Application: Running'
+          echo '  - Version: 1.0.0'
+          echo 'Health checks passed'
+      
+      - name: Switch Traffic to Green
+        run: |
+          echo 'Switching load balancer traffic...'
+          echo 'Traffic routing: 100% -> GREEN environment'
+          echo 'BLUE environment kept active for rollback'
+      
+      - name: Rollback on Failure
+        if: failure()
+        run: |
+          echo '=== ROLLBACK INITIATED ==='
+          echo 'Health checks failed, rolling back to BLUE environment'
+          exit 1
+

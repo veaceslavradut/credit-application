@@ -1,0 +1,29 @@
+-- V2__Seed_Test_Data.sql
+
+INSERT INTO organizations (id, name, tax_id, country_code, is_active)
+VALUES ('00000000-0000-0000-0000-000000000001', 'Example Bank', 'EXB-001', 'MD', TRUE)
+ON CONFLICT DO NOTHING;
+
+INSERT INTO users (id, email, password_hash, first_name, last_name, phone, role, organization_id, is_active)
+VALUES
+('00000000-0000-0000-0000-000000000011', 'borrower@example.com', '$2a$12$placeholderhash', 'Alice', 'Borrower', '+373-010-000-001', 'BORROWER', NULL, TRUE),
+('00000000-0000-0000-0000-000000000012', 'admin1@bank.com', '$2a$12$placeholderhash', 'Bob', 'Admin', '+373-010-000-002', 'BANK_ADMIN', '00000000-0000-0000-0000-000000000001', TRUE),
+('00000000-0000-0000-0000-000000000013', 'admin2@bank.com', '$2a$12$placeholderhash', 'Carol', 'Admin', '+373-010-000-0003', 'BANK_ADMIN', '00000000-0000-0000-0000-000000000001', TRUE)
+ON CONFLICT DO NOTHING;
+
+INSERT INTO user_roles (id, user_id, role)
+VALUES
+('00000000-0000-0000-0000-000000000021', '00000000-0000-0000-0000-000000000011', 'BORROWER'),
+('00000000-0000-0000-0000-000000000022', '00000000-0000-0000-0000-000000000012', 'BANK_ADMIN'),
+('00000000-0000-0000-0000-000000000023', '00000000-0000-0000-0000-000000000013', 'BANK_ADMIN')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO sessions (id, user_id, refresh_token, expires_at)
+VALUES
+('00000000-0000-0000-0000-000000000031', '00000000-0000-0000-0000-000000000011', 'seed-refresh-token-1', NOW() + INTERVAL '7 days')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO audit_logs (id, user_id, action, resource, timestamp, ip_address, result)
+VALUES
+('00000000-0000-0000-0000-000000000041', '00000000-0000-0000-0000-000000000011', 'CREATE', 'users', NOW(), '127.0.0.1', 'SUCCESS')
+ON CONFLICT DO NOTHING;

@@ -1,3 +1,12 @@
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\model\User.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\audit\AuditLog.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\CreditApplicationApplication.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\audit\AuditLogListener.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\AuditLogRepository.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\OrganizationRepository.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\model\Session.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\repository\UserRepository.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\Organization.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\RedisConfig.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\model\UserRole.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\controller\HealthController.java

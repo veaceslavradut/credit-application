@@ -1,3 +1,12 @@
 com\creditapp\CreditApplicationApplication.class
+com\creditapp\auth\model\Session.class
+com\creditapp\shared\audit\AuditLog.class
 com\creditapp\shared\config\RedisConfig.class
 com\creditapp\shared\controller\HealthController.class
+com\creditapp\auth\model\User.class
+com\creditapp\shared\repository\OrganizationRepository.class
+com\creditapp\shared\audit\AuditLogListener.class
+com\creditapp\shared\model\Organization.class
+com\creditapp\auth\model\UserRole.class
+com\creditapp\auth\repository\UserRepository.class
+com\creditapp\shared\repository\AuditLogRepository.class

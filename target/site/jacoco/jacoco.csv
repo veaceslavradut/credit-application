@@ -1,4 +1,10 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Credit Application Platform,com.creditapp.shared.model,Organization,20,28,0,0,6,8,6,7,6,7
 Credit Application Platform,com.creditapp.shared.controller,HealthController,0,78,0,8,0,20,0,8,0,4
+Credit Application Platform,com.creditapp.auth.model,Session,31,3,0,0,9,1,9,1,9,1
+Credit Application Platform,com.creditapp.auth.model,User,40,35,0,0,12,10,12,9,12,9
+Credit Application Platform,com.creditapp.auth.model,UserRole,24,3,0,0,7,1,7,1,7,1
+Credit Application Platform,com.creditapp.shared.audit,AuditLog,19,29,0,0,6,8,6,8,6,8
+Credit Application Platform,com.creditapp.shared.audit,AuditLogListener,16,15,0,0,4,4,2,3,2,3
 Credit Application Platform,com.creditapp,CreditApplicationApplication,5,3,0,0,2,1,1,1,1,1
 Credit Application Platform,com.creditapp.shared.config,RedisConfig,0,34,0,0,0,9,0,2,0,2
