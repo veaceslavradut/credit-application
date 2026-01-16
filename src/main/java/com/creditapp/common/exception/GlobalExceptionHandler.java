@@ -1,6 +1,7 @@
 package com.creditapp.common.exception;
 
 import com.creditapp.auth.exception.DuplicateEmailException;
+import com.creditapp.auth.exception.DuplicateBankRegistrationException;
 import com.creditapp.auth.exception.PasswordValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<?> handleDuplicateEmail(DuplicateEmailException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Conflict");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler(DuplicateBankRegistrationException.class)
+    public ResponseEntity<?> handleDuplicateBankRegistration(DuplicateBankRegistrationException ex, WebRequest request) {
         Map<String, Object> response = new HashMap<>();
         response.put("error", "Conflict");
         response.put("message", ex.getMessage());

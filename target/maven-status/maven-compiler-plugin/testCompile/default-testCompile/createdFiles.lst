@@ -1,5 +1,6 @@
 com\creditapp\unit\shared\model\AuditLogEntityTest.class
+com\creditapp\integration\auth\BankRegistrationIntegrationTest.class
+com\creditapp\SpringContextIntegrationTest.class
 com\creditapp\unit\shared\model\OrganizationEntityTest.class
 com\creditapp\shared\controller\HealthControllerTest.class
 com\creditapp\unit\auth\model\UserEntityTest.class
-com\creditapp\SpringContextIntegrationTest.class
