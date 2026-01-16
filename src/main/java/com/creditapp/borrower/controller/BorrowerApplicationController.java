@@ -2,8 +2,11 @@ package com.creditapp.borrower.controller;
 
 import com.creditapp.borrower.dto.ApplicationDTO;
 import com.creditapp.borrower.dto.ApplicationHistoryDTO;
+import com.creditapp.borrower.dto.CreateApplicationRequest;
 import com.creditapp.borrower.service.ApplicationService;
 import com.creditapp.shared.security.AuthorizationService;
+import com.creditapp.shared.security.RateLimited;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,6 +30,27 @@ public class BorrowerApplicationController {
 
     private final ApplicationService applicationService;
     private final AuthorizationService authorizationService;
+
+    /**
+     * Create a new loan application in DRAFT status.
+     * Rate limited to 1 application per borrower per minute.
+     */
+    @PostMapping
+    @PreAuthorize("hasAuthority('BORROWER')")
+    @RateLimited(action = "CREATE_APPLICATION", limitPerMinute = 1)
+    public ResponseEntity<ApplicationDTO> createApplication(@Valid @RequestBody CreateApplicationRequest request) {
+        UUID borrowerId = authorizationService.getCurrentUserId();
+        
+        log.info("Creating application for borrower: {}, loanType: {}, loanAmount: {}", 
+                borrowerId, request.getLoanType(), request.getLoanAmount());
+        
+        ApplicationDTO application = applicationService.createApplication(borrowerId, request);
+        
+        log.info("Application created successfully: {} for borrower: {}", 
+                application.getId(), borrowerId);
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(application);
+    }
 
     /**
      * List all applications for the authenticated borrower.

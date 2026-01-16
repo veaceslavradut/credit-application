@@ -6,8 +6,11 @@ import com.creditapp.auth.exception.PasswordValidationException;
 import com.creditapp.auth.exception.InvalidCredentialsException;
 import com.creditapp.auth.exception.BankNotActivatedException;
 import com.creditapp.auth.service.InvalidPasswordException;
+import com.creditapp.borrower.exception.ApplicationCreationException;
+import com.creditapp.borrower.exception.InvalidApplicationException;
 import com.creditapp.shared.exception.LoginRateLimitExceededException;
 import com.creditapp.shared.exception.NotFoundException;
+import com.creditapp.shared.exception.RateLimitExceededException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -133,6 +136,38 @@ public class GlobalExceptionHandler {
         response.put("timestamp", LocalDateTime.now().toString());
         response.put("path", request.getDescription(false).replace("uri=", ""));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(InvalidApplicationException.class)
+    public ResponseEntity<?> handleInvalidApplication(InvalidApplicationException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Invalid Application");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(ApplicationCreationException.class)
+    public ResponseEntity<?> handleApplicationCreation(ApplicationCreationException ex, WebRequest request) {
+        logger.error("Application creation failed", ex);
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Internal Server Error");
+        response.put("message", "Failed to create application. Please try again later.");
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
+
+    @ExceptionHandler(RateLimitExceededException.class)
+    public ResponseEntity<?> handleRateLimitExceeded(RateLimitExceededException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Rate Limit Exceeded");
+        response.put("message", ex.getMessage());
+        response.put("retryAfter", ex.getRetryAfterSeconds());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(response);
     }
 
     // DO NOT handle AccessDeniedException here - let Spring Security's CustomAccessDeniedHandler handle it

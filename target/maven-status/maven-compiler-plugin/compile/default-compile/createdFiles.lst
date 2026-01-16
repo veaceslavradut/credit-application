@@ -4,6 +4,7 @@ com\creditapp\borrower\dto\CreateApplicationRequest$CreateApplicationRequestBuil
 com\creditapp\borrower\model\RatePreference.class
 com\creditapp\borrower\dto\CreateApplicationRequest.class
 com\creditapp\borrower\model\ApplicationStatus.class
+com\creditapp\shared\audit\BusinessAudit.class
 com\creditapp\shared\config\RedisConfig.class
 com\creditapp\shared\controller\HealthController.class
 com\creditapp\borrower\dto\LoanPreferenceDTO.class
@@ -30,14 +31,16 @@ com\creditapp\shared\service\SendGridEmailService.class
 com\creditapp\borrower\model\ApplicationDetails$ApplicationDetailsBuilder.class
 com\creditapp\auth\filter\JwtAuthenticationToken.class
 com\creditapp\auth\service\BankRegistrationService.class
-com\creditapp\shared\audit\AuditLog.class
 com\creditapp\shared\repository\EmailTemplateRepository.class
 com\creditapp\borrower\model\Application.class
 com\creditapp\auth\dto\LoginRequest.class
 com\creditapp\shared\model\DeliveryStatus.class
 com\creditapp\shared\dto\EmailMetricsDTO.class
+com\creditapp\borrower\exception\InvalidApplicationException.class
 com\creditapp\borrower\service\ApplicationService.class
+com\creditapp\shared\exception\RateLimitExceededException.class
 com\creditapp\shared\model\BankStatus.class
+com\creditapp\shared\security\RateLimited.class
 com\creditapp\shared\service\BankActivationEmailService.class
 com\creditapp\borrower\dto\ApplicationDTO.class
 com\creditapp\borrower\service\ApplicationStatusTransitionService$1.class
@@ -46,6 +49,8 @@ com\creditapp\auth\service\InvalidPasswordException.class
 com\creditapp\borrower\repository\ApplicationHistoryRepository.class
 com\creditapp\borrower\model\LoanPreference.class
 com\creditapp\auth\exception\DuplicateBankRegistrationException.class
+com\creditapp\shared\audit\BusinessAuditAspect.class
+com\creditapp\shared\util\RateLimiter.class
 com\creditapp\shared\dto\NotificationHealthDTO$NotificationHealthDTOBuilder.class
 com\creditapp\shared\model\UserRole.class
 com\creditapp\auth\exception\DuplicateEmailException.class
@@ -78,6 +83,8 @@ com\creditapp\shared\util\LoginRateLimiter.class
 com\creditapp\auth\exception\InvalidCredentialsException.class
 com\creditapp\shared\model\User.class
 com\creditapp\borrower\dto\ApplicationDTO$ApplicationDTOBuilder.class
+com\creditapp\shared\security\RateLimitingAspect.class
+com\creditapp\shared\service\RequestContextService$RequestContext.class
 com\creditapp\shared\service\RequestContextService.class
 com\creditapp\shared\security\CustomAccessDeniedHandler.class
 com\creditapp\borrower\repository\ApplicationRepository.class
@@ -119,6 +126,8 @@ com\creditapp\auth\dto\RegistrationResponse.class
 com\creditapp\shared\dto\NotificationEvent$NotificationEventBuilder.class
 com\creditapp\shared\service\AuditService.class
 com\creditapp\common\interceptor\RateLimitingInterceptor.class
+com\creditapp\borrower\exception\ApplicationCreationException.class
+com\creditapp\shared\interceptor\AuditInterceptor.class
 com\creditapp\shared\repository\OrganizationRepository.class
 com\creditapp\auth\dto\UpdateProfileRequest.class
 com\creditapp\borrower\service\ApplicationStatusTransitionService.class

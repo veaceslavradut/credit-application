@@ -14,10 +14,13 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\e
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\RefreshToken.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\CreateApplicationRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\RefreshTokenRepository.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\audit\BusinessAudit.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\BankActivationEmailService.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\InvalidApplicationException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\EmploymentStatus.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\JwtConfig.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\EmailService.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\RateLimitingAspect.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\common\exception\GlobalExceptionHandler.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\service\LoginService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\EmailDeliveryLogRepository.java
@@ -39,6 +42,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\m
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\RefreshTokenRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\event\UserRegisteredEvent.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\dto\NotificationHealthDTO.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\interceptor\AuditInterceptor.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\ApplicationHistoryDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\LoginResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\controller\UserProfileController.java
@@ -58,9 +62,10 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\r
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\RegistrationResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\listener\EntityAuditListener.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\BankStatus.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\RateLimited.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\dto\EmailMetricsDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\ChangePasswordRequest.java
-C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\audit\AuditLog.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\exception\RateLimitExceededException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\CustomAccessDeniedHandler.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\UserProfileResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\BankRegistrationRequest.java
@@ -80,8 +85,10 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\fil
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\DeliveryStatus.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\controller\BorrowerApplicationController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\exception\PasswordValidationException.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\util\RateLimiter.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\MockEmailService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\RequestContextService.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\ApplicationCreationException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\exception\InvalidCredentialsException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\repository\ApplicationRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\controller\AuthController.java
@@ -92,6 +99,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\s
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\service\PasswordHasher.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\exception\BankNotActivatedException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\util\LoginRateLimiter.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\audit\BusinessAuditAspect.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\AuditAction.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\CreditApplicationApplication.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\SecurityConfig.java

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtAuthenticationFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.auth.filter</a> &gt; <span class="el_source">JwtAuthenticationFilter.java</span></div><h1>JwtAuthenticationFilter.java</h1><pre class="source lang-java linenums">package com.creditapp.auth.filter;
+
+import com.creditapp.shared.service.JwtTokenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.UUID;
+
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+<span class="fc" id="L21">    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);</span>
+    private static final String BEARER_PREFIX = &quot;Bearer &quot;;
+    private static final String AUTHORIZATION_HEADER = &quot;Authorization&quot;;
+    private final JwtTokenService jwtTokenService;
+
+<span class="fc" id="L26">    public JwtAuthenticationFilter(JwtTokenService jwtTokenService) {</span>
+<span class="fc" id="L27">        this.jwtTokenService = jwtTokenService;</span>
+<span class="fc" id="L28">    }</span>
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        try {
+<span class="nc" id="L34">            String token = extractTokenFromRequest(request);</span>
+<span class="nc bnc" id="L35" title="All 4 branches missed.">            if (token != null &amp;&amp; jwtTokenService.validateToken(token)) {</span>
+<span class="nc" id="L36">                UUID userId = jwtTokenService.extractUserId(token);</span>
+<span class="nc" id="L37">                String email = jwtTokenService.extractEmail(token);</span>
+<span class="nc" id="L38">                String role = jwtTokenService.extractRole(token);</span>
+
+<span class="nc" id="L40">                Collection&lt;GrantedAuthority&gt; authorities = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L41">                authorities.add(new SimpleGrantedAuthority(role));</span>
+
+<span class="nc" id="L43">                JwtAuthenticationToken authentication = new JwtAuthenticationToken(userId, email, authorities);</span>
+<span class="nc" id="L44">                SecurityContextHolder.getContext().setAuthentication(authentication);</span>
+<span class="nc" id="L45">                logger.debug(&quot;JWT token validated for user: {} ({})&quot;, userId, email);</span>
+            }
+<span class="nc" id="L47">        } catch (Exception e) {</span>
+<span class="nc" id="L48">            logger.debug(&quot;JWT token validation failed: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L49">        }</span>
+<span class="nc" id="L50">        filterChain.doFilter(request, response);</span>
+<span class="nc" id="L51">    }</span>
+
+    private String extractTokenFromRequest(HttpServletRequest request) {
+<span class="nc" id="L54">        String authHeader = request.getHeader(AUTHORIZATION_HEADER);</span>
+<span class="nc bnc" id="L55" title="All 4 branches missed.">        if (authHeader != null &amp;&amp; authHeader.startsWith(BEARER_PREFIX)) {</span>
+<span class="nc" id="L56">            return authHeader.substring(BEARER_PREFIX.length());</span>
+        }
+<span class="nc" id="L58">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

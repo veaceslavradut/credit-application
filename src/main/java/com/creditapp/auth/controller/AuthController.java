@@ -16,7 +16,6 @@ import com.creditapp.shared.model.Organization;
 import com.creditapp.shared.model.BankStatus;
 import com.creditapp.shared.repository.OrganizationRepository;
 import com.creditapp.shared.service.AuditService;
-import com.creditapp.shared.service.RequestContextService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -40,22 +38,19 @@ public class AuthController {
     private final BankActivationEmailService bankActivationEmailService;
     private final OrganizationRepository organizationRepository;
     private final AuditService auditService;
-    private final RequestContextService requestContextService;
 
     public AuthController(UserRegistrationService userRegistrationService,
                           BankRegistrationService bankRegistrationService,
                           LoginService loginService,
                           BankActivationEmailService bankActivationEmailService,
                           OrganizationRepository organizationRepository,
-                          AuditService auditService,
-                          RequestContextService requestContextService) {
+                          AuditService auditService) {
         this.userRegistrationService = userRegistrationService;
         this.bankRegistrationService = bankRegistrationService;
         this.loginService = loginService;
         this.bankActivationEmailService = bankActivationEmailService;
         this.organizationRepository = organizationRepository;
         this.auditService = auditService;
-        this.requestContextService = requestContextService;
     }
 
     @PostMapping("/register")
@@ -146,13 +141,9 @@ public class AuthController {
         logger.info("Login request received for email: {}", request.getEmail());
         LoginResponse response = loginService.login(request);
         
-        // Audit user login
+        // Audit user login - AuditService will extract user from SecurityContext
         try {
-            UUID userId = requestContextService.getCurrentUserId();
-            if (userId != null) {
-                auditService.logAction("User", userId, AuditAction.USER_LOGGED_IN,
-                        userId, requestContextService.getCurrentUserRole());
-            }
+            auditService.logAction("User", null, AuditAction.USER_LOGGED_IN);
         } catch (Exception e) {
             logger.error("Failed to audit user login", e);
         }
@@ -174,13 +165,9 @@ public class AuthController {
     public ResponseEntity<Void> logout() {
         logger.info("Logout request received");
         
-        // Audit user logout
+        // Audit user logout - AuditService will extract user from SecurityContext
         try {
-            UUID userId = requestContextService.getCurrentUserId();
-            if (userId != null) {
-                auditService.logAction("User", userId, AuditAction.USER_LOGGED_OUT,
-                        userId, requestContextService.getCurrentUserRole());
-            }
+            auditService.logAction("User", null, AuditAction.USER_LOGGED_OUT);
         } catch (Exception e) {
             logger.error("Failed to audit user logout", e);
         }

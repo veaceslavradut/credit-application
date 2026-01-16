@@ -1,93 +1,87 @@
 package com.creditapp.shared.service;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.Data;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import jakarta.servlet.http.HttpServletRequest;
-import java.util.UUID;
-
-@Slf4j
+/**
+ * Service to extract request context information (IP address, user agent)
+ */
 @Service
 public class RequestContextService {
 
-    public String getCurrentIpAddress() {
-        try {
-            HttpServletRequest request = getCurrentRequest();
-            if (request == null) return null;
-
-            String xForwardedFor = request.getHeader("X-Forwarded-For");
-            if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
-                return xForwardedFor.split(",")[0].trim();
-            }
-
-            String xRealIp = request.getHeader("X-Real-IP");
-            if (xRealIp != null && !xRealIp.isEmpty()) {
-                return xRealIp;
-            }
-
-            return request.getRemoteAddr();
-        } catch (Exception e) {
-            log.warn("Failed to get current IP address", e);
-            return null;
+    /**
+     * Get the IP address from the current HTTP request
+     */
+    public String getClientIpAddress() {
+        HttpServletRequest request = getCurrentRequest();
+        if (request == null) {
+            return "SYSTEM";
         }
+
+        // Check for X-Forwarded-For header (proxy/load balancer)
+        String ipAddress = request.getHeader("X-Forwarded-For");
+        if (ipAddress != null && !ipAddress.isEmpty() && !"unknown".equalsIgnoreCase(ipAddress)) {
+            // X-Forwarded-For can contain multiple IPs, get the first one
+            return ipAddress.split(",")[0].trim();
+        }
+
+        // Check for X-Real-IP header
+        ipAddress = request.getHeader("X-Real-IP");
+        if (ipAddress != null && !ipAddress.isEmpty() && !"unknown".equalsIgnoreCase(ipAddress)) {
+            return ipAddress;
+        }
+
+        // Fallback to remote address
+        ipAddress = request.getRemoteAddr();
+        return ipAddress != null ? ipAddress : "UNKNOWN";
     }
 
-    public String getCurrentUserAgent() {
-        try {
-            HttpServletRequest request = getCurrentRequest();
-            if (request == null) return null;
-            return request.getHeader("User-Agent");
-        } catch (Exception e) {
-            log.warn("Failed to get current User-Agent", e);
-            return null;
+    /**
+     * Get the user agent from the current HTTP request
+     */
+    public String getUserAgent() {
+        HttpServletRequest request = getCurrentRequest();
+        if (request == null) {
+            return "SYSTEM";
         }
+
+        String userAgent = request.getHeader("User-Agent");
+        return userAgent != null ? userAgent : "UNKNOWN";
     }
 
-    public UUID getCurrentUserId() {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null || !authentication.isAuthenticated()) {
-                return null;
-            }
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof String) {
-                return UUID.fromString((String) principal);
-            }
-            return null;
-        } catch (Exception e) {
-            log.warn("Failed to get current user ID", e);
-            return null;
-        }
+    /**
+     * Get request context information
+     */
+    public RequestContext getRequestContext() {
+        return new RequestContext(getClientIpAddress(), getUserAgent());
     }
 
-    public String getCurrentUserRole() {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null || !authentication.isAuthenticated()) {
-                return null;
-            }
-            return authentication.getAuthorities().stream()
-                    .findFirst()
-                    .map(auth -> auth.getAuthority())
-                    .orElse(null);
-        } catch (Exception e) {
-            log.warn("Failed to get current user role", e);
-            return null;
-        }
-    }
-
-    public HttpServletRequest getCurrentRequest() {
+    /**
+     * Get the current HTTP request from RequestContextHolder
+     */
+    private HttpServletRequest getCurrentRequest() {
         try {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            if (attributes == null) return null;
-            return attributes.getRequest();
+            return attributes != null ? attributes.getRequest() : null;
         } catch (Exception e) {
-            log.warn("Failed to get current HTTP request", e);
             return null;
+        }
+    }
+
+    /**
+     * Holder for request context data
+     */
+    @Data
+    public static class RequestContext {
+        private final String ipAddress;
+        private final String userAgent;
+
+        public RequestContext(String ipAddress, String userAgent) {
+            this.ipAddress = ipAddress;
+            this.userAgent = userAgent;
         }
     }
 }

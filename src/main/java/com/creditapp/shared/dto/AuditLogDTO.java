@@ -9,6 +9,10 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * DTO for returning audit log information via API
+ * Note: Excludes sensitive fields (ipAddress, userAgent) for security
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,6 +25,5 @@ public class AuditLogDTO {
     private String actorRole;
     private Map<String, Object> oldValues;
     private Map<String, Object> newValues;
-    private String ipAddress;
     private LocalDateTime createdAt;
 }

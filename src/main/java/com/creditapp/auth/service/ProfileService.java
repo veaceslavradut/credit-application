@@ -117,7 +117,6 @@ public class ProfileService {
         auditService.logActionWithValues(
                 "User", userId, 
                 AuditAction.PROFILE_UPDATED, 
-                userId, "BORROWER",
                 oldValues, newValues
         );
         
@@ -162,7 +161,6 @@ public class ProfileService {
         auditService.logActionWithValues(
                 "User", userId,
                 AuditAction.PASSWORD_CHANGED,
-                userId, user.getRole().toString(),
                 oldValues, newValues
         );
         

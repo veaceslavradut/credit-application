@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApplicationStatusTransitionService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.borrower.service</a> &gt; <span class="el_source">ApplicationStatusTransitionService.java</span></div><h1>ApplicationStatusTransitionService.java</h1><pre class="source lang-java linenums">package com.creditapp.borrower.service;
+
+import com.creditapp.borrower.model.ApplicationHistory;
+import com.creditapp.borrower.model.ApplicationStatus;
+import com.creditapp.borrower.repository.ApplicationHistoryRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.UUID;
+
+/**
+ * Service for managing application status transitions.
+ */
+@Service
+<span class="nc" id="L16">@RequiredArgsConstructor</span>
+<span class="nc" id="L17">@Slf4j</span>
+public class ApplicationStatusTransitionService {
+
+    private final ApplicationHistoryRepository applicationHistoryRepository;
+
+    /**
+     * Record a status transition in the application history.
+     */
+    public void recordStatusTransition(UUID applicationId, ApplicationStatus oldStatus,
+                                      ApplicationStatus newStatus, UUID changedByUserId, String reason) {
+        // Validate transition
+<span class="nc bnc" id="L28" title="All 2 branches missed.">        if (!isValidTransition(oldStatus, newStatus)) {</span>
+<span class="nc" id="L29">            throw new IllegalArgumentException(</span>
+                    &quot;Invalid transition from &quot; + oldStatus + &quot; to &quot; + newStatus);
+        }
+
+        // Create history entry
+<span class="nc" id="L34">        ApplicationHistory history = ApplicationHistory.builder()</span>
+<span class="nc" id="L35">                .applicationId(applicationId)</span>
+<span class="nc" id="L36">                .oldStatus(oldStatus)</span>
+<span class="nc" id="L37">                .newStatus(newStatus)</span>
+<span class="nc" id="L38">                .changedByUserId(changedByUserId)</span>
+<span class="nc" id="L39">                .changeReason(reason)</span>
+<span class="nc" id="L40">                .build();</span>
+
+<span class="nc" id="L42">        applicationHistoryRepository.save(history);</span>
+<span class="nc" id="L43">        log.info(&quot;Status transition recorded: {} -&gt; {} for application {}&quot;, oldStatus, newStatus, applicationId);</span>
+<span class="nc" id="L44">    }</span>
+
+    /**
+     * Check if a status transition is valid.
+     */
+    public boolean isValidTransition(ApplicationStatus oldStatus, ApplicationStatus newStatus) {
+        // Define valid transitions
+<span class="nc bnc" id="L51" title="All 6 branches missed.">        return switch (oldStatus) {</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">            case DRAFT -&gt; newStatus == ApplicationStatus.SUBMITTED;</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">            case SUBMITTED -&gt; newStatus == ApplicationStatus.UNDER_REVIEW;</span>
+<span class="nc bnc" id="L54" title="All 4 branches missed.">            case UNDER_REVIEW -&gt; newStatus == ApplicationStatus.OFFERS_AVAILABLE || </span>
+                                 newStatus == ApplicationStatus.REJECTED;
+<span class="nc bnc" id="L56" title="All 6 branches missed.">            case OFFERS_AVAILABLE -&gt; newStatus == ApplicationStatus.ACCEPTED || </span>
+                                     newStatus == ApplicationStatus.REJECTED || 
+                                     newStatus == ApplicationStatus.EXPIRED;
+<span class="nc bnc" id="L59" title="All 2 branches missed.">            case ACCEPTED -&gt; newStatus == ApplicationStatus.COMPLETED;</span>
+<span class="nc" id="L60">            case REJECTED, EXPIRED, WITHDRAWN, COMPLETED -&gt; false; // Terminal states</span>
+        };
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

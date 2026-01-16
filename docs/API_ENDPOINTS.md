@@ -251,12 +251,136 @@ All error responses follow this format:
 
 ---
 
+## Borrower Application API
+
+### POST /api/borrower/applications
+**Description:** Create a new loan application in DRAFT status.
+
+**Authentication:** Required - BORROWER role
+
+**Request Method:** POST
+
+**Request Headers:**
+- Content-Type: application/json
+- Authorization: Bearer {jwt_token}
+
+**Request Body:**
+```json
+{
+  "loanType": "PERSONAL",
+  "loanAmount": 25000,
+  "loanTermMonths": 36,
+  "currency": "EUR",
+  "ratePreference": "VARIABLE"
+}
+```
+
+**Request Parameters:**
+
+| Field | Type | Required | Validation | Description |
+|-------|------|----------|-----------|-------------|
+| loanType | String | Yes | Enum: PERSONAL, HOME, AUTO, DEBT_CONSOLIDATION, STUDENT, BUSINESS, OTHER | Type of loan requested |
+| loanAmount | BigDecimal | Yes | Min: 100, Max: 1,000,000 | Loan amount requested |
+| loanTermMonths | Integer | Yes | Min: 6, Max: 360 | Loan term in months |
+| currency | String | Yes | Enum: EUR, USD, MDL | Currency for the loan |
+| ratePreference | String | No | Enum: VARIABLE, FIXED, EITHER (default: VARIABLE) | Interest rate preference |
+
+**Success Response (HTTP 201 Created):**
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "loanType": "PERSONAL",
+  "loanAmount": 25000,
+  "loanTermMonths": 36,
+  "currency": "EUR",
+  "ratePreference": "VARIABLE",
+  "status": "DRAFT",
+  "createdAt": "2026-01-14T10:30:00Z",
+  "submittedAt": null,
+  "updatedAt": "2026-01-14T10:30:00Z"
+}
+```
+
+**Error Responses:**
+
+**400 Bad Request** - Validation failure
+```json
+{
+  "error": "Invalid Application",
+  "message": "Loan amount must be at least 100",
+  "timestamp": "2026-01-14T10:30:00Z"
+}
+```
+
+Common validation errors:
+- "Loan amount must be at least 100"
+- "Loan amount cannot exceed 1,000,000"
+- "Loan term must be at least 6 months"
+- "Loan term cannot exceed 360 months"
+- "Loan amount is required"
+- "Loan term is required"
+
+**401 Unauthorized** - Not authenticated
+```json
+{
+  "error": "Unauthorized",
+  "message": "Authentication required",
+  "timestamp": "2026-01-14T10:30:00Z"
+}
+```
+
+**403 Forbidden** - Wrong role (not BORROWER)
+```json
+{
+  "error": "Forbidden",
+  "message": "BORROWER role required",
+  "timestamp": "2026-01-14T10:30:00Z"
+}
+```
+
+**429 Too Many Requests** - Rate limit exceeded
+```json
+{
+  "error": "Rate Limit Exceeded",
+  "message": "You can create max 1 application per minute",
+  "retryAfter": 60,
+  "timestamp": "2026-01-14T10:30:00Z"
+}
+```
+
+**500 Internal Server Error** - Unexpected server error
+
+**Rate Limiting:** Maximum 1 application per borrower per minute
+
+**Notes:**
+- Application is created in DRAFT status
+- Application is linked to authenticated borrower
+- Audit log entry created with APPLICATION_CREATED event
+- If ratePreference is not provided, defaults to VARIABLE
+
+**cURL Example:**
+```bash
+curl -X POST https://api.creditapp.com/api/borrower/applications \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -d '{
+    "loanType": "PERSONAL",
+    "loanAmount": 25000,
+    "loanTermMonths": 36,
+    "currency": "EUR",
+    "ratePreference": "VARIABLE"
+  }'
+```
+
+---
+
 ## Authorization Matrix
 
 | Endpoint | Method | Public | Borrower | Bank Admin | Compliance |
 |----------|--------|--------|----------|------------|------------|
-| /api/auth/register-bank | POST |  |  |  |  |
-| /api/auth/activate | GET |  |  |  |  |
+| /api/auth/register-bank | POST | ✓ |  |  |  |
+| /api/auth/activate | GET | ✓ |  |  |  |
+| /api/borrower/applications | POST |  | ✓ |  |  |
 | /api/health | GET |  |  |  |  |
 
 ---
@@ -273,4 +397,5 @@ This API uses path-based versioning. Future versions will be available at /api/v
 
 | Date | Version | Changes | Story |
 |------|---------|---------|-------|
+| 2026-01-16 | 1.1 | Added borrower application creation endpoint with validation and rate limiting | Story 2.2 |
 | 2026-01-15 | 1.0 | Initial API documentation - Bank registration and activation endpoints | Story 1.4 |

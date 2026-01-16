@@ -1,0 +1,14 @@
+com\creditapp\integration\security\RBACIntegrationTest$TestConfig.class
+com\creditapp\borrower\service\ApplicationServiceTest.class
+com\creditapp\shared\service\AuditServiceTest.class
+com\creditapp\integration\auth\BankRegistrationIntegrationTest.class
+com\creditapp\SpringContextIntegrationTest.class
+com\creditapp\integration\notification\NotificationServiceIntegrationTest.class
+com\creditapp\unit\security\JwtTokenServiceUnitTest.class
+com\creditapp\integration\security\RBACIntegrationTest.class
+com\creditapp\unit\security\AuthorizationUnitTest.class
+com\creditapp\unit\shared\model\OrganizationEntityTest.class
+com\creditapp\shared\controller\HealthControllerTest.class
+com\creditapp\unit\auth\LoginServiceUnitTest.class
+com\creditapp\integration\auth\UserProfileIntegrationTest.class
+com\creditapp\unit\auth\model\UserEntityTest.class

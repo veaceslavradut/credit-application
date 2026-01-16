@@ -3,11 +3,16 @@ package com.creditapp.borrower.service;
 import com.creditapp.borrower.dto.ApplicationDTO;
 import com.creditapp.borrower.dto.ApplicationHistoryDTO;
 import com.creditapp.borrower.dto.CreateApplicationRequest;
+import com.creditapp.borrower.exception.ApplicationCreationException;
 import com.creditapp.borrower.exception.ApplicationNotFoundException;
+import com.creditapp.borrower.exception.InvalidApplicationException;
 import com.creditapp.borrower.model.Application;
 import com.creditapp.borrower.model.ApplicationStatus;
 import com.creditapp.borrower.repository.ApplicationHistoryRepository;
 import com.creditapp.borrower.repository.ApplicationRepository;
+import com.creditapp.shared.audit.BusinessAudit;
+import com.creditapp.shared.model.AuditAction;
+import com.creditapp.shared.service.AuditService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -29,35 +34,57 @@ public class ApplicationService {
 
     private final ApplicationRepository applicationRepository;
     private final ApplicationHistoryRepository applicationHistoryRepository;
+    private final AuditService auditService;
 
     /**
      * Create a new application in DRAFT status.
      */
+    @BusinessAudit(action = AuditAction.APPLICATION_CREATED, entityType = "Application")
     public ApplicationDTO createApplication(UUID borrowerId, CreateApplicationRequest request) {
-        // Validate amounts
+        // Validate loan amount (100 - 1,000,000)
+        if (request.getLoanAmount() == null) {
+            throw new InvalidApplicationException("Loan amount is required");
+        }
         if (request.getLoanAmount().compareTo(BigDecimal.valueOf(100)) < 0) {
-            throw new IllegalArgumentException("Loan amount must be at least 100");
+            throw new InvalidApplicationException("Loan amount must be at least 100");
+        }
+        if (request.getLoanAmount().compareTo(BigDecimal.valueOf(1000000)) > 0) {
+            throw new InvalidApplicationException("Loan amount cannot exceed 1,000,000");
+        }
+
+        // Validate loan term (6 - 360 months)
+        if (request.getLoanTermMonths() == null) {
+            throw new InvalidApplicationException("Loan term is required");
         }
         if (request.getLoanTermMonths() < 6) {
-            throw new IllegalArgumentException("Loan term must be at least 6 months");
+            throw new InvalidApplicationException("Loan term must be at least 6 months");
+        }
+        if (request.getLoanTermMonths() > 360) {
+            throw new InvalidApplicationException("Loan term cannot exceed 360 months");
         }
 
-        // Create application
-        Application application = Application.builder()
-                .borrowerId(borrowerId)
-                .loanType(request.getLoanType())
-                .loanAmount(request.getLoanAmount())
-                .loanTermMonths(request.getLoanTermMonths())
-                .currency(request.getCurrency())
-                .ratePreference(request.getRatePreference() != null ? request.getRatePreference() : "VARIABLE")
-                .status(ApplicationStatus.DRAFT)
-                .build();
+        try {
+            // Create application
+            Application application = Application.builder()
+                    .borrowerId(borrowerId)
+                    .loanType(request.getLoanType())
+                    .loanAmount(request.getLoanAmount())
+                    .loanTermMonths(request.getLoanTermMonths())
+                    .currency(request.getCurrency())
+                    .ratePreference(request.getRatePreference() != null ? request.getRatePreference() : "VARIABLE")
+                    .status(ApplicationStatus.DRAFT)
+                    .build();
 
-        application = applicationRepository.save(application);
+            application = applicationRepository.save(application);
 
-        // TODO: Log audit event when AuditService is available
-        log.info("Application created: {} for borrower: {}", application.getId(), borrowerId);
-        return mapToDTO(application);
+            // Audit event logged via @BusinessAudit annotation
+            log.info("Application created: {} for borrower: {}", application.getId(), borrowerId);
+            return mapToDTO(application);
+            
+        } catch (Exception e) {
+            log.error("Failed to create application for borrower: {}", borrowerId, e);
+            throw new ApplicationCreationException("Failed to create application", e);
+        }
     }
 
     /**
