@@ -11,9 +11,12 @@ import com.creditapp.auth.service.UserRegistrationService;
 import com.creditapp.auth.service.BankRegistrationService;
 import com.creditapp.auth.service.LoginService;
 import com.creditapp.shared.service.BankActivationEmailService;
+import com.creditapp.shared.model.AuditAction;
 import com.creditapp.shared.model.Organization;
 import com.creditapp.shared.model.BankStatus;
 import com.creditapp.shared.repository.OrganizationRepository;
+import com.creditapp.shared.service.AuditService;
+import com.creditapp.shared.service.RequestContextService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -35,23 +39,38 @@ public class AuthController {
     private final LoginService loginService;
     private final BankActivationEmailService bankActivationEmailService;
     private final OrganizationRepository organizationRepository;
+    private final AuditService auditService;
+    private final RequestContextService requestContextService;
 
     public AuthController(UserRegistrationService userRegistrationService,
                           BankRegistrationService bankRegistrationService,
                           LoginService loginService,
                           BankActivationEmailService bankActivationEmailService,
-                          OrganizationRepository organizationRepository) {
+                          OrganizationRepository organizationRepository,
+                          AuditService auditService,
+                          RequestContextService requestContextService) {
         this.userRegistrationService = userRegistrationService;
         this.bankRegistrationService = bankRegistrationService;
         this.loginService = loginService;
         this.bankActivationEmailService = bankActivationEmailService;
         this.organizationRepository = organizationRepository;
+        this.auditService = auditService;
+        this.requestContextService = requestContextService;
     }
 
     @PostMapping("/register")
     public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody RegistrationRequest request) {
         logger.info("Registration request received for email: {}", request.getEmail());
         RegistrationResponse response = userRegistrationService.registerBorrower(request);
+        
+        // Audit user registration
+        try {
+            auditService.logAction("User", response.getUserId(), AuditAction.USER_REGISTERED,
+                    response.getUserId(), "BORROWER");
+        } catch (Exception e) {
+            logger.error("Failed to audit user registration", e);
+        }
+        
         logger.info("User registered successfully: {}", request.getEmail());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -107,6 +126,14 @@ public class AuthController {
         bank.setActivatedAt(LocalDateTime.now());
         bank.setActivationToken(null);  // One-time use token
         organizationRepository.save(bank);
+        
+        // Audit bank activation
+        try {
+            auditService.logAction("Organization", bank.getId(), AuditAction.BANK_ACTIVATED,
+                    null, "SYSTEM");
+        } catch (Exception e) {
+            logger.error("Failed to audit bank activation", e);
+        }
 
         logger.info("Bank {} activated successfully", bank.getName());
         String jsonResponse = String.format("{\"bankId\": \"%s\", \"bankName\": \"%s\", \"status\": \"ACTIVE\", \"message\": \"Bank activated successfully\"}", 
@@ -118,6 +145,18 @@ public class AuthController {
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         logger.info("Login request received for email: {}", request.getEmail());
         LoginResponse response = loginService.login(request);
+        
+        // Audit user login
+        try {
+            UUID userId = requestContextService.getCurrentUserId();
+            if (userId != null) {
+                auditService.logAction("User", userId, AuditAction.USER_LOGGED_IN,
+                        userId, requestContextService.getCurrentUserRole());
+            }
+        } catch (Exception e) {
+            logger.error("Failed to audit user login", e);
+        }
+        
         logger.info("User logged in successfully: {}", request.getEmail());
         return ResponseEntity.ok(response);
     }
@@ -134,6 +173,18 @@ public class AuthController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> logout() {
         logger.info("Logout request received");
+        
+        // Audit user logout
+        try {
+            UUID userId = requestContextService.getCurrentUserId();
+            if (userId != null) {
+                auditService.logAction("User", userId, AuditAction.USER_LOGGED_OUT,
+                        userId, requestContextService.getCurrentUserRole());
+            }
+        } catch (Exception e) {
+            logger.error("Failed to audit user logout", e);
+        }
+        
         loginService.logout();
         logger.info("User logged out successfully");
         return ResponseEntity.noContent().build();
