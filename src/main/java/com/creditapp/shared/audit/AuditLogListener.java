@@ -1,6 +1,6 @@
 package com.creditapp.shared.audit;
 
-import com.creditapp.auth.model.User;
+import com.creditapp.shared.model.User;
 import jakarta.persistence.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

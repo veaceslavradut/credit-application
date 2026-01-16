@@ -1,6 +1,6 @@
 package com.creditapp.unit.shared.model;
 
-import com.creditapp.auth.model.User;
+import com.creditapp.shared.model.User;
 import com.creditapp.auth.repository.UserRepository;
 import com.creditapp.shared.audit.AuditLog;
 import com.creditapp.shared.repository.AuditLogRepository;

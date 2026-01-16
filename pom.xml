@@ -87,6 +87,15 @@
             <artifactId>flyway-core</artifactId>
             <version>9.22.3</version>
         </dependency>
+
+        <!-- SendGrid Email Service -->
+        <dependency>
+            <groupId>com.sendgrid</groupId>
+            <artifactId>sendgrid-java</artifactId>
+            <version>4.10.2</version>
+        </dependency>
+
+
         
         <!-- Testing -->
         <dependency>
