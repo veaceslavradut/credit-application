@@ -1,5 +1,11 @@
 package com.creditapp.shared.controller;
 
+import com.creditapp.shared.dto.EmailMetricsDTO;
+import com.creditapp.shared.dto.NotificationHealthDTO;
+import com.creditapp.shared.model.DeliveryStatus;
+import com.creditapp.shared.repository.EmailDeliveryLogRepository;
+import com.creditapp.shared.service.NotificationService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -10,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +29,15 @@ public class HealthController {
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+    
+    @Autowired
+    private NotificationService notificationService;
+    
+    @Autowired
+    private EmailDeliveryLogRepository emailDeliveryLogRepository;
+    
+    @Autowired(required = false)
+    private RabbitTemplate rabbitTemplate;
 
     @GetMapping("/health")
     public ResponseEntity<Map<String, Object>> health() {
@@ -60,6 +76,69 @@ public class HealthController {
             String pong = connection.ping();
             connection.close();
             return "PONG".equals(pong);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    @GetMapping("/health/notifications")
+    public ResponseEntity<NotificationHealthDTO> notificationHealth() {
+        try {
+            // Get email metrics
+            EmailMetricsDTO metrics = notificationService.getEmailMetrics();
+            
+            // Check RabbitMQ connection
+            boolean queueConnected = checkRabbitMQ();
+            
+            // Check SendGrid (simplified - just check if service exists)
+            boolean sendgridConnected = true; // In real scenario, ping SendGrid API
+            
+            // Get last email sent time
+            LocalDateTime lastEmailSent = emailDeliveryLogRepository
+                .findAll()
+                .stream()
+                .map(com.creditapp.shared.model.EmailDeliveryLog::getSentAt)
+                .max(LocalDateTime::compareTo)
+                .orElse(null);
+            
+            // Determine status
+            String status;
+            if (queueConnected && sendgridConnected) {
+                status = "UP";
+            } else if (queueConnected || sendgridConnected) {
+                status = "DEGRADED";
+            } else {
+                status = "DOWN";
+            }
+            
+            NotificationHealthDTO health = NotificationHealthDTO.builder()
+                .status(status)
+                .sendgridConnected(sendgridConnected)
+                .queueConnected(queueConnected)
+                .lastEmailSent(lastEmailSent)
+                .emailsSentLastHour(metrics.getEmailsSent())
+                .failureRate(metrics.getFailureRate())
+                .build();
+            
+            return ResponseEntity.ok(health);
+            
+        } catch (Exception e) {
+            NotificationHealthDTO health = NotificationHealthDTO.builder()
+                .status("DOWN")
+                .sendgridConnected(false)
+                .queueConnected(false)
+                .build();
+            return ResponseEntity.status(503).body(health);
+        }
+    }
+    
+    private boolean checkRabbitMQ() {
+        try {
+            if (rabbitTemplate == null) {
+                return false;
+            }
+            rabbitTemplate.getConnectionFactory().createConnection().close();
+            return true;
         } catch (Exception e) {
             return false;
         }

@@ -20,6 +20,11 @@
     redis:
       repositories:
         enabled: false
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
 
 server:
   port: 8080
@@ -47,3 +52,17 @@ jwt:
     minutes: 15
   refresh-expiration:
     days: 7
+
+# SendGrid email configuration
+sendgrid:
+  api-key: ${SENDGRID_API_KEY:test-key}
+  from-email: noreply@creditapp.com
+  enabled: true
+
+# Notification service configuration
+notification:
+  rate-limit:
+    emails-per-minute: 100
+  retry:
+    backoff-minutes: 1,5,15
+
