@@ -3,6 +3,8 @@
 import com.creditapp.borrower.dto.ApplicationDTO;
 import com.creditapp.borrower.dto.ApplicationHistoryDTO;
 import com.creditapp.borrower.dto.CreateApplicationRequest;
+import com.creditapp.borrower.dto.SubmitApplicationRequest;
+import com.creditapp.borrower.dto.SubmitApplicationResponse;
 import com.creditapp.borrower.dto.UpdateApplicationRequest;
 import com.creditapp.borrower.dto.UpdateApplicationResponse;
 import com.creditapp.borrower.service.ApplicationService;
@@ -26,8 +28,8 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping(&quot;/api/borrower/applications&quot;)
-<span class="nc" id="L29">@RequiredArgsConstructor</span>
-<span class="nc" id="L30">@Slf4j</span>
+@RequiredArgsConstructor
+<span class="nc" id="L32">@Slf4j</span>
 public class BorrowerApplicationController {
 
     private final ApplicationService applicationService;
@@ -41,17 +43,17 @@ public class BorrowerApplicationController {
     @PreAuthorize(&quot;hasAuthority('BORROWER')&quot;)
     @RateLimited(action = &quot;CREATE_APPLICATION&quot;, limitPerMinute = 1)
     public ResponseEntity&lt;ApplicationDTO&gt; createApplication(@Valid @RequestBody CreateApplicationRequest request) {
-<span class="nc" id="L44">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L46">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
         
-<span class="nc" id="L46">        log.info(&quot;Creating application for borrower: {}, loanType: {}, loanAmount: {}&quot;, </span>
-<span class="nc" id="L47">                borrowerId, request.getLoanType(), request.getLoanAmount());</span>
+<span class="nc" id="L48">        log.info(&quot;Creating application for borrower: {}, loanType: {}, loanAmount: {}&quot;, </span>
+<span class="nc" id="L49">                borrowerId, request.getLoanType(), request.getLoanAmount());</span>
         
-<span class="nc" id="L49">        ApplicationDTO application = applicationService.createApplication(borrowerId, request);</span>
+<span class="nc" id="L51">        ApplicationDTO application = applicationService.createApplication(borrowerId, request);</span>
         
-<span class="nc" id="L51">        log.info(&quot;Application created successfully: {} for borrower: {}&quot;, </span>
-<span class="nc" id="L52">                application.getId(), borrowerId);</span>
+<span class="nc" id="L53">        log.info(&quot;Application created successfully: {} for borrower: {}&quot;, </span>
+<span class="nc" id="L54">                application.getId(), borrowerId);</span>
         
-<span class="nc" id="L54">        return ResponseEntity.status(HttpStatus.CREATED).body(application);</span>
+<span class="nc" id="L56">        return ResponseEntity.status(HttpStatus.CREATED).body(application);</span>
     }
 
     /**
@@ -62,10 +64,10 @@ public class BorrowerApplicationController {
     public ResponseEntity&lt;Page&lt;ApplicationDTO&gt;&gt; listApplications(
             @RequestParam(defaultValue = &quot;0&quot;) int page,
             @RequestParam(defaultValue = &quot;10&quot;) int size) {
-<span class="nc" id="L65">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
-<span class="nc" id="L66">        Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);</span>
-<span class="nc" id="L67">        Page&lt;ApplicationDTO&gt; applications = applicationService.listApplicationsByBorrower(borrowerId, pageable);</span>
-<span class="nc" id="L68">        return ResponseEntity.ok(applications);</span>
+<span class="nc" id="L67">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L68">        Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);</span>
+<span class="nc" id="L69">        Page&lt;ApplicationDTO&gt; applications = applicationService.listApplicationsByBorrower(borrowerId, pageable);</span>
+<span class="nc" id="L70">        return ResponseEntity.ok(applications);</span>
     }
 
     /**
@@ -74,9 +76,9 @@ public class BorrowerApplicationController {
     @GetMapping(&quot;/{applicationId}&quot;)
     @PreAuthorize(&quot;hasAuthority('BORROWER')&quot;)
     public ResponseEntity&lt;ApplicationDTO&gt; getApplication(@PathVariable UUID applicationId) {
-<span class="nc" id="L77">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
-<span class="nc" id="L78">        ApplicationDTO application = applicationService.getApplication(applicationId, borrowerId);</span>
-<span class="nc" id="L79">        return ResponseEntity.ok(application);</span>
+<span class="nc" id="L79">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L80">        ApplicationDTO application = applicationService.getApplication(applicationId, borrowerId);</span>
+<span class="nc" id="L81">        return ResponseEntity.ok(application);</span>
     }
 
     /**
@@ -85,9 +87,9 @@ public class BorrowerApplicationController {
     @GetMapping(&quot;/{applicationId}/history&quot;)
     @PreAuthorize(&quot;hasAuthority('BORROWER')&quot;)
     public ResponseEntity&lt;List&lt;ApplicationHistoryDTO&gt;&gt; getApplicationHistory(@PathVariable UUID applicationId) {
-<span class="nc" id="L88">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
-<span class="nc" id="L89">        List&lt;ApplicationHistoryDTO&gt; history = applicationService.getApplicationHistory(applicationId, borrowerId);</span>
-<span class="nc" id="L90">        return ResponseEntity.ok(history);</span>
+<span class="nc" id="L90">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L91">        List&lt;ApplicationHistoryDTO&gt; history = applicationService.getApplicationHistory(applicationId, borrowerId);</span>
+<span class="nc" id="L92">        return ResponseEntity.ok(history);</span>
     }
 
     /**
@@ -99,16 +101,36 @@ public class BorrowerApplicationController {
     public ResponseEntity&lt;UpdateApplicationResponse&gt; updateApplication(
             @PathVariable UUID applicationId,
             @Valid @RequestBody UpdateApplicationRequest request) {
-<span class="nc" id="L102">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L104">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
         
-<span class="nc" id="L104">        log.info(&quot;Updating application: {} for borrower: {}&quot;, applicationId, borrowerId);</span>
+<span class="nc" id="L106">        log.info(&quot;Updating application: {} for borrower: {}&quot;, applicationId, borrowerId);</span>
         
-<span class="nc" id="L106">        UpdateApplicationResponse response = applicationService.updateApplication(applicationId, borrowerId, request);</span>
+<span class="nc" id="L108">        UpdateApplicationResponse response = applicationService.updateApplication(applicationId, borrowerId, request);</span>
         
-<span class="nc" id="L108">        log.info(&quot;Application updated successfully: {} by borrower: {}, fields: {}&quot;, </span>
-<span class="nc" id="L109">                applicationId, borrowerId, response.getEditedFields());</span>
+<span class="nc" id="L110">        log.info(&quot;Application updated successfully: {} by borrower: {}, fields: {}&quot;, </span>
+<span class="nc" id="L111">                applicationId, borrowerId, response.getEditedFields());</span>
         
-<span class="nc" id="L111">        return ResponseEntity.ok(response);</span>
+<span class="nc" id="L113">        return ResponseEntity.ok(response);</span>
+    }
+
+    /**
+     * Submit an application for underwriting review (transition DRAFT -&gt; SUBMITTED).
+     * No rate limiting for submissions (unlike creation).
+     */
+    @PostMapping(&quot;/{applicationId}/submit&quot;)
+    @PreAuthorize(&quot;hasAuthority('BORROWER')&quot;)
+    public ResponseEntity&lt;SubmitApplicationResponse&gt; submitApplication(
+            @PathVariable UUID applicationId,
+            @RequestBody(required = false) SubmitApplicationRequest request) {
+<span class="nc" id="L125">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+        
+<span class="nc" id="L127">        log.info(&quot;Submitting application: {} for borrower: {}&quot;, applicationId, borrowerId);</span>
+        
+<span class="nc" id="L129">        SubmitApplicationResponse response = applicationService.submitApplication(applicationId, borrowerId);</span>
+        
+<span class="nc" id="L131">        log.info(&quot;Application submitted successfully: {} by borrower: {}&quot;, applicationId, borrowerId);</span>
+        
+<span class="nc" id="L133">        return ResponseEntity.ok(response);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

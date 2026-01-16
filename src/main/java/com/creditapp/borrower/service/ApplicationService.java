@@ -3,13 +3,16 @@ package com.creditapp.borrower.service;
 import com.creditapp.borrower.dto.ApplicationDTO;
 import com.creditapp.borrower.dto.ApplicationHistoryDTO;
 import com.creditapp.borrower.dto.CreateApplicationRequest;
+import com.creditapp.borrower.dto.SubmitApplicationResponse;
 import com.creditapp.borrower.dto.UpdateApplicationRequest;
 import com.creditapp.borrower.dto.UpdateApplicationResponse;
+import com.creditapp.borrower.exception.ApplicationAlreadySubmittedException;
 import com.creditapp.borrower.exception.ApplicationCreationException;
 import com.creditapp.borrower.exception.ApplicationNotFoundException;
 import com.creditapp.borrower.exception.ApplicationNotEditableException;
 import com.creditapp.borrower.exception.ApplicationStaleException;
 import com.creditapp.borrower.exception.InvalidApplicationException;
+import com.creditapp.borrower.exception.SubmissionValidationException;
 import com.creditapp.borrower.model.Application;
 import com.creditapp.borrower.model.ApplicationStatus;
 import com.creditapp.borrower.repository.ApplicationHistoryRepository;
@@ -17,6 +20,8 @@ import com.creditapp.borrower.repository.ApplicationRepository;
 import com.creditapp.shared.audit.BusinessAudit;
 import com.creditapp.shared.model.AuditAction;
 import com.creditapp.shared.service.AuditService;
+import com.creditapp.shared.service.NotificationService;
+import com.creditapp.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -41,6 +46,8 @@ public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final ApplicationHistoryRepository applicationHistoryRepository;
     private final AuditService auditService;
+    private final NotificationService notificationService;
+    private final UserRepository userRepository;
 
     /**
      * Create a new application in DRAFT status.
@@ -137,6 +144,93 @@ public class ApplicationService {
     public Page<ApplicationDTO> listApplicationsByBorrower(UUID borrowerId, Pageable pageable) {
         return applicationRepository.findByBorrowerId(borrowerId, pageable)
                 .map(this::mapToDTO);
+    }
+
+    /**
+     * Submit an application for underwriting review (transition DRAFT -> SUBMITTED).
+     */
+    @BusinessAudit(action = AuditAction.APPLICATION_SUBMITTED, entityType = "Application")
+    public SubmitApplicationResponse submitApplication(UUID applicationId, UUID borrowerId) {
+        // Verify borrower owns the application
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ApplicationNotFoundException(
+                        "Application not found: " + applicationId));
+
+        if (!application.getBorrowerId().equals(borrowerId)) {
+            throw new ApplicationNotFoundException(
+                    "Access denied to application: " + applicationId);
+        }
+
+        // Verify application is in DRAFT status
+        if (application.getStatus() != ApplicationStatus.DRAFT) {
+            throw new ApplicationAlreadySubmittedException(
+                    "Application is already in " + application.getStatus() + " status. Only DRAFT applications can be submitted.");
+        }
+
+        // Validate required fields
+        List<String> missingFields = new ArrayList<>();
+        if (application.getLoanType() == null || application.getLoanType().isEmpty()) {
+            missingFields.add("loanType");
+        }
+        if (application.getLoanAmount() == null) {
+            missingFields.add("loanAmount");
+        }
+        if (application.getLoanTermMonths() == null) {
+            missingFields.add("loanTermMonths");
+        }
+        if (application.getCurrency() == null || application.getCurrency().isEmpty()) {
+            missingFields.add("currency");
+        }
+
+        if (!missingFields.isEmpty()) {
+            throw new SubmissionValidationException(
+                    "Required fields missing: " + String.join(", ", missingFields),
+                    missingFields);
+        }
+
+        // Update status to SUBMITTED
+        application.setStatus(ApplicationStatus.SUBMITTED);
+        
+        try {
+            application = applicationRepository.save(application);
+
+            log.info("Application submitted: {} by borrower: {}", applicationId, borrowerId);
+
+            // Queue email notification for borrower (APPLICATION_SUBMITTED)
+            try {
+                final Application appFinal = application;
+                java.util.Optional<com.creditapp.shared.model.User> borrowerOpt = userRepository.findById(borrowerId);
+                borrowerOpt.ifPresent(borrower -> {
+                    java.util.Map<String, String> vars = new java.util.HashMap<>();
+                    vars.put("firstName", borrower.getFirstName() != null ? borrower.getFirstName() : "");
+                    vars.put("loanAmount", appFinal.getLoanAmount() != null ? appFinal.getLoanAmount().toPlainString() : "");
+                    vars.put("currency", appFinal.getCurrency() != null ? appFinal.getCurrency() : "");
+                    vars.put("applicationId", appFinal.getId() != null ? appFinal.getId().toString() : "");
+                    vars.put("loanType", appFinal.getLoanType() != null ? appFinal.getLoanType() : "");
+                    vars.put("loanTermMonths", appFinal.getLoanTermMonths() != null ? appFinal.getLoanTermMonths().toString() : "");
+                    notificationService.queueNotification(
+                        "APPLICATION_SUBMITTED",
+                        borrower.getEmail(),
+                        vars
+                    );
+                });
+            } catch (Exception notifyEx) {
+                log.warn("Failed to queue APPLICATION_SUBMITTED email notification for application {}: {}",
+                        application.getId(), notifyEx.getMessage());
+            }
+
+            return SubmitApplicationResponse.builder()
+                    .id(application.getId())
+                    .status(application.getStatus().toString())
+                    .submittedAt(application.getSubmittedAt())
+                    .message("Application submitted successfully. Banks will review and contact you with offers.")
+                    .application(mapToDTO(application))
+                    .build();
+                    
+        } catch (Exception e) {
+            log.error("Failed to submit application: {}", applicationId, e);
+            throw new ApplicationCreationException("Failed to submit application", e);
+        }
     }
 
     /**

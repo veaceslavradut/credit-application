@@ -16,9 +16,9 @@ import java.util.UUID;
 public class JwtTokenService {
     private final JwtConfig.JwtProperties jwtProperties;
 
-<span class="fc" id="L19">    public JwtTokenService(JwtConfig.JwtProperties jwtProperties) {</span>
-<span class="fc" id="L20">        this.jwtProperties = jwtProperties;</span>
-<span class="fc" id="L21">    }</span>
+<span class="nc" id="L19">    public JwtTokenService(JwtConfig.JwtProperties jwtProperties) {</span>
+<span class="nc" id="L20">        this.jwtProperties = jwtProperties;</span>
+<span class="nc" id="L21">    }</span>
 
     public String generateToken(User user) {
 <span class="nc" id="L24">        Date now = new Date();</span>

@@ -19,8 +19,8 @@ public class UserRegistrationService {
     private final PasswordHasher passwordHasher;
     private final ApplicationEventPublisher eventPublisher;
 
-    public UserRegistrationService(UserRepository userRepository, PasswordValidator passwordValidator,
-<span class="nc" id="L23">                                   PasswordHasher passwordHasher, ApplicationEventPublisher eventPublisher) {</span>
+<span class="nc" id="L22">    public UserRegistrationService(UserRepository userRepository, PasswordValidator passwordValidator,</span>
+                                   PasswordHasher passwordHasher, ApplicationEventPublisher eventPublisher) {
 <span class="nc" id="L24">        this.userRepository = userRepository;</span>
 <span class="nc" id="L25">        this.passwordValidator = passwordValidator;</span>
 <span class="nc" id="L26">        this.passwordHasher = passwordHasher;</span>

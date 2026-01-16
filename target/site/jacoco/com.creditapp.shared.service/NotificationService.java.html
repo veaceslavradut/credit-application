@@ -22,7 +22,7 @@ import java.util.Map;
  * Handles template processing, variable substitution, and delivery tracking
  */
 @Service
-<span class="nc" id="L25">@RequiredArgsConstructor</span>
+@RequiredArgsConstructor
 <span class="nc" id="L26">@Slf4j</span>
 public class NotificationService {
     
@@ -46,7 +46,7 @@ public class NotificationService {
 <span class="nc bnc" id="L46" title="All 2 branches missed.">            if (!emailRateLimiter.checkRateLimit()) {</span>
 <span class="nc" id="L47">                log.warn(&quot;Rate limit exceeded for email to: {}&quot;, recipient);</span>
 <span class="nc" id="L48">                logDeliveryStatus(recipient, templateName, DeliveryStatus.FAILED, </span>
-                    &quot;Rate limit exceeded - email will be retried&quot;);
+<span class="nc" id="L49">                    &quot;Rate limit exceeded - email will be retried&quot;);</span>
 <span class="nc" id="L50">                return false;</span>
             }
             
@@ -93,7 +93,7 @@ public class NotificationService {
 <span class="nc bnc" id="L93" title="All 2 branches missed.">        for (Map.Entry&lt;String, String&gt; entry : variables.entrySet()) {</span>
 <span class="nc" id="L94">            String placeholder = &quot;{&quot; + entry.getKey() + &quot;}&quot;;</span>
 <span class="nc bnc" id="L95" title="All 2 branches missed.">            result = result.replace(placeholder, entry.getValue() != null ? entry.getValue() : &quot;&quot;);</span>
-<span class="nc" id="L96">        }</span>
+        }
 <span class="nc" id="L97">        return result;</span>
     }
     
@@ -116,16 +116,16 @@ public class NotificationService {
 <span class="nc" id="L116">                .build();</span>
             
 <span class="nc" id="L118">            rabbitTemplate.convertAndSend(</span>
-                com.creditapp.shared.config.RabbitMQConfig.NOTIFICATION_EXCHANGE,
-                &quot;notification.event&quot;,
-                event
+<span class="nc" id="L119">                com.creditapp.shared.config.RabbitMQConfig.NOTIFICATION_EXCHANGE,</span>
+<span class="nc" id="L120">                &quot;notification.event&quot;,</span>
+<span class="nc" id="L121">                event</span>
             );
             
 <span class="nc" id="L124">            log.info(&quot;Queued notification event: {} for recipient: {}&quot;, eventType, recipient);</span>
             
 <span class="nc" id="L126">        } catch (Exception e) {</span>
 <span class="nc" id="L127">            log.error(&quot;Failed to queue notification: {}&quot;, e.getMessage());</span>
-<span class="nc" id="L128">        }</span>
+        }
 <span class="nc" id="L129">    }</span>
     
     /**
@@ -151,13 +151,13 @@ public class NotificationService {
 <span class="nc" id="L151">        LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1);</span>
         
 <span class="nc" id="L153">        Long sent = emailDeliveryLogRepository.countByStatusAndSentAtAfter(</span>
-            DeliveryStatus.SENT, oneHourAgo);
+<span class="nc" id="L154">            DeliveryStatus.SENT, oneHourAgo);</span>
 <span class="nc" id="L155">        Long delivered = emailDeliveryLogRepository.countByStatusAndSentAtAfter(</span>
-            DeliveryStatus.DELIVERED, oneHourAgo);
+<span class="nc" id="L156">            DeliveryStatus.DELIVERED, oneHourAgo);</span>
 <span class="nc" id="L157">        Long bounced = emailDeliveryLogRepository.countByStatusAndSentAtAfter(</span>
-            DeliveryStatus.BOUNCED, oneHourAgo);
+<span class="nc" id="L158">            DeliveryStatus.BOUNCED, oneHourAgo);</span>
 <span class="nc" id="L159">        Long failed = emailDeliveryLogRepository.countByStatusAndSentAtAfter(</span>
-            DeliveryStatus.FAILED, oneHourAgo);
+<span class="nc" id="L160">            DeliveryStatus.FAILED, oneHourAgo);</span>
         
 <span class="nc" id="L162">        long total = sent + delivered + bounced + failed;</span>
 <span class="nc bnc" id="L163" title="All 2 branches missed.">        double successRate = total &gt; 0 ? (double) (sent + delivered) / total : 0.0;</span>

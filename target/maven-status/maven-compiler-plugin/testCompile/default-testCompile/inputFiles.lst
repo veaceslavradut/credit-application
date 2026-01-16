@@ -5,10 +5,12 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\borrower
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\auth\model\UserEntityTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\controller\HealthControllerTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\ApplicationCreationUnitTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\ApplicationSubmissionServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\security\JwtTokenServiceUnitTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\service\AuditServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\auth\LoginServiceUnitTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\auth\UserProfileIntegrationTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\borrower\service\ApplicationSubmissionNotificationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ApplicationCreationIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\security\RBACIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\security\AuthorizationUnitTest.java

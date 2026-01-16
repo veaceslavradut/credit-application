@@ -10,39 +10,39 @@ import java.util.Base64;
 
 @Configuration
 @ConfigurationProperties(prefix = &quot;jwt&quot;)
-<span class="fc" id="L13">public class JwtConfig {</span>
+<span class="nc" id="L13">public class JwtConfig {</span>
     private String secret;
     private Expiration expiration;
     private RefreshExpiration refreshExpiration;
 
-<span class="fc" id="L18">    public static class Expiration {</span>
+<span class="nc" id="L18">    public static class Expiration {</span>
         private Integer minutes;
-<span class="fc" id="L20">        public Integer getMinutes() { return minutes; }</span>
-<span class="fc" id="L21">        public void setMinutes(Integer minutes) { this.minutes = minutes; }</span>
+<span class="nc" id="L20">        public Integer getMinutes() { return minutes; }</span>
+<span class="nc" id="L21">        public void setMinutes(Integer minutes) { this.minutes = minutes; }</span>
     }
 
-<span class="fc" id="L24">    public static class RefreshExpiration {</span>
+<span class="nc" id="L24">    public static class RefreshExpiration {</span>
         private Integer days;
-<span class="fc" id="L26">        public Integer getDays() { return days; }</span>
-<span class="fc" id="L27">        public void setDays(Integer days) { this.days = days; }</span>
+<span class="nc" id="L26">        public Integer getDays() { return days; }</span>
+<span class="nc" id="L27">        public void setDays(Integer days) { this.days = days; }</span>
     }
 
 <span class="nc" id="L30">    public String getSecret() { return secret; }</span>
-<span class="fc" id="L31">    public void setSecret(String secret) { this.secret = secret; }</span>
-<span class="fc" id="L32">    public Expiration getExpiration() { return expiration; }</span>
-<span class="fc" id="L33">    public void setExpiration(Expiration expiration) { this.expiration = expiration; }</span>
-<span class="fc" id="L34">    public RefreshExpiration getRefreshExpiration() { return refreshExpiration; }</span>
-<span class="fc" id="L35">    public void setRefreshExpiration(RefreshExpiration refreshExpiration) { this.refreshExpiration = refreshExpiration; }</span>
+<span class="nc" id="L31">    public void setSecret(String secret) { this.secret = secret; }</span>
+<span class="nc" id="L32">    public Expiration getExpiration() { return expiration; }</span>
+<span class="nc" id="L33">    public void setExpiration(Expiration expiration) { this.expiration = expiration; }</span>
+<span class="nc" id="L34">    public RefreshExpiration getRefreshExpiration() { return refreshExpiration; }</span>
+<span class="nc" id="L35">    public void setRefreshExpiration(RefreshExpiration refreshExpiration) { this.refreshExpiration = refreshExpiration; }</span>
 
     @Bean
     public SecretKey jwtSigningKey() {
-<span class="fc" id="L39">        byte[] decodedKey = Base64.getDecoder().decode(secret);</span>
-<span class="fc" id="L40">        return Keys.hmacShaKeyFor(decodedKey);</span>
+<span class="nc" id="L39">        byte[] decodedKey = Base64.getDecoder().decode(secret);</span>
+<span class="nc" id="L40">        return Keys.hmacShaKeyFor(decodedKey);</span>
     }
 
     @Bean
     public JwtProperties jwtProperties() {
-<span class="fc" id="L45">        return new JwtProperties(secret, expiration.getMinutes(), refreshExpiration.getDays(), jwtSigningKey());</span>
+<span class="nc" id="L45">        return new JwtProperties(secret, expiration.getMinutes(), refreshExpiration.getDays(), jwtSigningKey());</span>
     }
 
     public static class JwtProperties {
@@ -51,12 +51,12 @@ import java.util.Base64;
         private final Integer refreshExpirationDays;
         private final SecretKey signingKey;
 
-<span class="fc" id="L54">        public JwtProperties(String secret, Integer expirationMinutes, Integer refreshExpirationDays, SecretKey signingKey) {</span>
-<span class="fc" id="L55">            this.secret = secret;</span>
-<span class="fc" id="L56">            this.expirationMinutes = expirationMinutes;</span>
-<span class="fc" id="L57">            this.refreshExpirationDays = refreshExpirationDays;</span>
-<span class="fc" id="L58">            this.signingKey = signingKey;</span>
-<span class="fc" id="L59">        }</span>
+<span class="nc" id="L54">        public JwtProperties(String secret, Integer expirationMinutes, Integer refreshExpirationDays, SecretKey signingKey) {</span>
+<span class="nc" id="L55">            this.secret = secret;</span>
+<span class="nc" id="L56">            this.expirationMinutes = expirationMinutes;</span>
+<span class="nc" id="L57">            this.refreshExpirationDays = refreshExpirationDays;</span>
+<span class="nc" id="L58">            this.signingKey = signingKey;</span>
+<span class="nc" id="L59">        }</span>
 
 <span class="nc" id="L61">        public String getSecret() { return secret; }</span>
 <span class="nc" id="L62">        public Integer getExpirationMinutes() { return expirationMinutes; }</span>

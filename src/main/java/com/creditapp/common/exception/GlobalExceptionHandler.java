@@ -6,10 +6,12 @@ import com.creditapp.auth.exception.PasswordValidationException;
 import com.creditapp.auth.exception.InvalidCredentialsException;
 import com.creditapp.auth.exception.BankNotActivatedException;
 import com.creditapp.auth.service.InvalidPasswordException;
+import com.creditapp.borrower.exception.ApplicationAlreadySubmittedException;
 import com.creditapp.borrower.exception.ApplicationCreationException;
 import com.creditapp.borrower.exception.InvalidApplicationException;
 import com.creditapp.borrower.exception.ApplicationNotEditableException;
 import com.creditapp.borrower.exception.ApplicationStaleException;
+import com.creditapp.borrower.exception.SubmissionValidationException;
 import com.creditapp.shared.exception.LoginRateLimitExceededException;
 import com.creditapp.shared.exception.NotFoundException;
 import com.creditapp.shared.exception.RateLimitExceededException;
@@ -180,6 +182,27 @@ public class GlobalExceptionHandler {
         response.put("timestamp", LocalDateTime.now().toString());
         response.put("path", request.getDescription(false).replace("uri=", ""));
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler(ApplicationAlreadySubmittedException.class)
+    public ResponseEntity<?> handleApplicationAlreadySubmitted(ApplicationAlreadySubmittedException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Application Already Submitted");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler(SubmissionValidationException.class)
+    public ResponseEntity<?> handleSubmissionValidation(SubmissionValidationException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Submission Validation Failed");
+        response.put("message", ex.getMessage());
+        response.put("missingFields", ex.getMissingFields());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(RateLimitExceededException.class)

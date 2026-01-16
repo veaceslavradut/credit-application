@@ -13,7 +13,7 @@ import java.util.UUID;
  * Service for managing application status transitions.
  */
 @Service
-<span class="nc" id="L16">@RequiredArgsConstructor</span>
+@RequiredArgsConstructor
 <span class="nc" id="L17">@Slf4j</span>
 public class ApplicationStatusTransitionService {
 
@@ -27,7 +27,7 @@ public class ApplicationStatusTransitionService {
         // Validate transition
 <span class="nc bnc" id="L28" title="All 2 branches missed.">        if (!isValidTransition(oldStatus, newStatus)) {</span>
 <span class="nc" id="L29">            throw new IllegalArgumentException(</span>
-                    &quot;Invalid transition from &quot; + oldStatus + &quot; to &quot; + newStatus);
+<span class="nc" id="L30">                    &quot;Invalid transition from &quot; + oldStatus + &quot; to &quot; + newStatus);</span>
         }
 
         // Create history entry
@@ -51,11 +51,11 @@ public class ApplicationStatusTransitionService {
 <span class="nc bnc" id="L51" title="All 6 branches missed.">        return switch (oldStatus) {</span>
 <span class="nc bnc" id="L52" title="All 2 branches missed.">            case DRAFT -&gt; newStatus == ApplicationStatus.SUBMITTED;</span>
 <span class="nc bnc" id="L53" title="All 2 branches missed.">            case SUBMITTED -&gt; newStatus == ApplicationStatus.UNDER_REVIEW;</span>
-<span class="nc bnc" id="L54" title="All 4 branches missed.">            case UNDER_REVIEW -&gt; newStatus == ApplicationStatus.OFFERS_AVAILABLE || </span>
-                                 newStatus == ApplicationStatus.REJECTED;
-<span class="nc bnc" id="L56" title="All 6 branches missed.">            case OFFERS_AVAILABLE -&gt; newStatus == ApplicationStatus.ACCEPTED || </span>
-                                     newStatus == ApplicationStatus.REJECTED || 
-                                     newStatus == ApplicationStatus.EXPIRED;
+<span class="nc bnc" id="L54" title="All 2 branches missed.">            case UNDER_REVIEW -&gt; newStatus == ApplicationStatus.OFFERS_AVAILABLE || </span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">                                 newStatus == ApplicationStatus.REJECTED;</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">            case OFFERS_AVAILABLE -&gt; newStatus == ApplicationStatus.ACCEPTED || </span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">                                     newStatus == ApplicationStatus.REJECTED || </span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">                                     newStatus == ApplicationStatus.EXPIRED;</span>
 <span class="nc bnc" id="L59" title="All 2 branches missed.">            case ACCEPTED -&gt; newStatus == ApplicationStatus.COMPLETED;</span>
 <span class="nc" id="L60">            case REJECTED, EXPIRED, WITHDRAWN, COMPLETED -&gt; false; // Terminal states</span>
         };

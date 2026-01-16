@@ -22,7 +22,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(&quot;/api&quot;)
-<span class="fc" id="L25">public class HealthController {</span>
+<span class="nc" id="L25">public class HealthController {</span>
 
     @Autowired
     private DataSource dataSource;
@@ -41,43 +41,43 @@ import java.util.Map;
 
     @GetMapping(&quot;/health&quot;)
     public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; health() {
-<span class="fc" id="L44">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L44">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
         
         // Check database connectivity
-<span class="fc" id="L47">        boolean databaseConnected = checkDatabase();</span>
-<span class="fc bfc" id="L48" title="All 2 branches covered.">        response.put(&quot;database&quot;, databaseConnected ? &quot;connected&quot; : &quot;disconnected&quot;);</span>
+<span class="nc" id="L47">        boolean databaseConnected = checkDatabase();</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        response.put(&quot;database&quot;, databaseConnected ? &quot;connected&quot; : &quot;disconnected&quot;);</span>
         
         // Check Redis connectivity
-<span class="fc" id="L51">        boolean redisConnected = checkRedis();</span>
-<span class="fc bfc" id="L52" title="All 2 branches covered.">        response.put(&quot;redis&quot;, redisConnected ? &quot;connected&quot; : &quot;disconnected&quot;);</span>
+<span class="nc" id="L51">        boolean redisConnected = checkRedis();</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        response.put(&quot;redis&quot;, redisConnected ? &quot;connected&quot; : &quot;disconnected&quot;);</span>
         
         // Add version
-<span class="fc" id="L55">        response.put(&quot;version&quot;, &quot;1.0.0&quot;);</span>
+<span class="nc" id="L55">        response.put(&quot;version&quot;, &quot;1.0.0&quot;);</span>
         
         // Return 200 if both services are connected, 503 otherwise
-<span class="fc bfc" id="L58" title="All 4 branches covered.">        if (databaseConnected &amp;&amp; redisConnected) {</span>
-<span class="fc" id="L59">            return ResponseEntity.ok(response);</span>
+<span class="nc bnc" id="L58" title="All 4 branches missed.">        if (databaseConnected &amp;&amp; redisConnected) {</span>
+<span class="nc" id="L59">            return ResponseEntity.ok(response);</span>
         } else {
-<span class="fc" id="L61">            return ResponseEntity.status(503).body(response);</span>
+<span class="nc" id="L61">            return ResponseEntity.status(503).body(response);</span>
         }
     }
 
     private boolean checkDatabase() {
-<span class="fc" id="L66">        try (Connection conn = dataSource.getConnection()) {</span>
-<span class="fc" id="L67">            return conn.isValid(2); // 2 second timeout</span>
-<span class="fc" id="L68">        } catch (Exception e) {</span>
-<span class="fc" id="L69">            return false;</span>
+<span class="nc" id="L66">        try (Connection conn = dataSource.getConnection()) {</span>
+<span class="nc" id="L67">            return conn.isValid(2); // 2 second timeout</span>
+<span class="nc" id="L68">        } catch (Exception e) {</span>
+<span class="nc" id="L69">            return false;</span>
         }
     }
 
     private boolean checkRedis() {
         try {
-<span class="fc" id="L75">            RedisConnection connection = redisTemplate.getConnectionFactory().getConnection();</span>
-<span class="fc" id="L76">            String pong = connection.ping();</span>
-<span class="fc" id="L77">            connection.close();</span>
-<span class="fc" id="L78">            return &quot;PONG&quot;.equals(pong);</span>
-<span class="fc" id="L79">        } catch (Exception e) {</span>
-<span class="fc" id="L80">            return false;</span>
+<span class="nc" id="L75">            RedisConnection connection = redisTemplate.getConnectionFactory().getConnection();</span>
+<span class="nc" id="L76">            String pong = connection.ping();</span>
+<span class="nc" id="L77">            connection.close();</span>
+<span class="nc" id="L78">            return &quot;PONG&quot;.equals(pong);</span>
+<span class="nc" id="L79">        } catch (Exception e) {</span>
+<span class="nc" id="L80">            return false;</span>
         }
     }
     
@@ -107,7 +107,7 @@ import java.util.Map;
 <span class="nc" id="L107">                status = &quot;UP&quot;;</span>
 <span class="nc bnc" id="L108" title="All 4 branches missed.">            } else if (queueConnected || sendgridConnected) {</span>
 <span class="nc" id="L109">                status = &quot;DEGRADED&quot;;</span>
-            } else {
+<span class="nc" id="L110">            } else {</span>
 <span class="nc" id="L111">                status = &quot;DOWN&quot;;</span>
             }
             

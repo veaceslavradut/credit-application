@@ -14,13 +14,13 @@ import org.springframework.context.annotation.Configuration;
  * Defines queues, exchanges, and bindings for async notification processing
  */
 @Configuration
-<span class="fc" id="L17">@Slf4j</span>
+<span class="nc" id="L17">@Slf4j</span>
 <span class="nc" id="L18">public class RabbitMQConfig {</span>
     
     public static final String NOTIFICATION_QUEUE = &quot;notification.events&quot;;
     public static final String NOTIFICATION_EXCHANGE = &quot;notifications&quot;;
     public static final String NOTIFICATION_ROUTING_KEY = &quot;notification.*&quot;;
-    public static final String NOTIFICATION_DLQ = &quot;notification.events.dlq&quot;;
+<span class="nc" id="L23">    public static final String NOTIFICATION_DLQ = &quot;notification.events.dlq&quot;;</span>
     
     /**
      * Create notification events queue

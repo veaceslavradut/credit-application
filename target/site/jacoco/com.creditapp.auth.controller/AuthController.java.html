@@ -39,12 +39,12 @@ public class AuthController {
     private final OrganizationRepository organizationRepository;
     private final AuditService auditService;
 
-    public AuthController(UserRegistrationService userRegistrationService,
+<span class="nc" id="L42">    public AuthController(UserRegistrationService userRegistrationService,</span>
                           BankRegistrationService bankRegistrationService,
                           LoginService loginService,
                           BankActivationEmailService bankActivationEmailService,
                           OrganizationRepository organizationRepository,
-<span class="nc" id="L47">                          AuditService auditService) {</span>
+                          AuditService auditService) {
 <span class="nc" id="L48">        this.userRegistrationService = userRegistrationService;</span>
 <span class="nc" id="L49">        this.bankRegistrationService = bankRegistrationService;</span>
 <span class="nc" id="L50">        this.loginService = loginService;</span>
@@ -64,7 +64,7 @@ public class AuthController {
 <span class="nc" id="L64">                    response.getUserId(), &quot;BORROWER&quot;);</span>
 <span class="nc" id="L65">        } catch (Exception e) {</span>
 <span class="nc" id="L66">            logger.error(&quot;Failed to audit user registration&quot;, e);</span>
-<span class="nc" id="L67">        }</span>
+        }
         
 <span class="nc" id="L69">        logger.info(&quot;User registered successfully: {}&quot;, request.getEmail());</span>
 <span class="nc" id="L70">        return ResponseEntity.status(HttpStatus.CREATED).body(response);</span>
@@ -125,10 +125,10 @@ public class AuthController {
         // Audit bank activation
         try {
 <span class="nc" id="L127">            auditService.logAction(&quot;Organization&quot;, bank.getId(), AuditAction.BANK_ACTIVATED,</span>
-                    null, &quot;SYSTEM&quot;);
+<span class="nc" id="L128">                    null, &quot;SYSTEM&quot;);</span>
 <span class="nc" id="L129">        } catch (Exception e) {</span>
 <span class="nc" id="L130">            logger.error(&quot;Failed to audit bank activation&quot;, e);</span>
-<span class="nc" id="L131">        }</span>
+        }
 
 <span class="nc" id="L133">        logger.info(&quot;Bank {} activated successfully&quot;, bank.getName());</span>
 <span class="nc" id="L134">        String jsonResponse = String.format(&quot;{\&quot;bankId\&quot;: \&quot;%s\&quot;, \&quot;bankName\&quot;: \&quot;%s\&quot;, \&quot;status\&quot;: \&quot;ACTIVE\&quot;, \&quot;message\&quot;: \&quot;Bank activated successfully\&quot;}&quot;, </span>
@@ -146,7 +146,7 @@ public class AuthController {
 <span class="nc" id="L146">            auditService.logAction(&quot;User&quot;, null, AuditAction.USER_LOGGED_IN);</span>
 <span class="nc" id="L147">        } catch (Exception e) {</span>
 <span class="nc" id="L148">            logger.error(&quot;Failed to audit user login&quot;, e);</span>
-<span class="nc" id="L149">        }</span>
+        }
         
 <span class="nc" id="L151">        logger.info(&quot;User logged in successfully: {}&quot;, request.getEmail());</span>
 <span class="nc" id="L152">        return ResponseEntity.ok(response);</span>
@@ -170,7 +170,7 @@ public class AuthController {
 <span class="nc" id="L170">            auditService.logAction(&quot;User&quot;, null, AuditAction.USER_LOGGED_OUT);</span>
 <span class="nc" id="L171">        } catch (Exception e) {</span>
 <span class="nc" id="L172">            logger.error(&quot;Failed to audit user logout&quot;, e);</span>
-<span class="nc" id="L173">        }</span>
+        }
         
 <span class="nc" id="L175">        loginService.logout();</span>
 <span class="nc" id="L176">        logger.info(&quot;User logged out successfully&quot;);</span>

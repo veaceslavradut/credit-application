@@ -18,14 +18,14 @@ import java.util.Collection;
 import java.util.UUID;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-<span class="fc" id="L21">    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);</span>
+<span class="nc" id="L21">    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);</span>
     private static final String BEARER_PREFIX = &quot;Bearer &quot;;
-    private static final String AUTHORIZATION_HEADER = &quot;Authorization&quot;;
+<span class="nc" id="L23">    private static final String AUTHORIZATION_HEADER = &quot;Authorization&quot;;</span>
     private final JwtTokenService jwtTokenService;
 
-<span class="fc" id="L26">    public JwtAuthenticationFilter(JwtTokenService jwtTokenService) {</span>
-<span class="fc" id="L27">        this.jwtTokenService = jwtTokenService;</span>
-<span class="fc" id="L28">    }</span>
+<span class="nc" id="L26">    public JwtAuthenticationFilter(JwtTokenService jwtTokenService) {</span>
+<span class="nc" id="L27">        this.jwtTokenService = jwtTokenService;</span>
+<span class="nc" id="L28">    }</span>
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 <span class="nc" id="L47">        } catch (Exception e) {</span>
 <span class="nc" id="L48">            logger.debug(&quot;JWT token validation failed: {}&quot;, e.getMessage());</span>
-<span class="nc" id="L49">        }</span>
+        }
 <span class="nc" id="L50">        filterChain.doFilter(request, response);</span>
 <span class="nc" id="L51">    }</span>
 

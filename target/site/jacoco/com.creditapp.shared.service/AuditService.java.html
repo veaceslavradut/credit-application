@@ -20,7 +20,7 @@ import java.util.*;
  */
 @Service
 <span class="fc" id="L22">@Slf4j</span>
-<span class="fc" id="L23">@RequiredArgsConstructor</span>
+@RequiredArgsConstructor
 public class AuditService {
 
     private final AuditLogRepository auditLogRepository;
@@ -28,9 +28,9 @@ public class AuditService {
 
     // PII fields that should be sanitized from audit logs
 <span class="fc" id="L30">    private static final Set&lt;String&gt; SENSITIVE_FIELDS = Set.of(</span>
-            &quot;password&quot;, &quot;passwordHash&quot;, &quot;token&quot;, &quot;refreshToken&quot;, &quot;accessToken&quot;,
-            &quot;ssn&quot;, &quot;socialSecurityNumber&quot;, &quot;creditCardNumber&quot;, &quot;cvv&quot;, &quot;pin&quot;
-    );
+<span class="fc" id="L31">            &quot;password&quot;, &quot;passwordHash&quot;, &quot;token&quot;, &quot;refreshToken&quot;, &quot;accessToken&quot;,</span>
+<span class="fc" id="L32">            &quot;ssn&quot;, &quot;socialSecurityNumber&quot;, &quot;creditCardNumber&quot;, &quot;cvv&quot;, &quot;pin&quot;</span>
+<span class="fc" id="L33">    );</span>
 
     /**
      * Log a simple action without old/new values
@@ -78,7 +78,7 @@ public class AuditService {
 <span class="nc" id="L78">                        .orElse(&quot;UNKNOWN&quot;);</span>
 <span class="nc" id="L79">            } catch (Exception e) {</span>
 <span class="nc" id="L80">                log.warn(&quot;Failed to extract actor context from authentication: {}&quot;, e.getMessage());</span>
-<span class="nc" id="L81">            }</span>
+            }
         }
 
         // Extract request context (IP, user agent)
@@ -103,25 +103,25 @@ public class AuditService {
 <span class="nc" id="L103">            Map&lt;String, Object&gt; sanitizedNewValues = sanitizeValues(newValues);</span>
 
 <span class="nc" id="L105">            AuditLog auditLog = new AuditLog(</span>
-                    entityType,
-                    entityId,
-                    action,
-                    actorId,
-                    actorRole,
-                    sanitizedOldValues,
-                    sanitizedNewValues,
-                    ipAddress,
-                    userAgent
+<span class="nc" id="L106">                    entityType,</span>
+<span class="nc" id="L107">                    entityId,</span>
+<span class="nc" id="L108">                    action,</span>
+<span class="nc" id="L109">                    actorId,</span>
+<span class="nc" id="L110">                    actorRole,</span>
+<span class="nc" id="L111">                    sanitizedOldValues,</span>
+<span class="nc" id="L112">                    sanitizedNewValues,</span>
+<span class="nc" id="L113">                    ipAddress,</span>
+<span class="nc" id="L114">                    userAgent</span>
             );
 
 <span class="nc" id="L117">            auditLogRepository.save(auditLog);</span>
 <span class="nc" id="L118">            log.debug(&quot;Audit log created: entityType={}, entityId={}, action={}, actor={}, role={}&quot;,</span>
-                    entityType, entityId, action, actorId, actorRole);
+<span class="nc" id="L119">                    entityType, entityId, action, actorId, actorRole);</span>
 <span class="nc" id="L120">        } catch (Exception e) {</span>
             // Never fail business operations due to audit logging failures
 <span class="nc" id="L122">            log.error(&quot;Failed to create audit log: entityType={}, entityId={}, action={} - {}&quot;,</span>
 <span class="nc" id="L123">                    entityType, entityId, action, e.getMessage(), e);</span>
-<span class="nc" id="L124">        }</span>
+        }
 <span class="nc" id="L125">    }</span>
 
     /**
@@ -129,17 +129,17 @@ public class AuditService {
      * Removes or masks PII and security-sensitive data
      */
     public Map&lt;String, Object&gt; sanitizeValues(Map&lt;String, Object&gt; values) {
-<span class="fc bfc" id="L132" title="All 4 branches covered.">        if (values == null || values.isEmpty()) {</span>
-<span class="fc" id="L133">            return values;</span>
+<span class="nc bnc" id="L132" title="All 4 branches missed.">        if (values == null || values.isEmpty()) {</span>
+<span class="nc" id="L133">            return values;</span>
         }
 
-<span class="fc" id="L136">        Map&lt;String, Object&gt; sanitized = new HashMap&lt;&gt;(values);</span>
-<span class="fc bfc" id="L137" title="All 2 branches covered.">        for (String sensitiveField : SENSITIVE_FIELDS) {</span>
-<span class="fc bfc" id="L138" title="All 2 branches covered.">            if (sanitized.containsKey(sensitiveField)) {</span>
-<span class="fc" id="L139">                sanitized.put(sensitiveField, &quot;***REDACTED***&quot;);</span>
+<span class="nc" id="L136">        Map&lt;String, Object&gt; sanitized = new HashMap&lt;&gt;(values);</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        for (String sensitiveField : SENSITIVE_FIELDS) {</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">            if (sanitized.containsKey(sensitiveField)) {</span>
+<span class="nc" id="L139">                sanitized.put(sensitiveField, &quot;***REDACTED***&quot;);</span>
             }
-<span class="fc" id="L141">        }</span>
-<span class="fc" id="L142">        return sanitized;</span>
+        }
+<span class="nc" id="L142">        return sanitized;</span>
     }
 
     /**
@@ -147,7 +147,7 @@ public class AuditService {
      */
     @Transactional(readOnly = true)
     public List&lt;AuditLog&gt; getAuditLogsForEntity(String entityType, UUID entityId) {
-<span class="fc" id="L150">        return auditLogRepository.findByEntityTypeAndEntityIdOrderByCreatedAtDesc(entityType, entityId);</span>
+<span class="nc" id="L150">        return auditLogRepository.findByEntityTypeAndEntityIdOrderByCreatedAtDesc(entityType, entityId);</span>
     }
 
     /**
@@ -155,7 +155,7 @@ public class AuditService {
      */
     @Transactional(readOnly = true)
     public List&lt;AuditLog&gt; getAuditLogsByActor(UUID actorId) {
-<span class="fc" id="L158">        return auditLogRepository.findByActorIdOrderByCreatedAtDesc(actorId);</span>
+<span class="nc" id="L158">        return auditLogRepository.findByActorIdOrderByCreatedAtDesc(actorId);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

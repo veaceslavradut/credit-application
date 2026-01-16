@@ -24,6 +24,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\s
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\RateLimitingAspect.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\common\exception\GlobalExceptionHandler.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\service\LoginService.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\SubmitApplicationResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\EmailDeliveryLogRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\repository\LoanPreferenceRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\ApplicationStatus.java
@@ -34,6 +35,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\d
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\UserRole.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\AuthorizationService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\SendGridConfig.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\ApplicationAlreadySubmittedException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\messaging\NotificationEventPublisher.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\ApplicationDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\repository\ApplicationDetailsRepository.java
@@ -62,6 +64,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\s
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\ApplicationStaleException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\EmailTemplateRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\RegistrationResponse.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\SubmissionValidationException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\listener\EntityAuditListener.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\BankStatus.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\RateLimited.java
@@ -115,6 +118,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\s
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\controller\BankAdminController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\exception\DuplicateBankRegistrationException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\ChangePasswordResponse.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\SubmitApplicationRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\listener\EmailNotificationListener.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\AsyncConfig.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\LoanPreference.java

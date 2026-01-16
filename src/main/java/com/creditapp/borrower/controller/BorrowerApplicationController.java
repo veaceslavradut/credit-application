@@ -3,6 +3,8 @@ package com.creditapp.borrower.controller;
 import com.creditapp.borrower.dto.ApplicationDTO;
 import com.creditapp.borrower.dto.ApplicationHistoryDTO;
 import com.creditapp.borrower.dto.CreateApplicationRequest;
+import com.creditapp.borrower.dto.SubmitApplicationRequest;
+import com.creditapp.borrower.dto.SubmitApplicationResponse;
 import com.creditapp.borrower.dto.UpdateApplicationRequest;
 import com.creditapp.borrower.dto.UpdateApplicationResponse;
 import com.creditapp.borrower.service.ApplicationService;
@@ -107,6 +109,26 @@ public class BorrowerApplicationController {
         
         log.info("Application updated successfully: {} by borrower: {}, fields: {}", 
                 applicationId, borrowerId, response.getEditedFields());
+        
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Submit an application for underwriting review (transition DRAFT -> SUBMITTED).
+     * No rate limiting for submissions (unlike creation).
+     */
+    @PostMapping("/{applicationId}/submit")
+    @PreAuthorize("hasAuthority('BORROWER')")
+    public ResponseEntity<SubmitApplicationResponse> submitApplication(
+            @PathVariable UUID applicationId,
+            @RequestBody(required = false) SubmitApplicationRequest request) {
+        UUID borrowerId = authorizationService.getCurrentUserId();
+        
+        log.info("Submitting application: {} for borrower: {}", applicationId, borrowerId);
+        
+        SubmitApplicationResponse response = applicationService.submitApplication(applicationId, borrowerId);
+        
+        log.info("Application submitted successfully: {} by borrower: {}", applicationId, borrowerId);
         
         return ResponseEntity.ok(response);
     }

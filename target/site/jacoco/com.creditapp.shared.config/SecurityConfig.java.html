@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
-<span class="fc" id="L19">public class SecurityConfig {</span>
+<span class="nc" id="L19">public class SecurityConfig {</span>
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter, CustomAccessDeniedHandler accessDeniedHandler) throws Exception {
@@ -38,7 +38,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter(JwtTokenService jwtTokenService) {
-<span class="fc" id="L41">        return new JwtAuthenticationFilter(jwtTokenService);</span>
+<span class="nc" id="L41">        return new JwtAuthenticationFilter(jwtTokenService);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

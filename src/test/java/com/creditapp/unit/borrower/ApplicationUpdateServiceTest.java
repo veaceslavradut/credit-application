@@ -16,6 +16,8 @@ import com.creditapp.borrower.service.ApplicationService;
 import com.creditapp.shared.audit.BusinessAudit;
 import com.creditapp.shared.model.AuditAction;
 import com.creditapp.shared.service.AuditService;
+import com.creditapp.shared.service.NotificationService;
+import com.creditapp.auth.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,6 +45,12 @@ class ApplicationUpdateServiceTest {
     @Mock
     private AuditService auditService;
 
+        @Mock
+        private NotificationService notificationService;
+
+        @Mock
+        private UserRepository userRepository;
+
     private ApplicationService applicationService;
 
     private UUID borrowerId;
@@ -54,7 +62,9 @@ class ApplicationUpdateServiceTest {
         applicationService = new ApplicationService(
                 applicationRepository,
                 mock(com.creditapp.borrower.repository.ApplicationHistoryRepository.class),
-                auditService
+                auditService,
+                notificationService,
+                userRepository
         );
 
         borrowerId = UUID.randomUUID();

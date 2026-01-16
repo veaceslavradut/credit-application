@@ -11,14 +11,14 @@ public class JwtAuthenticationToken implements Authentication {
     private final String email;
     private final Collection&lt;GrantedAuthority&gt; authorities;
 
-<span class="fc" id="L14">    public JwtAuthenticationToken(UUID userId, String email, Collection&lt;GrantedAuthority&gt; authorities) {</span>
-<span class="fc" id="L15">        this.userId = userId;</span>
-<span class="fc" id="L16">        this.email = email;</span>
-<span class="fc" id="L17">        this.authorities = authorities;</span>
-<span class="fc" id="L18">    }</span>
+<span class="nc" id="L14">    public JwtAuthenticationToken(UUID userId, String email, Collection&lt;GrantedAuthority&gt; authorities) {</span>
+<span class="nc" id="L15">        this.userId = userId;</span>
+<span class="nc" id="L16">        this.email = email;</span>
+<span class="nc" id="L17">        this.authorities = authorities;</span>
+<span class="nc" id="L18">    }</span>
 
     @Override
-<span class="fc" id="L21">    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() { return authorities; }</span>
+<span class="nc" id="L21">    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() { return authorities; }</span>
     @Override
 <span class="nc" id="L23">    public Object getCredentials() { return null; }</span>
     @Override
@@ -32,7 +32,7 @@ public class JwtAuthenticationToken implements Authentication {
     @Override
 <span class="nc" id="L33">    public String getName() { return email; }</span>
 
-<span class="fc" id="L35">    public UUID getUserId() { return userId; }</span>
-<span class="fc" id="L36">    public String getEmail() { return email; }</span>
+<span class="nc" id="L35">    public UUID getUserId() { return userId; }</span>
+<span class="nc" id="L36">    public String getEmail() { return email; }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -33,7 +33,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-<span class="nc" id="L36">@RequiredArgsConstructor</span>
+@RequiredArgsConstructor
 <span class="nc" id="L37">@Slf4j</span>
 @Transactional
 public class ProfileService {
@@ -71,7 +71,7 @@ public class ProfileService {
 <span class="nc" id="L71">                            p.getMaxTerm(),</span>
 <span class="nc" id="L72">                            p.getPurposeCategory(),</span>
 <span class="nc" id="L73">                            p.getPriority()</span>
-                    ))
+<span class="nc" id="L74">                    ))</span>
 <span class="nc" id="L75">                    .collect(Collectors.toList());</span>
 <span class="nc" id="L76">            profile.setLoanPreferences(preferenceDTOs);</span>
 <span class="nc bnc" id="L77" title="All 2 branches missed.">        } else if (user.getRole() == UserRole.BANK_ADMIN) {</span>
@@ -115,9 +115,9 @@ public class ProfileService {
 <span class="nc" id="L115">        newValues.put(&quot;phoneNumber&quot;, request.getPhoneNumber());</span>
         
 <span class="nc" id="L117">        auditService.logActionWithValues(</span>
-                &quot;User&quot;, userId, 
-                AuditAction.PROFILE_UPDATED, 
-                oldValues, newValues
+<span class="nc" id="L118">                &quot;User&quot;, userId, </span>
+<span class="nc" id="L119">                AuditAction.PROFILE_UPDATED, </span>
+<span class="nc" id="L120">                oldValues, newValues</span>
         );
         
 <span class="nc" id="L123">        return getCurrentUserProfile(updatedUser.getId());</span>
@@ -159,15 +159,15 @@ public class ProfileService {
 <span class="nc" id="L159">        newValues.put(&quot;passwordHash&quot;, &quot;[REDACTED]&quot;);</span>
         
 <span class="nc" id="L161">        auditService.logActionWithValues(</span>
-                &quot;User&quot;, userId,
-                AuditAction.PASSWORD_CHANGED,
-                oldValues, newValues
+<span class="nc" id="L162">                &quot;User&quot;, userId,</span>
+<span class="nc" id="L163">                AuditAction.PASSWORD_CHANGED,</span>
+<span class="nc" id="L164">                oldValues, newValues</span>
         );
         
 <span class="nc" id="L167">        passwordChangeEmailService.sendPasswordChangeNotification(user.getEmail(), user.getFirstName());</span>
         
 <span class="nc" id="L169">        return new ChangePasswordResponse(</span>
-                &quot;Password changed successfully. You have been logged out on all devices.&quot;,
+<span class="nc" id="L170">                &quot;Password changed successfully. You have been logged out on all devices.&quot;,</span>
 <span class="nc" id="L171">                LocalDateTime.now()</span>
         );
     }
@@ -178,7 +178,7 @@ public class ProfileService {
 <span class="nc" id="L178">            token.setRevoked(true);</span>
 <span class="nc" id="L179">            token.setRevokedAt(LocalDateTime.now());</span>
 <span class="nc" id="L180">            refreshTokenRepository.save(token);</span>
-<span class="nc" id="L181">        }</span>
+        }
 <span class="nc" id="L182">        log.info(&quot;Invalidated {} refresh tokens for user {}&quot;, activeTokens.size(), userId);</span>
 <span class="nc" id="L183">    }</span>
 }
