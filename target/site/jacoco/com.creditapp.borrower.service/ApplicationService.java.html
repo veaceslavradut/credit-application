@@ -91,17 +91,17 @@ public class ApplicationService {
      * Get an application by ID for a specific borrower.
      */
     public ApplicationDTO getApplication(UUID applicationId, UUID borrowerId) {
-<span class="nc" id="L94">        Application application = applicationRepository.findById(applicationId)</span>
-<span class="nc" id="L95">                .orElseThrow(() -&gt; new ApplicationNotFoundException(</span>
+<span class="fc" id="L94">        Application application = applicationRepository.findById(applicationId)</span>
+<span class="fc" id="L95">                .orElseThrow(() -&gt; new ApplicationNotFoundException(</span>
                         &quot;Application not found: &quot; + applicationId));
 
         // Verify borrower owns the application
-<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
-<span class="nc" id="L100">            throw new ApplicationNotFoundException(</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
+<span class="fc" id="L100">            throw new ApplicationNotFoundException(</span>
                     &quot;Access denied to application: &quot; + applicationId);
         }
 
-<span class="nc" id="L104">        return mapToDTO(application);</span>
+<span class="fc" id="L104">        return mapToDTO(application);</span>
     }
 
     /**
@@ -129,8 +129,8 @@ public class ApplicationService {
      * List applications for a borrower with pagination.
      */
     public Page&lt;ApplicationDTO&gt; listApplicationsByBorrower(UUID borrowerId, Pageable pageable) {
-<span class="nc" id="L132">        return applicationRepository.findByBorrowerId(borrowerId, pageable)</span>
-<span class="nc" id="L133">                .map(this::mapToDTO);</span>
+<span class="fc" id="L132">        return applicationRepository.findByBorrowerId(borrowerId, pageable)</span>
+<span class="fc" id="L133">                .map(this::mapToDTO);</span>
     }
 
     private ApplicationDTO mapToDTO(Application application) {

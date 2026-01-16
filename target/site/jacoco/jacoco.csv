@@ -5,7 +5,7 @@ Credit Application Platform,com.creditapp.borrower.model,LoanPreference,480,0,86
 Credit Application Platform,com.creditapp.borrower.model,RatePreference,21,0,0,0,4,0,1,0,1,0
 Credit Application Platform,com.creditapp.borrower.model,Application.ApplicationBuilder,63,92,1,1,0,1,6,12,5,12
 Credit Application Platform,com.creditapp.borrower.model,EmploymentStatus,39,0,0,0,7,0,1,0,1,0
-Credit Application Platform,com.creditapp.borrower.model,Application,172,83,18,0,18,12,32,13,23,13
+Credit Application Platform,com.creditapp.borrower.model,Application,169,86,18,0,17,13,31,14,22,14
 Credit Application Platform,com.creditapp.borrower.model,ApplicationStatus,0,57,0,0,0,10,0,1,0,1
 Credit Application Platform,com.creditapp.borrower.model,ApplicationHistory,166,0,12,0,18,0,30,0,24,0
 Credit Application Platform,com.creditapp.borrower.model,ApplicationDetails.ApplicationDetailsBuilder,88,0,0,0,1,0,11,0,11,0
@@ -13,7 +13,7 @@ Credit Application Platform,com.creditapp.borrower.model,Currency,21,0,0,0,4,0,1
 Credit Application Platform,com.creditapp.borrower.model,ApplicationDetails,161,0,14,0,20,0,30,0,23,0
 Credit Application Platform,com.creditapp.borrower.controller,BorrowerApplicationController,96,0,0,0,19,0,6,0,6,0
 Credit Application Platform,com.creditapp.borrower.exception,InvalidApplicationException,5,4,0,0,2,2,1,1,1,1
-Credit Application Platform,com.creditapp.borrower.exception,ApplicationNotFoundException,9,0,0,0,4,0,2,0,2,0
+Credit Application Platform,com.creditapp.borrower.exception,ApplicationNotFoundException,5,4,0,0,2,2,1,1,1,1
 Credit Application Platform,com.creditapp.borrower.exception,ApplicationCreationException,9,0,0,0,4,0,2,0,2,0
 Credit Application Platform,com.creditapp.bank.controller,BankAdminController,63,0,0,0,15,0,5,0,5,0
 Credit Application Platform,com.creditapp.shared.listener,EmailNotificationListener,33,0,0,0,13,0,3,0,3,0
@@ -62,7 +62,7 @@ Credit Application Platform,com.creditapp.auth.exception,BankNotActivatedExcepti
 Credit Application Platform,com.creditapp.auth.exception,DuplicateEmailException,9,0,0,0,4,0,2,0,2,0
 Credit Application Platform,com.creditapp.auth.exception,PasswordValidationException,9,0,0,0,4,0,2,0,2,0
 Credit Application Platform,com.creditapp.borrower.service,ApplicationStatusTransitionService,111,0,24,0,21,0,18,0,4,0
-Credit Application Platform,com.creditapp.borrower.service,ApplicationService,111,150,4,14,26,38,8,11,6,4
+Credit Application Platform,com.creditapp.borrower.service,ApplicationService,70,191,2,16,19,45,4,15,3,7
 Credit Application Platform,com.creditapp.auth.service,InvalidPasswordException,9,0,0,0,4,0,2,0,2,0
 Credit Application Platform,com.creditapp.auth.service,BankRegistrationService,158,0,6,0,42,0,5,0,2,0
 Credit Application Platform,com.creditapp.auth.service,PasswordHasher,20,0,0,0,5,0,3,0,3,0
