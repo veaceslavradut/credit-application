@@ -61,6 +61,7 @@ com\creditapp\shared\model\UserRole.class
 com\creditapp\auth\exception\DuplicateEmailException.class
 com\creditapp\borrower\model\EmploymentStatus.class
 com\creditapp\shared\config\JwtConfig$Expiration.class
+com\creditapp\borrower\dto\StatusTransitionDTO.class
 com\creditapp\shared\exception\NotFoundException.class
 com\creditapp\shared\util\EmailRateLimiter.class
 com\creditapp\auth\dto\ChangePasswordResponse.class
@@ -80,6 +81,7 @@ com\creditapp\auth\dto\RegistrationRequest.class
 com\creditapp\auth\dto\BankRegistrationResponse.class
 com\creditapp\borrower\exception\SubmissionValidationException.class
 com\creditapp\auth\service\PasswordValidator.class
+com\creditapp\borrower\dto\StatusTransitionDTO$StatusTransitionDTOBuilder.class
 com\creditapp\borrower\model\Currency.class
 com\creditapp\shared\listener\EmailNotificationListener.class
 com\creditapp\shared\dto\EmailMetricsDTO$EmailMetricsDTOBuilder.class
@@ -102,6 +104,7 @@ com\creditapp\shared\service\RequestContextService$RequestContext.class
 com\creditapp\shared\service\RequestContextService.class
 com\creditapp\shared\security\CustomAccessDeniedHandler.class
 com\creditapp\borrower\exception\FileSizeExceededException.class
+com\creditapp\borrower\dto\ApplicationStatusDTO.class
 com\creditapp\borrower\exception\DocumentStorageException.class
 com\creditapp\borrower\repository\ApplicationRepository.class
 com\creditapp\auth\exception\PasswordValidationException.class
@@ -118,6 +121,7 @@ com\creditapp\auth\dto\LoginResponse$UserDTO.class
 com\creditapp\common\config\WebMvcConfig.class
 com\creditapp\shared\config\SendGridConfig.class
 com\creditapp\shared\config\JwtConfig.class
+com\creditapp\borrower\dto\ApplicationStatusDTO$ApplicationStatusDTOBuilder.class
 com\creditapp\borrower\dto\ApplicationDetailsDTO.class
 com\creditapp\shared\service\MockEmailService$MockEmail.class
 com\creditapp\shared\dto\NotificationHealthDTO.class
@@ -144,6 +148,7 @@ com\creditapp\auth\service\PasswordHasher.class
 com\creditapp\shared\model\EmailDeliveryLog.class
 com\creditapp\borrower\model\LoanType.class
 com\creditapp\shared\model\RefreshToken.class
+com\creditapp\borrower\service\ApplicationStatusTrackingService.class
 com\creditapp\auth\dto\RegistrationResponse.class
 com\creditapp\shared\dto\NotificationEvent$NotificationEventBuilder.class
 com\creditapp\shared\service\AuditService.class

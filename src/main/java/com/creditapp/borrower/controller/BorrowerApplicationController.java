@@ -2,6 +2,7 @@ package com.creditapp.borrower.controller;
 
 import com.creditapp.borrower.dto.ApplicationDTO;
 import com.creditapp.borrower.dto.ApplicationHistoryDTO;
+import com.creditapp.borrower.dto.ApplicationStatusDTO;
 import com.creditapp.borrower.dto.CreateApplicationRequest;
 import com.creditapp.borrower.dto.DocumentDTO;
 import com.creditapp.borrower.dto.SubmitApplicationRequest;
@@ -11,6 +12,7 @@ import com.creditapp.borrower.dto.UpdateApplicationResponse;
 import com.creditapp.borrower.model.DocumentType;
 import com.creditapp.borrower.service.ApplicationDocumentService;
 import com.creditapp.borrower.service.ApplicationService;
+import com.creditapp.borrower.service.ApplicationStatusTrackingService;
 import com.creditapp.shared.security.AuthorizationService;
 import com.creditapp.shared.security.RateLimited;
 import jakarta.validation.Valid;
@@ -39,6 +41,7 @@ public class BorrowerApplicationController {
 
     private final ApplicationService applicationService;
     private final ApplicationDocumentService documentService;
+    private final ApplicationStatusTrackingService statusTrackingService;
     private final AuthorizationService authorizationService;
 
     /**
@@ -196,5 +199,24 @@ public class BorrowerApplicationController {
         log.info("Document deleted successfully: {} from application: {}", documentId, applicationId);
         
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Get application status and timeline history.
+     */
+    @GetMapping("/{applicationId}/status")
+    @PreAuthorize("hasAuthority('BORROWER')")
+    public ResponseEntity<ApplicationStatusDTO> getApplicationStatus(
+            @PathVariable UUID applicationId) {
+        UUID borrowerId = authorizationService.getCurrentUserId();
+        
+        log.info("Retrieving status for application: {} by borrower: {}", applicationId, borrowerId);
+        
+        ApplicationStatusDTO status = statusTrackingService.getApplicationStatus(applicationId, borrowerId);
+        
+        log.info("Status retrieved successfully for application: {} - current status: {}", 
+                applicationId, status.getCurrentStatus());
+        
+        return ResponseEntity.ok(status);
     }
 }

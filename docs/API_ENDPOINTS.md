@@ -633,6 +633,116 @@ curl -X DELETE https://api.creditapp.com/api/borrower/applications/550e8400-e29b
 
 ---
 
+### GET /api/borrower/applications/{applicationId}/status
+**Description:** Get current application status and full history timeline of status transitions.
+
+**Authentication:** Required (BORROWER role)
+
+**Request Method:** GET
+
+**Request Headers:**
+- Authorization: Bearer {jwt_token}
+
+**Path Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| applicationId | UUID | Yes | Unique identifier of the application |
+
+**Response (200 OK):**
+```json
+{
+  "applicationId": "550e8400-e29b-41d4-a716-446655440000",
+  "currentStatus": "UNDER_REVIEW",
+  "submittedAt": "2026-01-16T10:30:00Z",
+  "createdAt": "2026-01-14T09:00:00Z",
+  "progressionPercentage": 50,
+  "statusHistory": [
+    {
+      "oldStatus": "SUBMITTED",
+      "newStatus": "UNDER_REVIEW",
+      "changedAt": "2026-01-16T11:00:00Z",
+      "changedByUserId": null,
+      "changedByName": "System",
+      "reason": "Bank started review process"
+    },
+    {
+      "oldStatus": "DRAFT",
+      "newStatus": "SUBMITTED",
+      "changedAt": "2026-01-16T10:30:00Z",
+      "changedByUserId": "660e8400-e29b-41d4-a716-446655440001",
+      "changedByName": "User 660e8400",
+      "reason": "Borrower submitted application"
+    }
+  ]
+}
+```
+
+**Response Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| applicationId | UUID | Application identifier |
+| currentStatus | String | Current application status (DRAFT, SUBMITTED, UNDER_REVIEW, OFFERS_AVAILABLE, ACCEPTED, COMPLETED, etc.) |
+| submittedAt | ISO-8601 DateTime | Timestamp when application was submitted (null if still DRAFT) |
+| createdAt | ISO-8601 DateTime | Timestamp when application was created |
+| progressionPercentage | Integer | Workflow progression (0-100): DRAFT=17%, SUBMITTED=33%, UNDER_REVIEW=50%, OFFERS=67%, ACCEPTED=83%, COMPLETED=100% |
+| statusHistory | Array | List of status transitions in reverse chronological order (newest first) |
+
+**Status History Entry Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| oldStatus | String | Previous application status |
+| newStatus | String | New application status |
+| changedAt | ISO-8601 DateTime | When the transition occurred |
+| changedByUserId | UUID | User who made the change (null if system-initiated) |
+| changedByName | String | Display name of user or "System" |
+| reason | String | Reason or description of the status change |
+
+**Error Responses:**
+
+**403 Forbidden** - Not the application owner
+```json
+{
+  "error": "Forbidden",
+  "message": "You do not have permission to view this application",
+  "timestamp": "2026-01-16T10:30:00Z"
+}
+```
+
+**404 Not Found** - Application not found
+```json
+{
+  "error": "Not Found",
+  "message": "Application not found",
+  "timestamp": "2026-01-16T10:30:00Z"
+}
+```
+
+**Notes:**
+- Status history is returned in reverse chronological order (most recent first)
+- Only borrower who owns the application can view status
+- Progression percentage helps visualize workflow completion
+- Timeline shows all status transitions for audit and visibility
+- Real-time data: reflects current database state
+
+**Application Status Workflow:**
+- DRAFT → SUBMITTED (when borrower clicks submit)
+- SUBMITTED → UNDER_REVIEW (when bank starts review)
+- UNDER_REVIEW → OFFERS_AVAILABLE (when banks submit offers) or REJECTED
+- OFFERS_AVAILABLE → ACCEPTED (when borrower selects offer) or EXPIRED
+- ACCEPTED → COMPLETED (when loan is funded)
+- Any status → WITHDRAWN (if borrower cancels)
+
+**cURL Example:**
+```bash
+curl -X GET https://api.creditapp.com/api/borrower/applications/550e8400-e29b-41d4-a716-446655440000/status \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."
+```
+
+---
+
 ## Authorization Matrix
 
 | Endpoint | Method | Public | Borrower | Bank Admin | Compliance |
@@ -643,6 +753,7 @@ curl -X DELETE https://api.creditapp.com/api/borrower/applications/550e8400-e29b
 | /api/borrower/applications/{id}/documents | POST |  | ✓ |  |  |
 | /api/borrower/applications/{id}/documents | GET |  | ✓ |  |  |
 | /api/borrower/applications/{id}/documents/{docId} | DELETE |  | ✓ |  |  |
+| /api/borrower/applications/{id}/status | GET |  | ✓ |  |  |
 | /api/health | GET |  |  |  |  |
 
 ---
@@ -659,6 +770,7 @@ This API uses path-based versioning. Future versions will be available at /api/v
 
 | Date | Version | Changes | Story |
 |------|---------|---------|-------|
+| 2026-01-16 | 1.3 | Added application status tracking endpoint with status history timeline | Story 2.7 |
 | 2026-01-16 | 1.2 | Added document upload, list, and delete endpoints with file size limits and soft-delete pattern | Story 2.6 |
 | 2026-01-16 | 1.1 | Added borrower application creation endpoint with validation and rate limiting | Story 2.2 |
 | 2026-01-15 | 1.0 | Initial API documentation - Bank registration and activation endpoints | Story 1.4 |
