@@ -63,7 +63,6 @@ public class EntityAuditListener {
             newValues.put("firstName", user.getFirstName());
             newValues.put("lastName", user.getLastName());
             newValues.put("phone", user.getPhone());
-            newValues.put("status", user.getStatus());
 
             auditService.logActionWithValues("User", user.getId(), AuditAction.PROFILE_UPDATED,
                     actorId, actorRole, new HashMap<>(), newValues);
