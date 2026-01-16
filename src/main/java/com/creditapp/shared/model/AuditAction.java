@@ -9,6 +9,7 @@ public enum AuditAction {
     BANK_REGISTERED("Bank registered"),
     BANK_ACTIVATED("Bank activated"),
     APPLICATION_CREATED("Application created"),
+    APPLICATION_UPDATED("Application updated"),
     APPLICATION_SUBMITTED("Application submitted"),
     APPLICATION_STATUS_CHANGED("Application status changed"),
     OFFER_CREATED("Offer created"),

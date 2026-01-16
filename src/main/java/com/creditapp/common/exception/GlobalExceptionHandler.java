@@ -8,6 +8,8 @@ import com.creditapp.auth.exception.BankNotActivatedException;
 import com.creditapp.auth.service.InvalidPasswordException;
 import com.creditapp.borrower.exception.ApplicationCreationException;
 import com.creditapp.borrower.exception.InvalidApplicationException;
+import com.creditapp.borrower.exception.ApplicationNotEditableException;
+import com.creditapp.borrower.exception.ApplicationStaleException;
 import com.creditapp.shared.exception.LoginRateLimitExceededException;
 import com.creditapp.shared.exception.NotFoundException;
 import com.creditapp.shared.exception.RateLimitExceededException;
@@ -157,6 +159,27 @@ public class GlobalExceptionHandler {
         response.put("timestamp", LocalDateTime.now().toString());
         response.put("path", request.getDescription(false).replace("uri=", ""));
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
+
+    @ExceptionHandler(ApplicationNotEditableException.class)
+    public ResponseEntity<?> handleApplicationNotEditable(ApplicationNotEditableException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Conflict");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler(ApplicationStaleException.class)
+    public ResponseEntity<?> handleApplicationStale(ApplicationStaleException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Stale Update");
+        response.put("message", ex.getMessage());
+        response.put("currentVersion", ex.getCurrentVersion());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
     @ExceptionHandler(RateLimitExceededException.class)

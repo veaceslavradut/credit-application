@@ -3,6 +3,8 @@ package com.creditapp.borrower.controller;
 import com.creditapp.borrower.dto.ApplicationDTO;
 import com.creditapp.borrower.dto.ApplicationHistoryDTO;
 import com.creditapp.borrower.dto.CreateApplicationRequest;
+import com.creditapp.borrower.dto.UpdateApplicationRequest;
+import com.creditapp.borrower.dto.UpdateApplicationResponse;
 import com.creditapp.borrower.service.ApplicationService;
 import com.creditapp.shared.security.AuthorizationService;
 import com.creditapp.shared.security.RateLimited;
@@ -86,5 +88,26 @@ public class BorrowerApplicationController {
         UUID borrowerId = authorizationService.getCurrentUserId();
         List<ApplicationHistoryDTO> history = applicationService.getApplicationHistory(applicationId, borrowerId);
         return ResponseEntity.ok(history);
+    }
+
+    /**
+     * Update a DRAFT application. Only applications in DRAFT status can be edited.
+     * Uses optimistic locking to prevent concurrent modifications.
+     */
+    @PutMapping("/{applicationId}")
+    @PreAuthorize("hasAuthority('BORROWER')")
+    public ResponseEntity<UpdateApplicationResponse> updateApplication(
+            @PathVariable UUID applicationId,
+            @Valid @RequestBody UpdateApplicationRequest request) {
+        UUID borrowerId = authorizationService.getCurrentUserId();
+        
+        log.info("Updating application: {} for borrower: {}", applicationId, borrowerId);
+        
+        UpdateApplicationResponse response = applicationService.updateApplication(applicationId, borrowerId, request);
+        
+        log.info("Application updated successfully: {} by borrower: {}, fields: {}", 
+                applicationId, borrowerId, response.getEditedFields());
+        
+        return ResponseEntity.ok(response);
     }
 }

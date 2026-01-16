@@ -3,8 +3,12 @@ package com.creditapp.borrower.service;
 import com.creditapp.borrower.dto.ApplicationDTO;
 import com.creditapp.borrower.dto.ApplicationHistoryDTO;
 import com.creditapp.borrower.dto.CreateApplicationRequest;
+import com.creditapp.borrower.dto.UpdateApplicationRequest;
+import com.creditapp.borrower.dto.UpdateApplicationResponse;
 import com.creditapp.borrower.exception.ApplicationCreationException;
 import com.creditapp.borrower.exception.ApplicationNotFoundException;
+import com.creditapp.borrower.exception.ApplicationNotEditableException;
+import com.creditapp.borrower.exception.ApplicationStaleException;
 import com.creditapp.borrower.exception.InvalidApplicationException;
 import com.creditapp.borrower.model.Application;
 import com.creditapp.borrower.model.ApplicationStatus;
@@ -20,9 +24,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 /**
  * Service for application operations.
@@ -131,6 +137,129 @@ public class ApplicationService {
     public Page<ApplicationDTO> listApplicationsByBorrower(UUID borrowerId, Pageable pageable) {
         return applicationRepository.findByBorrowerId(borrowerId, pageable)
                 .map(this::mapToDTO);
+    }
+
+    /**
+     * Update an existing DRAFT application.
+     */
+    @BusinessAudit(action = AuditAction.APPLICATION_UPDATED, entityType = "Application")
+    public UpdateApplicationResponse updateApplication(UUID applicationId, UUID borrowerId, UpdateApplicationRequest request) {
+        // Verify borrower owns the application
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ApplicationNotFoundException(
+                        "Application not found: " + applicationId));
+
+        if (!application.getBorrowerId().equals(borrowerId)) {
+            throw new ApplicationNotFoundException(
+                    "Access denied to application: " + applicationId);
+        }
+
+        // Verify application is in DRAFT status
+        if (application.getStatus() != ApplicationStatus.DRAFT) {
+            throw new ApplicationNotEditableException(
+                    "Cannot edit application in " + application.getStatus() + " status. Only DRAFT applications can be edited.");
+        }
+
+        // Track old values for audit
+        List<String> editedFields = new ArrayList<>();
+        
+        // Validate and update loan amount if provided
+        if (request.getLoanAmount() != null) {
+            if (request.getLoanAmount().compareTo(BigDecimal.valueOf(100)) < 0) {
+                throw new InvalidApplicationException("Loan amount must be at least 100");
+            }
+            if (request.getLoanAmount().compareTo(BigDecimal.valueOf(1000000)) > 0) {
+                throw new InvalidApplicationException("Loan amount cannot exceed 1,000,000");
+            }
+            if (!request.getLoanAmount().equals(application.getLoanAmount())) {
+                application.setLoanAmount(request.getLoanAmount());
+                editedFields.add("loanAmount");
+            }
+        }
+
+        // Validate and update loan term if provided
+        if (request.getLoanTermMonths() != null) {
+            if (request.getLoanTermMonths() < 6) {
+                throw new InvalidApplicationException("Loan term must be at least 6 months");
+            }
+            if (request.getLoanTermMonths() > 360) {
+                throw new InvalidApplicationException("Loan term cannot exceed 360 months");
+            }
+            if (!request.getLoanTermMonths().equals(application.getLoanTermMonths())) {
+                application.setLoanTermMonths(request.getLoanTermMonths());
+                editedFields.add("loanTermMonths");
+            }
+        }
+
+        // Update other fields if provided
+        if (request.getLoanType() != null && !request.getLoanType().equals(application.getLoanType())) {
+            application.setLoanType(request.getLoanType());
+            editedFields.add("loanType");
+        }
+
+        if (request.getCurrency() != null && !request.getCurrency().equals(application.getCurrency())) {
+            application.setCurrency(request.getCurrency());
+            editedFields.add("currency");
+        }
+
+        if (request.getRatePreference() != null && !request.getRatePreference().equals(application.getRatePreference())) {
+            application.setRatePreference(request.getRatePreference());
+            editedFields.add("ratePreference");
+        }
+
+        // Update application details if provided
+        if (request.getApplicationDetails() != null) {
+            if (application.getDetails() == null) {
+                application.setDetails(com.creditapp.borrower.model.ApplicationDetails.builder()
+                        .applicationId(application.getId())
+                        .build());
+            }
+            
+            if (request.getApplicationDetails().getAnnualIncome() != null) {
+                application.getDetails().setAnnualIncome(request.getApplicationDetails().getAnnualIncome());
+                editedFields.add("annualIncome");
+            }
+            if (request.getApplicationDetails().getEmploymentStatus() != null) {
+                application.getDetails().setEmploymentStatus(request.getApplicationDetails().getEmploymentStatus());
+                editedFields.add("employmentStatus");
+            }
+            if (request.getApplicationDetails().getDownPaymentAmount() != null) {
+                application.getDetails().setDownPaymentAmount(request.getApplicationDetails().getDownPaymentAmount());
+                editedFields.add("downPaymentAmount");
+            }
+        }
+
+        try {
+            // Save application (JPA will increment version)
+            application = applicationRepository.save(application);
+            
+            log.info("Application updated: {} by borrower: {}, fields changed: {}", 
+                    applicationId, borrowerId, editedFields);
+
+            return UpdateApplicationResponse.builder()
+                    .id(application.getId())
+                    .loanType(application.getLoanType())
+                    .loanAmount(application.getLoanAmount())
+                    .loanTermMonths(application.getLoanTermMonths())
+                    .currency(application.getCurrency())
+                    .ratePreference(application.getRatePreference())
+                    .status(application.getStatus().toString())
+                    .version(application.getVersion())
+                    .updatedAt(application.getUpdatedAt())
+                    .editedFields(editedFields)
+                    .build();
+                    
+        } catch (ObjectOptimisticLockingFailureException e) {
+            // Application was modified by another request
+            Application current = applicationRepository.findById(applicationId)
+                    .orElseThrow(() -> new ApplicationNotFoundException("Application not found: " + applicationId));
+            throw new ApplicationStaleException(
+                    "Application was modified by another request. Please refresh and try again.", 
+                    current.getVersion());
+        } catch (Exception e) {
+            log.error("Failed to update application: {}", applicationId, e);
+            throw new ApplicationCreationException("Failed to update application", e);
+        }
     }
 
     private ApplicationDTO mapToDTO(Application application) {

@@ -64,6 +64,10 @@ public class Application {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Version
+    @Column(name = "version")
+    private Long version;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "borrower_id", insertable = false, updatable = false)
     private User borrower;
