@@ -40,3 +40,10 @@ logging:
   level:
     root: INFO
     com.creditapp: DEBUG
+
+jwt:
+  secret: your-256-bit-secret-key-base64-encoded-very-long-secret-key-here
+  expiration:
+    minutes: 15
+  refresh-expiration:
+    days: 7

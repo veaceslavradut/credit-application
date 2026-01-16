@@ -29,7 +29,11 @@ public class User {
     private String phone;
 
     @Column(name = "role", nullable = false)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
+    @Column(name = "organization_id")
+    private UUID organizationId;
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
@@ -50,8 +54,10 @@ public class User {
     public void setLastName(String lastName) { this.lastName = lastName; }
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public UserRole getRole() { return role; }
+    public void setRole(UserRole role) { this.role = role; }
+    public UUID getOrganizationId() { return organizationId; }
+    public void setOrganizationId(UUID organizationId) { this.organizationId = organizationId; }
     public Boolean getIsActive() { return isActive; }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }
     public LocalDateTime getCreatedAt() { return createdAt; }

@@ -6,6 +6,7 @@ import com.creditapp.auth.event.UserRegisteredEvent;
 import com.creditapp.auth.exception.DuplicateEmailException;
 import com.creditapp.auth.repository.UserRepository;
 import com.creditapp.shared.model.User;
+import com.creditapp.shared.model.UserRole;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
@@ -41,7 +42,7 @@ public class UserRegistrationService {
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setPhone(request.getPhoneNumber());
-        user.setRole("BORROWER");
+        user.setRole(UserRole.BORROWER);
         user.setIsActive(true);
         User savedUser = userRepository.save(user);
         eventPublisher.publishEvent(new UserRegisteredEvent(savedUser.getId(), savedUser.getEmail(), savedUser.getFirstName()));

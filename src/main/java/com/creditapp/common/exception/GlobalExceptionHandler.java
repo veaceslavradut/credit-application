@@ -3,6 +3,9 @@ package com.creditapp.common.exception;
 import com.creditapp.auth.exception.DuplicateEmailException;
 import com.creditapp.auth.exception.DuplicateBankRegistrationException;
 import com.creditapp.auth.exception.PasswordValidationException;
+import com.creditapp.auth.exception.InvalidCredentialsException;
+import com.creditapp.auth.exception.BankNotActivatedException;
+import com.creditapp.shared.exception.LoginRateLimitExceededException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -49,6 +52,37 @@ public class GlobalExceptionHandler {
         response.put("timestamp", LocalDateTime.now().toString());
         response.put("path", request.getDescription(false).replace("uri=", ""));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<?> handleInvalidCredentials(InvalidCredentialsException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Unauthorized");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
+
+    @ExceptionHandler(BankNotActivatedException.class)
+    public ResponseEntity<?> handleBankNotActivated(BankNotActivatedException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Unauthorized");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
+
+    @ExceptionHandler(LoginRateLimitExceededException.class)
+    public ResponseEntity<?> handleLoginRateLimitExceeded(LoginRateLimitExceededException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Too Many Requests");
+        response.put("message", ex.getMessage());
+        response.put("retryAfter", 60);
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(response);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

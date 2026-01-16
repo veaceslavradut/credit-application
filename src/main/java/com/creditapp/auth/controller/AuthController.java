@@ -4,8 +4,12 @@ import com.creditapp.auth.dto.RegistrationRequest;
 import com.creditapp.auth.dto.RegistrationResponse;
 import com.creditapp.auth.dto.BankRegistrationRequest;
 import com.creditapp.auth.dto.BankRegistrationResponse;
+import com.creditapp.auth.dto.LoginRequest;
+import com.creditapp.auth.dto.LoginResponse;
+import com.creditapp.auth.dto.RefreshTokenRequest;
 import com.creditapp.auth.service.UserRegistrationService;
 import com.creditapp.auth.service.BankRegistrationService;
+import com.creditapp.auth.service.LoginService;
 import com.creditapp.shared.service.BankActivationEmailService;
 import com.creditapp.shared.model.Organization;
 import com.creditapp.shared.model.BankStatus;
@@ -15,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -27,15 +32,18 @@ public class AuthController {
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private final UserRegistrationService userRegistrationService;
     private final BankRegistrationService bankRegistrationService;
+    private final LoginService loginService;
     private final BankActivationEmailService bankActivationEmailService;
     private final OrganizationRepository organizationRepository;
 
     public AuthController(UserRegistrationService userRegistrationService,
                           BankRegistrationService bankRegistrationService,
+                          LoginService loginService,
                           BankActivationEmailService bankActivationEmailService,
                           OrganizationRepository organizationRepository) {
         this.userRegistrationService = userRegistrationService;
         this.bankRegistrationService = bankRegistrationService;
+        this.loginService = loginService;
         this.bankActivationEmailService = bankActivationEmailService;
         this.organizationRepository = organizationRepository;
     }
@@ -104,5 +112,30 @@ public class AuthController {
         String jsonResponse = String.format("{\"bankId\": \"%s\", \"bankName\": \"%s\", \"status\": \"ACTIVE\", \"message\": \"Bank activated successfully\"}", 
                 bank.getId(), bank.getName());
         return ResponseEntity.ok(jsonResponse);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        logger.info("Login request received for email: {}", request.getEmail());
+        LoginResponse response = loginService.login(request);
+        logger.info("User logged in successfully: {}", request.getEmail());
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<LoginResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
+        logger.info("Token refresh request received");
+        LoginResponse response = loginService.refreshToken(request.getRefreshToken());
+        logger.info("Token refreshed successfully");
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/logout")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> logout() {
+        logger.info("Logout request received");
+        loginService.logout();
+        logger.info("User logged out successfully");
+        return ResponseEntity.noContent().build();
     }
 }

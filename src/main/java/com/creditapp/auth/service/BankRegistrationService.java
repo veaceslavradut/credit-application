@@ -6,6 +6,7 @@ import com.creditapp.auth.exception.DuplicateBankRegistrationException;
 import com.creditapp.shared.model.BankStatus;
 import com.creditapp.shared.model.Organization;
 import com.creditapp.shared.model.User;
+import com.creditapp.shared.model.UserRole;
 import com.creditapp.shared.repository.OrganizationRepository;
 import com.creditapp.auth.repository.UserRepository;
 import com.creditapp.shared.service.ActivationTokenService;
@@ -73,7 +74,7 @@ public class BankRegistrationService {
         admin.setFirstName(request.getAdminFirstName());
         admin.setLastName(request.getAdminLastName());
         admin.setPhone(request.getAdminPhone());
-        admin.setRole("BANK_ADMIN");
+        admin.setRole(UserRole.BANK_ADMIN);
         admin.setIsActive(true);
         User savedAdmin = userRepository.save(admin);
 
