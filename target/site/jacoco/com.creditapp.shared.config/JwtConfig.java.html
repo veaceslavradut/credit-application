@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.config</a> &gt; <span class="el_source">JwtConfig.java</span></div><h1>JwtConfig.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.config;
+
+import io.jsonwebtoken.security.Keys;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import javax.crypto.SecretKey;
+import java.util.Base64;
+
+@Configuration
+@ConfigurationProperties(prefix = &quot;jwt&quot;)
+<span class="fc" id="L13">public class JwtConfig {</span>
+    private String secret;
+    private Expiration expiration;
+    private RefreshExpiration refreshExpiration;
+
+<span class="fc" id="L18">    public static class Expiration {</span>
+        private Integer minutes;
+<span class="fc" id="L20">        public Integer getMinutes() { return minutes; }</span>
+<span class="fc" id="L21">        public void setMinutes(Integer minutes) { this.minutes = minutes; }</span>
+    }
+
+<span class="fc" id="L24">    public static class RefreshExpiration {</span>
+        private Integer days;
+<span class="fc" id="L26">        public Integer getDays() { return days; }</span>
+<span class="fc" id="L27">        public void setDays(Integer days) { this.days = days; }</span>
+    }
+
+<span class="nc" id="L30">    public String getSecret() { return secret; }</span>
+<span class="fc" id="L31">    public void setSecret(String secret) { this.secret = secret; }</span>
+<span class="fc" id="L32">    public Expiration getExpiration() { return expiration; }</span>
+<span class="fc" id="L33">    public void setExpiration(Expiration expiration) { this.expiration = expiration; }</span>
+<span class="fc" id="L34">    public RefreshExpiration getRefreshExpiration() { return refreshExpiration; }</span>
+<span class="fc" id="L35">    public void setRefreshExpiration(RefreshExpiration refreshExpiration) { this.refreshExpiration = refreshExpiration; }</span>
+
+    @Bean
+    public SecretKey jwtSigningKey() {
+<span class="fc" id="L39">        byte[] decodedKey = Base64.getDecoder().decode(secret);</span>
+<span class="fc" id="L40">        return Keys.hmacShaKeyFor(decodedKey);</span>
+    }
+
+    @Bean
+    public JwtProperties jwtProperties() {
+<span class="fc" id="L45">        return new JwtProperties(secret, expiration.getMinutes(), refreshExpiration.getDays(), jwtSigningKey());</span>
+    }
+
+    public static class JwtProperties {
+        private final String secret;
+        private final Integer expirationMinutes;
+        private final Integer refreshExpirationDays;
+        private final SecretKey signingKey;
+
+<span class="fc" id="L54">        public JwtProperties(String secret, Integer expirationMinutes, Integer refreshExpirationDays, SecretKey signingKey) {</span>
+<span class="fc" id="L55">            this.secret = secret;</span>
+<span class="fc" id="L56">            this.expirationMinutes = expirationMinutes;</span>
+<span class="fc" id="L57">            this.refreshExpirationDays = refreshExpirationDays;</span>
+<span class="fc" id="L58">            this.signingKey = signingKey;</span>
+<span class="fc" id="L59">        }</span>
+
+<span class="nc" id="L61">        public String getSecret() { return secret; }</span>
+<span class="fc" id="L62">        public Integer getExpirationMinutes() { return expirationMinutes; }</span>
+<span class="fc" id="L63">        public Integer getRefreshExpirationDays() { return refreshExpirationDays; }</span>
+<span class="fc" id="L64">        public SecretKey getSigningKey() { return signingKey; }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

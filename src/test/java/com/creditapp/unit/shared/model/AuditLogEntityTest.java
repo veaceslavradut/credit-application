@@ -1,6 +1,7 @@
 package com.creditapp.unit.shared.model;
 
 import com.creditapp.shared.model.User;
+import com.creditapp.shared.model.UserRole;
 import com.creditapp.auth.repository.UserRepository;
 import com.creditapp.shared.audit.AuditLog;
 import com.creditapp.shared.repository.AuditLogRepository;
@@ -52,7 +53,7 @@ class AuditLogEntityTest {
         user.setPasswordHash("hash");
         user.setFirstName("Test");
         user.setLastName("User");
-        user.setRole("BORROWER");
+        user.setRole(UserRole.BORROWER);
         User savedUser = userRepository.save(user);
         testUserId = savedUser.getId();
     }

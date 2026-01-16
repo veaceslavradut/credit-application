@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -112,8 +113,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    // DO NOT handle AccessDeniedException here - let Spring Security's CustomAccessDeniedHandler handle it
+    // @ExceptionHandler(AccessDeniedException.class) is intentionally omitted
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGlobalException(Exception ex, WebRequest request) {
+        // Rethrow AccessDeniedException so Spring Security can handle it properly
+        if (ex instanceof AccessDeniedException) {
+            throw (AccessDeniedException) ex;
+        }
+        
         logger.error("Unexpected error", ex);
         Map<String, Object> response = new HashMap<>();
         response.put("error", "Internal Server Error");

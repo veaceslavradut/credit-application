@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuditLog.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.audit</a> &gt; <span class="el_source">AuditLog.java</span></div><h1>AuditLog.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.audit;
+
+import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Immutable;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Entity
+@Table(name = &quot;audit_logs&quot;)
+@Immutable
+<span class="fc" id="L13">public class AuditLog {</span>
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(name = &quot;user_id&quot;)
+    private UUID userId;
+
+    @Column(name = &quot;action&quot;, nullable = false)
+    private String action;
+
+    @Column(name = &quot;resource&quot;, nullable = false)
+    private String resource;
+
+    @Column(name = &quot;timestamp&quot;, nullable = false)
+    @CreationTimestamp
+    private LocalDateTime timestamp;
+
+    @Column(name = &quot;ip_address&quot;)
+    private String ipAddress;
+
+    @Column(name = &quot;result&quot;, nullable = false)
+    private String result;
+
+<span class="nc" id="L38">    public UUID getId() { return id; }</span>
+<span class="nc" id="L39">    public UUID getUserId() { return userId; }</span>
+<span class="nc" id="L40">    public void setUserId(UUID userId) { this.userId = userId; }</span>
+<span class="nc" id="L41">    public String getAction() { return action; }</span>
+<span class="nc" id="L42">    public void setAction(String action) { this.action = action; }</span>
+<span class="nc" id="L43">    public String getResource() { return resource; }</span>
+<span class="nc" id="L44">    public void setResource(String resource) { this.resource = resource; }</span>
+<span class="nc" id="L45">    public LocalDateTime getTimestamp() { return timestamp; }</span>
+<span class="nc" id="L46">    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }</span>
+<span class="nc" id="L47">    public String getIpAddress() { return ipAddress; }</span>
+<span class="nc" id="L48">    public void setIpAddress(String ipAddress) { this.ipAddress = ipAddress; }</span>
+<span class="nc" id="L49">    public String getResult() { return result; }</span>
+<span class="nc" id="L50">    public void setResult(String result) { this.result = result; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

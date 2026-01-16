@@ -104,8 +104,8 @@ public class JwtTokenServiceUnitTest {
     @Test
     void testTokenExpirationClaimPresent() {
         String token = jwtTokenService.generateToken(testUser);
-        LocalDateTime expiration = jwtTokenService.extractExpiration(token);
+        Long expiration = jwtTokenService.extractExpiration(token);
         assertNotNull(expiration);
-        assertTrue(expiration.isAfter(LocalDateTime.now()));
+        assertTrue(expiration > System.currentTimeMillis());
     }
 }

@@ -1,6 +1,7 @@
 package com.creditapp.unit.auth.model;
 
 import com.creditapp.shared.model.User;
+import com.creditapp.shared.model.UserRole;
 import com.creditapp.auth.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ class UserEntityTest {
         u.setPasswordHash("hash");
         u.setFirstName("Test");
         u.setLastName("User");
-        u.setRole("BORROWER");
+        u.setRole(UserRole.BORROWER);
 
         userRepository.save(u);
 
