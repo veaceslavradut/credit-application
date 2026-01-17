@@ -975,6 +975,7 @@ curl -X GET "http://localhost:8080/api/help/loan-types?language=en"
 | /api/borrower/applications/{id}/documents | GET |  | ✓ |  |  |
 | /api/borrower/applications/{id}/documents/{docId} | DELETE |  | ✓ |  |  |
 | /api/borrower/applications/{id}/status | GET |  | ✓ |  |  |
+| /api/borrower/applications/{id}/offers | GET |  | ✓ |  |  |
 | /api/borrower/applications/{id}/withdraw | POST |  | ✓ |  |  |
 | /api/help/topics | GET | ✓ |  |  |  |
 | /api/help/{topic} | GET | ✓ |  |  |  |
@@ -1202,6 +1203,156 @@ Results of the calculation:
 - Full input parameters and results preserved
 - Supports regulatory audits and dispute resolution
 - Enables tracing of why specific offers were generated
+
+---
+
+## Borrower Offer Retrieval API
+
+### GET /api/borrower/applications/{applicationId}/offers
+**Description:** Retrieve and compare all preliminary offers for a specific application. Offers are sorted by APR in ascending order (lowest APR first).
+
+**Authentication:** Required - BORROWER role
+
+**Request Method:** GET
+
+**Path Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| applicationId | UUID | Yes | Unique identifier of the application |
+
+**Response (200 OK):** Returns OfferComparisonResponse with offers sorted by APR
+
+**Response Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| offers | Array<OfferComparisonDTO> | Array of offers sorted by APR ascending |
+| totalOffersCount | Integer | Total number of offers (auto-calculated from offers array length) |
+| disclaimer | String | Static disclaimer about preliminary nature of offers |
+| retrievedAt | ISO-8601 DateTime | Timestamp when offers were retrieved |
+| nextRefreshAvailableAt | ISO-8601 DateTime | Timestamp when offer data can be refreshed (now + 5 minutes for caching) |
+| applicationId | UUID | The requested application ID |
+
+**OfferComparisonDTO Fields (8-Field Comparison Schema):**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| offerId | UUID | Unique identifier of the offer |
+| bankId | UUID | Bank/Organization ID |
+| bankName | String | Display name of the bank |
+| logoUrl | String | URL to bank logo for UI display |
+| apr | BigDecimal | Annual Percentage Rate (4 decimal places) |
+| monthlyPayment | BigDecimal | Regular monthly payment amount (2 decimal places) |
+| totalCost | BigDecimal | Sum of all payments minus principal (2 decimal places) |
+| originationFee | BigDecimal | Upfront fee charged by bank (2 decimal places) |
+| insuranceCost | BigDecimal | Optional loan insurance cost (2 decimal places) |
+| processingTimeDays | Integer | Days to approval |
+| validityPeriodDays | Integer | Days the offer remains valid |
+| requiredDocuments | Array<String> | List of required documents for this offer |
+| expiresAt | ISO-8601 DateTime | When the offer expires |
+| offerStatus | String | Current status of the offer (CALCULATED, SUBMITTED, ACCEPTED, REJECTED, EXPIRED, WITHDRAWN) |
+
+**Example Response (200 OK):**
+```json
+{
+  "applicationId": "550e8400-e29b-41d4-a716-446655440000",
+  "offers": [
+    {
+      "offerId": "660e8400-e29b-41d4-a716-446655440001",
+      "bankId": "770e8400-e29b-41d4-a716-446655440002",
+      "bankName": "First National Bank",
+      "logoUrl": "https://firstbank.com/logo.png",
+      "apr": 3.50,
+      "monthlyPayment": 1500.00,
+      "totalCost": 45000.00,
+      "originationFee": 500.00,
+      "insuranceCost": 200.00,
+      "processingTimeDays": 5,
+      "validityPeriodDays": 30,
+      "requiredDocuments": ["ID", "Recent Paycheck", "Tax Return"],
+      "expiresAt": "2026-02-17T12:00:00Z",
+      "offerStatus": "CALCULATED"
+    },
+    {
+      "offerId": "880e8400-e29b-41d4-a716-446655440003",
+      "bankId": "770e8400-e29b-41d4-a716-446655440002",
+      "bankName": "First National Bank",
+      "logoUrl": "https://firstbank.com/logo.png",
+      "apr": 4.25,
+      "monthlyPayment": 1520.00,
+      "totalCost": 46000.00,
+      "originationFee": 600.00,
+      "insuranceCost": 250.00,
+      "processingTimeDays": 7,
+      "validityPeriodDays": 30,
+      "requiredDocuments": ["ID", "Recent Bank Statement"],
+      "expiresAt": "2026-02-17T12:00:00Z",
+      "offerStatus": "CALCULATED"
+    }
+  ],
+  "totalOffersCount": 2,
+  "disclaimer": "These are preliminary offers based on estimated calculations. Final terms may vary after formal review by the bank.",
+  "retrievedAt": "2026-01-17T14:30:00Z",
+  "nextRefreshAvailableAt": "2026-01-17T14:35:00Z"
+}
+```
+
+**Error Responses:**
+
+**400 Bad Request** - Application not in SUBMITTED status or later
+```json
+{
+  "error": "Bad Request",
+  "message": "Application must be in SUBMITTED status or later to view offers",
+  "timestamp": "2026-01-17T14:30:00Z"
+}
+```
+
+**403 Forbidden** - Borrower does not own this application
+```json
+{
+  "error": "Forbidden",
+  "message": "Borrower does not own this application",
+  "timestamp": "2026-01-17T14:30:00Z"
+}
+```
+
+**404 Not Found** - Application not found
+```json
+{
+  "error": "Not Found",
+  "message": "Application not found with ID: 550e8400-e29b-41d4-a716-446655440000",
+  "timestamp": "2026-01-17T14:30:00Z"
+}
+```
+
+**Performance & Caching:**
+- Response time: < 100ms for typical load
+- Offers cached for 5 minutes (nextRefreshAvailableAt indicates when refresh is available)
+- Use Spring Cache abstraction with configurable backend (Redis, Ehcache, etc.)
+- Caching key: applicationId + borrowerId
+- Cache invalidation: automatic on expiration or manual when new offers added
+
+**Features:**
+- Automatic APR sorting (ascending = lowest rate first)
+- Bank logo fallback to placeholder if not configured
+- Required documents parsed from comma-separated strings to arrays
+- N+1 query prevention: single offer query + batch bank details fetch
+- Read-only access (borrower cannot modify offers through this endpoint)
+- All dates returned in ISO-8601 UTC format
+
+**Authorization:**
+- Only BORROWER role can access this endpoint
+- Borrower can only view offers for their own applications
+- Returns 403 Forbidden if accessing another borrower's application
+
+**cURL Example:**
+```bash
+curl -X GET https://api.creditapp.com/api/borrower/applications/550e8400-e29b-41d4-a716-446655440000/offers \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -H "Content-Type: application/json"
+```
 
 ---
 

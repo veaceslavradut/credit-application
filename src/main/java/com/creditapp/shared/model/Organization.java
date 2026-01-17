@@ -46,6 +46,9 @@ public class Organization {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    @Column(name = "logo_url")
+    private String logoUrl;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -80,6 +83,8 @@ public class Organization {
     public void setActivatedAt(LocalDateTime activatedAt) { this.activatedAt = activatedAt; }
     public LocalDateTime getDeletedAt() { return deletedAt; }
     public void setDeletedAt(LocalDateTime deletedAt) { this.deletedAt = deletedAt; }
+    public String getLogoUrl() { return logoUrl; }
+    public void setLogoUrl(String logoUrl) { this.logoUrl = logoUrl; }
 
     @Override
     public boolean equals(Object o) {
