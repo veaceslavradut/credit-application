@@ -36,11 +36,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UUID userId = jwtTokenService.extractUserId(token);
                 String email = jwtTokenService.extractEmail(token);
                 String role = jwtTokenService.extractRole(token);
+                
+                // Extract organizationId for bank admins
+                UUID organizationId = null;
+                String orgIdStr = jwtTokenService.extractOrgId(token);
+                if (orgIdStr != null && !orgIdStr.isEmpty()) {
+                    try {
+                        organizationId = UUID.fromString(orgIdStr);
+                    } catch (IllegalArgumentException e) {
+                        logger.debug("Invalid organizationId in JWT: {}", orgIdStr);
+                    }
+                }
 
                 Collection<GrantedAuthority> authorities = new ArrayList<>();
                 authorities.add(new SimpleGrantedAuthority(role));
 
-                JwtAuthenticationToken authentication = new JwtAuthenticationToken(userId, email, authorities);
+                JwtAuthenticationToken authentication = new JwtAuthenticationToken(userId, email, authorities, organizationId);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 logger.debug("JWT token validated for user: {} ({})", userId, email);
             }

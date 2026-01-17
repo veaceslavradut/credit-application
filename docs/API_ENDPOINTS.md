@@ -1205,6 +1205,231 @@ Results of the calculation:
 
 ---
 
+## Bank Rate Card Configuration API
+
+### POST /api/bank/rate-cards
+**Description:** Create a new rate card configuration for a specific loan type and currency. If an active rate card exists for the same loan type and currency, it is marked as inactive (versioning).
+
+**Authentication:** Required - BANK_ADMIN role
+
+**Request Method:** POST
+
+**Request Headers:**
+- Authorization: Bearer {jwt_token}
+- Content-Type: application/json
+
+**Request Body:**
+```json
+{
+  "loanType": "PERSONAL",
+  "currency": "EUR",
+  "minLoanAmount": 5000,
+  "maxLoanAmount": 100000,
+  "baseApr": 8.5,
+  "aprAdjustmentRange": 3.0,
+  "originationFeePercent": 2.5,
+  "insurancePercent": 0.5
+}
+```
+
+**Request Parameters:**
+
+| Field | Type | Required | Validation | Description |
+|-------|------|----------|-----------|-------------|
+| loanType | String | Yes | Enum (PERSONAL, HOME, AUTO, etc.) | Type of loan |
+| currency | String | Yes | Enum (EUR, USD, MDL) | Currency of the loan |
+| minLoanAmount | BigDecimal | Yes | 100-1,000,000 | Minimum loan amount |
+| maxLoanAmount | BigDecimal | Yes | >= minLoanAmount, <= 1,000,000 | Maximum loan amount |
+| baseApr | BigDecimal | Yes | 0.5-50.0 | Base Annual Percentage Rate |
+| aprAdjustmentRange | BigDecimal | Yes | 0-5.0 | APR adjustment range (%) |
+| originationFeePercent | BigDecimal | Yes | 0-10.0 | Origination fee as percentage |
+| insurancePercent | BigDecimal | Yes | 0-5.0 | Insurance cost as percentage |
+
+**Response (201 Created):**
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "loanType": "PERSONAL",
+  "currency": "EUR",
+  "minLoanAmount": 5000,
+  "maxLoanAmount": 100000,
+  "baseApr": 8.5,
+  "aprAdjustmentRange": 3.0,
+  "originationFeePercent": 2.5,
+  "insurancePercent": 0.5,
+  "processingTimeDays": null,
+  "validFrom": "2026-01-17T10:30:00Z",
+  "validTo": null,
+  "active": true
+}
+```
+
+**Error Responses:**
+
+**400 Bad Request** - Validation failed
+```json
+{
+  "error": "Invalid Rate Card",
+  "message": "Minimum loan amount must be less than maximum loan amount",
+  "timestamp": "2026-01-17T10:30:00Z"
+}
+```
+
+**403 Forbidden** - Not BANK_ADMIN role
+```json
+{
+  "error": "Forbidden",
+  "message": "You do not have permission to access this resource",
+  "timestamp": "2026-01-17T10:30:00Z"
+}
+```
+
+---
+
+### GET /api/bank/rate-cards
+**Description:** Retrieve all active rate cards for the authenticated bank. Returns only rate cards with validTo = NULL.
+
+**Authentication:** Required - BANK_ADMIN role
+
+**Request Method:** GET
+
+**Request Headers:**
+- Authorization: Bearer {jwt_token}
+
+**Query Parameters:** None
+
+**Response (200 OK):**
+```json
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "loanType": "PERSONAL",
+    "currency": "EUR",
+    "minLoanAmount": 5000,
+    "maxLoanAmount": 100000,
+    "baseApr": 8.5,
+    "aprAdjustmentRange": 3.0,
+    "originationFeePercent": 2.5,
+    "insurancePercent": 0.5,
+    "processingTimeDays": null,
+    "validFrom": "2026-01-17T10:30:00Z",
+    "validTo": null,
+    "active": true
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440001",
+    "loanType": "HOME",
+    "currency": "EUR",
+    "minLoanAmount": 50000,
+    "maxLoanAmount": 500000,
+    "baseApr": 5.2,
+    "aprAdjustmentRange": 2.5,
+    "originationFeePercent": 1.5,
+    "insurancePercent": 0.3,
+    "processingTimeDays": null,
+    "validFrom": "2026-01-15T08:00:00Z",
+    "validTo": null,
+    "active": true
+  }
+]
+```
+
+**Error Responses:**
+
+**403 Forbidden** - Not BANK_ADMIN role
+```json
+{
+  "error": "Forbidden",
+  "message": "You do not have permission to access this resource",
+  "timestamp": "2026-01-17T10:30:00Z"
+}
+```
+
+---
+
+### PUT /api/bank/rate-cards/{rateCardId}
+**Description:** Update a rate card by creating a new version. The old rate card is marked as inactive (validTo = now), and a new card is created with the updated parameters.
+
+**Authentication:** Required - BANK_ADMIN role
+
+**Request Method:** PUT
+
+**Request Headers:**
+- Authorization: Bearer {jwt_token}
+- Content-Type: application/json
+
+**Path Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| rateCardId | UUID | Yes | ID of the rate card to update |
+
+**Request Body:**
+```json
+{
+  "loanType": "PERSONAL",
+  "currency": "EUR",
+  "minLoanAmount": 5000,
+  "maxLoanAmount": 100000,
+  "baseApr": 8.75,
+  "aprAdjustmentRange": 3.0,
+  "originationFeePercent": 2.5,
+  "insurancePercent": 0.5
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "id": "770e8400-e29b-41d4-a716-446655440002",
+  "loanType": "PERSONAL",
+  "currency": "EUR",
+  "minLoanAmount": 5000,
+  "maxLoanAmount": 100000,
+  "baseApr": 8.75,
+  "aprAdjustmentRange": 3.0,
+  "originationFeePercent": 2.5,
+  "insurancePercent": 0.5,
+  "processingTimeDays": null,
+  "validFrom": "2026-01-17T11:00:00Z",
+  "validTo": null,
+  "active": true
+}
+```
+
+**Note:** The response includes a new ID for the updated rate card (new version). The original rate card is marked inactive with validTo timestamp but remains in the database for audit history.
+
+**Error Responses:**
+
+**400 Bad Request** - Validation failed
+```json
+{
+  "error": "Invalid Rate Card",
+  "message": "Base APR must be between 0.5 and 50.0",
+  "timestamp": "2026-01-17T10:30:00Z"
+}
+```
+
+**403 Forbidden** - Not BANK_ADMIN role or rate card belongs to different bank
+```json
+{
+  "error": "Forbidden",
+  "message": "Rate card does not belong to your bank",
+  "timestamp": "2026-01-17T10:30:00Z"
+}
+```
+
+**404 Not Found** - Rate card not found
+```json
+{
+  "error": "Not Found",
+  "message": "Rate card with ID 550e8400-e29b-41d4-a716-446655440000 not found",
+  "timestamp": "2026-01-17T10:30:00Z"
+}
+```
+
+---
+
 ## Versioning
 This API uses path-based versioning. Future versions will be available at /api/v2/auth/... etc.
 
@@ -1217,6 +1442,7 @@ This API uses path-based versioning. Future versions will be available at /api/v
 
 | Date | Version | Changes | Story |
 |------|---------|---------|-------|
+| 2026-01-17 | 1.7 | Added Bank Rate Card Configuration API: POST, GET, PUT /api/bank/rate-cards endpoints for managing rate cards with versioning | Story 3.2 |
 | 2026-01-17 | 1.6 | Added Offer, BankRateCard, and OfferCalculationLog data model documentation | Story 3.1 |
 | 2026-01-17 | 1.5 | Added Help Content endpoints: topics listing and article retrieval | Story 2.10 |
 | 2026-01-16 | 1.4 | Added application withdrawal endpoint allowing borrowers to cancel applications | Story 2.8 |

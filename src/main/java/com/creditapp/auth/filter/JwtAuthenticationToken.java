@@ -10,11 +10,17 @@ public class JwtAuthenticationToken implements Authentication {
     private final UUID userId;
     private final String email;
     private final Collection<GrantedAuthority> authorities;
+    private final UUID organizationId;
 
     public JwtAuthenticationToken(UUID userId, String email, Collection<GrantedAuthority> authorities) {
+        this(userId, email, authorities, null);
+    }
+
+    public JwtAuthenticationToken(UUID userId, String email, Collection<GrantedAuthority> authorities, UUID organizationId) {
         this.userId = userId;
         this.email = email;
         this.authorities = authorities;
+        this.organizationId = organizationId;
     }
 
     @Override
@@ -34,4 +40,5 @@ public class JwtAuthenticationToken implements Authentication {
 
     public UUID getUserId() { return userId; }
     public String getEmail() { return email; }
+    public UUID getOrganizationId() { return organizationId; }
 }

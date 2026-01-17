@@ -19,7 +19,9 @@ public enum AuditAction {
     OFFER_ACCEPTED("Offer accepted"),
     APPLICATION_VIEWED("Application viewed"),
     ROLE_ASSIGNED("Role assigned"),
-    NOTIFICATION_SENT("Notification sent");
+    NOTIFICATION_SENT("Notification sent"),
+    RATE_CARD_CREATED("Rate card created"),
+    RATE_CARD_UPDATED("Rate card updated");
 
     private final String description;
 

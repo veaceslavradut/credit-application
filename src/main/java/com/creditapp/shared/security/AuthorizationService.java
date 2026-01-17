@@ -14,6 +14,22 @@ public class AuthorizationService {
     public boolean hasRole(String role) {
         return getCurrentUserRole() != null && getCurrentUserRole().name().equals(role);
     }
+    
+    /**
+     * Get bank ID from JWT token for BANK_ADMIN users.
+     * Throws IllegalStateException if organizationId not found.
+     */
+    public UUID getBankIdFromContext() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof JwtAuthenticationToken) {
+            JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;
+            UUID organizationId = token.getOrganizationId();
+            if (organizationId != null) {
+                return organizationId;
+            }
+        }
+        throw new IllegalStateException("Bank ID not found in authentication context");
+    }
 
     public UUID getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -39,6 +39,7 @@ com\creditapp\borrower\model\LoanPreference.class
 com\creditapp\shared\audit\BusinessAuditAspect.class
 com\creditapp\shared\dto\NotificationHealthDTO$NotificationHealthDTOBuilder.class
 com\creditapp\auth\exception\DuplicateEmailException.class
+com\creditapp\bank\dto\BankRateCardResponse.class
 com\creditapp\borrower\model\EmploymentStatus.class
 com\creditapp\shared\exception\NotFoundException.class
 com\creditapp\borrower\model\BorrowerNotification$BorrowerNotificationBuilder.class
@@ -53,6 +54,7 @@ com\creditapp\borrower\repository\ApplicationDetailsRepository.class
 com\creditapp\bank\model\OfferStatus.class
 com\creditapp\borrower\model\Currency.class
 com\creditapp\borrower\dto\UpdateApplicationResponse.class
+com\creditapp\bank\service\BankRateCardService.class
 com\creditapp\borrower\exception\ApplicationLockedException.class
 com\creditapp\auth\service\LoginService.class
 com\creditapp\shared\util\LoginRateLimiter.class
@@ -69,6 +71,7 @@ com\creditapp\auth\exception\PasswordValidationException.class
 com\creditapp\borrower\dto\SubmitApplicationRequest.class
 com\creditapp\borrower\repository\LoanPreferenceRepository.class
 com\creditapp\auth\dto\ChangePasswordRequest.class
+com\creditapp\bank\controller\BankAdminRateCardController.class
 com\creditapp\auth\dto\LoginResponse$UserDTO.class
 com\creditapp\shared\config\JwtConfig.class
 com\creditapp\borrower\dto\ApplicationDetailsDTO.class
@@ -77,6 +80,7 @@ com\creditapp\shared\service\AuditLogArchivalService.class
 com\creditapp\shared\model\HelpFAQ$HelpFAQBuilder.class
 com\creditapp\bank\repository\OfferCalculationLogRepository.class
 com\creditapp\borrower\dto\ApplicationHistoryDTO$ApplicationHistoryDTOBuilder.class
+com\creditapp\bank\dto\BankRateCardRequest.class
 com\creditapp\borrower\exception\InvalidDocumentException.class
 com\creditapp\shared\repository\HelpArticleRepository.class
 com\creditapp\auth\dto\RefreshTokenRequest.class
@@ -158,6 +162,7 @@ com\creditapp\borrower\dto\UpdateApplicationRequest$UpdateApplicationRequestBuil
 com\creditapp\auth\exception\BankNotActivatedException.class
 com\creditapp\borrower\repository\ApplicationDocumentRepository.class
 com\creditapp\shared\model\User.class
+com\creditapp\bank\exception\InvalidRateCardException.class
 com\creditapp\shared\security\RateLimitingAspect.class
 com\creditapp\shared\model\NotificationChannel.class
 com\creditapp\shared\service\RequestContextService.class
@@ -171,6 +176,7 @@ com\creditapp\shared\messaging\NotificationEventConsumer.class
 com\creditapp\auth\event\UserRegisteredEvent.class
 com\creditapp\bank\repository\OfferRepository.class
 com\creditapp\shared\listener\EntityAuditListener.class
+com\creditapp\bank\exception\DuplicateRateCardException.class
 com\creditapp\shared\model\AuditLog.class
 com\creditapp\shared\model\HelpArticle$HelpArticleBuilder.class
 com\creditapp\common\config\WebMvcConfig.class
@@ -195,6 +201,7 @@ com\creditapp\shared\security\RequiresBankAdmin.class
 com\creditapp\borrower\dto\NotificationDTO.class
 com\creditapp\borrower\dto\HelpArticleListDTO.class
 com\creditapp\shared\audit\AuditLogListener.class
+com\creditapp\bank\exception\RateCardNotFoundException.class
 com\creditapp\shared\model\Organization.class
 com\creditapp\auth\service\PasswordHasher.class
 com\creditapp\shared\model\HelpSection.class

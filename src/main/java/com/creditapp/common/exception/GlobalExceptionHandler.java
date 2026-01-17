@@ -6,6 +6,9 @@ import com.creditapp.auth.exception.PasswordValidationException;
 import com.creditapp.auth.exception.InvalidCredentialsException;
 import com.creditapp.auth.exception.BankNotActivatedException;
 import com.creditapp.auth.service.InvalidPasswordException;
+import com.creditapp.bank.exception.RateCardNotFoundException;
+import com.creditapp.bank.exception.InvalidRateCardException;
+import com.creditapp.bank.exception.DuplicateRateCardException;
 import com.creditapp.borrower.exception.ApplicationAlreadySubmittedException;
 import com.creditapp.borrower.exception.ApplicationCreationException;
 import com.creditapp.borrower.exception.ApplicationLockedException;
@@ -243,7 +246,35 @@ public class GlobalExceptionHandler {
         response.put("path", request.getDescription(false).replace("uri=", ""));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+    @ExceptionHandler(RateCardNotFoundException.class)
+    public ResponseEntity<?> handleRateCardNotFound(RateCardNotFoundException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Not Found");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
 
+    @ExceptionHandler(InvalidRateCardException.class)
+    public ResponseEntity<?> handleInvalidRateCard(InvalidRateCardException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Bad Request");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(DuplicateRateCardException.class)
+    public ResponseEntity<?> handleDuplicateRateCard(DuplicateRateCardException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Conflict");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
     @ExceptionHandler(FileSizeExceededException.class)
     public ResponseEntity<?> handleFileSizeExceeded(FileSizeExceededException ex, WebRequest request) {
         Map<String, Object> response = new HashMap<>();
