@@ -853,6 +853,144 @@ curl -X POST https://api.creditapp.com/api/borrower/applications/550e8400-e29b-4
 
 ---
 
+### POST /api/borrower/applications/{applicationId}/select-offer
+
+**Description:** Select a preliminary offer from a bank for a specific application. This action indicates borrower's intent to proceed with the selected offer. Only one offer can be selected per application.
+
+**Authentication:** Required (BORROWER role)
+
+**Path Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| applicationId | UUID | The ID of the application for which to select an offer |
+
+**Request Headers:**
+```
+Authorization: Bearer {jwt_token}
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "offerId": "550e8400-e29b-41d4-a716-446655440001"
+}
+```
+
+**Request Fields:**
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| offerId | UUID | Yes | The ID of the offer to select |
+
+**Success Response (200 OK):**
+```json
+{
+  "selectedOfferId": "550e8400-e29b-41d4-a716-446655440001",
+  "bankName": "Example Bank",
+  "apr": 8.5,
+  "monthlyPayment": 775.67,
+  "totalCost": 27944.12,
+  "expiresAt": "2026-01-15T10:30:00Z",
+  "nextSteps": [
+    "Submit proof of income (pay stubs or tax returns)",
+    "Submit government-issued ID",
+    "Schedule a call with our loan officer",
+    "Provide recent bank statements"
+  ],
+  "message": "You've selected this offer. The bank will review your application and contact you with next steps."
+}
+```
+
+**Response Fields:**
+| Field | Type | Description |
+|-------|------|-------------|
+| selectedOfferId | UUID | ID of the selected offer |
+| bankName | String | Name of the bank that made the offer |
+| apr | BigDecimal | Annual Percentage Rate |
+| monthlyPayment | BigDecimal | Monthly payment amount |
+| totalCost | BigDecimal | Total cost over loan term |
+| expiresAt | String | ISO-8601 timestamp when offer expires |
+| nextSteps | Array[String] | List of actions borrower should take next |
+| message | String | Confirmation message |
+
+**Error Responses:**
+
+**400 Bad Request** - Invalid offer or validation failure
+```json
+{
+  "error": "Invalid Offer",
+  "message": "Offer does not belong to this application",
+  "timestamp": "2026-01-15T10:30:00Z"
+}
+```
+
+**403 Forbidden** - Not the application owner
+```json
+{
+  "error": "Forbidden",
+  "message": "You do not have permission to select offers for this application",
+  "timestamp": "2026-01-15T10:30:00Z"
+}
+```
+
+**404 Not Found** - Application or offer not found
+```json
+{
+  "error": "Not Found",
+  "message": "Application not found with ID: 550e8400-e29b-41d4-a716-446655440000",
+  "timestamp": "2026-01-15T10:30:00Z"
+}
+```
+
+**410 Gone** - Offer expired
+```json
+{
+  "error": "Offer Expired",
+  "message": "This offer expired at 2026-01-15T10:30:00Z. Please contact the bank for a new offer.",
+  "expiresAt": "2026-01-15T10:30:00Z",
+  "timestamp": "2026-01-15T10:31:00Z"
+}
+```
+
+**Notes:**
+- Only one offer can be selected per application (selecting a new offer deselects the previous one)
+- Offer must not be expired (expiresAt > current time)
+- Offer must belong to the specified application
+- Borrower must own the application
+- Application status changes to ACCEPTED after selection
+- Offer status changes to ACCEPTED after selection
+- Email notifications sent to both borrower and bank after selection
+- Audit log entry created with OFFER_SELECTED event
+- Next steps are personalized based on bank and loan type
+
+**Selection Workflow:**
+1. Borrower views available offers (GET /api/borrower/applications/{applicationId}/offers)
+2. Borrower selects desired offer (POST /api/borrower/applications/{applicationId}/select-offer)
+3. System validates offer (not expired, belongs to application)
+4. System deselects previous offer if one was already selected
+5. System marks new offer as ACCEPTED
+6. System updates application status to ACCEPTED
+7. System sends email to borrower confirming selection
+8. System sends email to bank notifying of borrower's selection
+9. System logs OFFER_SELECTED audit event
+10. System returns next steps for borrower
+
+**Changing Selection:**
+- Borrowers can change their selection by selecting a different offer
+- Previous offer reverts to CALCULATED status (deselected)
+- New offer becomes ACCEPTED
+- Both OFFER_DESELECTED and OFFER_SELECTED audit events logged
+
+**cURL Example:**
+```bash
+curl -X POST https://api.creditapp.com/api/borrower/applications/550e8400-e29b-41d4-a716-446655440000/select-offer \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -H "Content-Type: application/json" \
+  -d '{"offerId":"550e8400-e29b-41d4-a716-446655440001"}'
+```
+
+---
+
 ## Help Content API
 
 ### GET /api/help/topics

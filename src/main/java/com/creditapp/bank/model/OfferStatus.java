@@ -14,6 +14,8 @@ public enum OfferStatus {
     REJECTED,
     /** Offer expired (validity period passed) */
     EXPIRED,
+    /** Offer was selected/accepted but then expired */
+    EXPIRED_WITH_SELECTION,
     /** Bank withdrew the offer */
     WITHDRAWN
 }

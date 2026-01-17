@@ -65,13 +65,21 @@ public class OfferRetrievalService {
             throw new ApplicationNotSubmittedException("Application must be in SUBMITTED status or later to view offers");
         }
 
-        List<Offer> offers = offerRepository.findActiveOffersByApplicationIdOrderByApr(applicationId, OfferStatus.EXPIRED);
+        // Exclude both EXPIRED and EXPIRED_WITH_SELECTION offers from results
+        List<Offer> allOffers = offerRepository.findByApplicationId(applicationId);
+        List<Offer> offers = allOffers.stream()
+            .filter(o -> o.getOfferStatus() != OfferStatus.EXPIRED && o.getOfferStatus() != OfferStatus.EXPIRED_WITH_SELECTION)
+            .sorted((o1, o2) -> o1.getApr().compareTo(o2.getApr()))
+            .collect(Collectors.toList());
 
-        log.info("Retrieved {} offers for application {} (borrower {})", 
-            offers.size(), applicationId, borrowerId);
+        log.info("Retrieved {} active offers for application {} (borrower {}) out of {} total", 
+            offers.size(), applicationId, borrowerId, allOffers.size());
 
         if (offers.isEmpty()) {
+            log.info("All offers have expired for application {}", applicationId);
             auditService.logAction("Application", applicationId, AuditAction.APPLICATION_VIEWED);
+            // Return empty list with metadata indicating offers have expired
+            // This will be used by API to suggest recalculation to borrower
             return new ArrayList<>();
         }
 

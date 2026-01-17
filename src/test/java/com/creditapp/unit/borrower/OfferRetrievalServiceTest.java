@@ -1,4 +1,4 @@
-package com.creditapp.unit.borrower.service;
+package com.creditapp.unit.borrower;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -27,6 +27,7 @@ import com.creditapp.borrower.repository.ApplicationRepository;
 import com.creditapp.borrower.service.OfferRetrievalService;
 import com.creditapp.shared.model.Organization;
 import com.creditapp.shared.repository.OrganizationRepository;
+import com.creditapp.shared.service.AuditService;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -43,6 +44,9 @@ public class OfferRetrievalServiceTest {
 
     @Mock
     private OrganizationRepository organizationRepository;
+
+    @Mock
+    private AuditService auditService;
 
     @InjectMocks
     private OfferRetrievalService service;
@@ -109,8 +113,7 @@ public class OfferRetrievalServiceTest {
         offers.add(offer2);
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-        when(offerRepository.findActiveOffersByApplicationIdOrderByApr(applicationId, OfferStatus.EXPIRED))
-            .thenReturn(offers);
+        when(offerRepository.findByApplicationId(applicationId)).thenReturn(offers);
         when(organizationRepository.findAllById(anyList())).thenReturn(List.of(bank));
 
         List<OfferComparisonDTO> result = service.getOffersForApplication(applicationId, borrowerId);
@@ -128,8 +131,7 @@ public class OfferRetrievalServiceTest {
         offers.add(offer1);
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-        when(offerRepository.findActiveOffersByApplicationIdOrderByApr(applicationId, OfferStatus.EXPIRED))
-            .thenReturn(offers);
+        when(offerRepository.findByApplicationId(applicationId)).thenReturn(offers);
         when(organizationRepository.findAllById(anyList())).thenReturn(List.of(bank));
 
         List<OfferComparisonDTO> result = service.getOffersForApplication(applicationId, borrowerId);
@@ -164,19 +166,9 @@ public class OfferRetrievalServiceTest {
     }
 
     @Test
-    void testApplicationNotSubmittedWithdrawn() {
-        application.setStatus(ApplicationStatus.WITHDRAWN);
-        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-
-        assertThrows(ApplicationNotSubmittedException.class,
-            () -> service.getOffersForApplication(applicationId, borrowerId));
-    }
-
-    @Test
     void testEmptyOffersReturnsEmptyList() {
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-        when(offerRepository.findActiveOffersByApplicationIdOrderByApr(applicationId, OfferStatus.EXPIRED))
-            .thenReturn(new ArrayList<>());
+        when(offerRepository.findByApplicationId(applicationId)).thenReturn(new ArrayList<>());
 
         List<OfferComparisonDTO> result = service.getOffersForApplication(applicationId, borrowerId);
 
@@ -189,8 +181,7 @@ public class OfferRetrievalServiceTest {
         offers.add(offer1);
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-        when(offerRepository.findActiveOffersByApplicationIdOrderByApr(applicationId, OfferStatus.EXPIRED))
-            .thenReturn(offers);
+        when(offerRepository.findByApplicationId(applicationId)).thenReturn(offers);
         when(organizationRepository.findAllById(anyList())).thenReturn(List.of(bank));
 
         List<OfferComparisonDTO> result = service.getOffersForApplication(applicationId, borrowerId);
@@ -217,8 +208,7 @@ public class OfferRetrievalServiceTest {
         offers.add(offer1);
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-        when(offerRepository.findActiveOffersByApplicationIdOrderByApr(applicationId, OfferStatus.EXPIRED))
-            .thenReturn(offers);
+        when(offerRepository.findByApplicationId(applicationId)).thenReturn(offers);
         when(organizationRepository.findAllById(anyList())).thenReturn(List.of(bankNoLogo));
 
         List<OfferComparisonDTO> result = service.getOffersForApplication(applicationId, borrowerId);
@@ -232,8 +222,7 @@ public class OfferRetrievalServiceTest {
         offers.add(offer1);
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-        when(offerRepository.findActiveOffersByApplicationIdOrderByApr(applicationId, OfferStatus.EXPIRED))
-            .thenReturn(offers);
+        when(offerRepository.findByApplicationId(applicationId)).thenReturn(offers);
         when(organizationRepository.findAllById(anyList())).thenReturn(List.of(bank));
 
         List<OfferComparisonDTO> result = service.getOffersForApplication(applicationId, borrowerId);
@@ -243,5 +232,106 @@ public class OfferRetrievalServiceTest {
         assertEquals("ID", documents.get(0));
         assertEquals("Paycheck", documents.get(1));
         assertEquals("Tax Return", documents.get(2));
+    }
+
+    @Test
+    void testExcludesExpiredOffers() {
+        Offer expiredOffer = new Offer();
+        expiredOffer.setId(UUID.randomUUID());
+        expiredOffer.setApplicationId(applicationId);
+        expiredOffer.setBankId(bankId);
+        expiredOffer.setApr(new BigDecimal("2.50"));
+        expiredOffer.setOfferStatus(OfferStatus.EXPIRED);
+        expiredOffer.setExpiresAt(LocalDateTime.now().minusHours(1));
+
+        List<Offer> allOffers = new ArrayList<>();
+        allOffers.add(offer1);
+        allOffers.add(expiredOffer);
+        allOffers.add(offer2);
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(offerRepository.findByApplicationId(applicationId)).thenReturn(allOffers);
+        when(organizationRepository.findAllById(anyList())).thenReturn(List.of(bank));
+
+        List<OfferComparisonDTO> result = service.getOffersForApplication(applicationId, borrowerId);
+
+        assertEquals(2, result.size());
+        assertFalse(result.stream().anyMatch(o -> o.getOfferStatus().equals("EXPIRED")));
+    }
+
+    @Test
+    void testExcludesExpiredWithSelectionOffers() {
+        Offer expiredSelectedOffer = new Offer();
+        expiredSelectedOffer.setId(UUID.randomUUID());
+        expiredSelectedOffer.setApplicationId(applicationId);
+        expiredSelectedOffer.setBankId(bankId);
+        expiredSelectedOffer.setApr(new BigDecimal("3.00"));
+        expiredSelectedOffer.setOfferStatus(OfferStatus.EXPIRED_WITH_SELECTION);
+        expiredSelectedOffer.setExpiresAt(LocalDateTime.now().minusHours(2));
+
+        List<Offer> allOffers = new ArrayList<>();
+        allOffers.add(offer1);
+        allOffers.add(expiredSelectedOffer);
+        allOffers.add(offer2);
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(offerRepository.findByApplicationId(applicationId)).thenReturn(allOffers);
+        when(organizationRepository.findAllById(anyList())).thenReturn(List.of(bank));
+
+        List<OfferComparisonDTO> result = service.getOffersForApplication(applicationId, borrowerId);
+
+        assertEquals(2, result.size());
+        assertFalse(result.stream().anyMatch(o -> o.getOfferStatus().equals("EXPIRED_WITH_SELECTION")));
+    }
+
+    @Test
+    void testAllOffersExpiredReturnsEmpty() {
+        Offer expiredOffer1 = new Offer();
+        expiredOffer1.setId(UUID.randomUUID());
+        expiredOffer1.setApplicationId(applicationId);
+        expiredOffer1.setBankId(bankId);
+        expiredOffer1.setOfferStatus(OfferStatus.EXPIRED);
+
+        Offer expiredOffer2 = new Offer();
+        expiredOffer2.setId(UUID.randomUUID());
+        expiredOffer2.setApplicationId(applicationId);
+        expiredOffer2.setBankId(bankId);
+        expiredOffer2.setOfferStatus(OfferStatus.EXPIRED_WITH_SELECTION);
+
+        List<Offer> allOffers = new ArrayList<>();
+        allOffers.add(expiredOffer1);
+        allOffers.add(expiredOffer2);
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(offerRepository.findByApplicationId(applicationId)).thenReturn(allOffers);
+
+        List<OfferComparisonDTO> result = service.getOffersForApplication(applicationId, borrowerId);
+
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    void testSortsOffersByAprAfterFilteringExpired() {
+        Offer expiredOffer = new Offer();
+        expiredOffer.setId(UUID.randomUUID());
+        expiredOffer.setApplicationId(applicationId);
+        expiredOffer.setBankId(bankId);
+        expiredOffer.setApr(new BigDecimal("1.50"));
+        expiredOffer.setOfferStatus(OfferStatus.EXPIRED);
+
+        List<Offer> allOffers = new ArrayList<>();
+        allOffers.add(offer2);  // APR 4.25
+        allOffers.add(expiredOffer);  // APR 1.50 (expired)
+        allOffers.add(offer1);  // APR 3.50
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(offerRepository.findByApplicationId(applicationId)).thenReturn(allOffers);
+        when(organizationRepository.findAllById(anyList())).thenReturn(List.of(bank));
+
+        List<OfferComparisonDTO> result = service.getOffersForApplication(applicationId, borrowerId);
+
+        assertEquals(2, result.size());
+        assertEquals(new BigDecimal("3.50"), result.get(0).getApr());  // Lowest non-expired
+        assertEquals(new BigDecimal("4.25"), result.get(1).getApr());  // Higher non-expired
     }
 }

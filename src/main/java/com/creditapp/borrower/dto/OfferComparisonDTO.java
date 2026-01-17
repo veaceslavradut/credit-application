@@ -20,6 +20,8 @@ public class OfferComparisonDTO {
     private List<String> requiredDocuments;
     private LocalDateTime expiresAt;
     private String offerStatus;
+    private Boolean offersExpired;
+    private String recalculateUrl;
 
     public OfferComparisonDTO() {}
 
@@ -72,4 +74,8 @@ public class OfferComparisonDTO {
     public void setExpiresAt(LocalDateTime expiresAt) { this.expiresAt = expiresAt; }
     public String getOfferStatus() { return offerStatus; }
     public void setOfferStatus(String offerStatus) { this.offerStatus = offerStatus; }
+    public Boolean getOffersExpired() { return offersExpired; }
+    public void setOffersExpired(Boolean offersExpired) { this.offersExpired = offersExpired; }
+    public String getRecalculateUrl() { return recalculateUrl; }
+    public void setRecalculateUrl(String recalculateUrl) { this.recalculateUrl = recalculateUrl; }
 }

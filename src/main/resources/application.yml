@@ -79,3 +79,17 @@ app:
     validity:
       period:
         hours: 24  # Default offer validity period in hours
+  scheduler:
+    offer-expiration:
+      enabled: true
+      cron: "0 0 0 * * *"  # Daily at midnight UTC
+      timezone: UTC
+
+# Offer expiration configuration
+creditapp:
+  scheduler:
+    offer-expiration-enabled: true
+    offer-expiration-cron: "0 0 0 * * *"  # Daily at midnight UTC
+  offers:
+    default-validity-days: 1
+    min-validity-minutes: 15

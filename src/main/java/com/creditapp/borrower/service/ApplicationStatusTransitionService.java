@@ -3,6 +3,8 @@ package com.creditapp.borrower.service;
 import com.creditapp.borrower.model.ApplicationHistory;
 import com.creditapp.borrower.model.ApplicationStatus;
 import com.creditapp.borrower.repository.ApplicationHistoryRepository;
+import com.creditapp.shared.model.AuditAction;
+import com.creditapp.shared.service.AuditService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.UUID;
 public class ApplicationStatusTransitionService {
 
     private final ApplicationHistoryRepository applicationHistoryRepository;
+    private final AuditService auditService;
 
     /**
      * Record a status transition in the application history.
@@ -40,6 +43,10 @@ public class ApplicationStatusTransitionService {
                 .build();
 
         applicationHistoryRepository.save(history);
+        
+        // Log audit event
+        auditService.logAction("Application", applicationId, AuditAction.APPLICATION_STATUS_CHANGED);
+        
         log.info("Status transition recorded: {} -> {} for application {}", oldStatus, newStatus, applicationId);
     }
 
@@ -56,7 +63,8 @@ public class ApplicationStatusTransitionService {
             case OFFERS_AVAILABLE -> newStatus == ApplicationStatus.ACCEPTED || 
                                      newStatus == ApplicationStatus.REJECTED || 
                                      newStatus == ApplicationStatus.EXPIRED;
-            case ACCEPTED -> newStatus == ApplicationStatus.COMPLETED;
+            case ACCEPTED -> newStatus == ApplicationStatus.COMPLETED ||
+                            newStatus == ApplicationStatus.SUBMITTED; // Revert when selected offer expires
             case REJECTED, EXPIRED, WITHDRAWN, COMPLETED -> false; // Terminal states
         };
     }

@@ -104,6 +104,32 @@ public class OfferCalculationService {
         return offerIds;
     }
 
+    /**
+     * Recalculate offers for an application.
+     * Marks all existing offers as CALCULATED (no longer active selections),
+     * then triggers new offer calculation for all active banks.
+     *
+     * @param applicationId The application ID to recalculate offers for
+     * @return List of new offer IDs created
+     */
+    public List<UUID> recalculateOffers(UUID applicationId) {
+        log.info("Recalculating offers for application: {}", applicationId);
+        
+        // Mark all existing offers as expired (not selected)
+        List<Offer> existingOffers = offerRepository.findByApplicationId(applicationId);
+        for (Offer offer : existingOffers) {
+            if (offer.getOfferStatus() != OfferStatus.EXPIRED && offer.getOfferStatus() != OfferStatus.EXPIRED_WITH_SELECTION) {
+                offer.setOfferStatus(OfferStatus.CALCULATED);
+                offer.setBorrowerSelectedAt(null);
+                offerRepository.save(offer);
+                log.info("Marked existing offer as CALCULATED for recalculation. OfferId: {}", offer.getId());
+            }
+        }
+        
+        // Trigger new offer calculation
+        return calculateOffers(applicationId);
+    }
+
     private Offer calculateOfferForBank(Application application, Organization bank) {
         UUID bankId = bank.getId();
         UUID applicationId = application.getId();

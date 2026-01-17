@@ -118,7 +118,7 @@ public class OfferSelectionServiceTest {
 
         verify(offerRepository).save(offer);
         verify(applicationRepository).save(application);
-        verify(auditService).logAction("Offer", offerId, AuditAction.OFFER_ACCEPTED);
+        verify(auditService).logActionWithValues(eq("Offer"), eq(offerId), eq(AuditAction.OFFER_SELECTED), any(), any());
         verify(emailService).sendOfferSelectedToBorrower(borrowerId, offer, application);
         verify(emailService).sendOfferSelectedToBank(bankId, offer, borrowerId);
     }
@@ -140,6 +140,9 @@ public class OfferSelectionServiceTest {
         assertThrows(OfferExpiredException.class, () ->
                 offerSelectionService.selectOffer(applicationId, borrowerId, offerId)
         );
+        
+        // Verify audit event logged for failed selection attempt
+        verify(auditService).logAction(eq("Offer"), eq(offerId), eq(AuditAction.OFFER_SELECTION_FAILED), eq(borrowerId), eq("BORROWER"));
     }
 
     @Test
@@ -225,6 +228,10 @@ public class OfferSelectionServiceTest {
         assertEquals(newOfferId, response.getSelectedOfferId());
         assertEquals(OfferStatus.CALCULATED, oldOffer.getOfferStatus());
         assertEquals(OfferStatus.ACCEPTED, newOffer.getOfferStatus());
+        
+        // Verify deselection and selection audit events logged
+        verify(auditService).logActionWithValues(eq("Offer"), eq(offerId), eq(AuditAction.OFFER_DESELECTED), any(), any());
+        verify(auditService).logActionWithValues(eq("Offer"), eq(newOfferId), eq(AuditAction.OFFER_SELECTED), any(), any());
     }
 
     @Test

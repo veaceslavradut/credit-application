@@ -20,7 +20,9 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -74,6 +76,9 @@ public class OfferSelectionService {
 
         if (offer.getExpiresAt() != null && offer.getExpiresAt().isBefore(LocalDateTime.now())) {
             log.warn("Offer expired. OfferId: {}, ExpiresAt: {}", offerId, offer.getExpiresAt());
+            // Log audit event for failed selection attempt
+            auditService.logAction("Offer", offerId, AuditAction.OFFER_SELECTION_FAILED,
+                    borrowerId, "BORROWER");
             throw new OfferExpiredException("Offer has expired", offer.getExpiresAt());
         }
 
@@ -84,6 +89,16 @@ public class OfferSelectionService {
             prevOffer.setBorrowerSelectedAt(null);
             offerRepository.save(prevOffer);
             log.info("Previous offer deselected. OfferId: {}, Status: CALCULATED", prevOffer.getId());
+            
+            // Log audit event for deselection
+            Map<String, Object> deselectionDetails = new HashMap<>();
+            deselectionDetails.put("applicationId", applicationId);
+            deselectionDetails.put("deselectedOfferId", prevOffer.getId());
+            deselectionDetails.put("bankId", prevOffer.getBankId());
+            deselectionDetails.put("previousStatus", OfferStatus.ACCEPTED.toString());
+            deselectionDetails.put("newStatus", OfferStatus.CALCULATED.toString());
+            auditService.logActionWithValues("Offer", prevOffer.getId(), AuditAction.OFFER_DESELECTED,
+                    new HashMap<>(), deselectionDetails);
         }
 
         offer.setOfferStatus(OfferStatus.ACCEPTED);
@@ -96,7 +111,17 @@ public class OfferSelectionService {
         applicationRepository.save(application);
         log.info("Application status updated to ACCEPTED. ApplicationId: {}", applicationId);
 
-        auditService.logAction("Offer", offerId, AuditAction.OFFER_ACCEPTED);
+        // Log comprehensive audit event for offer selection
+        Map<String, Object> selectionDetails = new HashMap<>();
+        selectionDetails.put("borrowerId", borrowerId);
+        selectionDetails.put("applicationId", applicationId);
+        selectionDetails.put("offerId", offerId);
+        selectionDetails.put("bankId", offer.getBankId());
+        selectionDetails.put("apr", savedOffer.getApr());
+        selectionDetails.put("selectedAt", savedOffer.getBorrowerSelectedAt());
+        selectionDetails.put("applicationStatus", ApplicationStatus.ACCEPTED.toString());
+        auditService.logActionWithValues("Offer", offerId, AuditAction.OFFER_SELECTED,
+                new HashMap<>(), selectionDetails);
 
         emailService.sendOfferSelectedToBorrower(borrowerId, savedOffer, application);
         emailService.sendOfferSelectedToBank(offer.getBankId(), savedOffer, borrowerId);

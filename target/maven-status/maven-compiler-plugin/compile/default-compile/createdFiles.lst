@@ -28,6 +28,7 @@ com\creditapp\shared\service\SendGridEmailService.class
 com\creditapp\borrower\model\ApplicationDetails$ApplicationDetailsBuilder.class
 com\creditapp\auth\filter\JwtAuthenticationToken.class
 com\creditapp\auth\service\BankRegistrationService.class
+com\creditapp\shared\service\OfferExpirationEmailService.class
 com\creditapp\borrower\model\Application.class
 com\creditapp\auth\dto\LoginRequest.class
 com\creditapp\shared\dto\EmailMetricsDTO.class
@@ -143,6 +144,7 @@ com\creditapp\borrower\dto\UpdateApplicationRequest.class
 com\creditapp\borrower\service\ApplicationStatusTransitionService$1.class
 com\creditapp\shared\model\AuditAction.class
 com\creditapp\borrower\exception\ApplicationNotSubmittedException.class
+com\creditapp\bank\scheduler\OfferExpirationScheduler.class
 com\creditapp\auth\exception\DuplicateBankRegistrationException.class
 com\creditapp\borrower\dto\HelpArticleDTO$HelpArticleDTOBuilder.class
 com\creditapp\shared\util\RateLimiter.class
@@ -232,6 +234,7 @@ com\creditapp\bank\service\OfferCalculationService$OfferCalculationResult.class
 com\creditapp\common\interceptor\RateLimitingInterceptor.class
 com\creditapp\shared\repository\OrganizationRepository.class
 com\creditapp\auth\dto\UpdateProfileRequest.class
+com\creditapp\bank\service\OfferExpirationService.class
 com\creditapp\shared\service\JwtTokenService.class
 com\creditapp\borrower\dto\WithdrawApplicationRequest$WithdrawApplicationRequestBuilder.class
 com\creditapp\borrower\model\ApplicationHistory.class
