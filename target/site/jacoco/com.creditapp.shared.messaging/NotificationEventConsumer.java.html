@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NotificationEventConsumer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.messaging</a> &gt; <span class="el_source">NotificationEventConsumer.java</span></div><h1>NotificationEventConsumer.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.messaging;
+
+import com.creditapp.shared.config.RabbitMQConfig;
+import com.creditapp.shared.dto.NotificationEvent;
+import com.creditapp.shared.service.NotificationService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * NotificationEventConsumer processes notification events from RabbitMQ
+ * NOTE: Disabled for Story 2.9 - will be fully implemented in Story 1.9
+ */
+@Component
+<span class="nc" id="L20">@RequiredArgsConstructor</span>
+<span class="nc" id="L21">@Slf4j</span>
+public class NotificationEventConsumer {
+    
+    private final NotificationService notificationService;
+    private final RabbitTemplate rabbitTemplate;
+    
+    @Value(&quot;${notification.retry.backoff-minutes:1,5,15}&quot;)
+    private String backoffMinutesConfig;
+    
+    private static final int MAX_RETRIES = 3;
+    
+    /**
+     * Temporarily disabled - requires full email service from Story 1.9
+     */
+    public void handleNotificationEvent(NotificationEvent event) {
+<span class="nc" id="L36">        log.info(&quot;Received notification event: {} for recipient: {}&quot;, </span>
+<span class="nc" id="L37">            event.getEventType(), event.getRecipientEmail());</span>
+        
+<span class="nc" id="L39">        log.warn(&quot;NotificationEventConsumer is disabled - requires Story 1.9 email service&quot;);</span>
+<span class="nc" id="L40">    }</span>
+    
+    private List&lt;Integer&gt; parseBackoffMinutes() {
+<span class="nc" id="L43">        return Arrays.stream(backoffMinutesConfig.split(&quot;,&quot;))</span>
+<span class="nc" id="L44">            .map(String::trim)</span>
+<span class="nc" id="L45">            .map(Integer::parseInt)</span>
+<span class="nc" id="L46">            .toList();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OfferComparisonResponse.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.borrower.dto</a> &gt; <span class="el_source">OfferComparisonResponse.java</span></div><h1>OfferComparisonResponse.java</h1><pre class="source lang-java linenums">package com.creditapp.borrower.dto;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+public class OfferComparisonResponse {
+    public static final String DEFAULT_DISCLAIMER = &quot;These are preliminary offers based on estimated calculations. Final terms may vary after formal review by the bank.&quot;;
+
+    private String disclaimer;
+    private List&lt;OfferComparisonDTO&gt; offers;
+    private UUID applicationId;
+    private int totalOffersCount;
+    private LocalDateTime retrievedAt;
+    private LocalDateTime nextRefreshAvailableAt;
+
+<span class="nc" id="L18">    public OfferComparisonResponse() {</span>
+<span class="nc" id="L19">        this.disclaimer = DEFAULT_DISCLAIMER;</span>
+<span class="nc" id="L20">        this.offers = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L21">        this.retrievedAt = LocalDateTime.now();</span>
+<span class="nc" id="L22">        this.nextRefreshAvailableAt = LocalDateTime.now().plusMinutes(5);</span>
+<span class="nc" id="L23">    }</span>
+
+    public OfferComparisonResponse(List&lt;OfferComparisonDTO&gt; offers, UUID applicationId) {
+<span class="nc" id="L26">        this();</span>
+<span class="nc" id="L27">        this.offers = offers;</span>
+<span class="nc" id="L28">        this.applicationId = applicationId;</span>
+<span class="nc" id="L29">        this.totalOffersCount = offers.size();</span>
+<span class="nc" id="L30">    }</span>
+
+<span class="nc" id="L32">    public String getDisclaimer() { return disclaimer; }</span>
+<span class="nc" id="L33">    public void setDisclaimer(String disclaimer) { this.disclaimer = disclaimer; }</span>
+<span class="nc" id="L34">    public List&lt;OfferComparisonDTO&gt; getOffers() { return offers; }</span>
+<span class="nc" id="L35">    public void setOffers(List&lt;OfferComparisonDTO&gt; offers) { this.offers = offers; }</span>
+<span class="nc" id="L36">    public UUID getApplicationId() { return applicationId; }</span>
+<span class="nc" id="L37">    public void setApplicationId(UUID applicationId) { this.applicationId = applicationId; }</span>
+<span class="nc" id="L38">    public int getTotalOffersCount() { return totalOffersCount; }</span>
+<span class="nc" id="L39">    public void setTotalOffersCount(int totalOffersCount) { this.totalOffersCount = totalOffersCount; }</span>
+<span class="nc" id="L40">    public LocalDateTime getRetrievedAt() { return retrievedAt; }</span>
+<span class="nc" id="L41">    public void setRetrievedAt(LocalDateTime retrievedAt) { this.retrievedAt = retrievedAt; }</span>
+<span class="nc" id="L42">    public LocalDateTime getNextRefreshAvailableAt() { return nextRefreshAvailableAt; }</span>
+<span class="nc" id="L43">    public void setNextRefreshAvailableAt(LocalDateTime nextRefreshAvailableAt) { this.nextRefreshAvailableAt = nextRefreshAvailableAt; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

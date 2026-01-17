@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.config</a> &gt; <span class="el_source">JwtConfig.java</span></div><h1>JwtConfig.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.config;
+
+import io.jsonwebtoken.security.Keys;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import javax.crypto.SecretKey;
+import java.util.Base64;
+
+@Configuration
+@ConfigurationProperties(prefix = &quot;jwt&quot;)
+<span class="nc" id="L13">public class JwtConfig {</span>
+    private String secret;
+    private Expiration expiration;
+    private RefreshExpiration refreshExpiration;
+
+<span class="nc" id="L18">    public static class Expiration {</span>
+        private Integer minutes;
+<span class="nc" id="L20">        public Integer getMinutes() { return minutes; }</span>
+<span class="nc" id="L21">        public void setMinutes(Integer minutes) { this.minutes = minutes; }</span>
+    }
+
+<span class="nc" id="L24">    public static class RefreshExpiration {</span>
+        private Integer days;
+<span class="nc" id="L26">        public Integer getDays() { return days; }</span>
+<span class="nc" id="L27">        public void setDays(Integer days) { this.days = days; }</span>
+    }
+
+<span class="nc" id="L30">    public String getSecret() { return secret; }</span>
+<span class="nc" id="L31">    public void setSecret(String secret) { this.secret = secret; }</span>
+<span class="nc" id="L32">    public Expiration getExpiration() { return expiration; }</span>
+<span class="nc" id="L33">    public void setExpiration(Expiration expiration) { this.expiration = expiration; }</span>
+<span class="nc" id="L34">    public RefreshExpiration getRefreshExpiration() { return refreshExpiration; }</span>
+<span class="nc" id="L35">    public void setRefreshExpiration(RefreshExpiration refreshExpiration) { this.refreshExpiration = refreshExpiration; }</span>
+
+    @Bean
+    public SecretKey jwtSigningKey() {
+<span class="nc bnc" id="L39" title="All 4 branches missed.">        if (secret == null || secret.isEmpty()) {</span>
+<span class="nc" id="L40">            return null;</span>
+        }
+        try {
+<span class="nc" id="L43">            byte[] decodedKey = Base64.getDecoder().decode(secret);</span>
+<span class="nc" id="L44">            return Keys.hmacShaKeyFor(decodedKey);</span>
+<span class="nc" id="L45">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L46">            return null;</span>
+        }
+    }
+
+    @Bean
+    public JwtProperties jwtProperties() {
+<span class="nc bnc" id="L52" title="All 8 branches missed.">        if (secret == null || secret.isEmpty() || expiration == null || refreshExpiration == null) {</span>
+<span class="nc" id="L53">            return null;</span>
+        }
+<span class="nc" id="L55">        SecretKey signingKey = jwtSigningKey();</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (signingKey == null) {</span>
+<span class="nc" id="L57">            return null;</span>
+        }
+<span class="nc" id="L59">        return new JwtProperties(secret, expiration.getMinutes(), refreshExpiration.getDays(), signingKey);</span>
+    }
+
+    public static class JwtProperties {
+        private final String secret;
+        private final Integer expirationMinutes;
+        private final Integer refreshExpirationDays;
+        private final SecretKey signingKey;
+
+<span class="nc" id="L68">        public JwtProperties(String secret, Integer expirationMinutes, Integer refreshExpirationDays, SecretKey signingKey) {</span>
+<span class="nc" id="L69">            this.secret = secret;</span>
+<span class="nc" id="L70">            this.expirationMinutes = expirationMinutes;</span>
+<span class="nc" id="L71">            this.refreshExpirationDays = refreshExpirationDays;</span>
+<span class="nc" id="L72">            this.signingKey = signingKey;</span>
+<span class="nc" id="L73">        }</span>
+
+<span class="nc" id="L75">        public String getSecret() { return secret; }</span>
+<span class="nc" id="L76">        public Integer getExpirationMinutes() { return expirationMinutes; }</span>
+<span class="nc" id="L77">        public Integer getRefreshExpirationDays() { return refreshExpirationDays; }</span>
+<span class="nc" id="L78">        public SecretKey getSigningKey() { return signingKey; }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,3 @@
+com\creditapp\SpringContextIntegrationTest.class
+com\creditapp\unit\shared\model\OrganizationEntityTest.class
+com\creditapp\test\config\TestSecurityConfig.class
