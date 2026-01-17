@@ -112,6 +112,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\m
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\EmploymentStatus.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\RateCardLookupService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\util\CalculationUtils.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\util\RateLimitInterceptor.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\controller\BorrowerNotificationController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\JwtConfig.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\HelpArticleStatus.java
@@ -125,6 +126,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\m
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\ApplicationStatus.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\User.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\common\interceptor\RateLimitingInterceptor.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\Resilience4jConfig.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\dto\NotificationEvent.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\OfferSelectionEmailService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\NotificationType.java
