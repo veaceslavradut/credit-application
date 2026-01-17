@@ -20,6 +20,10 @@
     redis:
       repositories:
         enabled: false
+  cache:
+    type: redis
+    redis:
+      time-to-live: 86400000
   rabbitmq:
     host: ${RABBITMQ_HOST:localhost}
     port: ${RABBITMQ_PORT:5672}

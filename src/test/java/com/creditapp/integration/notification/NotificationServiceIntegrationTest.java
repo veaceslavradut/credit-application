@@ -1,33 +1,32 @@
 package com.creditapp.integration.notification;
 
-import com.creditapp.shared.dto.EmailMetricsDTO;
+import com.creditapp.borrower.model.BorrowerNotification;
+import com.creditapp.borrower.repository.BorrowerNotificationRepository;
 import com.creditapp.shared.model.DeliveryStatus;
-import com.creditapp.shared.model.EmailDeliveryLog;
-import com.creditapp.shared.model.EmailTemplate;
-import com.creditapp.shared.repository.EmailDeliveryLogRepository;
-import com.creditapp.shared.repository.EmailTemplateRepository;
+import com.creditapp.shared.model.NotificationChannel;
+import com.creditapp.shared.model.NotificationType;
 import com.creditapp.shared.service.NotificationService;
-import com.creditapp.shared.util.EmailRateLimiter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * Integration tests for NotificationService
- * Tests email sending, delivery tracking, and rate limiting
+ * Tests notification creation, async delivery, and status tracking
  */
 @SpringBootTest
-@Testcontainers
 @ActiveProfiles("test")
 class NotificationServiceIntegrationTest {
     
@@ -35,184 +34,207 @@ class NotificationServiceIntegrationTest {
     private NotificationService notificationService;
     
     @Autowired
-    private EmailTemplateRepository emailTemplateRepository;
+    private BorrowerNotificationRepository notificationRepository;
     
-    @Autowired
-    private EmailDeliveryLogRepository emailDeliveryLogRepository;
-    
-    @Autowired
-    private EmailRateLimiter emailRateLimiter;
+    private UUID borrowerId;
+    private UUID applicationId;
     
     @BeforeEach
     void setUp() {
-        // Clean up delivery logs before each test
-        emailDeliveryLogRepository.deleteAll();
+        // Clean up notifications before each test
+        notificationRepository.deleteAll();
         
-        // Reset rate limiter
-        emailRateLimiter.reset();
-        
-        // Ensure test template exists
-        if (emailTemplateRepository.findByTemplateNameAndActiveTrue("REGISTRATION_CONFIRMATION").isEmpty()) {
-            EmailTemplate template = new EmailTemplate();
-            template.setTemplateName("REGISTRATION_CONFIRMATION");
-            template.setSubject("Welcome to CreditApp, {firstName}!");
-            template.setHtmlBody("<html><body><h1>Welcome {firstName} {lastName}</h1><p>Your email is {email}</p></body></html>");
-            template.setTextBody("Welcome {firstName} {lastName}! Your email is {email}");
-            template.setVariables("[\"firstName\", \"lastName\", \"email\"]");
-            template.setActive(true);
-            emailTemplateRepository.save(template);
-        }
+        // Set up test data
+        borrowerId = UUID.randomUUID();
+        applicationId = UUID.randomUUID();
     }
     
     @AfterEach
     void tearDown() {
-        emailRateLimiter.reset();
+        notificationRepository.deleteAll();
     }
     
     /**
-     * Test 1: Send email synchronously, verify EmailDeliveryLog created with SENT status
+     * Test 1: Create notification, verify BorrowerNotification record created with PENDING status
      */
     @Test
-    void testSendEmail_Success_CreatesDeliveryLog() {
+    void testCreateNotification_Success_CreatesNotificationRecord() {
         // Arrange
-        String recipient = "test@example.com";
-        String templateName = "REGISTRATION_CONFIRMATION";
-        Map<String, String> variables = new HashMap<>();
-        variables.put("firstName", "John");
-        variables.put("lastName", "Doe");
-        variables.put("email", recipient);
+        String subject = "Application Submitted";
+        String message = "Your application has been submitted successfully";
         
         // Act
-        boolean result = notificationService.sendEmail(recipient, templateName, variables);
+        BorrowerNotification result = notificationService.createNotification(
+                borrowerId, 
+                applicationId, 
+                NotificationType.APPLICATION_SUBMITTED, 
+                subject, 
+                message
+        );
         
         // Assert
-        assertThat(result).isTrue();
-        
-        List<EmailDeliveryLog> logs = emailDeliveryLogRepository.findAll();
-        assertThat(logs).hasSize(1);
-        
-        EmailDeliveryLog log = logs.get(0);
-        assertThat(log.getRecipientEmail()).isEqualTo(recipient);
-        assertThat(log.getTemplateName()).isEqualTo(templateName);
-        assertThat(log.getStatus()).isEqualTo(DeliveryStatus.SENT);
-        assertThat(log.getSentAt()).isNotNull();
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isNotNull();
+        assertThat(result.getBorrowerId()).isEqualTo(borrowerId);
+        assertThat(result.getApplicationId()).isEqualTo(applicationId);
+        assertThat(result.getNotificationType()).isEqualTo(NotificationType.APPLICATION_SUBMITTED);
+        assertThat(result.getSubject()).isEqualTo(subject);
+        assertThat(result.getMessage()).isEqualTo(message);
+        assertThat(result.getChannel()).isEqualTo(NotificationChannel.EMAIL);
+        // Initially PENDING, async delivery will update to SENT
+        assertThat(result.getDeliveryStatus()).isEqualTo(DeliveryStatus.PENDING);
+        assertThat(result.getSentAt()).isNotNull();
     }
     
     /**
-     * Test 2: Send email with variable substitution, verify content populated correctly
+     * Test 2: Create notification, verify async delivery eventually completes
      */
     @Test
-    void testSendEmail_VariableSubstitution_Success() {
+    void testCreateNotification_AsyncDelivery_CompletesSuccessfully() {
         // Arrange
-        String recipient = "jane@example.com";
-        Map<String, String> variables = new HashMap<>();
-        variables.put("firstName", "Jane");
-        variables.put("lastName", "Smith");
-        variables.put("email", recipient);
+        String subject = "Application Under Review";
+        String message = "Your application is under review";
         
         // Act
-        boolean result = notificationService.sendEmail(recipient, "REGISTRATION_CONFIRMATION", variables);
+        BorrowerNotification notification = notificationService.createNotification(
+                borrowerId, 
+                applicationId, 
+                NotificationType.APPLICATION_UNDER_REVIEW, 
+                subject, 
+                message
+        );
         
-        // Assert
-        assertThat(result).isTrue();
+        UUID notificationId = notification.getId();
         
-        // Verify delivery log created
-        List<EmailDeliveryLog> logs = emailDeliveryLogRepository.findAll();
-        assertThat(logs).hasSize(1);
-        assertThat(logs.get(0).getStatus()).isEqualTo(DeliveryStatus.SENT);
+        // Assert - wait for async delivery to complete (with timeout)
+        await()
+                .atMost(5, SECONDS)
+                .pollInterval(100, java.util.concurrent.TimeUnit.MILLISECONDS)
+                .untilAsserted(() -> {
+                    BorrowerNotification deliveredNotification = notificationRepository.findById(notificationId).orElseThrow(
+                            () -> new IllegalArgumentException("Notification not found: " + notificationId)
+                    );
+                    assertThat(deliveredNotification.getDeliveryStatus()).isEqualTo(DeliveryStatus.SENT);
+                });
     }
     
     /**
-     * Test 3: Invalid template name, verify failure logged
+     * Test 3: Get notifications for borrower, verify pagination works
      */
     @Test
-    void testSendEmail_InvalidTemplate_ReturnsFalse() {
+    void testGetNotifications_ReturnsBorrowerNotifications() {
+        // Arrange - create multiple notifications
+        notificationService.createNotification(
+                borrowerId, 
+                applicationId, 
+                NotificationType.APPLICATION_SUBMITTED, 
+                "Application Submitted", 
+                "Your application has been submitted"
+        );
+        
+        UUID applicationId2 = UUID.randomUUID();
+        notificationService.createNotification(
+                borrowerId, 
+                applicationId2, 
+                NotificationType.APPLICATION_UNDER_REVIEW, 
+                "Application Under Review", 
+                "Your application is under review"
+        );
+        
+        Pageable pageable = PageRequest.of(0, 10);
+        
+        // Act
+        var notificationsPage = notificationService.getNotifications(borrowerId, pageable);
+        
+        // Assert
+        assertThat(notificationsPage).isNotNull();
+        assertThat(notificationsPage.getTotalElements()).isGreaterThanOrEqualTo(2);
+        assertThat(notificationsPage.getContent()).isNotEmpty();
+    }
+    
+    /**
+     * Test 4: Create notification with different types, verify type stored correctly
+     */
+    @Test
+    void testCreateNotification_DifferentTypes_StoredCorrectly() {
         // Arrange
-        String recipient = "test@example.com";
-        Map<String, String> variables = new HashMap<>();
+        NotificationType[] types = {
+                NotificationType.APPLICATION_SUBMITTED,
+                NotificationType.APPLICATION_UNDER_REVIEW,
+                NotificationType.OFFERS_AVAILABLE,
+                NotificationType.OFFER_ACCEPTED
+        };
         
-        // Act
-        boolean result = notificationService.sendEmail(recipient, "NON_EXISTENT_TEMPLATE", variables);
+        // Act & Assert
+        for (int i = 0; i < types.length; i++) {
+            UUID appId = UUID.randomUUID();
+            BorrowerNotification notification = notificationService.createNotification(
+                    borrowerId,
+                    appId,
+                    types[i],
+                    types[i].name(),
+                    "Test message for " + types[i].name()
+            );
+            
+            assertThat(notification.getNotificationType()).isEqualTo(types[i]);
+            assertThat(notification.getChannel()).isEqualTo(NotificationChannel.EMAIL);
+        }
         
-        // Assert
-        assertThat(result).isFalse();
-        
-        List<EmailDeliveryLog> logs = emailDeliveryLogRepository.findAll();
-        assertThat(logs).hasSize(1);
-        assertThat(logs.get(0).getStatus()).isEqualTo(DeliveryStatus.FAILED);
+        // Verify all notifications exist in database
+        List<BorrowerNotification> allNotifications = notificationRepository.findAll();
+        assertThat(allNotifications.size()).isGreaterThanOrEqualTo(types.length);
     }
     
     /**
-     * Test 4: Get email metrics, verify counts returned
+     * Test 5: Verify notification channel is always EMAIL in current implementation
      */
     @Test
-    void testGetEmailMetrics_ReturnsCorrectCounts() {
-        // Arrange - send a few emails
-        Map<String, String> variables = new HashMap<>();
-        variables.put("firstName", "Test");
-        variables.put("lastName", "User");
-        variables.put("email", "test@example.com");
-        
-        notificationService.sendEmail("test1@example.com", "REGISTRATION_CONFIRMATION", variables);
-        notificationService.sendEmail("test2@example.com", "REGISTRATION_CONFIRMATION", variables);
-        
-        // Act
-        EmailMetricsDTO metrics = notificationService.getEmailMetrics();
-        
-        // Assert
-        assertThat(metrics).isNotNull();
-        assertThat(metrics.getEmailsSent()).isGreaterThanOrEqualTo(2L);
-        assertThat(metrics.getFailureRate()).isGreaterThanOrEqualTo(0.0);
-    }
-    
-    /**
-     * Test 5: Rate limiting - verify 101st email blocked when rate limit set to 100
-     * Note: This test is simplified for demonstration. In real scenario, we'd need to send 101 emails.
-     */
-    @Test
-    void testRateLimiting_ExceedsLimit_Blocked() {
+    void testCreateNotification_ChannelAlwaysEmail() {
         // Arrange
-        Map<String, String> variables = new HashMap<>();
-        variables.put("firstName", "Test");
-        variables.put("lastName", "User");
-        variables.put("email", "test@example.com");
+        String subject = "Test Notification";
+        String message = "Test message";
         
-        // Send emails up to limit (simplified - just verify rate limiter works)
-        long initialCount = emailRateLimiter.getCurrentCount();
-        
-        // Act - send one email
-        boolean result = notificationService.sendEmail("test@example.com", "REGISTRATION_CONFIRMATION", variables);
+        // Act
+        BorrowerNotification notification = notificationService.createNotification(
+                borrowerId,
+                applicationId,
+                NotificationType.APPLICATION_SUBMITTED,
+                subject,
+                message
+        );
         
         // Assert
-        assertThat(result).isTrue();
-        long newCount = emailRateLimiter.getCurrentCount();
-        assertThat(newCount).isGreaterThan(initialCount);
+        assertThat(notification.getChannel()).isEqualTo(NotificationChannel.EMAIL);
     }
     
     /**
-     * Test 6: Health check metrics accuracy
+     * Test 6: Mark notification as read, verify read status updated
      */
     @Test
-    void testEmailMetrics_Accuracy() {
-        // Arrange - create some delivery logs directly
-        EmailDeliveryLog log1 = new EmailDeliveryLog();
-        log1.setRecipientEmail("test1@example.com");
-        log1.setTemplateName("REGISTRATION_CONFIRMATION");
-        log1.setStatus(DeliveryStatus.SENT);
-        emailDeliveryLogRepository.save(log1);
+    void testMarkAsRead_UpdatesReadStatus() {
+        // Arrange
+        BorrowerNotification notification = notificationService.createNotification(
+                borrowerId,
+                applicationId,
+                NotificationType.APPLICATION_SUBMITTED,
+                "Test",
+                "Test message"
+        );
         
-        EmailDeliveryLog log2 = new EmailDeliveryLog();
-        log2.setRecipientEmail("test2@example.com");
-        log2.setTemplateName("REGISTRATION_CONFIRMATION");
-        log2.setStatus(DeliveryStatus.FAILED);
-        emailDeliveryLogRepository.save(log2);
+        UUID notificationId = notification.getId();
         
         // Act
-        EmailMetricsDTO metrics = notificationService.getEmailMetrics();
+        notificationService.markAsRead(notificationId, borrowerId);
         
         // Assert
-        assertThat(metrics.getEmailsSent()).isGreaterThanOrEqualTo(1L);
-        assertThat(metrics.getEmailsFailed()).isGreaterThanOrEqualTo(1L);
-        assertThat(metrics.getFailureRate()).isGreaterThan(0.0);
+        await()
+                .atMost(2, SECONDS)
+                .pollInterval(100, java.util.concurrent.TimeUnit.MILLISECONDS)
+                .untilAsserted(() -> {
+                    BorrowerNotification updated = notificationRepository.findById(notificationId).orElseThrow(
+                            () -> new IllegalArgumentException("Notification not found: " + notificationId)
+                    );
+                    assertThat(updated.getReadAt()).isNotNull();
+                });
     }
 }

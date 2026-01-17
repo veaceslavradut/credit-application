@@ -853,6 +853,117 @@ curl -X POST https://api.creditapp.com/api/borrower/applications/550e8400-e29b-4
 
 ---
 
+## Help Content API
+
+### GET /api/help/topics
+**Description:** List published help topics for a given language.
+
+**Authentication:** None required (public endpoint)
+
+**Request Method:** GET
+
+**Query Parameters:**
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| language | String | No | en | Language code (ISO-2), falls back to 'en' if not provided |
+
+**Response (200 OK):** Returns an array of HelpArticleListDTO
+
+**Response Fields:**
+- topic: String (unique identifier of the topic)
+- title: String (localized title)
+- description: String (short summary)
+- language: String (language code)
+
+**Example Response:**
+```json
+[
+  { "topic": "loan-types", "title": "Loan Types Overview", "description": "Compare common loan types and suitability", "language": "en" },
+  { "topic": "application-requirements", "title": "Application Requirements", "description": "What you need to submit an application", "language": "en" },
+  { "topic": "document-checklist", "title": "Document Checklist", "description": "Required documents by loan type", "language": "en" }
+]
+```
+
+**Example cURL:**
+```bash
+curl -X GET "http://localhost:8080/api/help/topics?language=en"
+```
+
+---
+
+### GET /api/help/{topic}
+**Description:** Retrieve a published help article by topic with ordered sections and FAQs. If the requested language is not available, returns the English version.
+
+**Authentication:** None required (public endpoint)
+
+**Request Method:** GET
+
+**Path Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| topic | String | Yes | Topic identifier (e.g., loan-types) |
+
+**Query Parameters:**
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| language | String | No | en | Language code (ISO-2). Falls back to English if not available |
+
+**Response (200 OK):** Returns a HelpArticleDTO
+
+**Response Fields:**
+- id: UUID
+- topic: String
+- title: String
+- description: String
+- content: String (rich text)
+- version: Integer
+- language: String
+- sections: Array<HelpSectionDTO> { heading, content, order }
+- faqs: Array<HelpFAQDTO> { question, answer, order }
+- lastUpdated: ISO-8601 DateTime
+
+**Example Response:**
+```json
+{
+  "id": "c1f1b5b2-0000-0000-0000-000000000001",
+  "topic": "loan-types",
+  "title": "Loan Types Overview",
+  "description": "Compare common loan types and suitability",
+  "content": "Learn about personal, home, auto, and business loans.",
+  "version": 1,
+  "language": "en",
+  "sections": [
+    { "heading": "Personal Loans", "content": "Unsecured loans for personal needs.", "order": 1 },
+    { "heading": "Home Loans", "content": "Mortgages for purchasing property.", "order": 2 }
+  ],
+  "faqs": [
+    { "question": "Which loan is best for me?", "answer": "It depends on your needs and eligibility.", "order": 1 }
+  ],
+  "lastUpdated": "2026-01-17T10:00:00Z"
+}
+```
+
+**Error Responses:**
+
+**404 Not Found** - Article not found for given topic
+```json
+{
+  "error": "Not Found",
+  "message": "Help article not found for topic 'unknown-topic'",
+  "timestamp": "2026-01-17T10:30:00Z"
+}
+```
+
+**Example cURL:**
+```bash
+curl -X GET "http://localhost:8080/api/help/loan-types?language=en"
+```
+
+---
+
 ## Authorization Matrix
 
 | Endpoint | Method | Public | Borrower | Bank Admin | Compliance |
@@ -865,6 +976,8 @@ curl -X POST https://api.creditapp.com/api/borrower/applications/550e8400-e29b-4
 | /api/borrower/applications/{id}/documents/{docId} | DELETE |  | ✓ |  |  |
 | /api/borrower/applications/{id}/status | GET |  | ✓ |  |  |
 | /api/borrower/applications/{id}/withdraw | POST |  | ✓ |  |  |
+| /api/help/topics | GET | ✓ |  |  |  |
+| /api/help/{topic} | GET | ✓ |  |  |  |
 | /api/health | GET |  |  |  |  |
 
 ---
@@ -881,6 +994,7 @@ This API uses path-based versioning. Future versions will be available at /api/v
 
 | Date | Version | Changes | Story |
 |------|---------|---------|-------|
+| 2026-01-17 | 1.5 | Added Help Content endpoints: topics listing and article retrieval | Story 2.10 |
 | 2026-01-16 | 1.4 | Added application withdrawal endpoint allowing borrowers to cancel applications | Story 2.8 |
 | 2026-01-16 | 1.3 | Added application status tracking endpoint with status history timeline | Story 2.7 |
 | 2026-01-16 | 1.2 | Added document upload, list, and delete endpoints with file size limits and soft-delete pattern | Story 2.6 |

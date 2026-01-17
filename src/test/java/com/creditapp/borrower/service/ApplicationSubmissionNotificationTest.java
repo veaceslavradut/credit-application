@@ -53,7 +53,7 @@ class ApplicationSubmissionNotificationTest {
     }
 
     @Test
-    void submitApplication_shouldQueueApplicationSubmittedEmail() {
+    void submitApplication_shouldCreateApplicationSubmittedNotification() {
         // Arrange application in DRAFT
         Application draft = Application.builder()
                 .id(applicationId)
@@ -96,9 +96,15 @@ class ApplicationSubmissionNotificationTest {
         assertEquals(applicationId, response.getId());
         assertEquals(ApplicationStatus.SUBMITTED.toString(), response.getStatus());
 
-        // Verify notification queued with template APPLICATION_SUBMITTED and borrower email
+        // Verify notification created with APPLICATION_SUBMITTED type
         verify(notificationService, times(1))
-            .queueNotification(eq("APPLICATION_SUBMITTED"), eq("borrower@example.com"), org.mockito.ArgumentMatchers.<java.util.Map<String, String>>any());
+            .createNotification(
+                eq(borrowerId),
+                eq(applicationId),
+                eq(com.creditapp.shared.model.NotificationType.APPLICATION_SUBMITTED),
+                org.mockito.ArgumentMatchers.anyString(),
+                org.mockito.ArgumentMatchers.anyString()
+            );
 
         // Verify application saved
         verify(applicationRepository, times(1)).save(org.mockito.ArgumentMatchers.<Application>any());
