@@ -21,7 +21,9 @@ import com.creditapp.borrower.exception.DocumentStorageException;
 import com.creditapp.borrower.exception.FileSizeExceededException;
 import com.creditapp.borrower.exception.InvalidApplicationException;
 import com.creditapp.borrower.exception.InvalidDocumentException;
+import com.creditapp.borrower.exception.InvalidOfferException;
 import com.creditapp.borrower.exception.NotificationNotFoundException;
+import com.creditapp.borrower.exception.OfferExpiredException;
 import com.creditapp.borrower.exception.SubmissionValidationException;
 import com.creditapp.shared.exception.LoginRateLimitExceededException;
 import com.creditapp.shared.exception.NotFoundException;
@@ -340,6 +342,27 @@ public class GlobalExceptionHandler {
 
     // DO NOT handle AccessDeniedException here - let Spring Security's CustomAccessDeniedHandler handle it
     // @ExceptionHandler(AccessDeniedException.class) is intentionally omitted
+
+    @ExceptionHandler(OfferExpiredException.class)
+    public ResponseEntity<?> handleOfferExpired(OfferExpiredException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Offer Expired");
+        response.put("message", ex.getMessage());
+        response.put("expiresAt", ex.getExpiresAt());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.GONE).body(response);
+    }
+
+    @ExceptionHandler(InvalidOfferException.class)
+    public ResponseEntity<?> handleInvalidOffer(InvalidOfferException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Invalid Offer");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGlobalException(Exception ex, WebRequest request) {

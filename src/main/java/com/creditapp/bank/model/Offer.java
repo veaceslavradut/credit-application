@@ -62,6 +62,9 @@ public class Offer {
     @Column(name = "offer_submitted_at")
     private LocalDateTime offerSubmittedAt;
     
+    @Column(name = "borrower_selected_at")
+    private LocalDateTime borrowerSelectedAt;
+    
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
@@ -203,6 +206,14 @@ public class Offer {
 
     public void setOfferSubmittedAt(LocalDateTime offerSubmittedAt) {
         this.offerSubmittedAt = offerSubmittedAt;
+    }
+
+    public LocalDateTime getBorrowerSelectedAt() {
+        return borrowerSelectedAt;
+    }
+
+    public void setBorrowerSelectedAt(LocalDateTime borrowerSelectedAt) {
+        this.borrowerSelectedAt = borrowerSelectedAt;
     }
 
     public LocalDateTime getUpdatedAt() {

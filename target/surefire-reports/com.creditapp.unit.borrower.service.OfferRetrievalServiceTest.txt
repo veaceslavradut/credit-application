@@ -1,0 +1,68 @@
+-------------------------------------------------------------------------------
+Test set: com.creditapp.unit.borrower.service.OfferRetrievalServiceTest
+-------------------------------------------------------------------------------
+Tests run: 10, Failures: 1, Errors: 6, Skipped: 0, Time elapsed: 0.065 s <<< FAILURE! -- in com.creditapp.unit.borrower.service.OfferRetrievalServiceTest
+com.creditapp.unit.borrower.service.OfferRetrievalServiceTest.testRequiredDocumentsParsing -- Time elapsed: 0.012 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.creditapp.shared.service.AuditService.logAction(String, java.util.UUID, com.creditapp.shared.model.AuditAction)" because "this.auditService" is null
+	at com.creditapp.borrower.service.OfferRetrievalService.getOffersForApplication(OfferRetrievalService.java:94)
+	at com.creditapp.unit.borrower.service.OfferRetrievalServiceTest.testRequiredDocumentsParsing(OfferRetrievalServiceTest.java:239)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.creditapp.unit.borrower.service.OfferRetrievalServiceTest.testAllComparisonFieldsPresent -- Time elapsed: 0.003 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.creditapp.shared.service.AuditService.logAction(String, java.util.UUID, com.creditapp.shared.model.AuditAction)" because "this.auditService" is null
+	at com.creditapp.borrower.service.OfferRetrievalService.getOffersForApplication(OfferRetrievalService.java:94)
+	at com.creditapp.unit.borrower.service.OfferRetrievalServiceTest.testAllComparisonFieldsPresent(OfferRetrievalServiceTest.java:196)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.creditapp.unit.borrower.service.OfferRetrievalServiceTest.testApplicationNotSubmittedWithdrawn -- Time elapsed: 0.007 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <com.creditapp.borrower.exception.ApplicationNotSubmittedException> but was: <java.lang.NullPointerException>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3115)
+	at com.creditapp.unit.borrower.service.OfferRetrievalServiceTest.testApplicationNotSubmittedWithdrawn(OfferRetrievalServiceTest.java:171)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: java.lang.NullPointerException: Cannot invoke "com.creditapp.shared.service.AuditService.logAction(String, java.util.UUID, com.creditapp.shared.model.AuditAction)" because "this.auditService" is null
+	at com.creditapp.borrower.service.OfferRetrievalService.getOffersForApplication(OfferRetrievalService.java:74)
+	at com.creditapp.unit.borrower.service.OfferRetrievalServiceTest.lambda$testApplicationNotSubmittedWithdrawn$3(OfferRetrievalServiceTest.java:172)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
+	... 6 more
+
+com.creditapp.unit.borrower.service.OfferRetrievalServiceTest.testEmptyOffersReturnsEmptyList -- Time elapsed: 0 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.creditapp.shared.service.AuditService.logAction(String, java.util.UUID, com.creditapp.shared.model.AuditAction)" because "this.auditService" is null
+	at com.creditapp.borrower.service.OfferRetrievalService.getOffersForApplication(OfferRetrievalService.java:74)
+	at com.creditapp.unit.borrower.service.OfferRetrievalServiceTest.testEmptyOffersReturnsEmptyList(OfferRetrievalServiceTest.java:181)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.creditapp.unit.borrower.service.OfferRetrievalServiceTest.testGetOffersForApplicationSortedByApr -- Time elapsed: 0.003 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.creditapp.shared.service.AuditService.logAction(String, java.util.UUID, com.creditapp.shared.model.AuditAction)" because "this.auditService" is null
+	at com.creditapp.borrower.service.OfferRetrievalService.getOffersForApplication(OfferRetrievalService.java:94)
+	at com.creditapp.unit.borrower.service.OfferRetrievalServiceTest.testGetOffersForApplicationSortedByApr(OfferRetrievalServiceTest.java:135)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.creditapp.unit.borrower.service.OfferRetrievalServiceTest.testGetOffersForApplicationHappyPath -- Time elapsed: 0.003 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.creditapp.shared.service.AuditService.logAction(String, java.util.UUID, com.creditapp.shared.model.AuditAction)" because "this.auditService" is null
+	at com.creditapp.borrower.service.OfferRetrievalService.getOffersForApplication(OfferRetrievalService.java:94)
+	at com.creditapp.unit.borrower.service.OfferRetrievalServiceTest.testGetOffersForApplicationHappyPath(OfferRetrievalServiceTest.java:116)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.creditapp.unit.borrower.service.OfferRetrievalServiceTest.testLogoUrlFallback -- Time elapsed: 0.005 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.creditapp.shared.service.AuditService.logAction(String, java.util.UUID, com.creditapp.shared.model.AuditAction)" because "this.auditService" is null
+	at com.creditapp.borrower.service.OfferRetrievalService.getOffersForApplication(OfferRetrievalService.java:94)
+	at com.creditapp.unit.borrower.service.OfferRetrievalServiceTest.testLogoUrlFallback(OfferRetrievalServiceTest.java:224)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+

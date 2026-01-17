@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.testcontainers.Testcontainers;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -33,7 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Testcontainers
-@ActiveProfiles("test")
 public class OfferRetrievalIntegrationTest {
 
     @Container
@@ -120,7 +117,7 @@ public class OfferRetrievalIntegrationTest {
             .andExpect(jsonPath("$.totalOffersCount", is(2)))
             .andExpect(jsonPath("$.disclaimer", notNullValue()))
             .andExpect(jsonPath("$.retrievedAt", notNullValue()))
-            .andExpect(jsonPath("$.nextRefreshAvailableAt", notNullValue());
+            .andExpect(jsonPath("$.nextRefreshAvailableAt", notNullValue()));
     }
 
     @Test

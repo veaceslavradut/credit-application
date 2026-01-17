@@ -1,10 +1,12 @@
 package com.creditapp.unit.security;
 
 import com.creditapp.auth.filter.JwtAuthenticationToken;
-import com.creditapp.shared.model.UserRole;
+import com.creditapp.auth.repository.UserRepository;
 import com.creditapp.shared.security.AuthorizationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -19,10 +21,14 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AuthorizationUnitTest {
 
     private AuthorizationService authorizationService;
+    
+    @Mock
+    private UserRepository userRepository;
 
     @BeforeEach
     public void setUp() {
-        authorizationService = new AuthorizationService();
+        MockitoAnnotations.openMocks(this);
+        authorizationService = new AuthorizationService(userRepository);
     }
 
     @Test

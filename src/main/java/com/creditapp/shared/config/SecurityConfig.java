@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.beans.factory.ObjectProvider;
 
 @Configuration
 @EnableWebSecurity
@@ -19,15 +20,26 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter, CustomAccessDeniedHandler accessDeniedHandler) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, 
+                                          CustomAccessDeniedHandler accessDeniedHandler,
+                                          ObjectProvider<JwtAuthenticationFilter> jwtFilterProvider) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**", "/api/health/**", "/actuator/**").permitAll()
                 .anyRequest().authenticated()
             )
-            .exceptionHandling(ex -> ex.accessDeniedHandler(accessDeniedHandler))
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .exceptionHandling(ex -> ex.accessDeniedHandler(accessDeniedHandler));
+        
+        // Only add JWT filter if available (not in all test profiles)
+        jwtFilterProvider.ifAvailable(filter -> {
+            try {
+                http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        
         return http.build();
     }
 

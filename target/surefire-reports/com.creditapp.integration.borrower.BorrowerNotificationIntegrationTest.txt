@@ -1,0 +1,114 @@
+-------------------------------------------------------------------------------
+Test set: com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 11, Failures: 10, Errors: 0, Skipped: 0, Time elapsed: 0.145 s <<< FAILURE! -- in com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest
+com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testGetNotifications_PaginationWorks -- Time elapsed: 0.020 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<200> but was:<403>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testGetNotifications_PaginationWorks(BorrowerNotificationIntegrationTest.java:206)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testMarkAsRead_UpdatesReadAtTimestamp -- Time elapsed: 0.016 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<204> but was:<403>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testMarkAsRead_UpdatesReadAtTimestamp(BorrowerNotificationIntegrationTest.java:249)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testNotificationSentAtTimestampFormatted -- Time elapsed: 0.010 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<200> but was:<403>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testNotificationSentAtTimestampFormatted(BorrowerNotificationIntegrationTest.java:226)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testGetNotifications_WithReadFilter_Unread -- Time elapsed: 0.012 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<200> but was:<403>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testGetNotifications_WithReadFilter_Unread(BorrowerNotificationIntegrationTest.java:100)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testGetNotifications_ReturnsCorrectFields -- Time elapsed: 0.007 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<200> but was:<403>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testGetNotifications_ReturnsCorrectFields(BorrowerNotificationIntegrationTest.java:170)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testMarkNotificationAsRead_Success -- Time elapsed: 0.017 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<204> but was:<403>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testMarkNotificationAsRead_Success(BorrowerNotificationIntegrationTest.java:130)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testMarkNotificationAsRead_NotFound -- Time elapsed: 0.011 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<404> but was:<403>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testMarkNotificationAsRead_NotFound(BorrowerNotificationIntegrationTest.java:145)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testGetNotifications_WithReadFilter_Read -- Time elapsed: 0.010 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<200> but was:<403>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testGetNotifications_WithReadFilter_Read(BorrowerNotificationIntegrationTest.java:120)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testGetNotifications_Unauthorized -- Time elapsed: 0.007 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<401> but was:<403>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testGetNotifications_Unauthorized(BorrowerNotificationIntegrationTest.java:152)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testGetNotifications_ReturnsNotificationsForBorrower -- Time elapsed: 0.009 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<200> but was:<403>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest.testGetNotifications_ReturnsNotificationsForBorrower(BorrowerNotificationIntegrationTest.java:72)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+

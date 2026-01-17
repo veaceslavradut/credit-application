@@ -18,6 +18,13 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
     List<Offer> findByApplicationIdOrderByAprAsc(UUID applicationId);
     
     /**
+     * Find the currently selected (ACCEPTED) offer for an application.
+     * @param applicationId Application UUID
+     * @return Optional containing the accepted offer if one exists
+     */
+    Optional<Offer> findByApplicationIdAndOfferStatus(UUID applicationId, OfferStatus offerStatus);
+    
+    /**
      * Retrieve all non-expired offers for an application, sorted by APR ascending.
      * This query is optimized to avoid N+1 queries when fetching bank details.
      * Note: We don't use JOIN FETCH here since we're not using @ManyToOne relationships.

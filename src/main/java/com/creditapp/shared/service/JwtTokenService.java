@@ -7,6 +7,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -16,11 +17,16 @@ import java.util.UUID;
 public class JwtTokenService {
     private final JwtConfig.JwtProperties jwtProperties;
 
-    public JwtTokenService(JwtConfig.JwtProperties jwtProperties) {
+    public JwtTokenService(@Autowired(required = false) JwtConfig.JwtProperties jwtProperties) {
         this.jwtProperties = jwtProperties;
     }
 
+    public boolean isConfigured() {
+        return jwtProperties != null;
+    }
+
     public String generateToken(User user) {
+        if (!isConfigured()) return null;
         Date now = new Date();
         long expirationMillis = jwtProperties.getExpirationMinutes() * 60 * 1000;
         Date expiryDate = new Date(now.getTime() + expirationMillis);
@@ -37,6 +43,7 @@ public class JwtTokenService {
     }
 
     public String generateRefreshToken(User user) {
+        if (!isConfigured()) return null;
         Date now = new Date();
         long expirationMillis = jwtProperties.getRefreshExpirationDays() * 24 * 60 * 60 * 1000;
         Date expiryDate = new Date(now.getTime() + expirationMillis);

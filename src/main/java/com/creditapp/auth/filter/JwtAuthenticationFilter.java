@@ -25,6 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public JwtAuthenticationFilter(JwtTokenService jwtTokenService) {
         this.jwtTokenService = jwtTokenService;
+        logger.debug("JwtAuthenticationFilter initialized");
     }
 
     @Override

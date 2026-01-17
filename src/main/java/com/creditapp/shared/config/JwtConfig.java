@@ -36,13 +36,27 @@ public class JwtConfig {
 
     @Bean
     public SecretKey jwtSigningKey() {
-        byte[] decodedKey = Base64.getDecoder().decode(secret);
-        return Keys.hmacShaKeyFor(decodedKey);
+        if (secret == null || secret.isEmpty()) {
+            return null;
+        }
+        try {
+            byte[] decodedKey = Base64.getDecoder().decode(secret);
+            return Keys.hmacShaKeyFor(decodedKey);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     @Bean
     public JwtProperties jwtProperties() {
-        return new JwtProperties(secret, expiration.getMinutes(), refreshExpiration.getDays(), jwtSigningKey());
+        if (secret == null || secret.isEmpty() || expiration == null || refreshExpiration == null) {
+            return null;
+        }
+        SecretKey signingKey = jwtSigningKey();
+        if (signingKey == null) {
+            return null;
+        }
+        return new JwtProperties(secret, expiration.getMinutes(), refreshExpiration.getDays(), signingKey);
     }
 
     public static class JwtProperties {

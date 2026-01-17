@@ -64,7 +64,8 @@ class ApplicationUpdateServiceTest {
                 mock(com.creditapp.borrower.repository.ApplicationHistoryRepository.class),
                 auditService,
                 notificationService,
-                userRepository
+                userRepository,
+                mock(com.creditapp.bank.service.OfferCalculationService.class)
         );
 
         borrowerId = UUID.randomUUID();

@@ -3,6 +3,7 @@ com\creditapp\shared\config\JwtConfig$RefreshExpiration.class
 com\creditapp\bank\dto\OfferDTO.class
 com\creditapp\shared\model\NotificationType.class
 com\creditapp\borrower\dto\CreateApplicationRequest$CreateApplicationRequestBuilder.class
+com\creditapp\shared\service\OfferSelectionEmailService.class
 com\creditapp\borrower\model\ApplicationStatus.class
 com\creditapp\shared\audit\BusinessAudit.class
 com\creditapp\shared\config\RedisConfig.class
@@ -11,6 +12,7 @@ com\creditapp\borrower\dto\LoanPreferenceDTO.class
 com\creditapp\auth\service\ProfileService.class
 com\creditapp\shared\service\PasswordValidationService.class
 com\creditapp\shared\repository\AuditLogRepository.class
+com\creditapp\borrower\service\OfferSelectionService.class
 com\creditapp\borrower\dto\ApplicationHistoryDTO.class
 com\creditapp\borrower\dto\HelpSectionDTO.class
 com\creditapp\bank\model\Offer.class
@@ -42,6 +44,7 @@ com\creditapp\shared\audit\BusinessAuditAspect.class
 com\creditapp\shared\dto\NotificationHealthDTO$NotificationHealthDTOBuilder.class
 com\creditapp\auth\exception\DuplicateEmailException.class
 com\creditapp\bank\dto\BankRateCardResponse.class
+com\creditapp\borrower\dto\SelectOfferResponse.class
 com\creditapp\borrower\model\EmploymentStatus.class
 com\creditapp\shared\exception\NotFoundException.class
 com\creditapp\borrower\model\BorrowerNotification$BorrowerNotificationBuilder.class
@@ -53,6 +56,7 @@ com\creditapp\bank\model\BankRateCard.class
 com\creditapp\common\exception\GlobalExceptionHandler.class
 com\creditapp\borrower\dto\SubmitApplicationRequest$SubmitApplicationRequestBuilder.class
 com\creditapp\borrower\repository\ApplicationDetailsRepository.class
+com\creditapp\borrower\exception\InvalidOfferException.class
 com\creditapp\bank\model\OfferStatus.class
 com\creditapp\borrower\model\Currency.class
 com\creditapp\borrower\dto\UpdateApplicationResponse.class
@@ -173,6 +177,8 @@ com\creditapp\shared\security\RateLimitingAspect.class
 com\creditapp\shared\model\NotificationChannel.class
 com\creditapp\shared\service\RequestContextService.class
 com\creditapp\bank\model\CalculationType.class
+com\creditapp\borrower\exception\OfferExpiredException.class
+com\creditapp\borrower\service\NextStepsService.class
 com\creditapp\borrower\exception\FileSizeExceededException.class
 com\creditapp\borrower\repository\BorrowerNotificationRepository.class
 com\creditapp\auth\dto\BankRegistrationRequest.class
@@ -194,6 +200,7 @@ com\creditapp\shared\dto\NotificationHealthDTO.class
 com\creditapp\shared\model\EmailTemplate$EmailTemplateBuilder.class
 com\creditapp\borrower\dto\DocumentDTO$DocumentDTOBuilder.class
 com\creditapp\shared\service\NotificationService.class
+com\creditapp\borrower\dto\SelectOfferRequest.class
 com\creditapp\borrower\exception\ApplicationStaleException.class
 com\creditapp\shared\dto\NotificationEvent.class
 com\creditapp\borrower\model\ApplicationHistory$ApplicationHistoryBuilder.class
