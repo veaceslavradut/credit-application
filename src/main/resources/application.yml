@@ -75,3 +75,7 @@ app:
   document-storage:
     path: ${DOCUMENT_STORAGE_PATH:uploads/documents}
     type: filesystem  # filesystem or s3
+  offer:
+    validity:
+      period:
+        hours: 24  # Default offer validity period in hours

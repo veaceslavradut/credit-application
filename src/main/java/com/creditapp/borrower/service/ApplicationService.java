@@ -22,6 +22,7 @@ import com.creditapp.shared.model.AuditAction;
 import com.creditapp.shared.service.AuditService;
 import com.creditapp.shared.service.NotificationService;
 import com.creditapp.auth.repository.UserRepository;
+import com.creditapp.bank.service.OfferCalculationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -48,6 +49,7 @@ public class ApplicationService {
     private final AuditService auditService;
     private final NotificationService notificationService;
     private final UserRepository userRepository;
+    private final OfferCalculationService offerCalculationService;
 
     /**
      * Create a new application in DRAFT status.
@@ -220,6 +222,16 @@ public class ApplicationService {
             } catch (Exception notifyEx) {
                 log.warn("Failed to create APPLICATION_SUBMITTED notification for application {}: {}",
                         application.getId(), notifyEx.getMessage());
+            }
+
+            // Trigger async offer calculation for all active banks
+            try {
+                log.info("Triggering async offer calculation for application: {}", application.getId());
+                offerCalculationService.calculateOffers(application.getId());
+            } catch (Exception calcEx) {
+                log.error("Failed to trigger offer calculation for application {}: {}",
+                        application.getId(), calcEx.getMessage(), calcEx);
+                // Don't fail submission if calculation trigger fails - calculation can be retried
             }
 
             return SubmitApplicationResponse.builder()

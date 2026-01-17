@@ -6,6 +6,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\OrganizationRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\filter\JwtAuthenticationToken.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\model\OfferCalculationLog.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\exception\OfferCalculationException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\exception\LoginRateLimitExceededException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\LoanType.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\EmailDeliveryLog.java
@@ -100,6 +101,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\HelpArticleDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\exception\RateLimitExceededException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\CustomAccessDeniedHandler.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\service\OfferCalculationService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\UserProfileResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\BankRegistrationRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\PasswordChangeEmailService.java

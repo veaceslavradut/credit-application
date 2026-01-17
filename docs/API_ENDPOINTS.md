@@ -1430,6 +1430,253 @@ Results of the calculation:
 
 ---
 
+## Offer Calculation API
+
+### Overview: Offer Calculation Flow
+
+The Offer Calculation Engine automatically generates preliminary loan offers when a borrower submits an application. This is an **internal process** - no external endpoints are exposed directly for calculation, but this section documents how the calculation works and what data is produced.
+
+**Flow:**
+1. Borrower submits application (POST /api/borrower/applications/{applicationId}/submit)
+2. ApplicationService triggers OfferCalculationService asynchronously
+3. For each bank with active rate cards matching the loan type/currency:
+   - Retrieve bank's rate card configuration
+   - Calculate offer using simulated bank formulas
+   - Store Offer entity with status CALCULATED
+   - Log calculation details in OfferCalculationLog
+4. Borrower receives notification: "Offers Available"
+5. Borrower retrieves offers (GET /api/borrower/applications/{applicationId}/offers)
+
+**Note:** This is a **mock/simulated** approach for MVP. No external bank APIs are called. Calculations use locally-configured rate cards (Story 3.2) to simulate what each bank's calculator would return.
+
+---
+
+### Internal Calculation Process
+
+**Triggered By:** Application submission (ApplicationService)
+
+**Input Parameters:**
+- Application: loan amount, term (months), loan type, currency
+- BankRateCard: base APR, APR adjustment range, origination fee %, insurance %
+
+**Calculation Steps:**
+
+1. **APR Determination**
+   - Base APR from rate card
+   - If loan term > 120 months: Add half of APR adjustment range
+   - Formula: `Final APR = Base APR + (APR Adjustment Range ÷ 2)` if term > 120
+   - Example: 8.5% base + (2.0% ÷ 2) = 9.5% final APR for 15-year loan
+
+2. **Monthly Payment Calculation (Amortization)**
+   - Formula: `M = P × [r(1 + r)^n] / [(1 + r)^n - 1]`
+   - Where:
+     - M = Monthly Payment
+     - P = Principal (loan amount)
+     - r = Monthly interest rate (APR ÷ 100 ÷ 12)
+     - n = Number of payments (loan term in months)
+   - Example: $25,000 @ 8.5% for 36 months = $788.67/month
+
+3. **Fee Calculations**
+   - Origination Fee = Loan Amount × (Origination Fee % ÷ 100)
+   - Insurance Cost = Loan Amount × (Insurance % ÷ 100), or $0 if null
+   - Example: $25,000 loan → $625 origination (2.5%) + $125 insurance (0.5%)
+
+4. **Total Cost**
+   - Total Interest = (Monthly Payment × Term) - Principal
+   - Total Cost = (Monthly Payment × Term)
+   - Example: $788.67 × 36 = $28,392.12 total cost
+
+**Output:**
+- Offer entity: APR, monthly payment, origination fee, insurance cost, total cost, required documents, validity period (24 hours)
+- OfferCalculationLog: All input/output values, calculation type (MOCK_CALCULATION), timestamp
+
+---
+
+### Calculation Examples
+
+#### Example 1: Standard Personal Loan
+**Input:**
+- Loan Amount: $25,000
+- Loan Term: 36 months
+- Loan Type: PERSONAL
+- Currency: EUR
+- Bank Rate Card: Base APR 8.5%, Origination 2.5%, Insurance 0.5%
+
+**Calculation:**
+- Monthly Rate: 8.5% ÷ 100 ÷ 12 = 0.00708333
+- Monthly Payment: $25,000 × [0.00708333(1.00708333)^36] / [(1.00708333)^36 - 1] = **$788.67**
+- Total Interest: ($788.67 × 36) - $25,000 = $3,392.12
+- Total Cost: $788.67 × 36 = **$28,392.12**
+- Origination Fee: $25,000 × 0.025 = **$625.00**
+- Insurance Cost: $25,000 × 0.005 = **$125.00**
+
+**Offer Result:**
+```json
+{
+  "id": "aa0e8400-e29b-41d4-a716-446655440010",
+  "applicationId": "990e8400-e29b-41d4-a716-446655440009",
+  "bankId": "550e8400-e29b-41d4-a716-446655440000",
+  "bankName": "Example Bank",
+  "loanAmount": 25000.00,
+  "loanTermMonths": 36,
+  "apr": 8.5000,
+  "monthlyPayment": 788.67,
+  "totalCost": 28392.12,
+  "originationFee": 625.00,
+  "insuranceCost": 125.00,
+  "requiredDocuments": ["ID", "PROOF_OF_INCOME", "BANK_STATEMENT"],
+  "status": "CALCULATED",
+  "offerValidUntil": "2026-01-18T14:30:00Z",
+  "createdAt": "2026-01-17T14:30:00Z"
+}
+```
+
+#### Example 2: Long-Term Loan with APR Adjustment
+**Input:**
+- Loan Amount: $50,000
+- Loan Term: 180 months (15 years)
+- Bank Rate Card: Base APR 8.5%, APR Adjustment Range 2.0%
+
+**Calculation:**
+- APR Adjustment Applied: Term > 120 months → Add 2.0% ÷ 2 = +1.0%
+- Final APR: 8.5% + 1.0% = **9.5%**
+- Monthly Rate: 9.5% ÷ 100 ÷ 12 = 0.00791667
+- Monthly Payment: $50,000 × [0.00791667(1.00791667)^180] / [(1.00791667)^180 - 1] = **$522.90**
+- Total Cost: $522.90 × 180 = **$94,122.00**
+
+#### Example 3: No Insurance
+**Input:**
+- Loan Amount: $25,000
+- Insurance Percent: null (bank doesn't require insurance)
+
+**Calculation:**
+- Insurance Cost: **$0.00** (null insurance percent treated as zero)
+
+---
+
+### Offer Status: CALCULATED
+
+**What it means:**
+- Offer is **preliminary** and **simulated** (not submitted by bank)
+- Based on bank's configured rate card formulas
+- No external API calls were made
+- Represents what the bank's calculator would likely return
+
+**Next Steps:**
+- Borrower reviews offers (Story 3.4)
+- Borrower accepts offer (Story 3.5)
+- In Phase 2: Real bank API integration replaces simulated calculations
+
+---
+
+### Asynchronous Execution
+
+**Why Async?**
+- Calculations run in background (don't block application submission)
+- Multiple banks calculated in parallel
+- Borrower receives "Application Submitted" confirmation immediately
+
+**Implementation:**
+- `@Async` annotation on `OfferCalculationService.calculateOffersForApplication()`
+- ThreadPoolTaskExecutor with 10 threads
+- Each bank calculation is independent
+
+**Error Handling:**
+- If one bank calculation fails, others proceed
+- Failed calculations logged with error details
+- Borrower still receives successful offers
+
+---
+
+### Calculation Determinism
+
+**Requirement:** Identical inputs MUST produce identical outputs.
+
+**Verified Behavior:**
+- Same loan amount, term, and rate card → Same APR, payment, fees
+- BigDecimal precision ensures no floating-point errors
+- All calculations use HALF_UP rounding mode
+- Monetary values: 2 decimal places
+- APR: 4 decimal places
+
+---
+
+### Validity Period
+
+**Default:** 24 hours from calculation timestamp
+
+**Configuration:** `app.offer.validity.period.hours=24`
+
+**Behavior:**
+- After 24 hours: Offer status changes to EXPIRED
+- Borrower must submit new application if offers expired
+- Configurable per deployment environment
+
+---
+
+### Audit Trail
+
+Every calculation is logged in `offer_calculation_logs` table:
+- Input: loan amount, term, rate card ID
+- Output: APR, monthly payment, fees, total cost
+- Calculation type: MOCK_CALCULATION
+- Timestamp: when calculation occurred
+- Bank ID: which bank's rate card was used
+
+**Purpose:**
+- Regulatory compliance
+- Debugging calculation issues
+- Comparing simulated vs. real calculations (Phase 2)
+
+---
+
+### Related Entities
+
+**Offer** (Story 3.1):
+- Stores calculated offer details
+- Linked to Application and Bank (Organization)
+- Status: CALCULATED, ACCEPTED, REJECTED, EXPIRED
+
+**BankRateCard** (Story 3.2):
+- Bank-configured parameters for calculations
+- Versioned (immutable history)
+- Active rate cards used for calculations
+
+**OfferCalculationLog** (Story 3.1):
+- Immutable log of all calculation inputs/outputs
+- Used for audit and analysis
+
+---
+
+### Known Test Cases
+
+For detailed verified calculation examples, see [docs/CALCULATION_TEST_CASES.md](../CALCULATION_TEST_CASES.md):
+- Test Case 1: $25,000 @ 8.5% for 36 months = $788.67/month
+- Test Case 2: $25,000 @ 7.8% (no insurance) = $781.93/month
+- Test Case 3: $25,000 @ 9.2% (higher rate) = $795.46/month
+- Test Case 4: $50,000 @ 9.5% for 180 months = $522.90/month (APR adjustment)
+- Test Case 5: $5,000 @ 8.5% for 24 months = $226.66/month
+
+---
+
+### Phase 2: Real Bank API Integration
+
+**Current (MVP):** Mock/simulated calculations using local rate cards
+
+**Future (Phase 2):** Replace with real bank API calls
+- External API endpoints per bank
+- Real-time offer generation
+- Asynchronous polling for results
+- Fallback to simulated if API unavailable
+
+**Benefits of Simulated Approach:**
+- Faster MVP development
+- Predictable calculations for testing
+- No dependency on external systems
+- Benchmark for validating real API responses
+
+---
+
 ## Versioning
 This API uses path-based versioning. Future versions will be available at /api/v2/auth/... etc.
 
@@ -1442,6 +1689,7 @@ This API uses path-based versioning. Future versions will be available at /api/v
 
 | Date | Version | Changes | Story |
 |------|---------|---------|-------|
+| 2026-01-17 | 1.8 | Added Offer Calculation Engine documentation: internal calculation flow, formulas, examples, async execution, and known test cases | Story 3.3 |
 | 2026-01-17 | 1.7 | Added Bank Rate Card Configuration API: POST, GET, PUT /api/bank/rate-cards endpoints for managing rate cards with versioning | Story 3.2 |
 | 2026-01-17 | 1.6 | Added Offer, BankRateCard, and OfferCalculationLog data model documentation | Story 3.1 |
 | 2026-01-17 | 1.5 | Added Help Content endpoints: topics listing and article retrieval | Story 2.10 |

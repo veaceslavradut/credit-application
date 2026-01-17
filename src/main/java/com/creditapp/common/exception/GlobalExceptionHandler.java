@@ -6,6 +6,7 @@ import com.creditapp.auth.exception.PasswordValidationException;
 import com.creditapp.auth.exception.InvalidCredentialsException;
 import com.creditapp.auth.exception.BankNotActivatedException;
 import com.creditapp.auth.service.InvalidPasswordException;
+import com.creditapp.bank.exception.OfferCalculationException;
 import com.creditapp.bank.exception.RateCardNotFoundException;
 import com.creditapp.bank.exception.InvalidRateCardException;
 import com.creditapp.bank.exception.DuplicateRateCardException;
@@ -324,6 +325,17 @@ public class GlobalExceptionHandler {
         response.put("timestamp", LocalDateTime.now().toString());
         response.put("path", request.getDescription(false).replace("uri=", ""));
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(OfferCalculationException.class)
+    public ResponseEntity<?> handleOfferCalculationException(OfferCalculationException ex, WebRequest request) {
+        logger.error("Offer calculation error", ex);
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Internal Server Error");
+        response.put("message", "Offer calculation failed. Please try again later.");
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
     // DO NOT handle AccessDeniedException here - let Spring Security's CustomAccessDeniedHandler handle it
