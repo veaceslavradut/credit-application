@@ -11,6 +11,8 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\r
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\model\Offer.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\audit\BusinessAudit.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\BankRateCardResponse.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\CalculateScenarioResponse.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\CalculateScenarioRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\service\LoginService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\controller\BankAdminRateCardController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\EmailDeliveryLogRepository.java
@@ -108,6 +110,8 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\InvalidApplicationException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\NotificationChannel.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\EmploymentStatus.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\RateCardLookupService.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\util\CalculationUtils.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\controller\BorrowerNotificationController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\JwtConfig.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\HelpArticleStatus.java
@@ -139,12 +143,14 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\m
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\RabbitMQConfig.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\AuditLogRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\SelectOfferRequest.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\DefaultRateCardService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\common\config\WebMvcConfig.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\DocumentStorageService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\ApplicationService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\audit\AuditLogListener.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\HelpArticleListDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\exception\InvalidRateCardException.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\ScenarioCalculatorService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\RegistrationResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\SubmissionValidationException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\StatusTransitionDTO.java
@@ -168,6 +174,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\u
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\repository\ApplicationHistoryRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\NextStepsService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\controller\HealthController.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\controller\ScenarioCalculatorController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\controller\BorrowerApplicationController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\InvalidDocumentException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\model\OfferStatus.java

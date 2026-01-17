@@ -93,3 +93,15 @@ creditapp:
   offers:
     default-validity-days: 1
     min-validity-minutes: 15
+  calculator:
+    default-rates:
+      baseAPR: 8.5
+      originationFeePercent: 1.5
+      insuranceCostPercent: 0.5
+      processingFeeFlat: 250
+    rate-limit:
+      enabled: true
+      requests-per-minute: 100
+    cache:
+      enabled: true
+      ttl-hours: 1
