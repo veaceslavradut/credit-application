@@ -1,5 +1,6 @@
 com\creditapp\shared\config\JwtConfig$JwtProperties.class
 com\creditapp\shared\config\JwtConfig$RefreshExpiration.class
+com\creditapp\bank\dto\OfferDTO.class
 com\creditapp\shared\model\NotificationType.class
 com\creditapp\borrower\dto\CreateApplicationRequest$CreateApplicationRequestBuilder.class
 com\creditapp\borrower\model\ApplicationStatus.class
@@ -11,6 +12,7 @@ com\creditapp\shared\service\PasswordValidationService.class
 com\creditapp\shared\repository\AuditLogRepository.class
 com\creditapp\borrower\dto\ApplicationHistoryDTO.class
 com\creditapp\borrower\dto\HelpSectionDTO.class
+com\creditapp\bank\model\Offer.class
 com\creditapp\shared\service\MockEmailService.class
 com\creditapp\shared\security\AuthorizationService.class
 com\creditapp\auth\filter\JwtAuthenticationFilter.class
@@ -18,6 +20,7 @@ com\creditapp\borrower\dto\DocumentDTO.class
 com\creditapp\shared\model\HelpSection$HelpSectionBuilder.class
 com\creditapp\bank\controller\BankAdminController.class
 com\creditapp\borrower\model\ApplicationDocument.class
+com\creditapp\bank\dto\BankRateCardDTO.class
 com\creditapp\shared\service\SendGridEmailService.class
 com\creditapp\borrower\model\ApplicationDetails$ApplicationDetailsBuilder.class
 com\creditapp\auth\filter\JwtAuthenticationToken.class
@@ -43,9 +46,11 @@ com\creditapp\shared\dto\AuditLogDTO.class
 com\creditapp\borrower\model\ApplicationDetails.class
 com\creditapp\shared\repository\RefreshTokenRepository.class
 com\creditapp\borrower\dto\SubmitApplicationResponse$SubmitApplicationResponseBuilder.class
+com\creditapp\bank\model\BankRateCard.class
 com\creditapp\common\exception\GlobalExceptionHandler.class
 com\creditapp\borrower\dto\SubmitApplicationRequest$SubmitApplicationRequestBuilder.class
 com\creditapp\borrower\repository\ApplicationDetailsRepository.class
+com\creditapp\bank\model\OfferStatus.class
 com\creditapp\borrower\model\Currency.class
 com\creditapp\borrower\dto\UpdateApplicationResponse.class
 com\creditapp\borrower\exception\ApplicationLockedException.class
@@ -70,6 +75,7 @@ com\creditapp\borrower\dto\ApplicationDetailsDTO.class
 com\creditapp\shared\service\MockEmailService$MockEmail.class
 com\creditapp\shared\service\AuditLogArchivalService.class
 com\creditapp\shared\model\HelpFAQ$HelpFAQBuilder.class
+com\creditapp\bank\repository\OfferCalculationLogRepository.class
 com\creditapp\borrower\dto\ApplicationHistoryDTO$ApplicationHistoryDTOBuilder.class
 com\creditapp\borrower\exception\InvalidDocumentException.class
 com\creditapp\shared\repository\HelpArticleRepository.class
@@ -96,6 +102,7 @@ com\creditapp\borrower\model\RatePreference.class
 com\creditapp\borrower\dto\CreateApplicationRequest.class
 com\creditapp\borrower\dto\SubmitApplicationResponse.class
 com\creditapp\shared\controller\HealthController.class
+com\creditapp\bank\service\OfferService.class
 com\creditapp\shared\exception\LoginRateLimitExceededException.class
 com\creditapp\auth\dto\UserProfileResponse.class
 com\creditapp\shared\security\RequiresComplianceOfficer.class
@@ -154,6 +161,7 @@ com\creditapp\shared\model\User.class
 com\creditapp\shared\security\RateLimitingAspect.class
 com\creditapp\shared\model\NotificationChannel.class
 com\creditapp\shared\service\RequestContextService.class
+com\creditapp\bank\model\CalculationType.class
 com\creditapp\borrower\exception\FileSizeExceededException.class
 com\creditapp\borrower\repository\BorrowerNotificationRepository.class
 com\creditapp\auth\dto\BankRegistrationRequest.class
@@ -161,12 +169,15 @@ com\creditapp\borrower\service\ApplicationDocumentService.class
 com\creditapp\borrower\dto\NotificationDTO$NotificationDTOBuilder.class
 com\creditapp\shared\messaging\NotificationEventConsumer.class
 com\creditapp\auth\event\UserRegisteredEvent.class
+com\creditapp\bank\repository\OfferRepository.class
 com\creditapp\shared\listener\EntityAuditListener.class
 com\creditapp\shared\model\AuditLog.class
 com\creditapp\shared\model\HelpArticle$HelpArticleBuilder.class
 com\creditapp\common\config\WebMvcConfig.class
 com\creditapp\shared\config\SendGridConfig.class
+com\creditapp\bank\dto\OfferCalculationLogDTO.class
 com\creditapp\borrower\dto\ApplicationStatusDTO$ApplicationStatusDTOBuilder.class
+com\creditapp\bank\model\OfferCalculationLog.class
 com\creditapp\shared\dto\NotificationHealthDTO.class
 com\creditapp\shared\model\EmailTemplate$EmailTemplateBuilder.class
 com\creditapp\borrower\dto\DocumentDTO$DocumentDTOBuilder.class
@@ -178,6 +189,7 @@ com\creditapp\auth\dto\LoginResponse.class
 com\creditapp\shared\service\PasswordChangeEmailService.class
 com\creditapp\borrower\dto\HelpSectionDTO$HelpSectionDTOBuilder.class
 com\creditapp\borrower\exception\ApplicationNotEditableException.class
+com\creditapp\bank\repository\BankRateCardRepository.class
 com\creditapp\shared\config\SecurityConfig.class
 com\creditapp\shared\security\RequiresBankAdmin.class
 com\creditapp\borrower\dto\NotificationDTO.class

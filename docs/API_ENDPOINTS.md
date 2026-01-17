@@ -982,6 +982,229 @@ curl -X GET "http://localhost:8080/api/help/loan-types?language=en"
 
 ---
 
+## Offer Data Model & Bank Rate Cards
+
+### Overview
+This section documents the data model for offers and bank rate cards used in the marketplace. These entities represent:
+- **BankRateCard**: Bank's loan calculator configuration (loan type, APR, fees, etc.)
+- **Offer**: Preliminary offer created by the bank for a borrower's application
+- **OfferCalculationLog**: Audit trail of calculations performed to generate offers
+
+### Offer Entity
+
+**Description:** Represents a preliminary offer from a bank for a borrower's application.
+
+**Fields:**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| id | UUID | Yes | Unique identifier (manually assigned UUID) |
+| applicationId | UUID | Yes | Foreign key to Application |
+| bankId | UUID | Yes | Foreign key to Organization (Bank) |
+| offerStatus | String (enum) | Yes | Status: CALCULATED, SUBMITTED, ACCEPTED, REJECTED, EXPIRED, WITHDRAWN |
+| apr | BigDecimal | Yes | Annual Percentage Rate (0.5-50%) |
+| monthlyPayment | BigDecimal | Yes | Calculated monthly payment amount |
+| totalCost | BigDecimal | Yes | Total cost of the loan (principal + interest) |
+| originationFee | BigDecimal | Yes | One-time origination fee amount |
+| insuranceCost | BigDecimal | No | Optional insurance cost |
+| processingTimeDays | Integer | Yes | Days until approval (1-30) |
+| validityPeriodDays | Integer | Yes | Days offer remains valid (7-90) |
+| requiredDocuments | String | No | Comma-separated list of required documents |
+| createdAt | LocalDateTime | Yes | Timestamp when offer was created (auto-set) |
+| expiresAt | LocalDateTime | Yes | Timestamp when offer expires (created_at + validity_period_days) |
+| offerSubmittedAt | LocalDateTime | No | Timestamp when borrower submitted intent to accept |
+| updatedAt | LocalDateTime | Yes | Timestamp of last update (auto-set) |
+
+**Example JSON Response:**
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "applicationId": "660e8400-e29b-41d4-a716-446655440001",
+  "bankId": "770e8400-e29b-41d4-a716-446655440002",
+  "offerStatus": "CALCULATED",
+  "apr": 8.5,
+  "monthlyPayment": 850.00,
+  "totalCost": 25500.00,
+  "originationFee": 2550.00,
+  "insuranceCost": 150.00,
+  "processingTimeDays": 7,
+  "validityPeriodDays": 30,
+  "requiredDocuments": "proof_of_income,identity_verification",
+  "createdAt": "2026-01-17T10:30:00Z",
+  "expiresAt": "2026-02-16T10:30:00Z",
+  "offerSubmittedAt": null,
+  "updatedAt": "2026-01-17T10:30:00Z"
+}
+```
+
+**Relationships:**
+- **Many-to-One to Application**: Each offer relates to one application (via applicationId)
+- **Many-to-One to Organization**: Each offer is created by one bank (via bankId)
+- **One-to-Many from OfferCalculationLog**: Multiple calculation logs may reference an offer
+
+**Key Constraints:**
+- `applicationId` and `bankId` are foreign keys (required, ON DELETE CASCADE for applications, ON DELETE RESTRICT for banks)
+- `apr` value: 0.5 to 50.0%
+- `validityPeriodDays` value: 7 to 90 days
+- `monthlyPayment`, `totalCost`, `originationFee` must be positive decimals
+
+---
+
+### BankRateCard Entity
+
+**Description:** Represents a bank's loan calculator configuration for a specific loan type and currency. Rate cards are versioned via `validFrom` and `validTo` timestamps.
+
+**Fields:**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| id | UUID | Yes | Unique identifier |
+| bankId | UUID | Yes | Foreign key to Organization (Bank) |
+| loanType | String (enum) | Yes | PERSONAL, HOME, AUTO, DEBT_CONSOLIDATION, STUDENT, BUSINESS, OTHER |
+| currency | String (enum) | Yes | EUR, USD, MDL |
+| minLoanAmount | BigDecimal | Yes | Minimum loan amount (100+) |
+| maxLoanAmount | BigDecimal | Yes | Maximum loan amount (100-1,000,000) |
+| baseApr | BigDecimal | Yes | Base Annual Percentage Rate (0.5-50%) |
+| aprAdjustmentRange | BigDecimal | Yes | APR adjustment range (0-5%) for risk adjustment |
+| originationFeePercent | BigDecimal | Yes | Origination fee as percentage (0-10%) |
+| insurancePercent | BigDecimal | No | Insurance cost as percentage (0-5%) |
+| processingTimeDays | Integer | Yes | Processing time in days (1-30) |
+| validFrom | LocalDateTime | Yes | When this rate card becomes active |
+| validTo | LocalDateTime | No | When this rate card becomes inactive (null = currently active) |
+| createdAt | LocalDateTime | Yes | Timestamp of creation (auto-set) |
+| updatedAt | LocalDateTime | Yes | Timestamp of last update (auto-set) |
+
+**Example JSON Response:**
+```json
+{
+  "id": "880e8400-e29b-41d4-a716-446655440003",
+  "bankId": "770e8400-e29b-41d4-a716-446655440002",
+  "loanType": "PERSONAL",
+  "currency": "EUR",
+  "minLoanAmount": 5000.00,
+  "maxLoanAmount": 100000.00,
+  "baseApr": 8.5,
+  "aprAdjustmentRange": 3.0,
+  "originationFeePercent": 2.5,
+  "insurancePercent": 0.5,
+  "processingTimeDays": 7,
+  "validFrom": "2026-01-17T00:00:00Z",
+  "validTo": null,
+  "createdAt": "2026-01-17T10:30:00Z",
+  "updatedAt": "2026-01-17T10:30:00Z",
+  "active": true
+}
+```
+
+**Versioning Strategy:**
+- When a bank updates rate cards, the old card is marked inactive by setting `validTo` to current timestamp
+- New card is created with `validFrom` = current timestamp and `validTo` = null
+- All historical versions are preserved for audit trail
+- Active cards always have `validTo` IS NULL
+
+**Relationships:**
+- **Many-to-One to Organization**: Each rate card belongs to one bank
+- **One-to-Many from Offer**: Rate cards guide offer calculations
+
+**Key Constraints:**
+- Unique constraint on (bankId, loanType, currency, validTo) per time period
+- `minLoanAmount` must be less than `maxLoanAmount`
+- Both amount fields must be >= 100
+- APR, fees, and insurance percentages within specified ranges
+
+---
+
+### OfferCalculationLog Entity
+
+**Description:** Immutable audit trail of all calculations performed to generate offers. Stores input parameters and calculated values as JSONB for flexible audit tracking.
+
+**Fields:**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| id | Long | Yes | Auto-incremented sequential ID |
+| applicationId | UUID | Yes | Foreign key to Application |
+| bankId | UUID | No | Foreign key to Organization (Bank) - nullable for audit |
+| calculationMethod | String | Yes | Name of calculation method used |
+| inputParameters | String (JSONB) | Yes | JSON object of input parameters used |
+| calculatedValues | String (JSONB) | Yes | JSON object of calculation results |
+| calculationType | String (enum) | Yes | MOCK_CALCULATION, REAL_API, OVERRIDE |
+| timestamp | LocalDateTime | Yes | When calculation occurred |
+| createdAt | LocalDateTime | Yes | Timestamp of log creation (auto-set) |
+
+**Example JSON Response:**
+```json
+{
+  "id": 1001,
+  "applicationId": "660e8400-e29b-41d4-a716-446655440001",
+  "bankId": "770e8400-e29b-41d4-a716-446655440002",
+  "calculationMethod": "standard_affordability_check",
+  "inputParameters": {
+    "loanType": "PERSONAL",
+    "loanAmount": 25000,
+    "loanTermMonths": 36,
+    "currency": "EUR",
+    "borrowerIncome": 3500,
+    "existingDebts": 500,
+    "riskScore": 720
+  },
+  "calculatedValues": {
+    "apr": 8.5,
+    "monthlyPayment": 850.00,
+    "totalCost": 25500.00,
+    "originationFee": 2550.00,
+    "insuranceCost": 150.00,
+    "processingTimeDays": 7,
+    "affordabilityRatio": 0.22,
+    "approvalProbability": 0.92
+  },
+  "calculationType": "REAL_API",
+  "timestamp": "2026-01-17T10:30:00Z",
+  "createdAt": "2026-01-17T10:30:00Z"
+}
+```
+
+**Input Parameters (JSONB):**
+Common fields logged for all calculations:
+- `loanType`: Type of loan being considered
+- `loanAmount`: Requested loan amount
+- `loanTermMonths`: Requested loan term
+- `currency`: Loan currency
+- `borrowerIncome`: Borrower's annual income
+- `existingDebts`: Existing monthly debt obligations
+- `riskScore`: Credit/risk score from evaluation
+- `employmentStatus`: Borrower's employment status
+- `downPayment`: Down payment amount (if applicable)
+
+**Calculated Values (JSONB):**
+Results of the calculation:
+- `apr`: Calculated Annual Percentage Rate
+- `monthlyPayment`: Calculated monthly payment
+- `totalCost`: Total loan cost (principal + interest)
+- `originationFee`: Calculated origination fee
+- `insuranceCost`: Calculated insurance cost
+- `processingTimeDays`: Processing time estimate
+- `affordabilityRatio`: Debt-to-income ratio
+- `approvalProbability`: Probability of approval (0.0-1.0)
+
+**Relationships:**
+- **Many-to-One to Application**: Multiple calculations per application
+- **Many-to-One to Organization**: Bank that performed calculation
+
+**Key Constraints:**
+- `inputParameters` and `calculatedValues` stored as JSONB for flexibility
+- `timestamp` must be set (required, not null)
+- Append-only: no updates or deletes allowed (immutable audit trail)
+- Created with FK ON DELETE CASCADE for applications, ON DELETE SET NULL for banks
+
+**Audit Trail Use:**
+- Every offer calculation is logged for compliance
+- Full input parameters and results preserved
+- Supports regulatory audits and dispute resolution
+- Enables tracing of why specific offers were generated
+
+---
+
 ## Versioning
 This API uses path-based versioning. Future versions will be available at /api/v2/auth/... etc.
 
@@ -994,6 +1217,7 @@ This API uses path-based versioning. Future versions will be available at /api/v
 
 | Date | Version | Changes | Story |
 |------|---------|---------|-------|
+| 2026-01-17 | 1.6 | Added Offer, BankRateCard, and OfferCalculationLog data model documentation | Story 3.1 |
 | 2026-01-17 | 1.5 | Added Help Content endpoints: topics listing and article retrieval | Story 2.10 |
 | 2026-01-16 | 1.4 | Added application withdrawal endpoint allowing borrowers to cancel applications | Story 2.8 |
 | 2026-01-16 | 1.3 | Added application status tracking endpoint with status history timeline | Story 2.7 |

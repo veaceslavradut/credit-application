@@ -4,8 +4,11 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\sec
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\service\AuditServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ApplicationWithdrawalIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\auth\UserProfileIntegrationTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\bank\OfferDataModelIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\borrower\service\ApplicationSubmissionNotificationTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\OfferEntityTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ApplicationCreationIntegrationTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\OfferServiceUnitTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\security\AuthorizationUnitTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\auth\BankRegistrationIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\ApplicationUpdateServiceTest.java
