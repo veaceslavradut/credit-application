@@ -1,5 +1,6 @@
 com\creditapp\shared\config\JwtConfig$JwtProperties.class
 com\creditapp\shared\config\JwtConfig$RefreshExpiration.class
+com\creditapp\shared\model\NotificationType.class
 com\creditapp\borrower\dto\CreateApplicationRequest$CreateApplicationRequestBuilder.class
 com\creditapp\borrower\model\ApplicationStatus.class
 com\creditapp\shared\audit\BusinessAudit.class
@@ -35,6 +36,7 @@ com\creditapp\shared\dto\NotificationHealthDTO$NotificationHealthDTOBuilder.clas
 com\creditapp\auth\exception\DuplicateEmailException.class
 com\creditapp\borrower\model\EmploymentStatus.class
 com\creditapp\shared\exception\NotFoundException.class
+com\creditapp\borrower\model\BorrowerNotification$BorrowerNotificationBuilder.class
 com\creditapp\shared\dto\AuditLogDTO.class
 com\creditapp\borrower\model\ApplicationDetails.class
 com\creditapp\shared\repository\RefreshTokenRepository.class
@@ -68,6 +70,7 @@ com\creditapp\borrower\exception\InvalidDocumentException.class
 com\creditapp\auth\dto\RefreshTokenRequest.class
 com\creditapp\borrower\dto\ApplicationDetailsDTO$ApplicationDetailsDTOBuilder.class
 com\creditapp\shared\messaging\NotificationEventPublisher.class
+com\creditapp\borrower\model\BorrowerNotification.class
 com\creditapp\borrower\service\ApplicationStatusTrackingService.class
 com\creditapp\borrower\exception\ApplicationAlreadySubmittedException.class
 com\creditapp\borrower\exception\ApplicationCreationException.class
@@ -77,6 +80,7 @@ com\creditapp\shared\service\DocumentStorageService.class
 com\creditapp\auth\controller\AuthController.class
 com\creditapp\borrower\exception\ApplicationNotFoundException.class
 com\creditapp\shared\config\AsyncConfig.class
+com\creditapp\borrower\exception\NotificationNotFoundException.class
 com\creditapp\borrower\exception\DocumentNotFoundException.class
 com\creditapp\borrower\service\WithdrawApplicationService.class
 com\creditapp\borrower\model\RatePreference.class
@@ -133,10 +137,13 @@ com\creditapp\auth\exception\BankNotActivatedException.class
 com\creditapp\borrower\repository\ApplicationDocumentRepository.class
 com\creditapp\shared\model\User.class
 com\creditapp\shared\security\RateLimitingAspect.class
+com\creditapp\shared\model\NotificationChannel.class
 com\creditapp\shared\service\RequestContextService.class
 com\creditapp\borrower\exception\FileSizeExceededException.class
+com\creditapp\borrower\repository\BorrowerNotificationRepository.class
 com\creditapp\auth\dto\BankRegistrationRequest.class
 com\creditapp\borrower\service\ApplicationDocumentService.class
+com\creditapp\borrower\dto\NotificationDTO$NotificationDTOBuilder.class
 com\creditapp\shared\messaging\NotificationEventConsumer.class
 com\creditapp\auth\event\UserRegisteredEvent.class
 com\creditapp\shared\listener\EntityAuditListener.class
@@ -156,9 +163,11 @@ com\creditapp\shared\service\PasswordChangeEmailService.class
 com\creditapp\borrower\exception\ApplicationNotEditableException.class
 com\creditapp\shared\config\SecurityConfig.class
 com\creditapp\shared\security\RequiresBankAdmin.class
+com\creditapp\borrower\dto\NotificationDTO.class
 com\creditapp\shared\audit\AuditLogListener.class
 com\creditapp\shared\model\Organization.class
 com\creditapp\auth\service\PasswordHasher.class
+com\creditapp\borrower\controller\BorrowerNotificationController.class
 com\creditapp\shared\model\EmailDeliveryLog.class
 com\creditapp\borrower\model\LoanType.class
 com\creditapp\shared\model\RefreshToken.class

@@ -17,6 +17,7 @@ import com.creditapp.borrower.exception.DocumentStorageException;
 import com.creditapp.borrower.exception.FileSizeExceededException;
 import com.creditapp.borrower.exception.InvalidApplicationException;
 import com.creditapp.borrower.exception.InvalidDocumentException;
+import com.creditapp.borrower.exception.NotificationNotFoundException;
 import com.creditapp.borrower.exception.SubmissionValidationException;
 import com.creditapp.shared.exception.LoginRateLimitExceededException;
 import com.creditapp.shared.exception.NotFoundException;
@@ -276,6 +277,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DocumentNotFoundException.class)
     public ResponseEntity<?> handleDocumentNotFound(DocumentNotFoundException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Not Found");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(NotificationNotFoundException.class)
+    public ResponseEntity<?> handleNotificationNotFound(NotificationNotFoundException ex, WebRequest request) {
         Map<String, Object> response = new HashMap<>();
         response.put("error", "Not Found");
         response.put("message", ex.getMessage());

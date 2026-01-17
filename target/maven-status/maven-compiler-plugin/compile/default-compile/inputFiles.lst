@@ -21,7 +21,9 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\a
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\BankActivationEmailService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\UpdateApplicationRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\InvalidApplicationException.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\NotificationChannel.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\EmploymentStatus.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\controller\BorrowerNotificationController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\JwtConfig.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\EmailService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\RateLimitingAspect.java
@@ -36,6 +38,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\m
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\common\interceptor\RateLimitingInterceptor.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\ApplicationDocument.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\dto\NotificationEvent.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\NotificationType.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\UserRole.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\AuthorizationService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\SendGridConfig.java
@@ -54,6 +57,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\LoginResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\controller\UserProfileController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\DocumentStorageException.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\NotificationNotFoundException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\ApplicationStatusTransitionService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\messaging\NotificationEventConsumer.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\RabbitMQConfig.java
@@ -91,6 +95,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\DocumentType.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\dto\AuditLogDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\ApplicationNotEditableException.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\NotificationDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\Application.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\UpdateProfileRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\ApplicationNotFoundException.java
@@ -124,7 +129,9 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\util\LoginRateLimiter.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\audit\BusinessAuditAspect.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\AuditAction.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\BorrowerNotification.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\CreditApplicationApplication.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\repository\BorrowerNotificationRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\SecurityConfig.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\repository\UserRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\Currency.java

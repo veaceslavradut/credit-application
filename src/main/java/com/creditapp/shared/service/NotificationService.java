@@ -1,175 +1,172 @@
 package com.creditapp.shared.service;
 
+import com.creditapp.borrower.dto.NotificationDTO;
+import com.creditapp.borrower.exception.NotificationNotFoundException;
+import com.creditapp.borrower.model.BorrowerNotification;
+import com.creditapp.borrower.repository.BorrowerNotificationRepository;
 import com.creditapp.shared.dto.EmailMetricsDTO;
+import com.creditapp.shared.model.AuditAction;
 import com.creditapp.shared.model.DeliveryStatus;
-import com.creditapp.shared.model.EmailDeliveryLog;
-import com.creditapp.shared.model.EmailTemplate;
-import com.creditapp.shared.repository.EmailDeliveryLogRepository;
-import com.creditapp.shared.repository.EmailTemplateRepository;
-import com.creditapp.shared.util.EmailRateLimiter;
-import com.sendgrid.Response;
+import com.creditapp.shared.model.NotificationChannel;
+import com.creditapp.shared.model.NotificationType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.UUID;
 
-/**
- * NotificationService orchestrates email notifications
- * Handles template processing, variable substitution, and delivery tracking
- */
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class NotificationService {
-    
-    private final EmailTemplateRepository emailTemplateRepository;
-    private final EmailDeliveryLogRepository emailDeliveryLogRepository;
-    private final EmailService emailService;
-    private final RabbitTemplate rabbitTemplate;
-    private final EmailRateLimiter emailRateLimiter;
-    
-    /**
-     * Send email using template with variable substitution
-     * @param recipient recipient email address
-     * @param templateName template name
-     * @param variables template variables
-     * @return true if sent successfully
-     */
+    private final BorrowerNotificationRepository notificationRepository;
+    private final AuditService auditService;
+
     @Transactional
-    public boolean sendEmail(String recipient, String templateName, Map<String, String> variables) {
-        try {
-            // Check rate limit before sending
-            if (!emailRateLimiter.checkRateLimit()) {
-                log.warn("Rate limit exceeded for email to: {}", recipient);
-                logDeliveryStatus(recipient, templateName, DeliveryStatus.FAILED, 
-                    "Rate limit exceeded - email will be retried");
-                return false;
-            }
-            
-            // Fetch template
-            EmailTemplate template = emailTemplateRepository
-                .findByTemplateNameAndActiveTrue(templateName)
-                .orElseThrow(() -> new RuntimeException("Email template not found: " + templateName));
-            
-            // Substitute variables in template
-            String subject = substituteVariables(template.getSubject(), variables);
-            String htmlBody = substituteVariables(template.getHtmlBody(), variables);
-            String textBody = substituteVariables(template.getTextBody(), variables);
-            
-            // Send email via email service
-            Response response = emailService.sendEmail(recipient, subject, htmlBody, textBody);
-            
-            // Log delivery
-            DeliveryStatus status = (response.getStatusCode() >= 200 && response.getStatusCode() < 300) 
-                ? DeliveryStatus.SENT 
-                : DeliveryStatus.FAILED;
-            
-            logDeliveryStatus(recipient, templateName, status, null);
-            
-            return status == DeliveryStatus.SENT;
-            
-        } catch (Exception e) {
-            log.error("Failed to send email to {} using template {}: {}", 
-                recipient, templateName, e.getMessage());
-            logDeliveryStatus(recipient, templateName, DeliveryStatus.FAILED, e.getMessage());
-            return false;
-        }
-    }
-    
-    /**
-     * Substitute variables in template text
-     * Replaces {variableName} placeholders with actual values
-     */
-    private String substituteVariables(String template, Map<String, String> variables) {
-        if (template == null || variables == null) {
-            return template;
-        }
+    public BorrowerNotification createNotification(UUID borrowerId, UUID applicationId, 
+                                                   NotificationType type, String subject, String message) {
+        log.info("Creating notification for borrower: {}, type: {}", borrowerId, type);
         
-        String result = template;
-        for (Map.Entry<String, String> entry : variables.entrySet()) {
-            String placeholder = "{" + entry.getKey() + "}";
-            result = result.replace(placeholder, entry.getValue() != null ? entry.getValue() : "");
-        }
-        return result;
-    }
-    
-    /**
-     * Queue notification for async processing
-     * @param eventType event type (e.g., APPLICATION_SUBMITTED)
-     * @param recipient recipient email
-     * @param variables template variables
-     */
-    public void queueNotification(String eventType, String recipient, Map<String, String> variables) {
-        try {
-            com.creditapp.shared.dto.NotificationEvent event = com.creditapp.shared.dto.NotificationEvent.builder()
-                .id(java.util.UUID.randomUUID())
-                .eventType(eventType)
-                .recipientEmail(recipient)
-                .templateName(eventType)
-                .variables(variables)
-                .timestamp(LocalDateTime.now())
-                .retryCount(0)
+        BorrowerNotification notification = BorrowerNotification.builder()
+                .borrowerId(borrowerId)
+                .applicationId(applicationId)
+                .notificationType(type)
+                .subject(subject)
+                .message(message)
+                .channel(NotificationChannel.EMAIL)
+                .sentAt(LocalDateTime.now())
+                .deliveryStatus(DeliveryStatus.PENDING)
                 .build();
+        
+        BorrowerNotification saved = notificationRepository.save(notification);
+        
+        // Trigger async email sending
+        sendNotificationAsync(saved.getId());
+        
+        log.info("Notification created with id: {}", saved.getId());
+        return saved;
+    }
+
+    @Async
+    public void sendNotificationAsync(UUID notificationId) {
+        try {
+            BorrowerNotification notification = notificationRepository.findById(notificationId)
+                    .orElseThrow(() -> new NotificationNotFoundException(notificationId));
             
-            rabbitTemplate.convertAndSend(
-                com.creditapp.shared.config.RabbitMQConfig.NOTIFICATION_EXCHANGE,
-                "notification.event",
-                event
+            // TODO: Implement actual email sending via SendGrid in future stories
+            // For now, just mark as SENT
+            notification.setDeliveryStatus(DeliveryStatus.SENT);
+            notificationRepository.save(notification);
+            
+            // Log audit event
+            auditService.logAction(
+                    "NOTIFICATION",
+                    notificationId,
+                    AuditAction.NOTIFICATION_SENT,
+                    notification.getBorrowerId(),
+                    "BORROWER"
             );
             
-            log.info("Queued notification event: {} for recipient: {}", eventType, recipient);
-            
+            log.info("Notification sent successfully: {}", notificationId);
         } catch (Exception e) {
-            log.error("Failed to queue notification: {}", e.getMessage());
+            log.error("Failed to send notification: {}", notificationId, e);
+            // Mark as failed
+            notificationRepository.findById(notificationId).ifPresent(n -> {
+                n.setDeliveryStatus(DeliveryStatus.FAILED);
+                notificationRepository.save(n);
+            });
         }
     }
-    
-    /**
-     * Log email delivery status
-     */
-    public void logDeliveryStatus(String recipientEmail, String templateName, 
-                                    DeliveryStatus status, String errorMessage) {
-        EmailDeliveryLog log = EmailDeliveryLog.builder()
-            .recipientEmail(recipientEmail)
-            .templateName(templateName)
-            .status(status)
-            .sentAt(LocalDateTime.now())
-            .errorMessage(errorMessage)
-            .build();
+
+    @Transactional(readOnly = true)
+    public Page<NotificationDTO> getNotifications(UUID borrowerId, Pageable pageable) {
+        log.info("Fetching notifications for borrower: {}", borrowerId);
         
-        emailDeliveryLogRepository.save(log);
+        Page<BorrowerNotification> notifications = notificationRepository.findByBorrowerId(borrowerId, pageable);
+        
+        return notifications.map(this::toDTO);
     }
-    
-    /**
-     * Get email metrics for health check
-     */
+
+    @Transactional(readOnly = true)
+    public Page<NotificationDTO> getUnreadNotifications(UUID borrowerId, Pageable pageable) {
+        log.info("Fetching unread notifications for borrower: {}", borrowerId);
+        
+        Page<BorrowerNotification> notifications = 
+                notificationRepository.findByBorrowerIdAndReadAtIsNull(borrowerId, pageable);
+        
+        return notifications.map(this::toDTO);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<NotificationDTO> getReadNotifications(UUID borrowerId, Pageable pageable) {
+        log.info("Fetching read notifications for borrower: {}", borrowerId);
+        
+        Page<BorrowerNotification> notifications = 
+                notificationRepository.findByBorrowerIdAndReadAtIsNotNull(borrowerId, pageable);
+        
+        return notifications.map(this::toDTO);
+    }
+
+    @Transactional
+    public void markAsRead(UUID notificationId, UUID borrowerId) {
+        log.info("Marking notification as read: {}", notificationId);
+        
+        BorrowerNotification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new NotificationNotFoundException(notificationId));
+        
+        // Verify ownership
+        if (!notification.getBorrowerId().equals(borrowerId)) {
+            throw new NotificationNotFoundException("Notification not found or access denied");
+        }
+        
+        if (notification.getReadAt() == null) {
+            notification.setReadAt(LocalDateTime.now());
+            notificationRepository.save(notification);
+            log.info("Notification marked as read: {}", notificationId);
+        }
+    }
+
+    @Transactional(readOnly = true)
     public EmailMetricsDTO getEmailMetrics() {
+        // Simple placeholder implementation for health check
+        // In a full implementation with email tracking, this would query email delivery logs
         LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1);
+        long sentLastHour = notificationRepository.findAll().stream()
+                .filter(n -> n.getSentAt().isAfter(oneHourAgo))
+                .filter(n -> n.getDeliveryStatus() == DeliveryStatus.SENT)
+                .count();
         
-        Long sent = emailDeliveryLogRepository.countByStatusAndSentAtAfter(
-            DeliveryStatus.SENT, oneHourAgo);
-        Long delivered = emailDeliveryLogRepository.countByStatusAndSentAtAfter(
-            DeliveryStatus.DELIVERED, oneHourAgo);
-        Long bounced = emailDeliveryLogRepository.countByStatusAndSentAtAfter(
-            DeliveryStatus.BOUNCED, oneHourAgo);
-        Long failed = emailDeliveryLogRepository.countByStatusAndSentAtAfter(
-            DeliveryStatus.FAILED, oneHourAgo);
+        long failedLastHour = notificationRepository.findAll().stream()
+                .filter(n -> n.getSentAt().isAfter(oneHourAgo))
+                .filter(n -> n.getDeliveryStatus() == DeliveryStatus.FAILED)
+                .count();
         
-        long total = sent + delivered + bounced + failed;
-        double successRate = total > 0 ? (double) (sent + delivered) / total : 0.0;
-        double failureRate = total > 0 ? (double) (bounced + failed) / total : 0.0;
+        double failureRate = (sentLastHour + failedLastHour) > 0 
+                ? (double) failedLastHour / (sentLastHour + failedLastHour) 
+                : 0.0;
         
         return EmailMetricsDTO.builder()
-            .emailsSent(sent)
-            .emailsDelivered(delivered)
-            .emailsBounced(bounced)
-            .emailsFailed(failed)
-            .successRate(successRate)
-            .failureRate(failureRate)
-            .build();
+                .emailsSent(sentLastHour)
+                .emailsFailed(failedLastHour)
+                .failureRate(failureRate)
+                .build();
+    }
+
+    private NotificationDTO toDTO(BorrowerNotification notification) {
+        return NotificationDTO.builder()
+                .id(notification.getId())
+                .notificationType(notification.getNotificationType())
+                .subject(notification.getSubject())
+                .message(notification.getMessage())
+                .sentAt(notification.getSentAt())
+                .readAt(notification.getReadAt())
+                .isRead(notification.getReadAt() != null)
+                .applicationId(notification.getApplicationId())
+                .build();
     }
 }

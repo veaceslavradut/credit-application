@@ -1,13 +1,13 @@
 package com.creditapp.shared.model;
 
-public enum DeliveryStatus {
-    PENDING("Pending"),
-    SENT("Sent"),
-    FAILED("Failed");
+public enum NotificationChannel {
+    EMAIL("Email"),
+    IN_APP("In-App"),
+    SMS("SMS");
 
     private final String displayName;
 
-    DeliveryStatus(String displayName) {
+    NotificationChannel(String displayName) {
         this.displayName = displayName;
     }
 

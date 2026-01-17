@@ -201,21 +201,24 @@ public class ApplicationService {
                 final Application appFinal = application;
                 java.util.Optional<com.creditapp.shared.model.User> borrowerOpt = userRepository.findById(borrowerId);
                 borrowerOpt.ifPresent(borrower -> {
-                    java.util.Map<String, String> vars = new java.util.HashMap<>();
-                    vars.put("firstName", borrower.getFirstName() != null ? borrower.getFirstName() : "");
-                    vars.put("loanAmount", appFinal.getLoanAmount() != null ? appFinal.getLoanAmount().toPlainString() : "");
-                    vars.put("currency", appFinal.getCurrency() != null ? appFinal.getCurrency() : "");
-                    vars.put("applicationId", appFinal.getId() != null ? appFinal.getId().toString() : "");
-                    vars.put("loanType", appFinal.getLoanType() != null ? appFinal.getLoanType() : "");
-                    vars.put("loanTermMonths", appFinal.getLoanTermMonths() != null ? appFinal.getLoanTermMonths().toString() : "");
-                    notificationService.queueNotification(
-                        "APPLICATION_SUBMITTED",
-                        borrower.getEmail(),
-                        vars
+                    String subject = "Application Submitted";
+                    String message = String.format(
+                        "Dear %s, your loan application for %s %s has been submitted successfully. Application ID: %s",
+                        borrower.getFirstName() != null ? borrower.getFirstName() : "",
+                        appFinal.getLoanAmount() != null ? appFinal.getLoanAmount().toPlainString() : "",
+                        appFinal.getCurrency() != null ? appFinal.getCurrency() : "",
+                        appFinal.getId() != null ? appFinal.getId().toString() : ""
+                    );
+                    notificationService.createNotification(
+                        borrowerId,
+                        appFinal.getId(),
+                        com.creditapp.shared.model.NotificationType.APPLICATION_SUBMITTED,
+                        subject,
+                        message
                     );
                 });
             } catch (Exception notifyEx) {
-                log.warn("Failed to queue APPLICATION_SUBMITTED email notification for application {}: {}",
+                log.warn("Failed to create APPLICATION_SUBMITTED notification for application {}: {}",
                         application.getId(), notifyEx.getMessage());
             }
 
