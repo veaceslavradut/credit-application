@@ -2,9 +2,13 @@
   application:
     name: credit-application
   profiles:
-    active: local
+    # Set 'local' as the default profile when no explicit profile is set
+    # This can be overridden by @ActiveProfiles in tests or by environment variables in production
+    default: local
+  # Disable Flyway by default - it will be enabled in prod/staging profiles
+  # Tests use Hibernate's create-drop instead
   flyway:
-    enabled: true
+    enabled: false
     locations: classpath:db/migration
     baseline-on-migrate: true
     schemas: public

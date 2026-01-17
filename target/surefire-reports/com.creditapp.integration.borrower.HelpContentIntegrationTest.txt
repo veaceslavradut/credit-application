@@ -1,0 +1,28 @@
+-------------------------------------------------------------------------------
+Test set: com.creditapp.integration.borrower.HelpContentIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 0.037 s <<< FAILURE! -- in com.creditapp.integration.borrower.HelpContentIntegrationTest
+com.creditapp.integration.borrower.HelpContentIntegrationTest.listTopics_Returns200AndList -- Time elapsed: 0.015 s <<< FAILURE!
+java.lang.AssertionError: No value at JSON path "$[0].topic"
+	at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:302)
+	at org.springframework.test.util.JsonPathExpectationsHelper.assertExistsAndReturn(JsonPathExpectationsHelper.java:326)
+	at org.springframework.test.util.JsonPathExpectationsHelper.exists(JsonPathExpectationsHelper.java:190)
+	at org.springframework.test.web.servlet.result.JsonPathResultMatchers.lambda$exists$3(JsonPathResultMatchers.java:123)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.HelpContentIntegrationTest.listTopics_Returns200AndList(HelpContentIntegrationTest.java:28)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: com.jayway.jsonpath.PathNotFoundException: No results for path: $[0]['topic']
+
+com.creditapp.integration.borrower.HelpContentIntegrationTest.getArticle_Returns200_ForLoanTypes -- Time elapsed: 0.013 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<200> but was:<500>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.HelpContentIntegrationTest.getArticle_Returns200_ForLoanTypes(HelpContentIntegrationTest.java:34)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+

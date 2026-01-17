@@ -165,7 +165,7 @@ public class NotificationService {
                 .message(notification.getMessage())
                 .sentAt(notification.getSentAt())
                 .readAt(notification.getReadAt())
-                .isRead(notification.getReadAt() != null)
+                .read(notification.getReadAt() != null)
                 .applicationId(notification.getApplicationId())
                 .build();
     }

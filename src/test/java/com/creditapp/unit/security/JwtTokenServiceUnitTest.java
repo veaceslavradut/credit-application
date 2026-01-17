@@ -4,31 +4,40 @@ import com.creditapp.shared.config.JwtConfig;
 import com.creditapp.shared.model.User;
 import com.creditapp.shared.model.UserRole;
 import com.creditapp.shared.service.JwtTokenService;
+import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.Base64;
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
 public class JwtTokenServiceUnitTest {
 
     private JwtTokenService jwtTokenService;
-
-    @Mock
-    private JwtConfig.JwtProperties jwtProperties;
 
     private User testUser;
     private User bankAdminUser;
 
     @BeforeEach
     void setUp() {
+        // Create a test secret key for JWT signing
+        String testSecret = "test-secret-key-for-jwt-token-signing-must-be-long-enough-256-bits";
+        SecretKey secretKey = Keys.hmacShaKeyFor(testSecret.getBytes(StandardCharsets.UTF_8));
+        
+        // Create JWT properties for testing using the proper constructor
+        JwtConfig.JwtProperties jwtProperties = new JwtConfig.JwtProperties(
+            testSecret,
+            15,      // expirationMinutes
+            7,       // refreshExpirationDays
+            secretKey
+        );
+        
+        // Initialize JWT token service with test configuration
+        jwtTokenService = new JwtTokenService(jwtProperties);
+
         testUser = new User();
         testUser.setId(UUID.randomUUID());
         testUser.setEmail("borrower@example.com");

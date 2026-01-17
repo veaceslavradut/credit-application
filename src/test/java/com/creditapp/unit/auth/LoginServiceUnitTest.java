@@ -21,12 +21,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -146,7 +145,7 @@ public class LoginServiceUnitTest {
         when(loginRateLimiter.checkRateLimit(testBankAdmin.getEmail())).thenReturn(true);
         when(userRepository.findByEmail(testBankAdmin.getEmail())).thenReturn(Optional.of(testBankAdmin));
         when(passwordEncoder.matches(request.getPassword(), testBankAdmin.getPasswordHash())).thenReturn(true);
-        when(organizationRepository.findById(testBankAdmin.getOrganizationId())).thenReturn(Optional.of(activeBank));
+        when(organizationRepository.findById(Objects.requireNonNull(testBankAdmin.getOrganizationId()))).thenReturn(Optional.of(activeBank));
         when(jwtTokenService.generateToken(testBankAdmin)).thenReturn("access_token");
         when(jwtTokenService.generateRefreshToken(testBankAdmin)).thenReturn("refresh_token");
 
@@ -169,7 +168,7 @@ public class LoginServiceUnitTest {
         when(loginRateLimiter.checkRateLimit(testBankAdmin.getEmail())).thenReturn(true);
         when(userRepository.findByEmail(testBankAdmin.getEmail())).thenReturn(Optional.of(testBankAdmin));
         when(passwordEncoder.matches(request.getPassword(), testBankAdmin.getPasswordHash())).thenReturn(true);
-        when(organizationRepository.findById(testBankAdmin.getOrganizationId())).thenReturn(Optional.of(inactiveBank));
+        when(organizationRepository.findById(Objects.requireNonNull(testBankAdmin.getOrganizationId()))).thenReturn(Optional.of(inactiveBank));
 
         assertThrows(BankNotActivatedException.class, () -> {
             loginService.login(request);
@@ -195,7 +194,7 @@ public class LoginServiceUnitTest {
 
         when(jwtTokenService.validateToken(refreshToken)).thenReturn(true);
         when(jwtTokenService.extractUserId(refreshToken)).thenReturn(testBorrower.getId());
-        when(userRepository.findById(testBorrower.getId())).thenReturn(Optional.of(testBorrower));
+        when(userRepository.findById(Objects.requireNonNull(testBorrower.getId()))).thenReturn(Optional.of(testBorrower));
         when(jwtTokenService.generateToken(testBorrower)).thenReturn("new_access_token");
         when(jwtTokenService.generateRefreshToken(testBorrower)).thenReturn("new_refresh_token");
 

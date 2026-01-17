@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -60,7 +61,7 @@ public class LoginService {
         }
 
         if (user.getRole() == UserRole.BANK_ADMIN) {
-            Optional<Organization> orgOpt = organizationRepository.findById(user.getOrganizationId());
+            Optional<Organization> orgOpt = organizationRepository.findById(Objects.requireNonNull(user.getOrganizationId()));
             if (orgOpt.isEmpty() || orgOpt.get().getStatus() != BankStatus.ACTIVE) {
                 throw new BankNotActivatedException("Bank account not activated. Please check your email for activation link.");
             }
@@ -85,7 +86,7 @@ public class LoginService {
         }
 
         UUID userId = jwtTokenService.extractUserId(refreshToken);
-        Optional<User> userOpt = userRepository.findById(userId);
+        Optional<User> userOpt = userRepository.findById(Objects.requireNonNull(userId));
         if (userOpt.isEmpty()) {
             throw new InvalidCredentialsException("User not found");
         }

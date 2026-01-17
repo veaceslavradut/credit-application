@@ -1,15 +1,17 @@
 package com.creditapp.integration.borrower;
 
+import com.creditapp.auth.repository.UserRepository;
 import com.creditapp.borrower.model.BorrowerNotification;
 import com.creditapp.borrower.repository.BorrowerNotificationRepository;
 import com.creditapp.shared.model.*;
+import com.creditapp.shared.service.JwtTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -35,20 +37,43 @@ class BorrowerNotificationIntegrationTest {
     private BorrowerNotificationRepository notificationRepository;
     
     @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private JwtTokenService jwtTokenService;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    @Autowired
     private ObjectMapper objectMapper;
     
-    private UUID borrowerId;
+    private User testBorrower;
     private UUID applicationId;
     private UUID notificationId;
+    private String testToken;
     
     @BeforeEach
     void setUp() {
-        borrowerId = UUID.randomUUID();
+        // Create test borrower user with unique email
+        testBorrower = new User();
+        testBorrower.setId(UUID.randomUUID());
+        testBorrower.setEmail("borrower_notif_" + UUID.randomUUID() + "@test.example.com");
+        testBorrower.setPasswordHash(passwordEncoder.encode("TestPassword123!"));
+        testBorrower.setFirstName("John");
+        testBorrower.setLastName("Doe");
+        testBorrower.setPhone("+373-012-345-67");
+        testBorrower.setRole(UserRole.BORROWER);
+        testBorrower = userRepository.save(testBorrower);
+        
+        // Generate JWT token for test borrower
+        testToken = jwtTokenService.generateToken(testBorrower);
+        
         applicationId = UUID.randomUUID();
         
-        // Create test notification
+        // Create test notification for this borrower
         BorrowerNotification notification = BorrowerNotification.builder()
-                .borrowerId(borrowerId)
+                .borrowerId(testBorrower.getId())
                 .applicationId(applicationId)
                 .notificationType(NotificationType.APPLICATION_SUBMITTED)
                 .subject("Application Submitted")
@@ -63,10 +88,10 @@ class BorrowerNotificationIntegrationTest {
     }
     
     @Test
-    @WithMockUser(username = "test@example.com", roles = {"BORROWER"})
     void testGetNotifications_ReturnsNotificationsForBorrower() throws Exception {
         // When & Then
         mockMvc.perform(get("/api/borrower/notifications")
+                .header("Authorization", "Bearer " + testToken)
                 .param("page", "0")
                 .param("size", "20"))
                 .andExpect(status().isOk())
@@ -75,11 +100,10 @@ class BorrowerNotificationIntegrationTest {
     }
     
     @Test
-    @WithMockUser(username = "test@example.com", roles = {"BORROWER"})
     void testGetNotifications_WithReadFilter_Unread() throws Exception {
         // Create unread notification
         BorrowerNotification unread = BorrowerNotification.builder()
-                .borrowerId(borrowerId)
+                .borrowerId(testBorrower.getId())
                 .applicationId(applicationId)
                 .notificationType(NotificationType.OFFERS_AVAILABLE)
                 .subject("Offers Available")
@@ -94,6 +118,7 @@ class BorrowerNotificationIntegrationTest {
         
         // When & Then
         mockMvc.perform(get("/api/borrower/notifications")
+                .header("Authorization", "Bearer " + testToken)
                 .param("read", "false")
                 .param("page", "0")
                 .param("size", "20"))
@@ -103,7 +128,6 @@ class BorrowerNotificationIntegrationTest {
     }
     
     @Test
-    @WithMockUser(username = "test@example.com", roles = {"BORROWER"})
     void testGetNotifications_WithReadFilter_Read() throws Exception {
         // Notification was already created in setUp and is read (sentAt is set, readAt is null)
         // So we need to mark it as read first
@@ -114,6 +138,7 @@ class BorrowerNotificationIntegrationTest {
         
         // When & Then
         mockMvc.perform(get("/api/borrower/notifications")
+                .header("Authorization", "Bearer " + testToken)
                 .param("read", "true")
                 .param("page", "0")
                 .param("size", "20"))
@@ -123,10 +148,10 @@ class BorrowerNotificationIntegrationTest {
     }
     
     @Test
-    @WithMockUser(username = "test@example.com", roles = {"BORROWER"})
     void testMarkNotificationAsRead_Success() throws Exception {
         // When & Then
-        mockMvc.perform(put("/api/borrower/notifications/{notificationId}/read", notificationId))
+        mockMvc.perform(put("/api/borrower/notifications/{notificationId}/read", notificationId)
+                .header("Authorization", "Bearer " + testToken))
                 .andExpect(status().isNoContent());
         
         // Verify notification is marked as read
@@ -136,12 +161,12 @@ class BorrowerNotificationIntegrationTest {
     }
     
     @Test
-    @WithMockUser(username = "test@example.com", roles = {"BORROWER"})
     void testMarkNotificationAsRead_NotFound() throws Exception {
         UUID nonExistentId = UUID.randomUUID();
         
         // When & Then
-        mockMvc.perform(put("/api/borrower/notifications/{notificationId}/read", nonExistentId))
+        mockMvc.perform(put("/api/borrower/notifications/{notificationId}/read", nonExistentId)
+                .header("Authorization", "Bearer " + testToken))
                 .andExpect(status().isNotFound());
     }
     
@@ -153,18 +178,31 @@ class BorrowerNotificationIntegrationTest {
     }
     
     @Test
-    @WithMockUser(username = "test@example.com", roles = {"BANK_ADMIN"})
     void testGetNotifications_Forbidden_NonBorrowerRole() throws Exception {
+        // Create bank admin user
+        User bankAdmin = new User();
+        bankAdmin.setId(UUID.randomUUID());
+        bankAdmin.setEmail("bankadmin_" + UUID.randomUUID() + "@test.example.com");
+        bankAdmin.setPasswordHash(passwordEncoder.encode("TestPassword123!"));
+        bankAdmin.setFirstName("Bank");
+        bankAdmin.setLastName("Admin");
+        bankAdmin.setRole(UserRole.BANK_ADMIN);
+        bankAdmin = userRepository.save(bankAdmin);
+        
+        // Generate JWT token for bank admin
+        String bankAdminToken = jwtTokenService.generateToken(bankAdmin);
+        
         // When & Then - Wrong role
-        mockMvc.perform(get("/api/borrower/notifications"))
+        mockMvc.perform(get("/api/borrower/notifications")
+                .header("Authorization", "Bearer " + bankAdminToken))
                 .andExpect(status().isForbidden());
     }
     
     @Test
-    @WithMockUser(username = "test@example.com", roles = {"BORROWER"})
     void testGetNotifications_ReturnsCorrectFields() throws Exception {
         // When
         MvcResult result = mockMvc.perform(get("/api/borrower/notifications")
+                .header("Authorization", "Bearer " + testToken)
                 .param("page", "0")
                 .param("size", "20"))
                 .andExpect(status().isOk())
@@ -182,12 +220,11 @@ class BorrowerNotificationIntegrationTest {
     }
     
     @Test
-    @WithMockUser(username = "test@example.com", roles = {"BORROWER"})
     void testGetNotifications_PaginationWorks() throws Exception {
         // Create multiple notifications
         for (int i = 0; i < 5; i++) {
             BorrowerNotification notif = BorrowerNotification.builder()
-                    .borrowerId(borrowerId)
+                    .borrowerId(testBorrower.getId())
                     .applicationId(applicationId)
                     .notificationType(NotificationType.APPLICATION_UNDER_REVIEW)
                     .subject("Notification " + i)
@@ -201,6 +238,7 @@ class BorrowerNotificationIntegrationTest {
         
         // When & Then - Request first page with size 3
         mockMvc.perform(get("/api/borrower/notifications")
+                .header("Authorization", "Bearer " + testToken)
                 .param("page", "0")
                 .param("size", "3"))
                 .andExpect(status().isOk())
@@ -210,6 +248,7 @@ class BorrowerNotificationIntegrationTest {
         
         // Request second page
         mockMvc.perform(get("/api/borrower/notifications")
+                .header("Authorization", "Bearer " + testToken)
                 .param("page", "1")
                 .param("size", "3"))
                 .andExpect(status().isOk())
@@ -217,10 +256,10 @@ class BorrowerNotificationIntegrationTest {
     }
     
     @Test
-    @WithMockUser(username = "test@example.com", roles = {"BORROWER"})
     void testNotificationSentAtTimestampFormatted() throws Exception {
         // When
         MvcResult result = mockMvc.perform(get("/api/borrower/notifications")
+                .header("Authorization", "Bearer " + testToken)
                 .param("page", "0")
                 .param("size", "20"))
                 .andExpect(status().isOk())
@@ -235,7 +274,6 @@ class BorrowerNotificationIntegrationTest {
     }
     
     @Test
-    @WithMockUser(username = "test@example.com", roles = {"BORROWER"})
     void testMarkAsRead_UpdatesReadAtTimestamp() throws Exception {
         // Given - Notification starts unread
         BorrowerNotification notif = notificationRepository.findById(notificationId).orElse(null);
@@ -245,7 +283,8 @@ class BorrowerNotificationIntegrationTest {
         LocalDateTime beforeMark = LocalDateTime.now();
         
         // When
-        mockMvc.perform(put("/api/borrower/notifications/{notificationId}/read", notificationId))
+        mockMvc.perform(put("/api/borrower/notifications/{notificationId}/read", notificationId)
+                .header("Authorization", "Bearer " + testToken))
                 .andExpect(status().isNoContent());
         
         LocalDateTime afterMark = LocalDateTime.now();

@@ -17,6 +17,12 @@
       time-to-live: 86400000
   jpa:
     show-sql: false
+  # Enable Flyway in production for migrations
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    schemas: public
 
 logging:
   level:

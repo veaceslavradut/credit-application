@@ -28,6 +28,8 @@ public class BankActivationEmailService {
 
         String activationLink = baseUrl + "/auth/activate?token=" + activationToken;
         String subject = "Activate Your " + bankName + " Account";
+        // Build HTML email for future SendGrid integration
+        @SuppressWarnings("unused")
         String htmlContent = buildHtmlEmail(bankName, activationLink);
 
         logger.info("Sending activation email to {} for bank {}", email, bankName);

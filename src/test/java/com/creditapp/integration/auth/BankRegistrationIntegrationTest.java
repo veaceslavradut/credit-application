@@ -13,40 +13,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = CreditApplicationApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Testcontainers
+@ActiveProfiles("test")
 public class BankRegistrationIntegrationTest {
-
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15.4-alpine")
-            .withDatabaseName("testdb")
-            .withUsername("test")
-            .withPassword("test");
-
-    @Container
-    static GenericContainer<?> redis = new GenericContainer<>("redis:7.2.3-alpine")
-            .withExposedPorts(6379);
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-        registry.add("spring.data.redis.host", redis::getHost);
-        registry.add("spring.data.redis.port", () -> redis.getMappedPort(6379).toString());
-    }
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -77,10 +54,11 @@ public class BankRegistrationIntegrationTest {
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("Test Bank", response.getBody().getBankName());
-        assertEquals("PENDING_ACTIVATION", response.getBody().getStatus());
-        assertNotNull(response.getBody().getBankId());
-        assertNotNull(response.getBody().getAdminUserId());
+        var body = response.getBody();
+        assertEquals("Test Bank", Objects.requireNonNull(body).getBankName());
+        assertEquals("PENDING_ACTIVATION", body.getStatus());
+        assertNotNull(body.getBankId());
+        assertNotNull(body.getAdminUserId());
 
         Optional<Organization> savedBank = organizationRepository.findByRegistrationNumber("TBK123456");
         assertTrue(savedBank.isPresent());

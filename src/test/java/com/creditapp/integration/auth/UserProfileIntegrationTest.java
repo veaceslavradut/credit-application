@@ -2,7 +2,6 @@ package com.creditapp.integration.auth;
 
 import com.creditapp.auth.dto.ChangePasswordRequest;
 import com.creditapp.auth.dto.UpdateProfileRequest;
-import com.creditapp.auth.dto.UserProfileResponse;
 import com.creditapp.auth.repository.UserRepository;
 import com.creditapp.shared.model.User;
 import com.creditapp.shared.model.UserRole;
@@ -13,9 +12,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -28,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
+@SuppressWarnings({"null", "nullness"})
 public class UserProfileIntegrationTest {
 
     @Autowired
@@ -44,7 +44,6 @@ public class UserProfileIntegrationTest {
 
     private User testUser;
     private String testPassword = "TestPassword123!";
-    private String testJwtToken;
 
     @BeforeEach
     public void setup() {
@@ -62,9 +61,9 @@ public class UserProfileIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "test.user@example.com", roles = "BORROWER")
     public void testGetProfileSuccessfully() throws Exception {
         mockMvc.perform(get("/api/profile")
-                .header("Authorization", "Bearer validToken")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -77,6 +76,7 @@ public class UserProfileIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "test.user@example.com", roles = "BORROWER")
     public void testUpdateProfile() throws Exception {
         UpdateProfileRequest updateRequest = new UpdateProfileRequest();
         updateRequest.setFirstName("Jane");
@@ -86,13 +86,13 @@ public class UserProfileIntegrationTest {
         String requestBody = objectMapper.writeValueAsString(updateRequest);
 
         mockMvc.perform(put("/api/profile")
-                .header("Authorization", "Bearer validToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser(username = "test.user@example.com", roles = "BORROWER")
     public void testChangePasswordSuccess() throws Exception {
         ChangePasswordRequest changeRequest = new ChangePasswordRequest();
         changeRequest.setCurrentPassword(testPassword);
@@ -102,13 +102,13 @@ public class UserProfileIntegrationTest {
         String requestBody = objectMapper.writeValueAsString(changeRequest);
 
         mockMvc.perform(put("/api/profile/change-password")
-                .header("Authorization", "Bearer validToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser(username = "test.user@example.com", roles = "BORROWER")
     public void testChangePasswordWithInvalidCurrentPassword() throws Exception {
         ChangePasswordRequest changeRequest = new ChangePasswordRequest();
         changeRequest.setCurrentPassword("WrongPassword123!");
@@ -118,13 +118,13 @@ public class UserProfileIntegrationTest {
         String requestBody = objectMapper.writeValueAsString(changeRequest);
 
         mockMvc.perform(put("/api/profile/change-password")
-                .header("Authorization", "Bearer validToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
+    @WithMockUser(username = "test.user@example.com", roles = "BORROWER")
     public void testChangePasswordWithWeakPassword() throws Exception {
         ChangePasswordRequest changeRequest = new ChangePasswordRequest();
         changeRequest.setCurrentPassword(testPassword);
@@ -134,13 +134,13 @@ public class UserProfileIntegrationTest {
         String requestBody = objectMapper.writeValueAsString(changeRequest);
 
         mockMvc.perform(put("/api/profile/change-password")
-                .header("Authorization", "Bearer validToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
+    @WithMockUser(username = "test.user@example.com", roles = "BORROWER")
     public void testChangePasswordWithMismatchedConfirmation() throws Exception {
         ChangePasswordRequest changeRequest = new ChangePasswordRequest();
         changeRequest.setCurrentPassword(testPassword);
@@ -150,13 +150,13 @@ public class UserProfileIntegrationTest {
         String requestBody = objectMapper.writeValueAsString(changeRequest);
 
         mockMvc.perform(put("/api/profile/change-password")
-                .header("Authorization", "Bearer validToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
+    @WithMockUser(username = "test.user@example.com", roles = "BORROWER")
     public void testUpdateProfileWithInvalidPhoneFormat() throws Exception {
         UpdateProfileRequest updateRequest = new UpdateProfileRequest();
         updateRequest.setFirstName("Jane");
@@ -166,7 +166,6 @@ public class UserProfileIntegrationTest {
         String requestBody = objectMapper.writeValueAsString(updateRequest);
 
         mockMvc.perform(put("/api/profile")
-                .header("Authorization", "Bearer validToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(status().isBadRequest());

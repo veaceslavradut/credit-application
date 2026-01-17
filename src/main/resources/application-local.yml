@@ -7,6 +7,11 @@
       maximum-pool-size: 10
       minimum-idle: 5
       connection-timeout: 30000
+  jpa:
+    hibernate:
+      # In local dev, use create-drop if desired; change to 'update' if keeping data between runs
+      ddl-auto: create-drop
+    show-sql: true
   data:
     redis:
       host: localhost
@@ -15,8 +20,6 @@
     type: redis
     redis:
       time-to-live: 86400000
-  jpa:
-    show-sql: true
 
 logging:
   level:

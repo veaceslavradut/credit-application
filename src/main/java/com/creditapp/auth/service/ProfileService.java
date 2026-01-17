@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -47,7 +48,7 @@ public class ProfileService {
     private final AuditService auditService;
     private final PasswordChangeEmailService passwordChangeEmailService;
     
-    public UserProfileResponse getCurrentUserProfile(UUID userId) {
+    public UserProfileResponse getCurrentUserProfile(@org.springframework.lang.NonNull UUID userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
         
@@ -76,7 +77,7 @@ public class ProfileService {
             profile.setLoanPreferences(preferenceDTOs);
         } else if (user.getRole() == UserRole.BANK_ADMIN) {
             if (user.getOrganizationId() != null) {
-                Organization org = organizationRepository.findById(user.getOrganizationId())
+                Organization org = organizationRepository.findById(Objects.requireNonNull(user.getOrganizationId()))
                         .orElse(null);
                 if (org != null) {
                     profile.setBankId(org.getId());
@@ -89,7 +90,7 @@ public class ProfileService {
         return profile;
     }
     
-    public UserProfileResponse updateProfile(UUID userId, UpdateProfileRequest request) {
+    public UserProfileResponse updateProfile(@org.springframework.lang.NonNull UUID userId, UpdateProfileRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
         
@@ -123,7 +124,7 @@ public class ProfileService {
         return getCurrentUserProfile(updatedUser.getId());
     }
     
-    public ChangePasswordResponse changePassword(UUID userId, ChangePasswordRequest request) {
+    public ChangePasswordResponse changePassword(@org.springframework.lang.NonNull UUID userId, ChangePasswordRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
         
@@ -172,7 +173,7 @@ public class ProfileService {
         );
     }
     
-    public void invalidateAllRefreshTokens(UUID userId) {
+    public void invalidateAllRefreshTokens(@org.springframework.lang.NonNull UUID userId) {
         List<RefreshToken> activeTokens = refreshTokenRepository.findByUserIdAndRevokedFalse(userId);
         for (RefreshToken token : activeTokens) {
             token.setRevoked(true);

@@ -21,12 +21,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,7 +30,6 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-@Testcontainers
 public class RBACIntegrationTest {
 
     @TestConfiguration
@@ -48,19 +43,6 @@ public class RBACIntegrationTest {
             doNothing().when(mock).recordFailedAttempt(anyString());
             return mock;
         }
-    }
-
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15.4")
-            .withDatabaseName("testdb")
-            .withUsername("test")
-            .withPassword("test");
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
     }
 
     @LocalServerPort
@@ -79,7 +61,9 @@ public class RBACIntegrationTest {
     private PasswordEncoder passwordEncoder;
 
     private String baseUrl;
+    @org.springframework.lang.Nullable
     private String borrowerToken;
+    @org.springframework.lang.Nullable
     private String bankAdminToken;
 
     @BeforeEach
@@ -135,6 +119,7 @@ public class RBACIntegrationTest {
             System.out.println("Borrower token: " + (borrowerToken != null ? "present" : "null"));
         } else {
             System.out.println("Borrower login failed: " + borrowerResponse.getStatusCode());
+            borrowerToken = "";
         }
 
         LoginRequest adminLogin = new LoginRequest();
@@ -152,13 +137,14 @@ public class RBACIntegrationTest {
             System.out.println("Bank admin token: " + (bankAdminToken != null ? "present" : "null"));
         } else {
             System.out.println("Bank admin login failed: " + adminResponse.getStatusCode());
+            bankAdminToken = "";
         }
     }
 
     @Test
     void testBorrowerCanAccessBorrowerEndpoints() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(borrowerToken);
+        headers.setBearerAuth(Objects.requireNonNull(borrowerToken));
         HttpEntity<Void> request = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
@@ -174,7 +160,7 @@ public class RBACIntegrationTest {
     @Test
     void testBorrowerCannotAccessBankEndpoints() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(borrowerToken);
+        headers.setBearerAuth(Objects.requireNonNull(borrowerToken));
         HttpEntity<Void> request = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
@@ -190,7 +176,7 @@ public class RBACIntegrationTest {
     @Test
     void testBankAdminCanAccessBankEndpoints() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(bankAdminToken);
+        headers.setBearerAuth(Objects.requireNonNull(bankAdminToken));
         HttpEntity<Void> request = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
@@ -206,7 +192,7 @@ public class RBACIntegrationTest {
     @Test
     void testBankAdminCannotAccessBorrowerEndpoints() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(bankAdminToken);
+        headers.setBearerAuth(Objects.requireNonNull(bankAdminToken));
         HttpEntity<Void> request = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
@@ -252,7 +238,7 @@ public class RBACIntegrationTest {
     @Test
     void testAccessDeniedReturns403WithMessage() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(borrowerToken);
+        headers.setBearerAuth(Objects.requireNonNull(borrowerToken));
         HttpEntity<Void> request = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
@@ -264,13 +250,14 @@ public class RBACIntegrationTest {
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().contains("Forbidden") || response.getBody().contains("Access"));
+        var body = response.getBody();
+        assertTrue(body != null && (body.contains("Forbidden") || body.contains("Access")));
     }
 
     @Test
     void testMultipleEndpointsWithSameRole() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(borrowerToken);
+        headers.setBearerAuth(Objects.requireNonNull(borrowerToken));
         HttpEntity<Void> request = new HttpEntity<>(headers);
 
         ResponseEntity<String> getResponse = restTemplate.exchange(

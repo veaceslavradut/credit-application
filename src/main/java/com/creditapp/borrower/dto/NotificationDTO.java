@@ -2,6 +2,7 @@ package com.creditapp.borrower.dto;
 
 import com.creditapp.shared.model.NotificationType;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,6 +27,7 @@ public class NotificationDTO {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime readAt;
     
-    private boolean isRead;
+    @JsonProperty("isRead")
+    private boolean read;
     private UUID applicationId;
 }

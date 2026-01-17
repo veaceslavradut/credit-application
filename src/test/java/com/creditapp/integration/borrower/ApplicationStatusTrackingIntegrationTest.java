@@ -9,6 +9,7 @@ import com.creditapp.borrower.repository.ApplicationHistoryRepository;
 import com.creditapp.borrower.repository.ApplicationRepository;
 import com.creditapp.shared.model.User;
 import com.creditapp.shared.model.UserRole;
+import com.creditapp.shared.service.JwtTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,16 +61,19 @@ public class ApplicationStatusTrackingIntegrationTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private JwtTokenService jwtTokenService;
 
     private User borrower;
     private Application testApplication;
 
     @BeforeEach
     void setUp() {
-        // Create borrower user
+        // Create borrower user with unique email
         borrower = new User();
         borrower.setId(UUID.randomUUID());
-        borrower.setEmail("borrower_status@example.com");
+        borrower.setEmail("borrower_" + UUID.randomUUID() + "@test.example.com");
         borrower.setPasswordHash(passwordEncoder.encode("TestPassword123!"));
         borrower.setFirstName("John");
         borrower.setLastName("Doe");
@@ -217,19 +221,19 @@ public class ApplicationStatusTrackingIntegrationTest {
         // Given: another borrower
         User otherBorrower = new User();
         otherBorrower.setId(UUID.randomUUID());
-        otherBorrower.setEmail("other_borrower@example.com");
+        otherBorrower.setEmail("other_borrower_" + UUID.randomUUID() + "@example.com");
         otherBorrower.setPasswordHash(passwordEncoder.encode("TestPassword123!"));
         otherBorrower.setFirstName("Jane");
         otherBorrower.setLastName("Smith");
         otherBorrower.setPhone("+373-012-345-68");
         otherBorrower.setRole(UserRole.BORROWER);
-        userRepository.save(otherBorrower);
+        otherBorrower = userRepository.save(otherBorrower);
 
         // When: other borrower tries to view status
         mockMvc.perform(
                 get("/api/borrower/applications/{id}/status", testApplication.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + getTokenForUser(otherBorrower))
+                        .header("Authorization", "Bearer " + jwtTokenService.generateToken(otherBorrower))
         )
                 // Then: access denied
                 .andExpect(status().isNotFound());
@@ -294,30 +298,7 @@ public class ApplicationStatusTrackingIntegrationTest {
     /**
      * Helper to get JWT token for borrower.
      */
-    private String getBorrowerToken() throws Exception {
-        return getTokenForUser(borrower);
-    }
-
-    /**
-     * Helper to get JWT token for any user via login endpoint.
-     */
-    private String getTokenForUser(User user) throws Exception {
-        Map<String, String> loginData = new HashMap<>();
-        loginData.put("email", user.getEmail());
-        loginData.put("password", "TestPassword123!");
-
-        String loginJson = objectMapper.writeValueAsString(loginData);
-
-        MvcResult result = mockMvc.perform(
-                post("/api/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(loginJson)
-        )
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String response = result.getResponse().getContentAsString();
-        var jsonNode = objectMapper.readTree(response);
-        return jsonNode.get("accessToken").asText();
+    private String getBorrowerToken() {
+        return jwtTokenService.generateToken(borrower);
     }
 }

@@ -4,11 +4,13 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\aut
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\test\config\TestSecurityConfig.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\controller\HealthControllerTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\security\JwtTokenServiceUnitTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\config\TestSecurityConfig.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\service\AuditServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\OfferComparisonTableServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ApplicationWithdrawalIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\auth\UserProfileIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\bank\OfferDataModelIntegrationTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\config\TestRedisConfig.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\OfferSelectionServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\borrower\service\ApplicationSubmissionNotificationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\OfferEntityTest.java

@@ -2,26 +2,31 @@ spring:
   application:
     name: credit-application
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false;MODE=PostgreSQL
+    # H2 in-memory database for testing (replacing PostgreSQL/TestContainers approach)
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
     username: sa
-    password: 
+    password:
     hikari:
       auto-commit: true
       connection-timeout: 20000
       maximum-pool-size: 5
 
-  # JPA configuration for test
+  # JPA configuration for test - Hibernate handles schema creation
   jpa:
     hibernate:
+      # CRITICAL: create-drop for test database - not validate
       ddl-auto: create-drop
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
         jdbc:
           batch_size: 10
+        # Use H2 dialect for in-memory testing
+        dialect: org.hibernate.dialect.H2Dialect
         
+  # Completely disable Flyway for tests - Hibernate create-drop will create all tables
   flyway:
     enabled: false
     

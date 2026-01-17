@@ -2,7 +2,6 @@ package com.creditapp.shared.controller;
 
 import com.creditapp.shared.dto.EmailMetricsDTO;
 import com.creditapp.shared.dto.NotificationHealthDTO;
-import com.creditapp.shared.model.DeliveryStatus;
 import com.creditapp.shared.repository.EmailDeliveryLogRepository;
 import com.creditapp.shared.service.NotificationService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -72,10 +71,17 @@ public class HealthController {
 
     private boolean checkRedis() {
         try {
-            RedisConnection connection = redisTemplate.getConnectionFactory().getConnection();
-            String pong = connection.ping();
+            var factory = redisTemplate.getConnectionFactory();
+            if (factory == null) {
+                return false;
+            }
+            RedisConnection connection = factory.getConnection();
+            if (connection == null) {
+                return false;
+            }
+            var pong = connection.ping();
             connection.close();
-            return "PONG".equals(pong);
+            return pong != null && pong.equals("PONG");
         } catch (Exception e) {
             return false;
         }

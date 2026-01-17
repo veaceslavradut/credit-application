@@ -5,6 +5,7 @@ import com.creditapp.shared.service.JwtTokenService;
 import com.creditapp.shared.security.CustomAccessDeniedHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.ObjectProvider;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
+@Profile("!test")
 public class SecurityConfig {
 
     @Bean
@@ -26,12 +28,13 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/api/health/**", "/actuator/**").permitAll()
+                .requestMatchers("/api/auth/**", "/api/health/**", "/api/help/**", "/actuator/**").permitAll()
                 .anyRequest().authenticated()
             )
             .exceptionHandling(ex -> ex.accessDeniedHandler(accessDeniedHandler));
         
-        // Only add JWT filter if available (not in all test profiles)
+        // Only add JWT filter if available (not in test profile which uses @WithMockUser)
+        // This allows Spring Security's test utilities to work properly
         jwtFilterProvider.ifAvailable(filter -> {
             try {
                 http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);

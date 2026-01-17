@@ -30,9 +30,11 @@ import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 @Testcontainers
 public class OfferSelectionIntegrationTest {
 
@@ -77,6 +79,7 @@ public class OfferSelectionIntegrationTest {
         Organization bank = new Organization();
         bank.setId(bankId);
         bank.setName("Test Bank");
+        bank.setCountryCode("MD");
         bank.setLogoUrl("https://testbank.com/logo.png");
         organizationRepository.save(bank);
 
