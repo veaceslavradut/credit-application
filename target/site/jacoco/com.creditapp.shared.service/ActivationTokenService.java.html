@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ActivationTokenService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.service</a> &gt; <span class="el_source">ActivationTokenService.java</span></div><h1>ActivationTokenService.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.service;
+
+import org.springframework.stereotype.Service;
+
+import java.security.SecureRandom;
+import java.util.regex.Pattern;
+
+@Service
+<span class="fc" id="L9">public class ActivationTokenService {</span>
+    private static final int TOKEN_LENGTH = 32;
+    private static final String TOKEN_CHARSET = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789&quot;;
+<span class="fc" id="L12">    private static final Pattern TOKEN_PATTERN = Pattern.compile(&quot;^[a-zA-Z0-9]{32}$&quot;);</span>
+<span class="fc" id="L13">    private final SecureRandom secureRandom = new SecureRandom();</span>
+
+    public String generateToken() {
+<span class="fc" id="L16">        StringBuilder token = new StringBuilder(TOKEN_LENGTH);</span>
+<span class="fc bfc" id="L17" title="All 2 branches covered.">        for (int i = 0; i &lt; TOKEN_LENGTH; i++) {</span>
+<span class="fc" id="L18">            int randomIndex = secureRandom.nextInt(TOKEN_CHARSET.length());</span>
+<span class="fc" id="L19">            token.append(TOKEN_CHARSET.charAt(randomIndex));</span>
+        }
+<span class="fc" id="L21">        return token.toString();</span>
+    }
+
+    public boolean validateToken(String token) {
+<span class="nc bnc" id="L25" title="All 4 branches missed.">        if (token == null || token.isEmpty()) {</span>
+<span class="nc" id="L26">            return false;</span>
+        }
+<span class="nc" id="L28">        return TOKEN_PATTERN.matcher(token).matches();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

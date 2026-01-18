@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OfferComparisonTableResponse.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.borrower.dto</a> &gt; <span class="el_source">OfferComparisonTableResponse.java</span></div><h1>OfferComparisonTableResponse.java</h1><pre class="source lang-java linenums">package com.creditapp.borrower.dto;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+
+public class OfferComparisonTableResponse {
+    private List&lt;OfferComparisonTableRow&gt; offers;
+    private Integer totalCount;
+    private Integer limit;
+    private Integer offset;
+    private boolean hasMore;
+    private String sortBy;
+    private String sortOrder;
+    private Map&lt;String, Object&gt; appliedFilters;
+    private LocalDateTime retrievedAt;
+
+    // Constructors
+<span class="fc" id="L19">    public OfferComparisonTableResponse() {}</span>
+
+    // Getters and Setters
+<span class="fc" id="L22">    public List&lt;OfferComparisonTableRow&gt; getOffers() { return offers; }</span>
+<span class="fc" id="L23">    public void setOffers(List&lt;OfferComparisonTableRow&gt; offers) { this.offers = offers; }</span>
+
+<span class="fc" id="L25">    public Integer getTotalCount() { return totalCount; }</span>
+<span class="fc" id="L26">    public void setTotalCount(Integer totalCount) { this.totalCount = totalCount; }</span>
+
+<span class="nc" id="L28">    public Integer getLimit() { return limit; }</span>
+<span class="fc" id="L29">    public void setLimit(Integer limit) { this.limit = limit; }</span>
+
+<span class="nc" id="L31">    public Integer getOffset() { return offset; }</span>
+<span class="fc" id="L32">    public void setOffset(Integer offset) { this.offset = offset; }</span>
+
+<span class="nc" id="L34">    public boolean isHasMore() { return hasMore; }</span>
+<span class="fc" id="L35">    public void setHasMore(boolean hasMore) { this.hasMore = hasMore; }</span>
+
+<span class="fc" id="L37">    public String getSortBy() { return sortBy; }</span>
+<span class="fc" id="L38">    public void setSortBy(String sortBy) { this.sortBy = sortBy; }</span>
+
+<span class="fc" id="L40">    public String getSortOrder() { return sortOrder; }</span>
+<span class="fc" id="L41">    public void setSortOrder(String sortOrder) { this.sortOrder = sortOrder; }</span>
+
+<span class="nc" id="L43">    public Map&lt;String, Object&gt; getAppliedFilters() { return appliedFilters; }</span>
+<span class="fc" id="L44">    public void setAppliedFilters(Map&lt;String, Object&gt; appliedFilters) { this.appliedFilters = appliedFilters; }</span>
+
+<span class="nc" id="L46">    public LocalDateTime getRetrievedAt() { return retrievedAt; }</span>
+<span class="fc" id="L47">    public void setRetrievedAt(LocalDateTime retrievedAt) { this.retrievedAt = retrievedAt; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
