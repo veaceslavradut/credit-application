@@ -28,7 +28,7 @@ import org.springframework.beans.factory.ObjectProvider;
 <span class="nc" id="L28">        http</span>
 <span class="nc" id="L29">            .csrf(csrf -&gt; csrf.disable())</span>
 <span class="nc" id="L30">            .authorizeHttpRequests(auth -&gt; auth</span>
-<span class="nc" id="L31">                .requestMatchers(&quot;/api/auth/**&quot;, &quot;/api/health/**&quot;, &quot;/api/help/**&quot;, &quot;/actuator/**&quot;).permitAll()</span>
+<span class="nc" id="L31">                .requestMatchers(&quot;/api/auth/**&quot;, &quot;/api/health/**&quot;, &quot;/api/help/**&quot;, &quot;/api/borrower/scenario-calculator&quot;, &quot;/actuator/**&quot;).permitAll()</span>
 <span class="nc" id="L32">                .anyRequest().authenticated()</span>
             )
 <span class="nc" id="L34">            .exceptionHandling(ex -&gt; ex.accessDeniedHandler(accessDeniedHandler));</span>
@@ -40,7 +40,7 @@ import org.springframework.beans.factory.ObjectProvider;
 <span class="nc" id="L40">                http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);</span>
 <span class="nc" id="L41">            } catch (Exception e) {</span>
 <span class="nc" id="L42">                throw new RuntimeException(e);</span>
-<span class="nc" id="L43">            }</span>
+            }
 <span class="nc" id="L44">        });</span>
         
 <span class="nc" id="L46">        return http.build();</span>

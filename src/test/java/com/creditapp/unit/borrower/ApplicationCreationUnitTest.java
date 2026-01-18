@@ -72,6 +72,7 @@ class ApplicationCreationUnitTest {
                 .build();
 
         when(applicationRepository.save(any(Application.class))).thenReturn(savedApplication);
+        when(applicationRepository.findById(any(UUID.class))).thenReturn(java.util.Optional.of(savedApplication));
 
         ApplicationDTO result = applicationService.createApplication(borrowerId, validRequest);
 
@@ -174,6 +175,7 @@ class ApplicationCreationUnitTest {
                 .build();
 
         when(applicationRepository.save(any(Application.class))).thenReturn(savedApplication);
+        when(applicationRepository.findById(any(UUID.class))).thenReturn(java.util.Optional.of(savedApplication));
 
         ApplicationDTO result = applicationService.createApplication(borrowerId, requestWithoutRatePreference);
 
@@ -229,6 +231,7 @@ class ApplicationCreationUnitTest {
                 .build();
 
         when(applicationRepository.save(any(Application.class))).thenReturn(savedApplication);
+        when(applicationRepository.findById(any(UUID.class))).thenReturn(java.util.Optional.of(savedApplication));
 
         ApplicationDTO result = applicationService.createApplication(borrowerId, validRequest);
 

@@ -47,6 +47,7 @@ public class EmailTemplate {
     @Column(columnDefinition = "TEXT")
     private String variables;
     
+    @Builder.Default
     @Column(nullable = false)
     private Boolean active = true;
     

@@ -120,7 +120,7 @@ public class BankRateCardIntegrationTest {
     public void testGetRateCards_UnauthorizedUser_Returns403() throws Exception {
         mockMvc.perform(get("/api/bank/rate-cards")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test

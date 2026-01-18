@@ -45,7 +45,7 @@ public class BorrowerNotification {
     @Column(nullable = false, length = 20)
     private NotificationChannel channel;
 
-    @Column(name = "sent_at", nullable = false)
+    @Column(name = "sent_at", nullable = true)
     private LocalDateTime sentAt;
 
     @Column(name = "read_at")

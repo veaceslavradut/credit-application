@@ -66,6 +66,7 @@ class ApplicationServiceTest {
                 .build();
 
         when(applicationRepository.save(any(Application.class))).thenReturn(savedApplication);
+        when(applicationRepository.findById(any(UUID.class))).thenReturn(java.util.Optional.of(savedApplication));
 
         // When
         ApplicationDTO result = applicationService.createApplication(borrowerId, validRequest);
@@ -147,6 +148,7 @@ class ApplicationServiceTest {
                 .build();
 
         when(applicationRepository.save(any(Application.class))).thenReturn(savedApplication);
+        when(applicationRepository.findById(any(UUID.class))).thenReturn(java.util.Optional.of(savedApplication));
 
         // When
         ApplicationDTO result = applicationService.createApplication(borrowerId, validRequest);

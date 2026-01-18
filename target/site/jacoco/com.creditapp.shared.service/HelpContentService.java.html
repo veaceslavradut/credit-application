@@ -37,12 +37,12 @@ public class HelpContentService {
     public List&lt;HelpArticleListDTO&gt; listHelpTopics(String language) {
 <span class="fc" id="L38">        Page&lt;HelpArticle&gt; page = helpArticleRepository.findByLanguageAndStatus(language, HelpArticleStatus.PUBLISHED, PageRequest.of(0, 100));</span>
 <span class="fc" id="L39">        return page.getContent().stream()</span>
-<span class="pc" id="L40">                .map(a -&gt; HelpArticleListDTO.builder()</span>
-<span class="nc" id="L41">                        .topic(a.getTopic())</span>
-<span class="nc" id="L42">                        .title(a.getTitle())</span>
-<span class="nc" id="L43">                        .description(a.getDescription())</span>
-<span class="nc" id="L44">                        .language(a.getLanguage())</span>
-<span class="nc" id="L45">                        .build())</span>
+<span class="fc" id="L40">                .map(a -&gt; HelpArticleListDTO.builder()</span>
+<span class="fc" id="L41">                        .topic(a.getTopic())</span>
+<span class="fc" id="L42">                        .title(a.getTitle())</span>
+<span class="fc" id="L43">                        .description(a.getDescription())</span>
+<span class="fc" id="L44">                        .language(a.getLanguage())</span>
+<span class="fc" id="L45">                        .build())</span>
 <span class="fc" id="L46">                .collect(Collectors.toList());</span>
     }
 

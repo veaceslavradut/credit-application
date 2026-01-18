@@ -21,7 +21,7 @@ import java.util.UUID;
 <span class="nc bnc" id="L21" title="All 78 branches missed.">@Data</span>
 <span class="fc" id="L22">@NoArgsConstructor</span>
 <span class="nc" id="L23">@AllArgsConstructor</span>
-<span class="nc" id="L24">@Builder</span>
+<span class="pc bnc" id="L24" title="All 2 branches missed.">@Builder</span>
 public class EmailTemplate {
     
     @Id
@@ -47,15 +47,16 @@ public class EmailTemplate {
     @Column(columnDefinition = &quot;TEXT&quot;)
 <span class="nc" id="L48">    private String variables;</span>
     
-<span class="pc" id="L50">    @Column(nullable = false)</span>
-<span class="pc" id="L51">    private Boolean active = true;</span>
+    @Builder.Default
+    @Column(nullable = false)
+<span class="pc" id="L52">    private Boolean active = true;</span>
     
     @CreationTimestamp
     @Column(name = &quot;created_at&quot;, nullable = false, updatable = false)
-<span class="nc" id="L55">    private LocalDateTime createdAt;</span>
+<span class="nc" id="L56">    private LocalDateTime createdAt;</span>
     
     @UpdateTimestamp
     @Column(name = &quot;updated_at&quot;, nullable = false)
-<span class="nc" id="L59">    private LocalDateTime updatedAt;</span>
+<span class="nc" id="L60">    private LocalDateTime updatedAt;</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

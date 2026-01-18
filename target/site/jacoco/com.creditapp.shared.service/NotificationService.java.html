@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
-<span class="fc" id="L24">@RequiredArgsConstructor</span>
+@RequiredArgsConstructor
 <span class="fc" id="L25">@Slf4j</span>
 public class NotificationService {
     private final BorrowerNotificationRepository notificationRepository;
@@ -39,37 +39,37 @@ public class NotificationService {
 <span class="fc" id="L39">                .subject(subject)</span>
 <span class="fc" id="L40">                .message(message)</span>
 <span class="fc" id="L41">                .channel(NotificationChannel.EMAIL)</span>
-<span class="fc" id="L42">                .sentAt(LocalDateTime.now())</span>
-<span class="fc" id="L43">                .deliveryStatus(DeliveryStatus.PENDING)</span>
-<span class="fc" id="L44">                .build();</span>
+<span class="fc" id="L42">                .deliveryStatus(DeliveryStatus.PENDING)</span>
+<span class="fc" id="L43">                .build();</span>
         
-<span class="fc" id="L46">        BorrowerNotification saved = notificationRepository.save(notification);</span>
+<span class="fc" id="L45">        BorrowerNotification saved = notificationRepository.save(notification);</span>
         
         // Trigger async email sending
-<span class="fc" id="L49">        sendNotificationAsync(saved.getId());</span>
+<span class="fc" id="L48">        sendNotificationAsync(saved.getId());</span>
         
-<span class="fc" id="L51">        log.info(&quot;Notification created with id: {}&quot;, saved.getId());</span>
-<span class="fc" id="L52">        return saved;</span>
+<span class="fc" id="L50">        log.info(&quot;Notification created with id: {}&quot;, saved.getId());</span>
+<span class="fc" id="L51">        return saved;</span>
     }
 
     @Async
     public void sendNotificationAsync(UUID notificationId) {
         try {
-<span class="fc" id="L58">            BorrowerNotification notification = notificationRepository.findById(notificationId)</span>
-<span class="fc" id="L59">                    .orElseThrow(() -&gt; new NotificationNotFoundException(notificationId));</span>
+<span class="fc" id="L57">            BorrowerNotification notification = notificationRepository.findById(notificationId)</span>
+<span class="fc" id="L58">                    .orElseThrow(() -&gt; new NotificationNotFoundException(notificationId));</span>
             
             // TODO: Implement actual email sending via SendGrid in future stories
             // For now, just mark as SENT
-<span class="fc" id="L63">            notification.setDeliveryStatus(DeliveryStatus.SENT);</span>
+<span class="fc" id="L62">            notification.setDeliveryStatus(DeliveryStatus.SENT);</span>
+<span class="fc" id="L63">            notification.setSentAt(LocalDateTime.now());</span>
 <span class="fc" id="L64">            notificationRepository.save(notification);</span>
             
             // Log audit event
 <span class="fc" id="L67">            auditService.logAction(</span>
-                    &quot;NOTIFICATION&quot;,
-                    notificationId,
-                    AuditAction.NOTIFICATION_SENT,
+<span class="fc" id="L68">                    &quot;NOTIFICATION&quot;,</span>
+<span class="fc" id="L69">                    notificationId,</span>
+<span class="fc" id="L70">                    AuditAction.NOTIFICATION_SENT,</span>
 <span class="fc" id="L71">                    notification.getBorrowerId(),</span>
-                    &quot;BORROWER&quot;
+<span class="fc" id="L72">                    &quot;BORROWER&quot;</span>
             );
             
 <span class="fc" id="L75">            log.info(&quot;Notification sent successfully: {}&quot;, notificationId);</span>
@@ -80,7 +80,7 @@ public class NotificationService {
 <span class="nc" id="L80">                n.setDeliveryStatus(DeliveryStatus.FAILED);</span>
 <span class="nc" id="L81">                notificationRepository.save(n);</span>
 <span class="nc" id="L82">            });</span>
-<span class="fc" id="L83">        }</span>
+        }
 <span class="fc" id="L84">    }</span>
 
     @Transactional(readOnly = true)
@@ -148,7 +148,7 @@ public class NotificationService {
         
 <span class="pc bpc" id="L149" title="1 of 2 branches missed.">        double failureRate = (sentLastHour + failedLastHour) &gt; 0 </span>
 <span class="fc" id="L150">                ? (double) failedLastHour / (sentLastHour + failedLastHour) </span>
-<span class="pc" id="L151">                : 0.0;</span>
+<span class="nc" id="L151">                : 0.0;</span>
         
 <span class="fc" id="L153">        return EmailMetricsDTO.builder()</span>
 <span class="fc" id="L154">                .emailsSent(sentLastHour)</span>

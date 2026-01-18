@@ -13,6 +13,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+import com.creditapp.shared.model.HelpArticle;
+import com.creditapp.shared.model.HelpArticleStatus;
+import com.creditapp.shared.repository.HelpArticleRepository;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -20,6 +26,27 @@ public class HelpContentIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private HelpArticleRepository helpArticleRepository;
+
+    @org.junit.jupiter.api.BeforeEach
+    void setUp() {
+        helpArticleRepository.deleteAll();
+        
+        HelpArticle loanTypes = new HelpArticle();
+        loanTypes.setId(UUID.randomUUID());
+        loanTypes.setTopic("loan-types");
+        loanTypes.setTitle("Loan Types");
+        loanTypes.setContent("Different types of loans available");
+        loanTypes.setLanguage("en");
+        loanTypes.setDescription("Learn about different loan types");
+        loanTypes.setStatus(HelpArticleStatus.PUBLISHED);
+        loanTypes.setVersion(1);
+        loanTypes.setCreatedAt(LocalDateTime.now());
+        loanTypes.setUpdatedAt(LocalDateTime.now());
+        helpArticleRepository.save(loanTypes);
+    }
 
     @Test
     void listTopics_Returns200AndList() throws Exception {

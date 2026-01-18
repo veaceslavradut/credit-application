@@ -91,6 +91,12 @@ public class ApplicationService {
                     .build();
 
             application = applicationRepository.save(application);
+            // Flush and reload to ensure @CreationTimestamp is populated by database
+            applicationRepository.flush();
+            // Use Java Optional API to handle the reload safely
+            UUID appId = application.getId();
+            application = applicationRepository.findById(appId)
+                    .orElseThrow(() -> new ApplicationCreationException("Failed to retrieve saved application"));
 
             // Audit event logged via @BusinessAudit annotation
             log.info("Application created: {} for borrower: {}", application.getId(), borrowerId);

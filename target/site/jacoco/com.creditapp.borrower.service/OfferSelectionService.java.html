@@ -129,7 +129,7 @@ public class OfferSelectionService {
 <span class="fc" id="L129">        List&lt;String&gt; nextSteps = nextStepsService.generateNextSteps(savedOffer, application.getLoanType());</span>
 
 <span class="fc" id="L131">        Organization bank = organizationRepository.findById(offer.getBankId())</span>
-<span class="fc" id="L132">                .orElseThrow(() -&gt; new InvalidOfferException(&quot;Bank not found: &quot; + offer.getBankId()));</span>
+<span class="pc" id="L132">                .orElseThrow(() -&gt; new InvalidOfferException(&quot;Bank not found: &quot; + offer.getBankId()));</span>
 
 <span class="fc" id="L134">        return new SelectOfferResponse(</span>
 <span class="fc" id="L135">                savedOffer.getId(),</span>

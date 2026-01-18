@@ -1,16 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.creditapp.integration.notification.NotificationServiceIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 6, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.528 s <<< FAILURE! -- in com.creditapp.integration.notification.NotificationServiceIntegrationTest
-com.creditapp.integration.notification.NotificationServiceIntegrationTest.testCreateNotification_Success_CreatesNotificationRecord -- Time elapsed: 0.062 s <<< FAILURE!
-org.opentest4j.AssertionFailedError: 
-
-expected: PENDING
- but was: SENT
-	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
-	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:502)
-	at com.creditapp.integration.notification.NotificationServiceIntegrationTest.testCreateNotification_Success_CreatesNotificationRecord(NotificationServiceIntegrationTest.java:85)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.449 s -- in com.creditapp.integration.notification.NotificationServiceIntegrationTest

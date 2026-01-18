@@ -55,18 +55,29 @@ public class ApplicationStatusTransitionService {
      */
     public boolean isValidTransition(ApplicationStatus oldStatus, ApplicationStatus newStatus) {
         // Define valid transitions
-<span class="nc bnc" id="L58" title="All 6 branches missed.">        return switch (oldStatus) {</span>
-<span class="nc bnc" id="L59" title="All 2 branches missed.">            case DRAFT -&gt; newStatus == ApplicationStatus.SUBMITTED;</span>
-<span class="nc bnc" id="L60" title="All 2 branches missed.">            case SUBMITTED -&gt; newStatus == ApplicationStatus.UNDER_REVIEW;</span>
-<span class="nc bnc" id="L61" title="All 4 branches missed.">            case UNDER_REVIEW -&gt; newStatus == ApplicationStatus.OFFERS_AVAILABLE || </span>
-                                 newStatus == ApplicationStatus.REJECTED;
-<span class="nc bnc" id="L63" title="All 6 branches missed.">            case OFFERS_AVAILABLE -&gt; newStatus == ApplicationStatus.ACCEPTED || </span>
-                                     newStatus == ApplicationStatus.REJECTED || 
-                                     newStatus == ApplicationStatus.EXPIRED;
-<span class="nc bnc" id="L66" title="All 4 branches missed.">            case ACCEPTED -&gt; newStatus == ApplicationStatus.COMPLETED ||</span>
-                            newStatus == ApplicationStatus.SUBMITTED; // Revert when selected offer expires
-<span class="nc" id="L68">            case REJECTED, EXPIRED, WITHDRAWN, COMPLETED -&gt; false; // Terminal states</span>
-        };
+<span class="nc bnc" id="L58" title="All 7 branches missed.">        switch (oldStatus) {</span>
+            case DRAFT:
+<span class="nc bnc" id="L60" title="All 2 branches missed.">                return newStatus == ApplicationStatus.SUBMITTED;</span>
+            case SUBMITTED:
+<span class="nc bnc" id="L62" title="All 2 branches missed.">                return newStatus == ApplicationStatus.UNDER_REVIEW;</span>
+            case UNDER_REVIEW:
+<span class="nc bnc" id="L64" title="All 4 branches missed.">                return newStatus == ApplicationStatus.OFFERS_AVAILABLE || </span>
+                       newStatus == ApplicationStatus.REJECTED;
+            case OFFERS_AVAILABLE:
+<span class="nc bnc" id="L67" title="All 6 branches missed.">                return newStatus == ApplicationStatus.ACCEPTED || </span>
+                       newStatus == ApplicationStatus.REJECTED || 
+                       newStatus == ApplicationStatus.EXPIRED;
+            case ACCEPTED:
+<span class="nc bnc" id="L71" title="All 4 branches missed.">                return newStatus == ApplicationStatus.COMPLETED ||</span>
+                       newStatus == ApplicationStatus.SUBMITTED; // Revert when selected offer expires
+            case REJECTED:
+            case EXPIRED:
+            case WITHDRAWN:
+            case COMPLETED:
+<span class="nc" id="L77">                return false; // Terminal states</span>
+            default:
+<span class="nc" id="L79">                return false;</span>
+        }
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

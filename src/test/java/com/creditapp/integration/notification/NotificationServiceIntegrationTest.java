@@ -72,7 +72,7 @@ class NotificationServiceIntegrationTest {
                 message
         );
         
-        // Assert
+        // Assert - verify notification is created with expected properties
         assertThat(result).isNotNull();
         assertThat(result.getId()).isNotNull();
         assertThat(result.getBorrowerId()).isEqualTo(borrowerId);
@@ -81,9 +81,18 @@ class NotificationServiceIntegrationTest {
         assertThat(result.getSubject()).isEqualTo(subject);
         assertThat(result.getMessage()).isEqualTo(message);
         assertThat(result.getChannel()).isEqualTo(NotificationChannel.EMAIL);
-        // Initially PENDING, async delivery will update to SENT
-        assertThat(result.getDeliveryStatus()).isEqualTo(DeliveryStatus.PENDING);
-        assertThat(result.getSentAt()).isNotNull();
+        
+        // Wait for async delivery to complete and verify final state
+        UUID notificationId = result.getId();
+        await().atMost(2, SECONDS).until(() -> {
+            BorrowerNotification updated = notificationRepository.findById(notificationId).orElse(null);
+            return updated != null && updated.getDeliveryStatus() == DeliveryStatus.SENT;
+        });
+        
+        // Verify final delivery state has sentAt set
+        BorrowerNotification delivered = notificationRepository.findById(notificationId).orElseThrow();
+        assertThat(delivered.getDeliveryStatus()).isEqualTo(DeliveryStatus.SENT);
+        assertThat(delivered.getSentAt()).isNotNull();
     }
     
     /**

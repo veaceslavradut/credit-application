@@ -31,5 +31,6 @@ public class CalculateScenarioResponse {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private LocalDateTime calculatedAt;
     
+    @Builder.Default
     private String disclaimer = "This is a preliminary calculation based on current rates. Actual rates and payments may vary based on final underwriting review.";
 }

@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(&quot;/api/borrower/notifications&quot;)
-<span class="fc" id="L20">@RequiredArgsConstructor</span>
+@RequiredArgsConstructor
 <span class="fc" id="L21">@Slf4j</span>
 public class BorrowerNotificationController {
     private final NotificationService notificationService;
@@ -40,10 +40,10 @@ public class BorrowerNotificationController {
 <span class="fc bfc" id="L40" title="All 2 branches covered.">        if (read != null) {</span>
 <span class="fc bfc" id="L41" title="All 2 branches covered.">            if (read) {</span>
 <span class="fc" id="L42">                notifications = notificationService.getReadNotifications(borrowerId, pageable);</span>
-            } else {
+<span class="fc" id="L43">            } else {</span>
 <span class="fc" id="L44">                notifications = notificationService.getUnreadNotifications(borrowerId, pageable);</span>
             }
-        } else {
+<span class="fc" id="L46">        } else {</span>
 <span class="fc" id="L47">            notifications = notificationService.getNotifications(borrowerId, pageable);</span>
         }
         

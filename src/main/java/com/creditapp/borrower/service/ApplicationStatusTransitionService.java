@@ -55,17 +55,28 @@ public class ApplicationStatusTransitionService {
      */
     public boolean isValidTransition(ApplicationStatus oldStatus, ApplicationStatus newStatus) {
         // Define valid transitions
-        return switch (oldStatus) {
-            case DRAFT -> newStatus == ApplicationStatus.SUBMITTED;
-            case SUBMITTED -> newStatus == ApplicationStatus.UNDER_REVIEW;
-            case UNDER_REVIEW -> newStatus == ApplicationStatus.OFFERS_AVAILABLE || 
-                                 newStatus == ApplicationStatus.REJECTED;
-            case OFFERS_AVAILABLE -> newStatus == ApplicationStatus.ACCEPTED || 
-                                     newStatus == ApplicationStatus.REJECTED || 
-                                     newStatus == ApplicationStatus.EXPIRED;
-            case ACCEPTED -> newStatus == ApplicationStatus.COMPLETED ||
-                            newStatus == ApplicationStatus.SUBMITTED; // Revert when selected offer expires
-            case REJECTED, EXPIRED, WITHDRAWN, COMPLETED -> false; // Terminal states
-        };
+        switch (oldStatus) {
+            case DRAFT:
+                return newStatus == ApplicationStatus.SUBMITTED;
+            case SUBMITTED:
+                return newStatus == ApplicationStatus.UNDER_REVIEW;
+            case UNDER_REVIEW:
+                return newStatus == ApplicationStatus.OFFERS_AVAILABLE || 
+                       newStatus == ApplicationStatus.REJECTED;
+            case OFFERS_AVAILABLE:
+                return newStatus == ApplicationStatus.ACCEPTED || 
+                       newStatus == ApplicationStatus.REJECTED || 
+                       newStatus == ApplicationStatus.EXPIRED;
+            case ACCEPTED:
+                return newStatus == ApplicationStatus.COMPLETED ||
+                       newStatus == ApplicationStatus.SUBMITTED; // Revert when selected offer expires
+            case REJECTED:
+            case EXPIRED:
+            case WITHDRAWN:
+            case COMPLETED:
+                return false; // Terminal states
+            default:
+                return false;
+        }
     }
 }

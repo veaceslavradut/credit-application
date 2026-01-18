@@ -39,7 +39,6 @@ public class NotificationService {
                 .subject(subject)
                 .message(message)
                 .channel(NotificationChannel.EMAIL)
-                .sentAt(LocalDateTime.now())
                 .deliveryStatus(DeliveryStatus.PENDING)
                 .build();
         
@@ -61,6 +60,7 @@ public class NotificationService {
             // TODO: Implement actual email sending via SendGrid in future stories
             // For now, just mark as SENT
             notification.setDeliveryStatus(DeliveryStatus.SENT);
+            notification.setSentAt(LocalDateTime.now());
             notificationRepository.save(notification);
             
             // Log audit event

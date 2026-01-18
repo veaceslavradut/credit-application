@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.creditapp.integration.security.RBACIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 14.67 s -- in com.creditapp.integration.security.RBACIntegrationTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.55 s -- in com.creditapp.integration.security.RBACIntegrationTest

@@ -28,7 +28,7 @@ public class HelpContentController {
     @GetMapping(&quot;/api/help/{topic}&quot;)
     public ResponseEntity&lt;HelpArticleDTO&gt; getArticle(@PathVariable(&quot;topic&quot;) String topic,
                                                      @RequestParam(name = &quot;language&quot;, defaultValue = &quot;en&quot;) String language) {
-<span class="nc" id="L31">        return ResponseEntity.ok(helpContentService.getHelpArticle(topic, language));</span>
+<span class="fc" id="L31">        return ResponseEntity.ok(helpContentService.getHelpArticle(topic, language));</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
