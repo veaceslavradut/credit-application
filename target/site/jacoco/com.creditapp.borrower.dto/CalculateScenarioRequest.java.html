@@ -9,23 +9,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-<span class="nc bnc" id="L12" title="All 30 branches missed.">@Data</span>
-<span class="nc" id="L13">@NoArgsConstructor</span>
-<span class="nc" id="L14">@AllArgsConstructor</span>
-<span class="nc" id="L15">@Builder</span>
+<span class="pc bnc" id="L12" title="All 30 branches missed.">@Data</span>
+<span class="fc" id="L13">@NoArgsConstructor</span>
+<span class="fc" id="L14">@AllArgsConstructor</span>
+<span class="pc" id="L15">@Builder</span>
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CalculateScenarioRequest {
     
     @jakarta.validation.constraints.NotNull(message = &quot;Loan amount is required&quot;)
     @jakarta.validation.constraints.DecimalMin(value = &quot;1000&quot;, message = &quot;Loan amount must be at least 1000&quot;)
     @jakarta.validation.constraints.DecimalMax(value = &quot;5000000&quot;, message = &quot;Loan amount cannot exceed 5000000&quot;)
-<span class="nc" id="L22">    private BigDecimal loanAmount;</span>
+<span class="fc" id="L22">    private BigDecimal loanAmount;</span>
     
     @jakarta.validation.constraints.NotNull(message = &quot;Term months is required&quot;)
     @jakarta.validation.constraints.Min(value = 6, message = &quot;Term must be at least 6 months&quot;)
     @jakarta.validation.constraints.Max(value = 480, message = &quot;Term cannot exceed 480 months (40 years)&quot;)
-<span class="nc" id="L27">    private Integer termMonths;</span>
+<span class="fc" id="L27">    private Integer termMonths;</span>
     
-<span class="nc" id="L29">    private UUID bankId;</span>
+<span class="fc" id="L29">    private UUID bankId;</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

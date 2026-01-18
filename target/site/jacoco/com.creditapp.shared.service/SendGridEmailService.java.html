@@ -22,7 +22,7 @@ import java.util.UUID;
  */
 @Service
 @ConditionalOnProperty(name = &quot;sendgrid.enabled&quot;, havingValue = &quot;true&quot;, matchIfMissing = true)
-@RequiredArgsConstructor
+<span class="fc" id="L25">@RequiredArgsConstructor</span>
 <span class="fc" id="L26">@Slf4j</span>
 public class SendGridEmailService implements EmailService {
     
@@ -35,13 +35,13 @@ public class SendGridEmailService implements EmailService {
     public void sendRegistrationConfirmation(String email, String userName, UUID userId) {
 <span class="nc" id="L36">        String subject = &quot;Welcome to Credit Application Platform!&quot;;</span>
 <span class="nc" id="L37">        String htmlContent = String.format(</span>
-<span class="nc" id="L38">            &quot;&lt;html&gt;&lt;body&gt;&lt;h1&gt;Welcome, %s!&lt;/h1&gt;&lt;p&gt;Your account has been successfully created.&lt;/p&gt;&quot; +</span>
+            &quot;&lt;html&gt;&lt;body&gt;&lt;h1&gt;Welcome, %s!&lt;/h1&gt;&lt;p&gt;Your account has been successfully created.&lt;/p&gt;&quot; +
             &quot;&lt;p&gt;User ID: %s&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;,
-<span class="nc" id="L40">            userName, userId</span>
+            userName, userId
         );
 <span class="nc" id="L42">        String textContent = String.format(</span>
-<span class="nc" id="L43">            &quot;Welcome, %s! Your account has been successfully created. User ID: %s&quot;,</span>
-<span class="nc" id="L44">            userName, userId</span>
+            &quot;Welcome, %s! Your account has been successfully created. User ID: %s&quot;,
+            userName, userId
         );
 <span class="nc" id="L46">        sendEmail(email, subject, htmlContent, textContent);</span>
 <span class="nc" id="L47">    }</span>

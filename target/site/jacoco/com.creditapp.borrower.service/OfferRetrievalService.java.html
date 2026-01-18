@@ -38,10 +38,10 @@ public class OfferRetrievalService {
     private final OrganizationRepository organizationRepository;
     private final AuditService auditService;
 
-<span class="fc" id="L41">    public OfferRetrievalService(OfferRepository offerRepository,</span>
+    public OfferRetrievalService(OfferRepository offerRepository,
                                  ApplicationRepository applicationRepository,
                                  OrganizationRepository organizationRepository,
-                                 AuditService auditService) {
+<span class="fc" id="L44">                                 AuditService auditService) {</span>
 <span class="fc" id="L45">        this.offerRepository = offerRepository;</span>
 <span class="fc" id="L46">        this.applicationRepository = applicationRepository;</span>
 <span class="fc" id="L47">        this.organizationRepository = organizationRepository;</span>
@@ -92,7 +92,7 @@ public class OfferRetrievalService {
 <span class="fc" id="L92">        Map&lt;UUID, Organization&gt; bankMap = new HashMap&lt;&gt;();</span>
 <span class="fc bfc" id="L93" title="All 2 branches covered.">        for (Organization bank : banks) {</span>
 <span class="fc" id="L94">            bankMap.put(bank.getId(), bank);</span>
-        }
+<span class="fc" id="L95">        }</span>
 
 <span class="fc" id="L97">        List&lt;OfferComparisonDTO&gt; result = offers.stream()</span>
 <span class="fc" id="L98">            .map(offer -&gt; convertToDTO(offer, bankMap.get(offer.getBankId())))</span>
@@ -120,7 +120,7 @@ public class OfferRetrievalService {
 <span class="fc" id="L120">            offer.getId(),</span>
 <span class="fc" id="L121">            offer.getBankId(),</span>
 <span class="pc bpc" id="L122" title="1 of 2 branches missed.">            bank != null ? bank.getName() : &quot;Unknown Bank&quot;,</span>
-<span class="fc" id="L123">            logoUrl,</span>
+            logoUrl,
 <span class="fc" id="L124">            offer.getApr(),</span>
 <span class="fc" id="L125">            offer.getMonthlyPayment(),</span>
 <span class="fc" id="L126">            offer.getTotalCost(),</span>
@@ -128,7 +128,7 @@ public class OfferRetrievalService {
 <span class="fc" id="L128">            offer.getInsuranceCost(),</span>
 <span class="fc" id="L129">            offer.getProcessingTimeDays(),</span>
 <span class="fc" id="L130">            offer.getValidityPeriodDays(),</span>
-<span class="fc" id="L131">            documents,</span>
+            documents,
 <span class="fc" id="L132">            offer.getExpiresAt(),</span>
 <span class="fc" id="L133">            offer.getOfferStatus().toString()</span>
         );

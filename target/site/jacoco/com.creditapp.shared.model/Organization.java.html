@@ -24,15 +24,15 @@ import java.util.UUID;
     @Column(name = &quot;country_code&quot;, nullable = false)
     private String countryCode;
 
-    @Column(name = &quot;is_active&quot;, nullable = false)
-<span class="fc" id="L28">    private boolean active = true;</span>
+<span class="fc" id="L27">    @Column(name = &quot;is_active&quot;, nullable = false)</span>
+    private boolean active = true;
 
     @Column(name = &quot;registration_number&quot;, unique = true)
     private String registrationNumber;
 
-    @Enumerated(EnumType.STRING)
+<span class="fc" id="L33">    @Enumerated(EnumType.STRING)</span>
     @Column(name = &quot;status&quot;, nullable = false)
-<span class="fc" id="L35">    private BankStatus status = BankStatus.PENDING_ACTIVATION;</span>
+    private BankStatus status = BankStatus.PENDING_ACTIVATION;
 
     @Column(name = &quot;activation_token&quot;, unique = true)
     private String activationToken;

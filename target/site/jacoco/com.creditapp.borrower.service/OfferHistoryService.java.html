@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  * Provides pagination, sorting, and caching for offer history queries.
  */
 @Service
-@RequiredArgsConstructor
+<span class="fc" id="L34">@RequiredArgsConstructor</span>
 <span class="fc" id="L35">@Slf4j</span>
 public class OfferHistoryService {
     private final OfferRepository offerRepository;
@@ -52,7 +52,7 @@ public class OfferHistoryService {
     public OfferHistoryResponse getOfferHistory(UUID borrowerId, Integer limit, Integer offset, String sortBy) {
 <span class="fc" id="L53">        long startTime = System.currentTimeMillis();</span>
 <span class="fc" id="L54">        log.debug(&quot;[HISTORY] Retrieving offer history for borrower: {}, limit: {}, offset: {}, sortBy: {}&quot;, </span>
-<span class="fc" id="L55">            borrowerId, limit, offset, sortBy);</span>
+            borrowerId, limit, offset, sortBy);
         
 <span class="pc bpc" id="L57" title="2 of 4 branches missed.">        if (limit == null || limit &lt;= 0) {</span>
 <span class="nc" id="L58">            limit = 20;</span>

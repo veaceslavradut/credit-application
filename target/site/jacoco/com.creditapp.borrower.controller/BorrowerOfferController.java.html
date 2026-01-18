@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(&quot;/api/borrower/applications&quot;)
-@RequiredArgsConstructor
+<span class="fc" id="L18">@RequiredArgsConstructor</span>
 <span class="fc" id="L19">@Slf4j</span>
 public class BorrowerOfferController {
     
@@ -33,9 +33,9 @@ public class BorrowerOfferController {
 <span class="fc" id="L33">        log.info(&quot;GET /api/borrower/applications/{}/offers by borrower {}&quot;, applicationId, borrowerId);</span>
         
 <span class="fc" id="L35">        OfferComparisonTableResponse response = offerComparisonTableService.getOffersTable(</span>
-<span class="fc" id="L36">                applicationId, </span>
-<span class="fc" id="L37">                borrowerId, </span>
-<span class="fc" id="L38">                request</span>
+                applicationId, 
+                borrowerId, 
+                request
         );
         
 <span class="fc" id="L41">        return ResponseEntity.ok(response);</span>
@@ -51,9 +51,9 @@ public class BorrowerOfferController {
 <span class="nc" id="L51">        log.info(&quot;GET /api/borrower/applications/{}/offers-table by borrower {}&quot;, applicationId, borrowerId);</span>
         
 <span class="nc" id="L53">        OfferComparisonTableResponse response = offerComparisonTableService.getOffersTable(</span>
-<span class="nc" id="L54">                applicationId, </span>
-<span class="nc" id="L55">                borrowerId, </span>
-<span class="nc" id="L56">                request</span>
+                applicationId, 
+                borrowerId, 
+                request
         );
         
 <span class="nc" id="L59">        return ResponseEntity.ok(response);</span>
@@ -69,8 +69,8 @@ public class BorrowerOfferController {
 <span class="fc" id="L69">        log.info(&quot;POST /api/borrower/applications/{}/select-offer by borrower {}&quot;, applicationId, borrowerId);</span>
         
 <span class="fc" id="L71">        SelectOfferResponse response = offerSelectionService.selectOffer(</span>
-<span class="fc" id="L72">                applicationId,</span>
-<span class="fc" id="L73">                borrowerId,</span>
+                applicationId,
+                borrowerId,
 <span class="fc" id="L74">                request.getOfferId()</span>
         );
         

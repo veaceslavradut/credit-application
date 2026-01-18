@@ -86,7 +86,7 @@ public class BankRateCardService {
         // Verify bank ownership
 <span class="pc bpc" id="L87" title="1 of 2 branches missed.">        if (!existingCard.getBankId().equals(bankId)) {</span>
 <span class="nc" id="L88">            throw new InvalidRateCardException(</span>
-<span class="nc" id="L89">                &quot;Rate card does not belong to the requesting bank&quot;);</span>
+                &quot;Rate card does not belong to the requesting bank&quot;);
         }
         
         // Mark old card as inactive
@@ -133,7 +133,7 @@ public class BankRateCardService {
 <span class="nc" id="L133">            .findByBankIdAndLoanTypeAndCurrencyAndValidToIsNull(bankId, loanType, currency)</span>
 <span class="nc" id="L134">            .orElseThrow(() -&gt; new RateCardNotFoundException(</span>
 <span class="nc" id="L135">                String.format(&quot;No active rate card found for loan type %s and currency %s&quot;, </span>
-<span class="nc" id="L136">                    loanType, currency)));</span>
+                    loanType, currency)));
         
 <span class="nc" id="L138">        return mapToResponse(card);</span>
     }
@@ -164,7 +164,7 @@ public class BankRateCardService {
         
 <span class="pc bpc" id="L165" title="1 of 2 branches missed.">        if (request.getMinLoanAmount().compareTo(request.getMaxLoanAmount()) &gt; 0) {</span>
 <span class="nc" id="L166">            throw new InvalidRateCardException(</span>
-<span class="nc" id="L167">                &quot;Minimum loan amount cannot exceed maximum loan amount&quot;);</span>
+                &quot;Minimum loan amount cannot exceed maximum loan amount&quot;);
         }
         
 <span class="pc bpc" id="L170" title="2 of 4 branches missed.">        if (request.getBaseApr() == null || request.getBaseApr().signum() &lt; 0) {</span>

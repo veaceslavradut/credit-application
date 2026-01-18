@@ -25,11 +25,11 @@ public class BankRateCardResponse {
     // Constructors
 <span class="fc" id="L26">    public BankRateCardResponse() {}</span>
     
-<span class="fc" id="L28">    public BankRateCardResponse(UUID id, LoanType loanType, Currency currency,</span>
+    public BankRateCardResponse(UUID id, LoanType loanType, Currency currency,
             BigDecimal minLoanAmount, BigDecimal maxLoanAmount, BigDecimal baseApr,
             BigDecimal aprAdjustmentRange, BigDecimal originationFeePercent,
             BigDecimal insurancePercent, Integer processingTimeDays,
-            LocalDateTime validFrom, LocalDateTime validTo) {
+<span class="fc" id="L32">            LocalDateTime validFrom, LocalDateTime validTo) {</span>
 <span class="fc" id="L33">        this.id = id;</span>
 <span class="fc" id="L34">        this.loanType = loanType;</span>
 <span class="fc" id="L35">        this.currency = currency;</span>

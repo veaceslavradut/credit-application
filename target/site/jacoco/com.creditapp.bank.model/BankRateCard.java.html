@@ -70,11 +70,11 @@ public class BankRateCard {
     // Constructors
 <span class="fc" id="L71">    public BankRateCard() {}</span>
 
-<span class="nc" id="L73">    public BankRateCard(UUID id, UUID bankId, LoanType loanType, Currency currency,</span>
+    public BankRateCard(UUID id, UUID bankId, LoanType loanType, Currency currency,
                        BigDecimal minLoanAmount, BigDecimal maxLoanAmount, BigDecimal baseApr,
                        BigDecimal aprAdjustmentRange, BigDecimal originationFeePercent,
                        BigDecimal insurancePercent, Integer processingTimeDays,
-                       LocalDateTime validFrom, LocalDateTime validTo) {
+<span class="nc" id="L77">                       LocalDateTime validFrom, LocalDateTime validTo) {</span>
 <span class="nc" id="L78">        this.id = id;</span>
 <span class="nc" id="L79">        this.bankId = bankId;</span>
 <span class="nc" id="L80">        this.loanType = loanType;</span>

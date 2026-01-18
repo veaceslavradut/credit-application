@@ -22,68 +22,68 @@ import java.util.UUID;
         @Index(name = &quot;idx_applications_created_at&quot;, columnList = &quot;created_at&quot;),
         @Index(name = &quot;idx_applications_borrower_created&quot;, columnList = &quot;borrower_id, created_at&quot;)
 })
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+<span class="pc" id="L25">@Data</span>
+<span class="fc" id="L26">@NoArgsConstructor</span>
+<span class="fc" id="L27">@AllArgsConstructor</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">@Builder</span>
 public class Application {
 
     @Id
-    private UUID id;
+<span class="fc" id="L32">    private UUID id;</span>
 
     @Column(name = &quot;borrower_id&quot;, nullable = false)
-    private UUID borrowerId;
+<span class="fc" id="L35">    private UUID borrowerId;</span>
 
     @Column(name = &quot;loan_type&quot;, nullable = false)
-    private String loanType;
+<span class="fc" id="L38">    private String loanType;</span>
 
     @Column(name = &quot;loan_amount&quot;, nullable = false)
-    private BigDecimal loanAmount;
+<span class="fc" id="L41">    private BigDecimal loanAmount;</span>
 
     @Column(name = &quot;loan_term_months&quot;, nullable = false)
-    private Integer loanTermMonths;
+<span class="fc" id="L44">    private Integer loanTermMonths;</span>
 
     @Column(name = &quot;currency&quot;, nullable = false)
-    private String currency;
+<span class="fc" id="L47">    private String currency;</span>
 
     @Column(name = &quot;rate_preference&quot;)
-    private String ratePreference;
+<span class="fc" id="L50">    private String ratePreference;</span>
 
     @Column(name = &quot;status&quot;, nullable = false)
     @Enumerated(EnumType.STRING)
-    private ApplicationStatus status;
+<span class="fc" id="L54">    private ApplicationStatus status;</span>
 
     @CreationTimestamp
     @Column(name = &quot;created_at&quot;, nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+<span class="fc" id="L58">    private LocalDateTime createdAt;</span>
 
     @Column(name = &quot;submitted_at&quot;)
-    private LocalDateTime submittedAt;
+<span class="fc" id="L61">    private LocalDateTime submittedAt;</span>
 
     @UpdateTimestamp
     @Column(name = &quot;updated_at&quot;, nullable = false)
-    private LocalDateTime updatedAt;
+<span class="fc" id="L65">    private LocalDateTime updatedAt;</span>
 
     @Column(name = &quot;withdrawn_at&quot;)
-    private LocalDateTime withdrawnAt;
+<span class="fc" id="L68">    private LocalDateTime withdrawnAt;</span>
 
     @Column(name = &quot;withdrawal_reason&quot;, length = 500)
-    private String withdrawalReason;
+<span class="nc" id="L71">    private String withdrawalReason;</span>
 
     @Version
     @Column(name = &quot;version&quot;)
-    private Long version;
+<span class="fc" id="L75">    private Long version;</span>
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;borrower_id&quot;, insertable = false, updatable = false)
-    private User borrower;
+<span class="fc" id="L79">    private User borrower;</span>
 
     @OneToOne(mappedBy = &quot;application&quot;, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private ApplicationDetails details;
+<span class="fc" id="L82">    private ApplicationDetails details;</span>
 
     @OneToMany(mappedBy = &quot;application&quot;, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
-    private List&lt;ApplicationHistory&gt; history = new ArrayList&lt;&gt;();
+<span class="nc" id="L86">    private List&lt;ApplicationHistory&gt; history = new ArrayList&lt;&gt;();</span>
 
     @PrePersist
     public void prePersist() {

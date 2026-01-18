@@ -28,6 +28,7 @@ com\creditapp\unit\shared\HelpContentServiceUnitTest.class
 com\creditapp\integration\borrower\ApplicationCreationIntegrationTest.class
 com\creditapp\test\config\TestSecurityConfig.class
 com\creditapp\unit\security\AuthorizationUnitTest.class
+com\creditapp\unit\bank\ApplicationQueueServiceTest.class
 com\creditapp\borrower\service\ApplicationSubmissionNotificationTest.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$8.class
 com\creditapp\integration\borrower\OfferHistoryIntegrationTest.class

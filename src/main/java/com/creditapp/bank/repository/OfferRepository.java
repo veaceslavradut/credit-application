@@ -21,6 +21,18 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
     List<Offer> findByApplicationIdOrderByAprAsc(UUID applicationId);
     
     /**
+     * Retrieve offers by bank with pagination for dashboard queues.
+     */
+    @Query("SELECT o FROM Offer o WHERE o.bankId = :bankId ORDER BY o.createdAt DESC")
+    Page<Offer> findByBankId(@Param("bankId") UUID bankId, Pageable pageable);
+    
+    /**
+     * Count distinct applications that have at least one offer from the bank.
+     */
+    @Query("SELECT COUNT(DISTINCT o.applicationId) FROM Offer o WHERE o.bankId = :bankId")
+    Long countDistinctApplicationsByBankId(@Param("bankId") UUID bankId);
+    
+    /**
      * Find the currently selected (ACCEPTED) offer for an application.
      * @param applicationId Application UUID
      * @return Optional containing the accepted offer if one exists

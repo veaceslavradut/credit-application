@@ -40,7 +40,7 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
  * Service for application operations.
  */
 @Service
-@RequiredArgsConstructor
+<span class="fc" id="L43">@RequiredArgsConstructor</span>
 <span class="fc" id="L44">@Slf4j</span>
 public class ApplicationService {
 
@@ -114,12 +114,12 @@ public class ApplicationService {
     public ApplicationDTO getApplication(UUID applicationId, UUID borrowerId) {
 <span class="fc" id="L115">        Application application = applicationRepository.findById(applicationId)</span>
 <span class="fc" id="L116">                .orElseThrow(() -&gt; new ApplicationNotFoundException(</span>
-<span class="fc" id="L117">                        &quot;Application not found: &quot; + applicationId));</span>
+                        &quot;Application not found: &quot; + applicationId));
 
         // Verify borrower owns the application
 <span class="fc bfc" id="L120" title="All 2 branches covered.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
 <span class="fc" id="L121">            throw new ApplicationNotFoundException(</span>
-<span class="fc" id="L122">                    &quot;Access denied to application: &quot; + applicationId);</span>
+                    &quot;Access denied to application: &quot; + applicationId);
         }
 
 <span class="fc" id="L125">        return mapToDTO(application);</span>
@@ -132,11 +132,11 @@ public class ApplicationService {
         // Verify borrower owns the application
 <span class="nc" id="L133">        Application application = applicationRepository.findById(applicationId)</span>
 <span class="nc" id="L134">                .orElseThrow(() -&gt; new ApplicationNotFoundException(</span>
-<span class="nc" id="L135">                        &quot;Application not found: &quot; + applicationId));</span>
+                        &quot;Application not found: &quot; + applicationId));
 
 <span class="nc bnc" id="L137" title="All 2 branches missed.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
 <span class="nc" id="L138">            throw new ApplicationNotFoundException(</span>
-<span class="nc" id="L139">                    &quot;Access denied to application: &quot; + applicationId);</span>
+                    &quot;Access denied to application: &quot; + applicationId);
         }
 
 <span class="nc" id="L142">        return applicationHistoryRepository</span>
@@ -162,11 +162,11 @@ public class ApplicationService {
         // Verify borrower owns the application
 <span class="fc" id="L163">        Application application = applicationRepository.findById(applicationId)</span>
 <span class="fc" id="L164">                .orElseThrow(() -&gt; new ApplicationNotFoundException(</span>
-<span class="fc" id="L165">                        &quot;Application not found: &quot; + applicationId));</span>
+                        &quot;Application not found: &quot; + applicationId));
 
 <span class="fc bfc" id="L167" title="All 2 branches covered.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
 <span class="fc" id="L168">            throw new ApplicationNotFoundException(</span>
-<span class="fc" id="L169">                    &quot;Access denied to application: &quot; + applicationId);</span>
+                    &quot;Access denied to application: &quot; + applicationId);
         }
 
         // Verify application is in DRAFT status
@@ -193,7 +193,7 @@ public class ApplicationService {
 <span class="fc bfc" id="L193" title="All 2 branches covered.">        if (!missingFields.isEmpty()) {</span>
 <span class="fc" id="L194">            throw new SubmissionValidationException(</span>
 <span class="fc" id="L195">                    &quot;Required fields missing: &quot; + String.join(&quot;, &quot;, missingFields),</span>
-<span class="fc" id="L196">                    missingFields);</span>
+                    missingFields);
         }
 
         // Update status to SUBMITTED
@@ -211,34 +211,34 @@ public class ApplicationService {
 <span class="fc" id="L211">                borrowerOpt.ifPresent(borrower -&gt; {</span>
 <span class="fc" id="L212">                    String subject = &quot;Application Submitted&quot;;</span>
 <span class="fc" id="L213">                    String message = String.format(</span>
-<span class="fc" id="L214">                        &quot;Dear %s, your loan application for %s %s has been submitted successfully. Application ID: %s&quot;,</span>
+                        &quot;Dear %s, your loan application for %s %s has been submitted successfully. Application ID: %s&quot;,
 <span class="pc bpc" id="L215" title="1 of 2 branches missed.">                        borrower.getFirstName() != null ? borrower.getFirstName() : &quot;&quot;,</span>
 <span class="pc bpc" id="L216" title="1 of 2 branches missed.">                        appFinal.getLoanAmount() != null ? appFinal.getLoanAmount().toPlainString() : &quot;&quot;,</span>
 <span class="pc bpc" id="L217" title="1 of 2 branches missed.">                        appFinal.getCurrency() != null ? appFinal.getCurrency() : &quot;&quot;,</span>
 <span class="pc bpc" id="L218" title="1 of 2 branches missed.">                        appFinal.getId() != null ? appFinal.getId().toString() : &quot;&quot;</span>
                     );
 <span class="fc" id="L220">                    notificationService.createNotification(</span>
-<span class="fc" id="L221">                        borrowerId,</span>
+                        borrowerId,
 <span class="fc" id="L222">                        appFinal.getId(),</span>
-<span class="fc" id="L223">                        com.creditapp.shared.model.NotificationType.APPLICATION_SUBMITTED,</span>
-<span class="fc" id="L224">                        subject,</span>
-<span class="fc" id="L225">                        message</span>
+                        com.creditapp.shared.model.NotificationType.APPLICATION_SUBMITTED,
+                        subject,
+                        message
                     );
 <span class="fc" id="L227">                });</span>
 <span class="fc" id="L228">            } catch (Exception notifyEx) {</span>
 <span class="fc" id="L229">                log.warn(&quot;Failed to create APPLICATION_SUBMITTED notification for application {}: {}&quot;,</span>
 <span class="fc" id="L230">                        application.getId(), notifyEx.getMessage());</span>
-            }
+<span class="fc" id="L231">            }</span>
 
             // Trigger async offer calculation for all active banks
             try {
 <span class="fc" id="L235">                log.info(&quot;Triggering async offer calculation for application: {}&quot;, application.getId());</span>
 <span class="nc" id="L236">                offerCalculationService.calculateOffers(application.getId());</span>
-<span class="pc" id="L237">            } catch (Exception calcEx) {</span>
+<span class="fc" id="L237">            } catch (Exception calcEx) {</span>
 <span class="fc" id="L238">                log.error(&quot;Failed to trigger offer calculation for application {}: {}&quot;,</span>
 <span class="fc" id="L239">                        application.getId(), calcEx.getMessage(), calcEx);</span>
                 // Don't fail submission if calculation trigger fails - calculation can be retried
-            }
+<span class="nc" id="L241">            }</span>
 
 <span class="fc" id="L243">            return SubmitApplicationResponse.builder()</span>
 <span class="fc" id="L244">                    .id(application.getId())</span>
@@ -262,11 +262,11 @@ public class ApplicationService {
         // Verify borrower owns the application
 <span class="fc" id="L263">        Application application = applicationRepository.findById(applicationId)</span>
 <span class="fc" id="L264">                .orElseThrow(() -&gt; new ApplicationNotFoundException(</span>
-<span class="fc" id="L265">                        &quot;Application not found: &quot; + applicationId));</span>
+                        &quot;Application not found: &quot; + applicationId));
 
 <span class="fc bfc" id="L267" title="All 2 branches covered.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
 <span class="fc" id="L268">            throw new ApplicationNotFoundException(</span>
-<span class="fc" id="L269">                    &quot;Access denied to application: &quot; + applicationId);</span>
+                    &quot;Access denied to application: &quot; + applicationId);
         }
 
         // Verify application is in DRAFT status
@@ -349,7 +349,7 @@ public class ApplicationService {
 <span class="fc" id="L349">            application = applicationRepository.save(application);</span>
             
 <span class="fc" id="L351">            log.info(&quot;Application updated: {} by borrower: {}, fields changed: {}&quot;, </span>
-<span class="fc" id="L352">                    applicationId, borrowerId, editedFields);</span>
+                    applicationId, borrowerId, editedFields);
 
 <span class="fc" id="L354">            return UpdateApplicationResponse.builder()</span>
 <span class="fc" id="L355">                    .id(application.getId())</span>
@@ -369,7 +369,7 @@ public class ApplicationService {
 <span class="fc" id="L369">            Application current = applicationRepository.findById(applicationId)</span>
 <span class="pc" id="L370">                    .orElseThrow(() -&gt; new ApplicationNotFoundException(&quot;Application not found: &quot; + applicationId));</span>
 <span class="fc" id="L371">            throw new ApplicationStaleException(</span>
-<span class="fc" id="L372">                    &quot;Application was modified by another request. Please refresh and try again.&quot;, </span>
+                    &quot;Application was modified by another request. Please refresh and try again.&quot;, 
 <span class="fc" id="L373">                    current.getVersion());</span>
 <span class="nc" id="L374">        } catch (Exception e) {</span>
 <span class="nc" id="L375">            log.error(&quot;Failed to update application: {}&quot;, applicationId, e);</span>

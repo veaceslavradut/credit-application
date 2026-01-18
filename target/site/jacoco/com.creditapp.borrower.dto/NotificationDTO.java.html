@@ -12,23 +12,23 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 <span class="nc bnc" id="L14" title="All 66 branches missed.">@Data</span>
-<span class="nc" id="L15">@Builder</span>
+<span class="pc" id="L15">@Builder</span>
 <span class="nc" id="L16">@NoArgsConstructor</span>
-<span class="nc" id="L17">@AllArgsConstructor</span>
+<span class="fc" id="L17">@AllArgsConstructor</span>
 public class NotificationDTO {
-<span class="nc" id="L19">    private UUID id;</span>
-<span class="nc" id="L20">    private NotificationType notificationType;</span>
-<span class="nc" id="L21">    private String subject;</span>
-<span class="nc" id="L22">    private String message;</span>
+<span class="fc" id="L19">    private UUID id;</span>
+<span class="fc" id="L20">    private NotificationType notificationType;</span>
+<span class="fc" id="L21">    private String subject;</span>
+<span class="fc" id="L22">    private String message;</span>
     
     @JsonFormat(pattern = &quot;yyyy-MM-dd'T'HH:mm:ss'Z'&quot;)
-<span class="nc" id="L25">    private LocalDateTime sentAt;</span>
+<span class="fc" id="L25">    private LocalDateTime sentAt;</span>
     
     @JsonFormat(pattern = &quot;yyyy-MM-dd'T'HH:mm:ss'Z'&quot;)
-<span class="nc" id="L28">    private LocalDateTime readAt;</span>
+<span class="fc" id="L28">    private LocalDateTime readAt;</span>
     
     @JsonProperty(&quot;isRead&quot;)
-<span class="nc" id="L31">    private boolean read;</span>
-<span class="nc" id="L32">    private UUID applicationId;</span>
+<span class="fc" id="L31">    private boolean read;</span>
+<span class="fc" id="L32">    private UUID applicationId;</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
