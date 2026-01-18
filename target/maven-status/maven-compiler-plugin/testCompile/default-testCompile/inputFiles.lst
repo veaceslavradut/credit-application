@@ -34,6 +34,7 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integrat
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\OfferHistoryIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\test\config\TestSecurityConfig.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\controller\HealthControllerTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\service\OfferInsightsServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ApplicationWithdrawalIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\bank\OfferDataModelIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\ApplicationStatusUpdateServiceTest.java

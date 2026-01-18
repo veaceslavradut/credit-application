@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = &quot;organizations&quot;)
-<span class="nc" id="L12">public class Organization {</span>
+<span class="fc" id="L12">public class Organization {</span>
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -24,13 +24,13 @@ import java.util.UUID;
     @Column(name = &quot;country_code&quot;, nullable = false)
     private String countryCode;
 
-<span class="nc" id="L27">    @Column(name = &quot;is_active&quot;, nullable = false)</span>
+<span class="fc" id="L27">    @Column(name = &quot;is_active&quot;, nullable = false)</span>
     private boolean active = true;
 
     @Column(name = &quot;registration_number&quot;, unique = true)
     private String registrationNumber;
 
-<span class="nc" id="L33">    @Enumerated(EnumType.STRING)</span>
+<span class="fc" id="L33">    @Enumerated(EnumType.STRING)</span>
     @Column(name = &quot;status&quot;, nullable = false)
     private BankStatus status = BankStatus.PENDING_ACTIVATION;
 
@@ -57,10 +57,10 @@ import java.util.UUID;
     @Column(name = &quot;updated_at&quot;, nullable = false)
     private LocalDateTime updatedAt;
 
-<span class="nc" id="L60">    public UUID getId() { return id; }</span>
-<span class="nc" id="L61">    public void setId(UUID id) { this.id = id; }</span>
-<span class="nc" id="L62">    public String getName() { return name; }</span>
-<span class="nc" id="L63">    public void setName(String name) { this.name = name; }</span>
+<span class="fc" id="L60">    public UUID getId() { return id; }</span>
+<span class="fc" id="L61">    public void setId(UUID id) { this.id = id; }</span>
+<span class="fc" id="L62">    public String getName() { return name; }</span>
+<span class="fc" id="L63">    public void setName(String name) { this.name = name; }</span>
 <span class="nc" id="L64">    public String getTaxId() { return taxId; }</span>
 <span class="nc" id="L65">    public void setTaxId(String taxId) { this.taxId = taxId; }</span>
 <span class="nc" id="L66">    public String getCountryCode() { return countryCode; }</span>

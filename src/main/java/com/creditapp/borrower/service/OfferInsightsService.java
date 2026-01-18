@@ -109,7 +109,7 @@ public class OfferInsightsService {
         );
     }
 
-    UUID calculateRecommendedOffer(List<Offer> offers) {
+    public UUID calculateRecommendedOffer(List<Offer> offers) {
         // Weighted scoring: APR (40%), monthly payment (30%), total cost (20%), processing time (10%)
         return offers.stream()
                 .max(Comparator.comparing(offer -> calculateScore(offer, offers)))
@@ -137,7 +137,7 @@ public class OfferInsightsService {
         return aprScore.add(monthlyPaymentScore).add(totalCostScore).add(processingTimeScore);
     }
 
-    SavingsAnalysisDTO calculateSavings(List<Offer> offers, Map<UUID, String> bankNames) {
+    public SavingsAnalysisDTO calculateSavings(List<Offer> offers, Map<UUID, String> bankNames) {
         Offer bestOffer = offers.stream()
                 .min(Comparator.comparing(Offer::getTotalCost))
                 .orElseThrow();

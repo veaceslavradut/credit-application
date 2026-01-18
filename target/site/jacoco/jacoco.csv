@@ -17,7 +17,7 @@ Credit Application Platform,com.creditapp.borrower.model,ApplicationDocument.App
 Credit Application Platform,com.creditapp.borrower.model,Currency,21,0,0,0,4,0,1,0,1,0
 Credit Application Platform,com.creditapp.borrower.model,ApplicationDetails,154,0,14,0,20,0,30,0,23,0
 Credit Application Platform,com.creditapp.borrower.controller,BorrowerNotificationController,97,0,4,0,16,0,6,0,4,0
-Credit Application Platform,com.creditapp.borrower.controller,BorrowerOfferController,74,0,0,0,15,0,5,0,5,0
+Credit Application Platform,com.creditapp.borrower.controller,BorrowerOfferController,85,0,2,0,28,0,6,0,5,0
 Credit Application Platform,com.creditapp.borrower.controller,ScenarioCalculatorController,25,0,0,0,6,0,3,0,3,0
 Credit Application Platform,com.creditapp.borrower.controller,HelpContentController,19,0,0,0,5,0,3,0,3,0
 Credit Application Platform,com.creditapp.borrower.controller,BorrowerHistoryController,67,0,0,0,18,0,4,0,4,0
@@ -36,7 +36,7 @@ Credit Application Platform,com.creditapp.bank.service,ApplicationStatusUpdateSe
 Credit Application Platform,com.creditapp.borrower.exception,ApplicationAlreadySubmittedException,4,0,0,0,2,0,1,0,1,0
 Credit Application Platform,com.creditapp.borrower.exception,ApplicationNotSubmittedException,9,0,0,0,4,0,2,0,2,0
 Credit Application Platform,com.creditapp.borrower.exception,InvalidDocumentException,4,0,0,0,2,0,1,0,1,0
-Credit Application Platform,com.creditapp.borrower.exception,ApplicationNotFoundException,9,0,0,0,4,0,2,0,2,0
+Credit Application Platform,com.creditapp.borrower.exception,ApplicationNotFoundException,5,4,0,0,2,2,1,1,1,1
 Credit Application Platform,com.creditapp.borrower.exception,DocumentNotFoundException,4,0,0,0,2,0,1,0,1,0
 Credit Application Platform,com.creditapp.borrower.exception,OfferExpiredException,10,0,0,0,4,0,2,0,2,0
 Credit Application Platform,com.creditapp.borrower.exception,FileSizeExceededException,4,0,0,0,2,0,1,0,1,0
@@ -62,10 +62,10 @@ Credit Application Platform,com.creditapp.shared.listener,EntityAuditListener,19
 Credit Application Platform,com.creditapp.shared.listener,EmailNotificationListener,33,0,0,0,13,0,3,0,3,0
 Credit Application Platform,com.creditapp.bank.websocket,ApplicationQueueWebSocketInterceptor,61,0,6,0,15,0,7,0,4,0
 Credit Application Platform,com.creditapp.bank.websocket,ApplicationQueueWebSocketHandler,343,0,24,0,92,0,27,0,15,0
-Credit Application Platform,com.creditapp.bank.model,OfferStatus,45,0,0,0,8,0,1,0,1,0
+Credit Application Platform,com.creditapp.bank.model,OfferStatus,0,45,0,0,0,8,0,1,0,1
 Credit Application Platform,com.creditapp.bank.model,OfferDocument.OfferDocumentBuilder,35,100,0,0,0,1,2,15,2,15
 Credit Application Platform,com.creditapp.bank.model,BankRateCard,149,0,2,0,58,0,32,0,31,0
-Credit Application Platform,com.creditapp.bank.model,Offer,161,21,0,0,64,9,35,6,35,6
+Credit Application Platform,com.creditapp.bank.model,Offer,126,56,0,0,49,24,25,16,25,16
 Credit Application Platform,com.creditapp.bank.model,OfferDocument,529,82,110,0,7,13,77,13,22,13
 Credit Application Platform,com.creditapp.bank.model,CalculationType,21,0,0,0,4,0,1,0,1,0
 Credit Application Platform,com.creditapp.bank.model,OfferCalculationLog,86,0,0,0,35,0,19,0,19,0
@@ -132,12 +132,12 @@ Credit Application Platform,com.creditapp.shared.model,EmailTemplate,435,0,78,0,
 Credit Application Platform,com.creditapp.shared.model,EmailDeliveryLog,386,0,70,0,12,0,58,0,23,0
 Credit Application Platform,com.creditapp.shared.model,RefreshToken,89,0,4,0,24,0,19,0,17,0
 Credit Application Platform,com.creditapp.shared.model,EmailDeliveryLog.EmailDeliveryLogBuilder,81,0,0,0,1,0,11,0,11,0
-Credit Application Platform,com.creditapp.shared.model,Organization,146,0,12,0,36,0,37,0,31,0
+Credit Application Platform,com.creditapp.shared.model,Organization,123,23,12,0,29,7,32,5,26,5
 Credit Application Platform,com.creditapp.shared.model,DeliveryStatus,35,0,0,0,8,0,3,0,3,0
 Credit Application Platform,com.creditapp.shared.model,HelpFAQ,343,0,62,0,11,0,52,0,21,0
 Credit Application Platform,com.creditapp.shared.model,AuditLog,541,0,94,0,25,0,76,0,29,0
 Credit Application Platform,com.creditapp.shared.model,NotificationType,63,0,0,0,12,0,3,0,3,0
-Credit Application Platform,com.creditapp.shared.model,BankStatus,21,0,0,0,4,0,1,0,1,0
+Credit Application Platform,com.creditapp.shared.model,BankStatus,0,21,0,0,0,4,0,1,0,1
 Credit Application Platform,com.creditapp.shared.model,HelpSection,386,0,70,0,12,0,58,0,23,0
 Credit Application Platform,com.creditapp.shared.model,HelpArticleStatus,35,0,0,0,8,0,3,0,3,0
 Credit Application Platform,com.creditapp.shared.model,AuditAction,3,193,0,0,1,30,1,2,1,2
@@ -157,6 +157,7 @@ Credit Application Platform,com.creditapp.borrower.service,ScenarioCalculatorSer
 Credit Application Platform,com.creditapp.borrower.service,OfferSelectionService,365,0,10,0,69,0,12,0,7,0
 Credit Application Platform,com.creditapp.borrower.service,ApplicationService,847,0,86,0,191,0,60,0,17,0
 Credit Application Platform,com.creditapp.borrower.service,OfferHistoryService,296,0,22,0,60,0,19,0,8,0
+Credit Application Platform,com.creditapp.borrower.service,OfferInsightsService,1,354,1,5,0,100,1,11,0,9
 Credit Application Platform,com.creditapp.borrower.service,OfferComparisonTableService,538,0,68,0,106,0,49,0,15,0
 Credit Application Platform,com.creditapp.borrower.service,ApplicationDocumentService,397,0,28,0,80,0,27,0,13,0
 Credit Application Platform,com.creditapp.borrower.service,NextStepsService,190,0,6,0,50,0,8,0,3,0
@@ -264,6 +265,7 @@ Credit Application Platform,com.creditapp.borrower.dto,HelpArticleDTO.HelpArticl
 Credit Application Platform,com.creditapp.borrower.dto,SelectOfferRequest,81,0,14,0,4,0,15,0,8,0
 Credit Application Platform,com.creditapp.borrower.dto,ApplicationHistoryResponse.ApplicationHistoryResponseBuilder,63,0,0,0,1,0,9,0,9,0
 Credit Application Platform,com.creditapp.borrower.dto,OfferComparisonResponse,74,0,0,0,23,0,14,0,14,0
+Credit Application Platform,com.creditapp.borrower.dto,OfferSummaryDTO,0,18,0,0,0,1,0,1,0,1
 Credit Application Platform,com.creditapp.borrower.dto,UpdateApplicationRequest,300,0,54,0,10,0,46,0,19,0
 Credit Application Platform,com.creditapp.borrower.dto,OfferHistoryRecord,687,0,126,0,19,0,100,0,37,0
 Credit Application Platform,com.creditapp.borrower.dto,ApplicationHistoryRequest,386,0,70,0,12,0,58,0,23,0
@@ -273,6 +275,7 @@ Credit Application Platform,com.creditapp.borrower.dto,NotificationDTO,373,0,66,
 Credit Application Platform,com.creditapp.borrower.dto,UpdateApplicationRequest.UpdateApplicationRequestBuilder,63,0,0,0,1,0,9,0,9,0
 Credit Application Platform,com.creditapp.borrower.dto,WithdrawApplicationResponse,257,0,46,0,9,0,40,0,17,0
 Credit Application Platform,com.creditapp.borrower.dto,CalculateScenarioRequest,171,0,30,0,7,0,28,0,13,0
+Credit Application Platform,com.creditapp.borrower.dto,SavingsAnalysisDTO,0,15,0,0,0,1,0,1,0,1
 Credit Application Platform,com.creditapp.borrower.dto,OfferComparisonTableRequest,93,0,0,0,29,0,21,0,21,0
 Credit Application Platform,com.creditapp.borrower.dto,UpdateApplicationResponse.UpdateApplicationResponseBuilder,99,0,0,0,1,0,13,0,13,0
 Credit Application Platform,com.creditapp.borrower.dto,ApplicationStatusDTO.ApplicationStatusDTOBuilder,63,0,0,0,1,0,9,0,9,0
@@ -281,6 +284,7 @@ Credit Application Platform,com.creditapp.borrower.dto,DocumentDTO.DocumentDTOBu
 Credit Application Platform,com.creditapp.borrower.dto,UpdateApplicationResponse,472,0,86,0,14,0,70,0,27,0
 Credit Application Platform,com.creditapp.borrower.dto,SubmitApplicationResponse.SubmitApplicationResponseBuilder,54,0,0,0,1,0,8,0,8,0
 Credit Application Platform,com.creditapp.borrower.dto,ApplicationDetailsDTO,171,0,30,0,7,0,28,0,13,0
+Credit Application Platform,com.creditapp.borrower.dto,OfferInsightsDTO,0,24,0,0,0,1,0,1,0,1
 Credit Application Platform,com.creditapp.borrower.dto,CreateApplicationRequest.CreateApplicationRequestBuilder,54,0,0,0,1,0,8,0,8,0
 Credit Application Platform,com.creditapp.borrower.dto,NotificationDTO.NotificationDTOBuilder,81,0,0,0,1,0,11,0,11,0
 Credit Application Platform,com.creditapp.borrower.dto,OfferComparisonDTO,160,0,0,0,49,0,34,0,34,0
