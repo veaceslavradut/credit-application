@@ -6,10 +6,12 @@ import com.creditapp.auth.exception.PasswordValidationException;
 import com.creditapp.auth.exception.InvalidCredentialsException;
 import com.creditapp.auth.exception.BankNotActivatedException;
 import com.creditapp.auth.service.InvalidPasswordException;
+import com.creditapp.bank.exception.InsufficientMarketDataException;
 import com.creditapp.bank.exception.OfferCalculationException;
 import com.creditapp.bank.exception.RateCardNotFoundException;
 import com.creditapp.bank.exception.InvalidRateCardException;
 import com.creditapp.bank.exception.DuplicateRateCardException;
+import com.creditapp.bank.exception.InsufficientMarketDataException;
 import com.creditapp.borrower.exception.ApplicationAlreadySubmittedException;
 import com.creditapp.borrower.exception.ApplicationCreationException;
 import com.creditapp.borrower.exception.ApplicationLockedException;
@@ -404,6 +406,16 @@ public class GlobalExceptionHandler {
         response.put("timestamp", LocalDateTime.now().toString());
         response.put("path", request.getDescription(false).replace("uri=", ""));
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(InsufficientMarketDataException.class)
+    public ResponseEntity<?> handleInsufficientMarketData(InsufficientMarketDataException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Precondition Failed");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(response);
     }
 
     @ExceptionHandler(Exception.class)

@@ -7,17 +7,17 @@ import jakarta.validation.constraints.Pattern;
 import java.math.BigDecimal;
 
 public class OfferComparisonTableRequest {
-<span class="nc" id="L10">    @Pattern(regexp = &quot;apr|monthlypayment|totalcost|bankname&quot;, message = &quot;sortBy must be one of: apr, monthlypayment, totalcost, bankname&quot;)</span>
-    private String sortBy = &quot;apr&quot;;
+    @Pattern(regexp = &quot;apr|monthlypayment|totalcost|bankname&quot;, message = &quot;sortBy must be one of: apr, monthlypayment, totalcost, bankname&quot;)
+<span class="nc" id="L11">    private String sortBy = &quot;apr&quot;;</span>
     
-<span class="nc" id="L13">    @Pattern(regexp = &quot;asc|desc&quot;, message = &quot;sortOrder must be either asc or desc&quot;)</span>
-    private String sortOrder = &quot;asc&quot;;
+    @Pattern(regexp = &quot;asc|desc&quot;, message = &quot;sortOrder must be either asc or desc&quot;)
+<span class="nc" id="L14">    private String sortOrder = &quot;asc&quot;;</span>
     
-<span class="nc" id="L16">    @Min(value = 1, message = &quot;limit must be at least 1&quot;)</span>
+    @Min(value = 1, message = &quot;limit must be at least 1&quot;)
     @Max(value = 100, message = &quot;limit cannot exceed 100&quot;)
 <span class="nc" id="L18">    private Integer limit = 20;</span>
     
-<span class="nc" id="L20">    @Min(value = 0, message = &quot;offset must be 0 or greater&quot;)</span>
+    @Min(value = 0, message = &quot;offset must be 0 or greater&quot;)
 <span class="nc" id="L21">    private Integer offset = 0;</span>
     
     private BigDecimal aprMin;
@@ -25,11 +25,11 @@ public class OfferComparisonTableRequest {
     private BigDecimal monthlyPaymentMin;
     private BigDecimal monthlyPaymentMax;
     
-<span class="nc" id="L28">    @Pattern(regexp = &quot;all|national|regional|credit-union&quot;, message = &quot;bankCategory must be one of: all, national, regional, credit-union&quot;)</span>
-    private String bankCategory = &quot;all&quot;;
+    @Pattern(regexp = &quot;all|national|regional|credit-union&quot;, message = &quot;bankCategory must be one of: all, national, regional, credit-union&quot;)
+<span class="nc" id="L29">    private String bankCategory = &quot;all&quot;;</span>
     
-<span class="nc" id="L31">    @Pattern(regexp = &quot;full|summary&quot;, message = &quot;comparisonMode must be either full or summary&quot;)</span>
-    private String comparisonMode = &quot;full&quot;;
+    @Pattern(regexp = &quot;full|summary&quot;, message = &quot;comparisonMode must be either full or summary&quot;)
+<span class="nc" id="L32">    private String comparisonMode = &quot;full&quot;;</span>
 
     // Constructors
 <span class="nc" id="L35">    public OfferComparisonTableRequest() {}</span>

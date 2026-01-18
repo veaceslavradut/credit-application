@@ -32,8 +32,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
-<span class="nc" id="L35">@RequiredArgsConstructor</span>
-<span class="nc" id="L36">@Slf4j</span>
+@RequiredArgsConstructor
+<span class="fc" id="L36">@Slf4j</span>
 public class ApplicationQueueService {
     private final OfferRepository offerRepository;
     private final ApplicationRepository applicationRepository;
@@ -138,7 +138,7 @@ public class ApplicationQueueService {
 <span class="nc" id="L138">                .approvalStatus(approvalStatus)</span>
 <span class="nc" id="L139">                .actionItems(Collections.emptyList())</span>
 <span class="nc" id="L140">                .build());</span>
-<span class="nc" id="L141">        }</span>
+        }
 
 <span class="nc" id="L143">        long totalDistinct = Optional.ofNullable(offerRepository.countDistinctApplicationsByBankId(bankId)).orElse(0L);</span>
 <span class="nc bnc" id="L144" title="All 2 branches missed.">        boolean hasMore = offset + items.size() &lt; totalDistinct;</span>

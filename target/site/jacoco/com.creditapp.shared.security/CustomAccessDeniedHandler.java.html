@@ -16,9 +16,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Component
-<span class="nc" id="L19">public class CustomAccessDeniedHandler implements AccessDeniedHandler {</span>
-<span class="nc" id="L20">    private static final Logger logger = LoggerFactory.getLogger(CustomAccessDeniedHandler.class);</span>
-<span class="nc" id="L21">    private final ObjectMapper objectMapper = new ObjectMapper();</span>
+<span class="fc" id="L19">public class CustomAccessDeniedHandler implements AccessDeniedHandler {</span>
+<span class="fc" id="L20">    private static final Logger logger = LoggerFactory.getLogger(CustomAccessDeniedHandler.class);</span>
+<span class="fc" id="L21">    private final ObjectMapper objectMapper = new ObjectMapper();</span>
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)

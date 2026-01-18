@@ -18,52 +18,52 @@ import java.util.UUID;
         @Index(name = &quot;idx_actor_id&quot;, columnList = &quot;actor_id&quot;),
         @Index(name = &quot;idx_created_at&quot;, columnList = &quot;created_at&quot;)
 })
-<span class="nc bnc" id="L21" title="All 94 branches missed.">@Data</span>
-<span class="nc" id="L22">@NoArgsConstructor</span>
-<span class="nc" id="L23">@AllArgsConstructor</span>
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuditLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-<span class="nc" id="L27">    private Long id;</span>
+    private Long id;
 
     @Column(name = &quot;entity_type&quot;, nullable = false)
-<span class="nc" id="L30">    private String entityType;</span>
+    private String entityType;
 
     @Column(name = &quot;entity_id&quot;, nullable = false)
-<span class="nc" id="L33">    private UUID entityId;</span>
+    private UUID entityId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = &quot;action&quot;, nullable = false)
-<span class="nc" id="L37">    private AuditAction action;</span>
+    private AuditAction action;
 
     @Column(name = &quot;actor_id&quot;)
-<span class="nc" id="L40">    private UUID actorId;</span>
+    private UUID actorId;
 
     @Column(name = &quot;actor_role&quot;)
-<span class="nc" id="L43">    private String actorRole;</span>
+    private String actorRole;
 
     @Type(JsonBinaryType.class)
     @Column(name = &quot;old_values&quot;, columnDefinition = &quot;jsonb&quot;)
-<span class="nc" id="L47">    private Map&lt;String, Object&gt; oldValues;</span>
+    private Map&lt;String, Object&gt; oldValues;
 
     @Type(JsonBinaryType.class)
     @Column(name = &quot;new_values&quot;, columnDefinition = &quot;jsonb&quot;)
-<span class="nc" id="L51">    private Map&lt;String, Object&gt; newValues;</span>
+    private Map&lt;String, Object&gt; newValues;
 
     @Column(name = &quot;ip_address&quot;)
-<span class="nc" id="L54">    private String ipAddress;</span>
+    private String ipAddress;
 
     @Column(name = &quot;user_agent&quot;)
-<span class="nc" id="L57">    private String userAgent;</span>
+    private String userAgent;
 
     @CreationTimestamp
     @Column(name = &quot;created_at&quot;, nullable = false, updatable = false)
-<span class="nc" id="L61">    private LocalDateTime createdAt;</span>
+    private LocalDateTime createdAt;
 
-    public AuditLog(String entityType, UUID entityId, AuditAction action,
+<span class="nc" id="L63">    public AuditLog(String entityType, UUID entityId, AuditAction action,</span>
                    UUID actorId, String actorRole,
                    Map&lt;String, Object&gt; oldValues, Map&lt;String, Object&gt; newValues,
-<span class="nc" id="L66">                   String ipAddress, String userAgent) {</span>
+                   String ipAddress, String userAgent) {
 <span class="nc" id="L67">        this.entityType = entityType;</span>
 <span class="nc" id="L68">        this.entityId = entityId;</span>
 <span class="nc" id="L69">        this.action = action;</span>

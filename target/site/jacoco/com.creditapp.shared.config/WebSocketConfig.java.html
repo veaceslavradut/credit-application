@@ -10,17 +10,17 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSocket
-<span class="nc" id="L13">@RequiredArgsConstructor</span>
+@RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketConfigurer {
 
     private final ApplicationQueueWebSocketHandler applicationQueueWebSocketHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-<span class="nc" id="L20">        registry.addHandler(applicationQueueWebSocketHandler, &quot;/ws/bank/{bankId}/applications&quot;)</span>
-<span class="nc" id="L21">            .addInterceptors(new ApplicationQueueWebSocketInterceptor())</span>
-<span class="nc" id="L22">            .setAllowedOrigins(&quot;*&quot;)</span>
-<span class="nc" id="L23">            .withSockJS();</span>
-<span class="nc" id="L24">    }</span>
+<span class="fc" id="L20">        registry.addHandler(applicationQueueWebSocketHandler, &quot;/ws/bank/{bankId}/applications&quot;)</span>
+<span class="fc" id="L21">            .addInterceptors(new ApplicationQueueWebSocketInterceptor())</span>
+<span class="fc" id="L22">            .setAllowedOrigins(&quot;*&quot;)</span>
+<span class="fc" id="L23">            .withSockJS();</span>
+<span class="fc" id="L24">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

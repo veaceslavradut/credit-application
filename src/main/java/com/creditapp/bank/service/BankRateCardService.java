@@ -18,6 +18,8 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 
 @Service
 @Transactional
@@ -35,6 +37,10 @@ public class BankRateCardService {
      * Creates a new rate card. If an active card exists for the same loan type and currency,
      * marks it as inactive (versioning).
      */
+    @Caching(evict = {
+        @CacheEvict(value = {"bankMarketAnalysis", "rateCards"}, key = "#bankId.toString()", allEntries = false),
+        @CacheEvict(value = "marketAverage", key = "#request.loanType.name() + ':' + #request.currency.name()", allEntries = false)
+    })
     public BankRateCardResponse createRateCard(UUID bankId, BankRateCardRequest request) {
         validateRateCardRequest(request);
         
@@ -75,6 +81,10 @@ public class BankRateCardService {
      * Updates a rate card by creating a new version. Marks the old card as inactive.
      * This implements an immutable history pattern for audit trail.
      */
+    @Caching(evict = {
+        @CacheEvict(value = {"bankMarketAnalysis", "rateCards"}, key = "#bankId.toString()", allEntries = false),
+        @CacheEvict(value = "marketAverage", key = "#request.loanType.name() + ':' + #request.currency.name()", allEntries = false)
+    })
     public BankRateCardResponse updateRateCard(UUID bankId, UUID rateCardId, BankRateCardRequest request) {
         validateRateCardRequest(request);
         

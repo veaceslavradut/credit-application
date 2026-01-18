@@ -1,0 +1,26 @@
+-------------------------------------------------------------------------------
+Test set: com.creditapp.integration.bank.BankRateCardIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 2.615 s <<< FAILURE! -- in com.creditapp.integration.bank.BankRateCardIntegrationTest
+com.creditapp.integration.bank.BankRateCardIntegrationTest.testCreateValidRateCard_Returns201Created -- Time elapsed: 0.832 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<201> but was:<500>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.bank.BankRateCardIntegrationTest.testCreateValidRateCard_Returns201Created(BankRateCardIntegrationTest.java:95)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+com.creditapp.integration.bank.BankRateCardIntegrationTest.testUpdateRateCard_CreatesNewVersion_Returns200OK -- Time elapsed: 0.296 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<201> but was:<500>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.bank.BankRateCardIntegrationTest.testUpdateRateCard_CreatesNewVersion_Returns200OK(BankRateCardIntegrationTest.java:159)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+

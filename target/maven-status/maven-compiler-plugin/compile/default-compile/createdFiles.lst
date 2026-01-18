@@ -200,7 +200,6 @@ com\creditapp\shared\service\HelpContentService.class
 com\creditapp\shared\service\BankActivationEmailService.class
 com\creditapp\borrower\dto\ApplicationDTO.class
 com\creditapp\borrower\dto\UpdateApplicationRequest.class
-com\creditapp\borrower\service\ApplicationStatusTransitionService$1.class
 com\creditapp\shared\model\AuditAction.class
 com\creditapp\borrower\exception\ApplicationNotSubmittedException.class
 com\creditapp\bank\scheduler\OfferExpirationScheduler.class

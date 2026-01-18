@@ -22,8 +22,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-<span class="nc" id="L25">@RequiredArgsConstructor</span>
-<span class="nc" id="L26">@Slf4j</span>
+@RequiredArgsConstructor
+<span class="fc" id="L26">@Slf4j</span>
 public class BankOfferSubmissionService {
 
     private final ApplicationRepository applicationRepository;
@@ -128,16 +128,16 @@ public class BankOfferSubmissionService {
         // Send email notification to borrower
         try {
 <span class="nc" id="L130">            emailService.sendOfferSubmittedByBankNotification(</span>
-                    offer,
-                    application,
-                    officerId,
-                    &quot;Bank Name&quot;, // TODO: Get from bank repository
-                    &quot;Officer Name&quot; // TODO: Get from user repository
+<span class="nc" id="L131">                    offer,</span>
+<span class="nc" id="L132">                    application,</span>
+<span class="nc" id="L133">                    officerId,</span>
+<span class="nc" id="L134">                    &quot;Bank Name&quot;, // TODO: Get from bank repository</span>
+<span class="nc" id="L135">                    &quot;Officer Name&quot; // TODO: Get from user repository</span>
             );
 <span class="nc" id="L137">        } catch (Exception e) {</span>
 <span class="nc" id="L138">            log.error(&quot;[OFFER_SUBMIT] Failed to send email notification&quot;, e);</span>
             // Continue - email failure shouldn't fail offer submission
-<span class="nc" id="L140">        }</span>
+        }
 
         // Log audit event
         try {
@@ -150,15 +150,15 @@ public class BankOfferSubmissionService {
 <span class="nc" id="L150">                    &quot;totalCost&quot;, totalCost.toString()</span>
             );
 <span class="nc" id="L152">            auditService.logActionWithValues(</span>
-                    &quot;Offer&quot;,
+<span class="nc" id="L153">                    &quot;Offer&quot;,</span>
 <span class="nc" id="L154">                    offer.getId(),</span>
-                    AuditAction.OFFER_SUBMITTED,
+<span class="nc" id="L155">                    AuditAction.OFFER_SUBMITTED,</span>
 <span class="nc" id="L156">                    Map.of(),</span>
-                    auditData
+<span class="nc" id="L157">                    auditData</span>
             );
 <span class="nc" id="L159">        } catch (Exception e) {</span>
 <span class="nc" id="L160">            log.error(&quot;[OFFER_SUBMIT] Failed to log audit event&quot;, e);</span>
-<span class="nc" id="L161">        }</span>
+        }
 
 <span class="nc" id="L163">        long took = System.currentTimeMillis() - start;</span>
 <span class="nc" id="L164">        log.info(&quot;[OFFER_SUBMIT] Bank officer {} submitted offer {} for application {} in {}ms&quot;,</span>

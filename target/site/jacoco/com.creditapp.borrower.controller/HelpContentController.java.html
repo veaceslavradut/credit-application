@@ -16,9 +16,9 @@ public class HelpContentController {
 
     private final HelpContentService helpContentService;
 
-<span class="nc" id="L19">    public HelpContentController(HelpContentService helpContentService) {</span>
-<span class="nc" id="L20">        this.helpContentService = helpContentService;</span>
-<span class="nc" id="L21">    }</span>
+<span class="fc" id="L19">    public HelpContentController(HelpContentService helpContentService) {</span>
+<span class="fc" id="L20">        this.helpContentService = helpContentService;</span>
+<span class="fc" id="L21">    }</span>
 
     @GetMapping(&quot;/api/help/topics&quot;)
     public ResponseEntity&lt;List&lt;HelpArticleListDTO&gt;&gt; listTopics(@RequestParam(name = &quot;language&quot;, defaultValue = &quot;en&quot;) String language) {

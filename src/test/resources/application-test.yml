@@ -36,6 +36,9 @@ spring:
       port: 6379
       repositories:
         enabled: false
+  
+  cache:
+    type: none  # Disable caching for tests
 
   security:
     filter:

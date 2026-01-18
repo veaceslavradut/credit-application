@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-<span class="nc" id="L29">@Slf4j</span>
+<span class="fc" id="L29">@Slf4j</span>
 @Service
 public class OfferSelectionService {
 
@@ -37,31 +37,31 @@ public class OfferSelectionService {
     private final AuditService auditService;
     private final NextStepsService nextStepsService;
 
-    public OfferSelectionService(OfferRepository offerRepository,
+<span class="fc" id="L40">    public OfferSelectionService(OfferRepository offerRepository,</span>
                                 ApplicationRepository applicationRepository,
                                 OrganizationRepository organizationRepository,
                                 OfferSelectionEmailService emailService,
                                 AuditService auditService,
-<span class="nc" id="L45">                                NextStepsService nextStepsService) {</span>
-<span class="nc" id="L46">        this.offerRepository = offerRepository;</span>
-<span class="nc" id="L47">        this.applicationRepository = applicationRepository;</span>
-<span class="nc" id="L48">        this.organizationRepository = organizationRepository;</span>
-<span class="nc" id="L49">        this.emailService = emailService;</span>
-<span class="nc" id="L50">        this.auditService = auditService;</span>
-<span class="nc" id="L51">        this.nextStepsService = nextStepsService;</span>
-<span class="nc" id="L52">    }</span>
+                                NextStepsService nextStepsService) {
+<span class="fc" id="L46">        this.offerRepository = offerRepository;</span>
+<span class="fc" id="L47">        this.applicationRepository = applicationRepository;</span>
+<span class="fc" id="L48">        this.organizationRepository = organizationRepository;</span>
+<span class="fc" id="L49">        this.emailService = emailService;</span>
+<span class="fc" id="L50">        this.auditService = auditService;</span>
+<span class="fc" id="L51">        this.nextStepsService = nextStepsService;</span>
+<span class="fc" id="L52">    }</span>
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public SelectOfferResponse selectOffer(UUID applicationId, UUID borrowerId, UUID offerId) {
 <span class="nc" id="L56">        log.debug(&quot;Offer selection started. ApplicationId: {}, BorrowerId: {}, OfferId: {}&quot;, </span>
-                applicationId, borrowerId, offerId);
+<span class="nc" id="L57">                applicationId, borrowerId, offerId);</span>
 
 <span class="nc" id="L59">        Application application = applicationRepository.findById(applicationId)</span>
 <span class="nc" id="L60">                .orElseThrow(() -&gt; new InvalidOfferException(&quot;Application not found: &quot; + applicationId));</span>
 
 <span class="nc bnc" id="L62" title="All 2 branches missed.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
 <span class="nc" id="L63">            log.warn(&quot;Unauthorized offer selection attempt. ApplicationId: {}, BorrowerId: {}&quot;, </span>
-                    applicationId, borrowerId);
+<span class="nc" id="L64">                    applicationId, borrowerId);</span>
 <span class="nc" id="L65">            throw new InvalidOfferException(&quot;Unauthorized access to application&quot;);</span>
         }
 
@@ -70,7 +70,7 @@ public class OfferSelectionService {
 
 <span class="nc bnc" id="L71" title="All 2 branches missed.">        if (!offer.getApplicationId().equals(applicationId)) {</span>
 <span class="nc" id="L72">            log.warn(&quot;Offer does not belong to application. ApplicationId: {}, OfferId: {}&quot;, </span>
-                    applicationId, offerId);
+<span class="nc" id="L73">                    applicationId, offerId);</span>
 <span class="nc" id="L74">            throw new InvalidOfferException(&quot;Offer does not belong to this application&quot;);</span>
         }
 
@@ -78,7 +78,7 @@ public class OfferSelectionService {
 <span class="nc" id="L78">            log.warn(&quot;Offer expired. OfferId: {}, ExpiresAt: {}&quot;, offerId, offer.getExpiresAt());</span>
             // Log audit event for failed selection attempt
 <span class="nc" id="L80">            auditService.logAction(&quot;Offer&quot;, offerId, AuditAction.OFFER_SELECTION_FAILED,</span>
-                    borrowerId, &quot;BORROWER&quot;);
+<span class="nc" id="L81">                    borrowerId, &quot;BORROWER&quot;);</span>
 <span class="nc" id="L82">            throw new OfferExpiredException(&quot;Offer has expired&quot;, offer.getExpiresAt());</span>
         }
 
@@ -98,7 +98,7 @@ public class OfferSelectionService {
 <span class="nc" id="L98">            deselectionDetails.put(&quot;previousStatus&quot;, OfferStatus.ACCEPTED.toString());</span>
 <span class="nc" id="L99">            deselectionDetails.put(&quot;newStatus&quot;, OfferStatus.CALCULATED.toString());</span>
 <span class="nc" id="L100">            auditService.logActionWithValues(&quot;Offer&quot;, prevOffer.getId(), AuditAction.OFFER_DESELECTED,</span>
-                    new HashMap&lt;&gt;(), deselectionDetails);
+<span class="nc" id="L101">                    new HashMap&lt;&gt;(), deselectionDetails);</span>
         }
 
 <span class="nc" id="L104">        offer.setOfferStatus(OfferStatus.ACCEPTED);</span>
@@ -121,7 +121,7 @@ public class OfferSelectionService {
 <span class="nc" id="L121">        selectionDetails.put(&quot;selectedAt&quot;, savedOffer.getBorrowerSelectedAt());</span>
 <span class="nc" id="L122">        selectionDetails.put(&quot;applicationStatus&quot;, ApplicationStatus.ACCEPTED.toString());</span>
 <span class="nc" id="L123">        auditService.logActionWithValues(&quot;Offer&quot;, offerId, AuditAction.OFFER_SELECTED,</span>
-                new HashMap&lt;&gt;(), selectionDetails);
+<span class="nc" id="L124">                new HashMap&lt;&gt;(), selectionDetails);</span>
 
 <span class="nc" id="L126">        emailService.sendOfferSelectedToBorrower(borrowerId, savedOffer, application);</span>
 <span class="nc" id="L127">        emailService.sendOfferSelectedToBank(offer.getBankId(), savedOffer, borrowerId);</span>
@@ -138,15 +138,15 @@ public class OfferSelectionService {
 <span class="nc" id="L138">                savedOffer.getMonthlyPayment(),</span>
 <span class="nc" id="L139">                savedOffer.getTotalCost(),</span>
 <span class="nc" id="L140">                savedOffer.getExpiresAt(),</span>
-                nextSteps,
-                &quot;Offer selected successfully. Application status updated to ACCEPTED.&quot;
+<span class="nc" id="L141">                nextSteps,</span>
+<span class="nc" id="L142">                &quot;Offer selected successfully. Application status updated to ACCEPTED.&quot;</span>
         );
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public SelectOfferResponse changeOfferSelection(UUID applicationId, UUID borrowerId, UUID newOfferId) {
 <span class="nc" id="L148">        log.debug(&quot;Offer change requested. ApplicationId: {}, BorrowerId: {}, NewOfferId: {}&quot;, </span>
-                applicationId, borrowerId, newOfferId);
+<span class="nc" id="L149">                applicationId, borrowerId, newOfferId);</span>
 <span class="nc" id="L150">        return selectOffer(applicationId, borrowerId, newOfferId);</span>
     }
 }

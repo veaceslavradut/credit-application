@@ -18,8 +18,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-<span class="nc" id="L21">@RequiredArgsConstructor</span>
-<span class="nc" id="L22">@Slf4j</span>
+@RequiredArgsConstructor
+<span class="fc" id="L22">@Slf4j</span>
 public class ScenarioCalculatorService {
     
     private final RateCardLookupService rateCardLookupService;
@@ -64,7 +64,7 @@ public class ScenarioCalculatorService {
         );
         
 <span class="nc" id="L66">        BigDecimal totalCost = CalculationUtils.calculateTotalCost(</span>
-            monthlyPayment, termMonths, loanAmount
+<span class="nc" id="L67">            monthlyPayment, termMonths, loanAmount</span>
         );
         
 <span class="nc" id="L70">        CalculateScenarioResponse response = CalculateScenarioResponse.builder()</span>

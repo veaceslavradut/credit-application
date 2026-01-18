@@ -21,8 +21,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
-<span class="nc" id="L24">@RequiredArgsConstructor</span>
-<span class="nc" id="L25">@Slf4j</span>
+@RequiredArgsConstructor
+<span class="fc" id="L25">@Slf4j</span>
 public class NotificationService {
     private final BorrowerNotificationRepository notificationRepository;
     private final AuditService auditService;
@@ -65,11 +65,11 @@ public class NotificationService {
             
             // Log audit event
 <span class="nc" id="L67">            auditService.logAction(</span>
-                    &quot;NOTIFICATION&quot;,
-                    notificationId,
-                    AuditAction.NOTIFICATION_SENT,
+<span class="nc" id="L68">                    &quot;NOTIFICATION&quot;,</span>
+<span class="nc" id="L69">                    notificationId,</span>
+<span class="nc" id="L70">                    AuditAction.NOTIFICATION_SENT,</span>
 <span class="nc" id="L71">                    notification.getBorrowerId(),</span>
-                    &quot;BORROWER&quot;
+<span class="nc" id="L72">                    &quot;BORROWER&quot;</span>
             );
             
 <span class="nc" id="L75">            log.info(&quot;Notification sent successfully: {}&quot;, notificationId);</span>
@@ -80,7 +80,7 @@ public class NotificationService {
 <span class="nc" id="L80">                n.setDeliveryStatus(DeliveryStatus.FAILED);</span>
 <span class="nc" id="L81">                notificationRepository.save(n);</span>
 <span class="nc" id="L82">            });</span>
-<span class="nc" id="L83">        }</span>
+        }
 <span class="nc" id="L84">    }</span>
 
     @Transactional(readOnly = true)

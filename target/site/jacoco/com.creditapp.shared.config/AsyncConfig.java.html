@@ -8,17 +8,17 @@ import java.util.concurrent.Executor;
 
 @Configuration
 @EnableAsync
-<span class="nc" id="L11">public class AsyncConfig {</span>
+<span class="fc" id="L11">public class AsyncConfig {</span>
 
     @Bean(name = &quot;taskExecutor&quot;)
     public Executor taskExecutor() {
-<span class="nc" id="L15">        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();</span>
-<span class="nc" id="L16">        executor.setCorePoolSize(2);</span>
-<span class="nc" id="L17">        executor.setMaxPoolSize(5);</span>
-<span class="nc" id="L18">        executor.setQueueCapacity(10);</span>
-<span class="nc" id="L19">        executor.setThreadNamePrefix(&quot;async-&quot;);</span>
-<span class="nc" id="L20">        executor.initialize();</span>
-<span class="nc" id="L21">        return executor;</span>
+<span class="fc" id="L15">        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();</span>
+<span class="fc" id="L16">        executor.setCorePoolSize(2);</span>
+<span class="fc" id="L17">        executor.setMaxPoolSize(5);</span>
+<span class="fc" id="L18">        executor.setQueueCapacity(10);</span>
+<span class="fc" id="L19">        executor.setThreadNamePrefix(&quot;async-&quot;);</span>
+<span class="fc" id="L20">        executor.initialize();</span>
+<span class="fc" id="L21">        return executor;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

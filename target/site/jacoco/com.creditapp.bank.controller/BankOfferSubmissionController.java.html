@@ -18,9 +18,9 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(&quot;/api/bank/offers&quot;)
-<span class="nc" id="L21">@RequiredArgsConstructor</span>
+@RequiredArgsConstructor
 @Validated
-<span class="nc" id="L23">@Slf4j</span>
+<span class="fc" id="L23">@Slf4j</span>
 public class BankOfferSubmissionController {
 
     private final BankOfferSubmissionService offerSubmissionService;
@@ -36,9 +36,9 @@ public class BankOfferSubmissionController {
 <span class="nc" id="L36">                officerId, request.getApplicationId());</span>
 
 <span class="nc" id="L38">        BankOfferSubmissionResponse response = offerSubmissionService.submitOffer(</span>
-                bankId,
-                officerId,
-                request
+<span class="nc" id="L39">                bankId,</span>
+<span class="nc" id="L40">                officerId,</span>
+<span class="nc" id="L41">                request</span>
         );
 
 <span class="nc" id="L44">        return ResponseEntity.status(HttpStatus.CREATED).body(response);</span>

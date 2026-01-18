@@ -2477,6 +2477,189 @@ curl -X GET https://api.creditapp.com/api/borrower/applications/550e8400-e29b-41
 
 ---
 
+### GET /api/bank/rate-cards/market-analysis
+**Description:** Analyze bank's rate cards against current market conditions. Returns competitive positioning, market statistics, and visualization data for APR, fees, and processing times. Results are cached for 24 hours.
+
+**Authentication:** Required - BANK_ADMIN role
+
+**Request Method:** GET
+
+**Request Headers:**
+- Authorization: Bearer {jwt_token}
+
+**Query Parameters:** None
+
+**Response (200 OK):**
+```json
+{
+  "myBankRates": [
+    {
+      "loanType": "HOME",
+      "currency": "USD",
+      "baseApr": 7.5,
+      "marketPercentileRanking": 100,
+      "competitivePosition": "MORE_COMPETITIVE",
+      "originationFeePercent": 1.0,
+      "insurancePercent": 0.5,
+      "processingTimeDays": 5
+    },
+    {
+      "loanType": "AUTO",
+      "currency": "EUR",
+      "baseApr": 6.0,
+      "marketPercentileRanking": 95,
+      "competitivePosition": "MORE_COMPETITIVE",
+      "originationFeePercent": 0.9,
+      "insurancePercent": 0.2,
+      "processingTimeDays": 7
+    }
+  ],
+  "marketAverageRates": [
+    {
+      "loanType": "HOME",
+      "currency": "USD",
+      "averageApr": 8.17,
+      "medianApr": 8.0,
+      "minApr": 7.5,
+      "maxApr": 9.0,
+      "averageOriginationFee": 1.0,
+      "averageInsuranceCost": 0.4,
+      "averageProcessingTime": 5,
+      "bankCount": 3
+    },
+    {
+      "loanType": "AUTO",
+      "currency": "EUR",
+      "averageApr": 6.67,
+      "medianApr": 6.5,
+      "minApr": 6.0,
+      "maxApr": 7.5,
+      "averageOriginationFee": 1.0,
+      "averageInsuranceCost": 0.3,
+      "averageProcessingTime": 8,
+      "bankCount": 3
+    }
+  ],
+  "overallCompetitivePosition": "MORE_COMPETITIVE",
+  "analysisDate": "2026-01-18T10:30:00Z",
+  "bankCount": 4,
+  "visualization": {
+    "aprComparisons": [
+      {
+        "loanType": "HOME",
+        "currency": "USD",
+        "myApr": 7.5,
+        "marketMedianApr": 8.0,
+        "marketMinApr": 7.5,
+        "marketMaxApr": 9.0
+      }
+    ],
+    "feeComparisons": [
+      {
+        "loanType": "HOME",
+        "currency": "USD",
+        "myOriginationFeePercent": 1.0,
+        "marketAvgOriginationFeePercent": 1.0,
+        "myInsurancePercent": 0.5,
+        "marketAvgInsurancePercent": 0.4
+      }
+    ],
+    "processingComparisons": [
+      {
+        "loanType": "HOME",
+        "currency": "USD",
+        "myProcessingDays": 5,
+        "marketAverageProcessingDays": 5
+      }
+    ]
+  }
+}
+```
+
+**Response Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| myBankRates | Array | Bank's active rate cards with market positioning |
+| marketAverageRates | Array | Anonymized market statistics per loan type/currency |
+| overallCompetitivePosition | String | Average position: MORE_COMPETITIVE, AVERAGE, LESS_COMPETITIVE |
+| analysisDate | DateTime | When analysis was performed |
+| bankCount | Integer | Total unique banks in market (privacy: minimum 3) |
+| visualization | Object | Chart-ready comparison data |
+
+**Market Percentile Ranking:**
+- Calculated per loan type and currency subset
+- Lower APR = higher percentile (inverted scale)
+- Formula: `percentile = ((total - position + 1) / total) × 100`
+- Example: Best APR (7.5%) among 4 banks = 100 percentile
+
+**Competitive Position:**
+- **MORE_COMPETITIVE**: Percentile ≥ 75% (top quartile)
+- **AVERAGE**: Percentile 25-74% (middle two quartiles)
+- **LESS_COMPETITIVE**: Percentile < 25% (bottom quartile)
+
+**Privacy Protection:**
+- Minimum 3 banks required per loan type/currency
+- No competitor names or IDs disclosed
+- Only aggregated statistics returned
+
+**Caching:**
+- Results cached for 24 hours with Redis
+- Cache key: `bankMarketAnalysis:{bankId}`
+- Cache invalidated on rate card create/update
+
+**Visualization Data:**
+- Ready for charts/graphs in frontend
+- APR comparison: your rate vs market min/median/max
+- Fee comparison: origination and insurance vs market average
+- Processing time: your days vs market average
+
+**Error Responses:**
+
+**403 Forbidden** - Not BANK_ADMIN role
+```json
+{
+  "error": "Forbidden",
+  "message": "You do not have permission to access this resource",
+  "timestamp": "2026-01-18T10:30:00Z"
+}
+```
+
+**404 Not Found** - No active rate cards
+```json
+{
+  "error": "Not Found",
+  "message": "No active rate cards found for bank",
+  "timestamp": "2026-01-18T10:30:00Z"
+}
+```
+
+**412 Precondition Failed** - Insufficient market data
+```json
+{
+  "error": "Precondition Failed",
+  "message": "Insufficient market data: only 2 banks found, minimum 3 required",
+  "timestamp": "2026-01-18T10:30:00Z"
+}
+```
+
+**Example Usage:**
+
+```bash
+curl -X GET \
+  https://api.example.com/api/bank/rate-cards/market-analysis \
+  -H 'Authorization: Bearer eyJhbGci...'
+```
+
+**UI Integration Tips:**
+- Display competitive position badge prominently
+- Use bar charts for APR comparisons (your rate vs market range)
+- Show percentile ranking with visual indicators (gauge chart)
+- Highlight areas where bank is more/less competitive
+- Update analysis daily or on rate card changes
+
+---
+
 ## Offer Calculation API
 
 ### Overview: Offer Calculation Flow
@@ -2736,6 +2919,7 @@ This API uses path-based versioning. Future versions will be available at /api/v
 
 | Date | Version | Changes | Story |
 |------|---------|---------|-------|
+| 2026-01-18 | 1.9 | Added Bank Market Analysis API: GET /api/bank/rate-cards/market-analysis endpoint with competitive positioning, market statistics, visualization data, and 24h caching | Story 3.14 |
 | 2026-01-17 | 1.8 | Added Offer Calculation Engine documentation: internal calculation flow, formulas, examples, async execution, and known test cases | Story 3.3 |
 | 2026-01-17 | 1.7 | Added Bank Rate Card Configuration API: POST, GET, PUT /api/bank/rate-cards endpoints for managing rate cards with versioning | Story 3.2 |
 | 2026-01-17 | 1.6 | Added Offer, BankRateCard, and OfferCalculationLog data model documentation | Story 3.1 |

@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmailNotificationListener {
 
-<span class="nc" id="L14">    private static final Logger logger = LoggerFactory.getLogger(EmailNotificationListener.class);</span>
+<span class="fc" id="L14">    private static final Logger logger = LoggerFactory.getLogger(EmailNotificationListener.class);</span>
 
     private final EmailService emailService;
 
-<span class="nc" id="L18">    public EmailNotificationListener(EmailService emailService) {</span>
-<span class="nc" id="L19">        this.emailService = emailService;</span>
-<span class="nc" id="L20">    }</span>
+<span class="fc" id="L18">    public EmailNotificationListener(EmailService emailService) {</span>
+<span class="fc" id="L19">        this.emailService = emailService;</span>
+<span class="fc" id="L20">    }</span>
 
     @EventListener
     @Async
@@ -31,7 +31,7 @@ public class EmailNotificationListener {
             );
 <span class="nc" id="L32">        } catch (Exception e) {</span>
 <span class="nc" id="L33">            logger.error(&quot;Error handling user registration event for user: {}&quot;, event.getEmail(), e);</span>
-<span class="nc" id="L34">        }</span>
+        }
 <span class="nc" id="L35">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

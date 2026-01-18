@@ -25,7 +25,7 @@ import java.util.UUID;
  * Service for uploading offer documents.
  */
 @Service
-<span class="fc" id="L28">@RequiredArgsConstructor</span>
+@RequiredArgsConstructor
 <span class="fc" id="L29">@Slf4j</span>
 @Transactional
 public class OfferDocumentUploadService {
@@ -42,96 +42,96 @@ public class OfferDocumentUploadService {
     public OfferDocumentMetadata uploadDocument(UUID offerId, UUID bankId, UUID officerId, OfferDocumentUploadRequest request) {
         try {
             // Validate file
-<span class="fc" id="L45">            FileValidationService.ValidationResult validationResult = fileValidationService.validateFile(request.getFile());</span>
-<span class="fc bfc" id="L46" title="All 2 branches covered.">            if (!validationResult.valid) {</span>
-<span class="fc" id="L47">                throw new IllegalArgumentException(&quot;File validation failed: &quot; + validationResult.errorMessage);</span>
+<span class="nc" id="L45">            FileValidationService.ValidationResult validationResult = fileValidationService.validateFile(request.getFile());</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">            if (!validationResult.valid) {</span>
+<span class="nc" id="L47">                throw new IllegalArgumentException(&quot;File validation failed: &quot; + validationResult.errorMessage);</span>
             }
             
             // Fetch and verify offer
-<span class="fc" id="L51">            Offer offer = offerRepository.findById(offerId)</span>
-<span class="fc" id="L52">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Offer not found: &quot; + offerId));</span>
+<span class="nc" id="L51">            Offer offer = offerRepository.findById(offerId)</span>
+<span class="nc" id="L52">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Offer not found: &quot; + offerId));</span>
             
-<span class="fc bfc" id="L54" title="All 2 branches covered.">            if (!offer.getBankId().equals(bankId)) {</span>
-<span class="fc" id="L55">                throw new IllegalArgumentException(&quot;Bank does not own this offer&quot;);</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">            if (!offer.getBankId().equals(bankId)) {</span>
+<span class="nc" id="L55">                throw new IllegalArgumentException(&quot;Bank does not own this offer&quot;);</span>
             }
             
             // Generate S3 key
-<span class="fc" id="L59">            String timestamp = String.valueOf(System.currentTimeMillis());</span>
-<span class="fc" id="L60">            String s3Key = String.format(&quot;offers/%s/%s_%s_%s&quot;, </span>
-                offerId, 
-<span class="fc" id="L62">                request.getDocumentType(), </span>
-                timestamp, 
-<span class="fc" id="L64">                sanitizeFileName(request.getFile().getOriginalFilename()));</span>
+<span class="nc" id="L59">            String timestamp = String.valueOf(System.currentTimeMillis());</span>
+<span class="nc" id="L60">            String s3Key = String.format(&quot;offers/%s/%s_%s_%s&quot;, </span>
+<span class="nc" id="L61">                offerId, </span>
+<span class="nc" id="L62">                request.getDocumentType(), </span>
+<span class="nc" id="L63">                timestamp, </span>
+<span class="nc" id="L64">                sanitizeFileName(request.getFile().getOriginalFilename()));</span>
             
             // Upload to S3
-<span class="fc" id="L67">            Map&lt;String, String&gt; metadata = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L68">            metadata.put(&quot;offerId&quot;, offerId.toString());</span>
-<span class="fc" id="L69">            metadata.put(&quot;bankId&quot;, bankId.toString());</span>
-<span class="fc" id="L70">            metadata.put(&quot;documentType&quot;, request.getDocumentType());</span>
+<span class="nc" id="L67">            Map&lt;String, String&gt; metadata = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L68">            metadata.put(&quot;offerId&quot;, offerId.toString());</span>
+<span class="nc" id="L69">            metadata.put(&quot;bankId&quot;, bankId.toString());</span>
+<span class="nc" id="L70">            metadata.put(&quot;documentType&quot;, request.getDocumentType());</span>
             
-<span class="fc" id="L72">            try (var fileStream = request.getFile().getInputStream()) {</span>
-<span class="fc" id="L73">                S3DocumentStorageService.S3ObjectMetadata s3Metadata = s3DocumentStorageService.uploadFile(</span>
-                    s3Key, 
-                    fileStream, 
-<span class="fc" id="L76">                    request.getFile().getContentType(), </span>
-                    metadata
+<span class="nc" id="L72">            try (var fileStream = request.getFile().getInputStream()) {</span>
+<span class="nc" id="L73">                S3DocumentStorageService.S3ObjectMetadata s3Metadata = s3DocumentStorageService.uploadFile(</span>
+<span class="nc" id="L74">                    s3Key, </span>
+<span class="nc" id="L75">                    fileStream, </span>
+<span class="nc" id="L76">                    request.getFile().getContentType(), </span>
+<span class="nc" id="L77">                    metadata</span>
                 );
                 
-<span class="fc" id="L80">                log.info(&quot;Document uploaded to S3: offerId={}, key={}&quot;, offerId, s3Key);</span>
+<span class="nc" id="L80">                log.info(&quot;Document uploaded to S3: offerId={}, key={}&quot;, offerId, s3Key);</span>
             }
             
             // Generate pre-signed URL
-<span class="fc" id="L84">            String presignedUrl = s3DocumentStorageService.generatePresignedUrl(</span>
-                s3Key, 
-<span class="fc" id="L86">                java.time.Duration.ofHours(24)</span>
+<span class="nc" id="L84">            String presignedUrl = s3DocumentStorageService.generatePresignedUrl(</span>
+<span class="nc" id="L85">                s3Key, </span>
+<span class="nc" id="L86">                java.time.Duration.ofHours(24)</span>
             );
             
             // Create OfferDocument entity
-<span class="fc" id="L90">            OfferDocument document = OfferDocument.builder()</span>
-<span class="fc" id="L91">                .offerId(offerId)</span>
-<span class="fc" id="L92">                .documentType(request.getDocumentType())</span>
-<span class="fc" id="L93">                .fileName(request.getFile().getOriginalFilename())</span>
-<span class="fc" id="L94">                .fileSize(request.getFile().getSize())</span>
-<span class="fc" id="L95">                .mimeType(request.getFile().getContentType())</span>
-<span class="fc" id="L96">                .s3Key(s3Key)</span>
-<span class="fc" id="L97">                .s3Url(presignedUrl)</span>
-<span class="fc" id="L98">                .uploadedByOfficerId(officerId)</span>
-<span class="fc" id="L99">                .uploadedAt(LocalDateTime.now())</span>
-<span class="fc" id="L100">                .description(request.getDescription())</span>
-<span class="fc" id="L101">                .virusScanStatus(&quot;CLEAN&quot;) // For MVP, skip scanning</span>
-<span class="fc" id="L102">                .build();</span>
+<span class="nc" id="L90">            OfferDocument document = OfferDocument.builder()</span>
+<span class="nc" id="L91">                .offerId(offerId)</span>
+<span class="nc" id="L92">                .documentType(request.getDocumentType())</span>
+<span class="nc" id="L93">                .fileName(request.getFile().getOriginalFilename())</span>
+<span class="nc" id="L94">                .fileSize(request.getFile().getSize())</span>
+<span class="nc" id="L95">                .mimeType(request.getFile().getContentType())</span>
+<span class="nc" id="L96">                .s3Key(s3Key)</span>
+<span class="nc" id="L97">                .s3Url(presignedUrl)</span>
+<span class="nc" id="L98">                .uploadedByOfficerId(officerId)</span>
+<span class="nc" id="L99">                .uploadedAt(LocalDateTime.now())</span>
+<span class="nc" id="L100">                .description(request.getDescription())</span>
+<span class="nc" id="L101">                .virusScanStatus(&quot;CLEAN&quot;) // For MVP, skip scanning</span>
+<span class="nc" id="L102">                .build();</span>
             
-<span class="fc" id="L104">            OfferDocument savedDocument = offerDocumentRepository.save(document);</span>
+<span class="nc" id="L104">            OfferDocument savedDocument = offerDocumentRepository.save(document);</span>
             
             // Log audit event
-<span class="fc" id="L107">            Map&lt;String, String&gt; auditContext = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L108">            auditContext.put(&quot;offerId&quot;, offerId.toString());</span>
-<span class="fc" id="L109">            auditContext.put(&quot;documentId&quot;, savedDocument.getId().toString());</span>
-<span class="fc" id="L110">            auditContext.put(&quot;documentType&quot;, request.getDocumentType());</span>
-<span class="fc" id="L111">            auditContext.put(&quot;fileName&quot;, request.getFile().getOriginalFilename());</span>
-<span class="fc" id="L112">            auditContext.put(&quot;fileSize&quot;, String.valueOf(request.getFile().getSize()));</span>
-<span class="fc" id="L113">            auditContext.put(&quot;uploadedByOfficerId&quot;, officerId.toString());</span>
+<span class="nc" id="L107">            Map&lt;String, String&gt; auditContext = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L108">            auditContext.put(&quot;offerId&quot;, offerId.toString());</span>
+<span class="nc" id="L109">            auditContext.put(&quot;documentId&quot;, savedDocument.getId().toString());</span>
+<span class="nc" id="L110">            auditContext.put(&quot;documentType&quot;, request.getDocumentType());</span>
+<span class="nc" id="L111">            auditContext.put(&quot;fileName&quot;, request.getFile().getOriginalFilename());</span>
+<span class="nc" id="L112">            auditContext.put(&quot;fileSize&quot;, String.valueOf(request.getFile().getSize()));</span>
+<span class="nc" id="L113">            auditContext.put(&quot;uploadedByOfficerId&quot;, officerId.toString());</span>
             
-<span class="fc" id="L115">            Map&lt;String, Object&gt; auditContextObj = auditContext.entrySet().stream()</span>
-<span class="fc" id="L116">                .collect(java.util.stream.Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));</span>
-<span class="fc" id="L117">            auditService.logActionWithValues(&quot;OfferDocument&quot;, savedDocument.getId(), AuditAction.DOCUMENT_UPLOADED, auditContextObj, null);</span>
+<span class="nc" id="L115">            Map&lt;String, Object&gt; auditContextObj = auditContext.entrySet().stream()</span>
+<span class="nc" id="L116">                .collect(java.util.stream.Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));</span>
+<span class="nc" id="L117">            auditService.logActionWithValues(&quot;OfferDocument&quot;, savedDocument.getId(), AuditAction.DOCUMENT_UPLOADED, auditContextObj, null);</span>
             
-<span class="fc" id="L119">            log.info(&quot;Document uploaded successfully: offerId={}, documentId={}, type={}&quot;, </span>
-<span class="fc" id="L120">                offerId, savedDocument.getId(), request.getDocumentType());</span>
+<span class="nc" id="L119">            log.info(&quot;Document uploaded successfully: offerId={}, documentId={}, type={}&quot;, </span>
+<span class="nc" id="L120">                offerId, savedDocument.getId(), request.getDocumentType());</span>
             
             // Return metadata
-<span class="fc" id="L123">            return OfferDocumentMetadata.builder()</span>
-<span class="fc" id="L124">                .documentId(savedDocument.getId())</span>
-<span class="fc" id="L125">                .offerId(savedDocument.getOfferId())</span>
-<span class="fc" id="L126">                .documentType(savedDocument.getDocumentType())</span>
-<span class="fc" id="L127">                .fileName(savedDocument.getFileName())</span>
-<span class="fc" id="L128">                .fileSize(savedDocument.getFileSize())</span>
-<span class="fc" id="L129">                .uploadedAt(savedDocument.getUploadedAt())</span>
-<span class="fc" id="L130">                .uploadedByOfficerId(savedDocument.getUploadedByOfficerId())</span>
-<span class="fc" id="L131">                .description(savedDocument.getDescription())</span>
-<span class="fc" id="L132">                .virusScanStatus(savedDocument.getVirusScanStatus())</span>
-<span class="fc" id="L133">                .downloadUrl(presignedUrl)</span>
-<span class="fc" id="L134">                .build();</span>
+<span class="nc" id="L123">            return OfferDocumentMetadata.builder()</span>
+<span class="nc" id="L124">                .documentId(savedDocument.getId())</span>
+<span class="nc" id="L125">                .offerId(savedDocument.getOfferId())</span>
+<span class="nc" id="L126">                .documentType(savedDocument.getDocumentType())</span>
+<span class="nc" id="L127">                .fileName(savedDocument.getFileName())</span>
+<span class="nc" id="L128">                .fileSize(savedDocument.getFileSize())</span>
+<span class="nc" id="L129">                .uploadedAt(savedDocument.getUploadedAt())</span>
+<span class="nc" id="L130">                .uploadedByOfficerId(savedDocument.getUploadedByOfficerId())</span>
+<span class="nc" id="L131">                .description(savedDocument.getDescription())</span>
+<span class="nc" id="L132">                .virusScanStatus(savedDocument.getVirusScanStatus())</span>
+<span class="nc" id="L133">                .downloadUrl(presignedUrl)</span>
+<span class="nc" id="L134">                .build();</span>
 <span class="nc" id="L135">        } catch (IOException e) {</span>
 <span class="nc" id="L136">            log.error(&quot;Failed to upload document: offerId={}, error={}&quot;, offerId, e.getMessage(), e);</span>
 <span class="nc" id="L137">            throw new RuntimeException(&quot;Document upload failed: &quot; + e.getMessage(), e);</span>
@@ -139,8 +139,8 @@ public class OfferDocumentUploadService {
     }
     
     private String sanitizeFileName(String fileName) {
-<span class="pc bpc" id="L142" title="1 of 2 branches missed.">        if (fileName == null) return &quot;document&quot;;</span>
-<span class="fc" id="L143">        return fileName.replaceAll(&quot;[^a-zA-Z0-9._-]&quot;, &quot;_&quot;);</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (fileName == null) return &quot;document&quot;;</span>
+<span class="nc" id="L143">        return fileName.replaceAll(&quot;[^a-zA-Z0-9._-]&quot;, &quot;_&quot;);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

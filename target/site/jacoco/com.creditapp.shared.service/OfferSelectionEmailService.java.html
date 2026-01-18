@@ -8,15 +8,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-<span class="nc" id="L11">@Slf4j</span>
+<span class="fc" id="L11">@Slf4j</span>
 @Service
 public class OfferSelectionEmailService {
 
     private final EmailService emailService;
 
-<span class="nc" id="L17">    public OfferSelectionEmailService(EmailService emailService) {</span>
-<span class="nc" id="L18">        this.emailService = emailService;</span>
-<span class="nc" id="L19">    }</span>
+<span class="fc" id="L17">    public OfferSelectionEmailService(EmailService emailService) {</span>
+<span class="fc" id="L18">        this.emailService = emailService;</span>
+<span class="fc" id="L19">    }</span>
 
     @Async
     public void sendOfferSelectedToBorrower(UUID borrowerId, Offer offer, Application application) {
@@ -43,7 +43,7 @@ public class OfferSelectionEmailService {
 <span class="nc" id="L43">        } catch (Exception e) {</span>
 <span class="nc" id="L44">            log.error(&quot;Failed to send offer selection email to borrower. BorrowerId: {}, OfferId: {}, Error: {}&quot;,</span>
 <span class="nc" id="L45">                    borrowerId, offer.getId(), e.getMessage(), e);</span>
-<span class="nc" id="L46">        }</span>
+        }
 <span class="nc" id="L47">    }</span>
 
     @Async
@@ -68,7 +68,7 @@ public class OfferSelectionEmailService {
 <span class="nc" id="L68">        } catch (Exception e) {</span>
 <span class="nc" id="L69">            log.error(&quot;Failed to send offer selection email to bank. BankId: {}, OfferId: {}, Error: {}&quot;,</span>
 <span class="nc" id="L70">                    bankId, offer.getId(), e.getMessage(), e);</span>
-<span class="nc" id="L71">        }</span>
+        }
 <span class="nc" id="L72">    }</span>
 
     @Async
@@ -92,7 +92,7 @@ public class OfferSelectionEmailService {
 <span class="nc" id="L92">        } catch (Exception e) {</span>
 <span class="nc" id="L93">            log.error(&quot;Failed to send offer deselection email to bank. BankId: {}, OfferId: {}, Error: {}&quot;,</span>
 <span class="nc" id="L94">                    bankId, offer.getId(), e.getMessage(), e);</span>
-<span class="nc" id="L95">        }</span>
+        }
 <span class="nc" id="L96">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
