@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankOfferSubmissionRequest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.bank.dto</a> &gt; <span class="el_source">BankOfferSubmissionRequest.java</span></div><h1>BankOfferSubmissionRequest.java</h1><pre class="source lang-java linenums">package com.creditapp.bank.dto;
+
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+<span class="pc bnc" id="L18" title="All 94 branches missed.">@Data</span>
+<span class="nc" id="L19">@Builder</span>
+<span class="fc" id="L20">@NoArgsConstructor</span>
+<span class="nc" id="L21">@AllArgsConstructor</span>
+public class BankOfferSubmissionRequest {
+
+    @NotNull(message = &quot;Application ID is required&quot;)
+<span class="fc" id="L25">    private UUID applicationId;</span>
+
+    @NotNull(message = &quot;APR is required&quot;)
+    @DecimalMin(value = &quot;4.0&quot;, message = &quot;APR must be at least 4%&quot;)
+    @DecimalMax(value = &quot;20.0&quot;, message = &quot;APR must not exceed 20%&quot;)
+<span class="fc" id="L30">    private BigDecimal apr;</span>
+
+    @Min(value = 6, message = &quot;Term must be at least 6 months&quot;)
+    @Max(value = 480, message = &quot;Term must not exceed 480 months&quot;)
+<span class="fc" id="L34">    private Integer termMonths;</span>
+
+<span class="fc" id="L36">    private BigDecimal monthlyPayment;</span>
+
+<span class="fc" id="L38">    private BigDecimal totalCost;</span>
+
+<span class="fc" id="L40">    private BigDecimal originationFee;</span>
+
+<span class="fc" id="L42">    private BigDecimal insuranceCost;</span>
+
+<span class="fc" id="L44">    private Integer processingTimeDays;</span>
+
+<span class="fc" id="L46">    private List&lt;String&gt; requiredDocuments;</span>
+
+<span class="fc" id="L48">    private String notes;</span>
+
+<span class="nc" id="L50">    private Map&lt;String, String&gt; customTerms;</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

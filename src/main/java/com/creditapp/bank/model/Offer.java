@@ -65,6 +65,15 @@ public class Offer {
     @Column(name = "borrower_selected_at")
     private LocalDateTime borrowerSelectedAt;
     
+    @Column(name = "submitted_by_officer_id")
+    private UUID submittedByOfficerId;
+    
+    @Column(name = "submission_notes", length = 2000)
+    private String submissionNotes;
+    
+    @Column(name = "office_notes", length = 2000)
+    private String officeNotes;
+    
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
@@ -218,6 +227,30 @@ public class Offer {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public UUID getSubmittedByOfficerId() {
+        return submittedByOfficerId;
+    }
+
+    public void setSubmittedByOfficerId(UUID submittedByOfficerId) {
+        this.submittedByOfficerId = submittedByOfficerId;
+    }
+
+    public String getSubmissionNotes() {
+        return submissionNotes;
+    }
+
+    public void setSubmissionNotes(String submissionNotes) {
+        this.submissionNotes = submissionNotes;
+    }
+
+    public String getOfficeNotes() {
+        return officeNotes;
+    }
+
+    public void setOfficeNotes(String officeNotes) {
+        this.officeNotes = officeNotes;
     }
 
     /**

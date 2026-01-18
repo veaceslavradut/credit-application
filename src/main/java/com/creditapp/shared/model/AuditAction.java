@@ -16,6 +16,7 @@ public enum AuditAction {
     DOCUMENT_UPLOADED("Document uploaded"),
     DOCUMENT_DELETED("Document deleted"),
     OFFER_CREATED("Offer created"),
+    OFFER_SUBMITTED("Offer submitted by bank officer"),
     OFFER_ACCEPTED("Offer accepted"),
     OFFER_SELECTED("Offer selected by borrower"),
     OFFER_DESELECTED("Offer deselected by borrower"),

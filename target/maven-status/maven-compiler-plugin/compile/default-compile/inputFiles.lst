@@ -50,10 +50,12 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\EmailTemplateRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\listener\EntityAuditListener.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\HelpContentService.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\service\BankOfferSubmissionService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\BankStatus.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\RateLimited.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\ApplicationStatusDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\ChangePasswordRequest.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\BankOfferSubmissionEmailService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\HelpArticleDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\exception\RateLimitExceededException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\service\OfferCalculationService.java
@@ -67,7 +69,9 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\service\PasswordValidator.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\RedisConfig.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\DocumentDTO.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\controller\BankOfferSubmissionController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\filter\JwtAuthenticationFilter.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\validator\APRValidator.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\DeliveryStatus.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\exception\PasswordValidationException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\RequestContextService.java
@@ -139,6 +143,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\m
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\service\ApplicationQueueService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\EmailService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\RateLimitingAspect.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\BankOfferSubmissionRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\OfferHistoryRecord.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\OfferExpiredException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\common\exception\GlobalExceptionHandler.java
@@ -226,6 +231,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\m
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\CreditApplicationApplication.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\HelpSectionDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\SecurityConfig.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\BankOfferSubmissionResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\repository\BankRateCardRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\Currency.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\Organization.java

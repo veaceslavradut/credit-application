@@ -15,9 +15,11 @@ com\creditapp\borrower\dto\LoanPreferenceDTO.class
 com\creditapp\shared\service\RateCardLookupService.class
 com\creditapp\auth\service\ProfileService.class
 com\creditapp\borrower\dto\OfferComparisonTableResponse.class
+com\creditapp\bank\dto\BankOfferSubmissionResponse.class
 com\creditapp\shared\service\PasswordValidationService.class
 com\creditapp\shared\repository\AuditLogRepository.class
 com\creditapp\borrower\controller\BorrowerHistoryController.class
+com\creditapp\shared\validator\APRValidator$ValidationResult.class
 com\creditapp\borrower\service\OfferSelectionService.class
 com\creditapp\borrower\dto\ApplicationHistoryDTO.class
 com\creditapp\bank\dto\ApplicationStatusUpdateResponse$ApplicationStatusUpdateResponseBuilder.class
@@ -59,7 +61,9 @@ com\creditapp\borrower\model\LoanPreference.class
 com\creditapp\shared\audit\BusinessAuditAspect.class
 com\creditapp\shared\dto\NotificationHealthDTO$NotificationHealthDTOBuilder.class
 com\creditapp\auth\exception\DuplicateEmailException.class
+com\creditapp\shared\service\BankOfferSubmissionEmailService.class
 com\creditapp\bank\controller\BankApplicationQueueController.class
+com\creditapp\shared\validator\APRValidator.class
 com\creditapp\bank\dto\BankRateCardResponse.class
 com\creditapp\borrower\dto\SelectOfferResponse.class
 com\creditapp\borrower\model\EmploymentStatus.class
@@ -88,6 +92,7 @@ com\creditapp\shared\util\LoginRateLimiter.class
 com\creditapp\auth\exception\InvalidCredentialsException.class
 com\creditapp\borrower\dto\ApplicationDTO$ApplicationDTOBuilder.class
 com\creditapp\shared\service\RequestContextService$RequestContext.class
+com\creditapp\bank\dto\BankOfferSubmissionRequest.class
 com\creditapp\borrower\dto\OfferComparisonTableRequest.class
 com\creditapp\shared\security\CustomAccessDeniedHandler.class
 com\creditapp\shared\model\HelpArticleStatus.class
@@ -138,6 +143,7 @@ com\creditapp\borrower\exception\DocumentNotFoundException.class
 com\creditapp\borrower\service\WithdrawApplicationService.class
 com\creditapp\bank\dto\ApplicationQueueRequest$ApplicationQueueRequestBuilder.class
 com\creditapp\bank\dto\ApplicationStatusUpdateRequest.class
+com\creditapp\bank\dto\BankOfferSubmissionRequest$BankOfferSubmissionRequestBuilder.class
 com\creditapp\borrower\dto\OfferComparisonDTO.class
 com\creditapp\borrower\model\RatePreference.class
 com\creditapp\borrower\dto\CreateApplicationRequest.class
@@ -195,6 +201,7 @@ com\creditapp\shared\util\EmailRateLimiter.class
 com\creditapp\auth\dto\ChangePasswordResponse.class
 com\creditapp\auth\repository\UserRepository.class
 com\creditapp\borrower\dto\CalculateScenarioResponse$CalculateScenarioResponseBuilder.class
+com\creditapp\bank\service\BankOfferSubmissionService.class
 com\creditapp\borrower\dto\UpdateApplicationResponse$UpdateApplicationResponseBuilder.class
 com\creditapp\shared\service\PasswordValidationService$ValidationResult.class
 com\creditapp\bank\service\ApplicationQueueNotificationService.class
@@ -219,6 +226,7 @@ com\creditapp\borrower\dto\UpdateApplicationRequest$UpdateApplicationRequestBuil
 com\creditapp\auth\exception\BankNotActivatedException.class
 com\creditapp\borrower\dto\OfferHistoryRecord.class
 com\creditapp\borrower\repository\ApplicationDocumentRepository.class
+com\creditapp\bank\controller\BankOfferSubmissionController.class
 com\creditapp\shared\model\User.class
 com\creditapp\bank\exception\InvalidRateCardException.class
 com\creditapp\shared\security\RateLimitingAspect.class
@@ -244,6 +252,7 @@ com\creditapp\shared\model\AuditLog.class
 com\creditapp\shared\model\HelpArticle$HelpArticleBuilder.class
 com\creditapp\common\config\WebMvcConfig.class
 com\creditapp\shared\config\SendGridConfig.class
+com\creditapp\shared\validator\APRValidator$APRComparison.class
 com\creditapp\bank\dto\OfferCalculationLogDTO.class
 com\creditapp\borrower\dto\ApplicationStatusDTO$ApplicationStatusDTOBuilder.class
 com\creditapp\bank\model\OfferCalculationLog.class
@@ -290,3 +299,4 @@ com\creditapp\bank\service\OfferExpirationService.class
 com\creditapp\shared\service\JwtTokenService.class
 com\creditapp\borrower\dto\WithdrawApplicationRequest$WithdrawApplicationRequestBuilder.class
 com\creditapp\borrower\model\ApplicationHistory.class
+com\creditapp\bank\dto\BankOfferSubmissionResponse$BankOfferSubmissionResponseBuilder.class

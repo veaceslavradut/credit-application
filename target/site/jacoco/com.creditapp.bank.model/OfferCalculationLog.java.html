@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OfferCalculationLog.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.bank.model</a> &gt; <span class="el_source">OfferCalculationLog.java</span></div><h1>OfferCalculationLog.java</h1><pre class="source lang-java linenums">package com.creditapp.bank.model;
+
+import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
+import org.hibernate.annotations.Type;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+/**
+ * Entity for storing detailed calculation logs for all offer calculations.
+ * This provides an immutable audit trail of all calculations performed.
+ */
+@Entity
+@Table(name = &quot;offer_calculation_log&quot;)
+public class OfferCalculationLog {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(name = &quot;application_id&quot;, nullable = false)
+    private UUID applicationId;
+    
+    @Column(name = &quot;bank_id&quot;)
+    private UUID bankId;
+    
+    @Column(name = &quot;calculation_method&quot;)
+    private String calculationMethod;
+    
+    @Type(JsonType.class)
+    @Column(name = &quot;input_parameters&quot;, columnDefinition = &quot;JSONB&quot;)
+    private String inputParameters;
+    
+    @Type(JsonType.class)
+    @Column(name = &quot;calculated_values&quot;, columnDefinition = &quot;JSONB&quot;)
+    private String calculatedValues;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = &quot;calculation_type&quot;, nullable = false)
+    private CalculationType calculationType;
+    
+    @Column(name = &quot;timestamp&quot;, nullable = false)
+    private LocalDateTime timestamp;
+    
+    @CreationTimestamp
+    @Column(name = &quot;created_at&quot;, nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    // Constructors
+<span class="nc" id="L52">    public OfferCalculationLog() {}</span>
+
+    public OfferCalculationLog(UUID applicationId, UUID bankId, String calculationMethod,
+                              String inputParameters, String calculatedValues,
+<span class="nc" id="L56">                              CalculationType calculationType, LocalDateTime timestamp) {</span>
+<span class="nc" id="L57">        this.applicationId = applicationId;</span>
+<span class="nc" id="L58">        this.bankId = bankId;</span>
+<span class="nc" id="L59">        this.calculationMethod = calculationMethod;</span>
+<span class="nc" id="L60">        this.inputParameters = inputParameters;</span>
+<span class="nc" id="L61">        this.calculatedValues = calculatedValues;</span>
+<span class="nc" id="L62">        this.calculationType = calculationType;</span>
+<span class="nc" id="L63">        this.timestamp = timestamp;</span>
+<span class="nc" id="L64">    }</span>
+
+    // Getters and Setters
+    public Long getId() {
+<span class="nc" id="L68">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="nc" id="L72">        this.id = id;</span>
+<span class="nc" id="L73">    }</span>
+
+    public UUID getApplicationId() {
+<span class="nc" id="L76">        return applicationId;</span>
+    }
+
+    public void setApplicationId(UUID applicationId) {
+<span class="nc" id="L80">        this.applicationId = applicationId;</span>
+<span class="nc" id="L81">    }</span>
+
+    public UUID getBankId() {
+<span class="nc" id="L84">        return bankId;</span>
+    }
+
+    public void setBankId(UUID bankId) {
+<span class="nc" id="L88">        this.bankId = bankId;</span>
+<span class="nc" id="L89">    }</span>
+
+    public String getCalculationMethod() {
+<span class="nc" id="L92">        return calculationMethod;</span>
+    }
+
+    public void setCalculationMethod(String calculationMethod) {
+<span class="nc" id="L96">        this.calculationMethod = calculationMethod;</span>
+<span class="nc" id="L97">    }</span>
+
+    public String getInputParameters() {
+<span class="nc" id="L100">        return inputParameters;</span>
+    }
+
+    public void setInputParameters(String inputParameters) {
+<span class="nc" id="L104">        this.inputParameters = inputParameters;</span>
+<span class="nc" id="L105">    }</span>
+
+    public String getCalculatedValues() {
+<span class="nc" id="L108">        return calculatedValues;</span>
+    }
+
+    public void setCalculatedValues(String calculatedValues) {
+<span class="nc" id="L112">        this.calculatedValues = calculatedValues;</span>
+<span class="nc" id="L113">    }</span>
+
+    public CalculationType getCalculationType() {
+<span class="nc" id="L116">        return calculationType;</span>
+    }
+
+    public void setCalculationType(CalculationType calculationType) {
+<span class="nc" id="L120">        this.calculationType = calculationType;</span>
+<span class="nc" id="L121">    }</span>
+
+    public LocalDateTime getTimestamp() {
+<span class="nc" id="L124">        return timestamp;</span>
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+<span class="nc" id="L128">        this.timestamp = timestamp;</span>
+<span class="nc" id="L129">    }</span>
+
+    public LocalDateTime getCreatedAt() {
+<span class="nc" id="L132">        return createdAt;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
