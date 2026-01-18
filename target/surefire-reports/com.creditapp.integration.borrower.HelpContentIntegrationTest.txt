@@ -1,9 +1,9 @@
 -------------------------------------------------------------------------------
 Test set: com.creditapp.integration.borrower.HelpContentIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.048 s <<< FAILURE! -- in com.creditapp.integration.borrower.HelpContentIntegrationTest
-com.creditapp.integration.borrower.HelpContentIntegrationTest.getArticle_Returns200_ForLoanTypes -- Time elapsed: 0.016 s <<< FAILURE!
-java.lang.AssertionError: Status expected:<200> but was:<500>
+Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.051 s <<< FAILURE! -- in com.creditapp.integration.borrower.HelpContentIntegrationTest
+com.creditapp.integration.borrower.HelpContentIntegrationTest.getArticle_Returns200_ForLoanTypes -- Time elapsed: 0.017 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<200> but was:<400>
 	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
 	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
 	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)

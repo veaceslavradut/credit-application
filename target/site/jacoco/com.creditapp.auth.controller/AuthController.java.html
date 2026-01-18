@@ -39,12 +39,12 @@ public class AuthController {
     private final OrganizationRepository organizationRepository;
     private final AuditService auditService;
 
-<span class="fc" id="L42">    public AuthController(UserRegistrationService userRegistrationService,</span>
+    public AuthController(UserRegistrationService userRegistrationService,
                           BankRegistrationService bankRegistrationService,
                           LoginService loginService,
                           BankActivationEmailService bankActivationEmailService,
                           OrganizationRepository organizationRepository,
-                          AuditService auditService) {
+<span class="fc" id="L47">                          AuditService auditService) {</span>
 <span class="fc" id="L48">        this.userRegistrationService = userRegistrationService;</span>
 <span class="fc" id="L49">        this.bankRegistrationService = bankRegistrationService;</span>
 <span class="fc" id="L50">        this.loginService = loginService;</span>
@@ -64,7 +64,7 @@ public class AuthController {
 <span class="nc" id="L64">                    response.getUserId(), &quot;BORROWER&quot;);</span>
 <span class="nc" id="L65">        } catch (Exception e) {</span>
 <span class="nc" id="L66">            logger.error(&quot;Failed to audit user registration&quot;, e);</span>
-        }
+<span class="nc" id="L67">        }</span>
         
 <span class="nc" id="L69">        logger.info(&quot;User registered successfully: {}&quot;, request.getEmail());</span>
 <span class="nc" id="L70">        return ResponseEntity.status(HttpStatus.CREATED).body(response);</span>
@@ -72,84 +72,84 @@ public class AuthController {
 
     @PostMapping(&quot;/register-bank&quot;)
     public ResponseEntity&lt;BankRegistrationResponse&gt; registerBank(@Valid @RequestBody BankRegistrationRequest request) {
-<span class="nc" id="L75">        logger.info(&quot;Bank registration request received for bank: {} with email: {}&quot;, request.getBankName(), request.getContactEmail());</span>
+<span class="fc" id="L75">        logger.info(&quot;Bank registration request received for bank: {} with email: {}&quot;, request.getBankName(), request.getContactEmail());</span>
         try {
-<span class="nc" id="L77">            BankRegistrationResponse response = bankRegistrationService.registerBank(request);</span>
+<span class="fc" id="L77">            BankRegistrationResponse response = bankRegistrationService.registerBank(request);</span>
             
             // Send activation email asynchronously
-<span class="nc" id="L80">            Organization savedBank = organizationRepository.findByRegistrationNumber(request.getRegistrationNumber()).orElseThrow();</span>
-<span class="nc" id="L81">            bankActivationEmailService.sendActivationEmail(</span>
-<span class="nc" id="L82">                    request.getContactEmail(),</span>
-<span class="nc" id="L83">                    request.getBankName(),</span>
-<span class="nc" id="L84">                    savedBank.getActivationToken()</span>
+<span class="fc" id="L80">            Organization savedBank = organizationRepository.findByRegistrationNumber(request.getRegistrationNumber()).orElseThrow();</span>
+<span class="fc" id="L81">            bankActivationEmailService.sendActivationEmail(</span>
+<span class="fc" id="L82">                    request.getContactEmail(),</span>
+<span class="fc" id="L83">                    request.getBankName(),</span>
+<span class="fc" id="L84">                    savedBank.getActivationToken()</span>
             );
             
-<span class="nc" id="L87">            logger.info(&quot;Bank registered successfully: {}&quot;, request.getBankName());</span>
-<span class="nc" id="L88">            return ResponseEntity.status(HttpStatus.CREATED).body(response);</span>
-<span class="nc" id="L89">        } catch (Exception e) {</span>
-<span class="nc" id="L90">            logger.error(&quot;Bank registration failed for {}: {}&quot;, request.getBankName(), e.getMessage());</span>
-<span class="nc" id="L91">            throw e;</span>
+<span class="fc" id="L87">            logger.info(&quot;Bank registered successfully: {}&quot;, request.getBankName());</span>
+<span class="fc" id="L88">            return ResponseEntity.status(HttpStatus.CREATED).body(response);</span>
+<span class="fc" id="L89">        } catch (Exception e) {</span>
+<span class="fc" id="L90">            logger.error(&quot;Bank registration failed for {}: {}&quot;, request.getBankName(), e.getMessage());</span>
+<span class="fc" id="L91">            throw e;</span>
         }
     }
 
     @GetMapping(&quot;/activate&quot;)
     public ResponseEntity&lt;String&gt; activateBank(@RequestParam(&quot;token&quot;) String token) {
-<span class="nc" id="L97">        logger.info(&quot;Bank activation request received with token&quot;);</span>
+<span class="fc" id="L97">        logger.info(&quot;Bank activation request received with token&quot;);</span>
         
-<span class="nc" id="L99">        Optional&lt;Organization&gt; bankOpt = organizationRepository.findByActivationToken(token);</span>
-<span class="nc bnc" id="L100" title="All 2 branches missed.">        if (bankOpt.isEmpty()) {</span>
-<span class="nc" id="L101">            logger.warn(&quot;Invalid activation token provided&quot;);</span>
-<span class="nc" id="L102">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;{\&quot;error\&quot;: \&quot;Invalid activation token\&quot;}&quot;);</span>
+<span class="fc" id="L99">        Optional&lt;Organization&gt; bankOpt = organizationRepository.findByActivationToken(token);</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if (bankOpt.isEmpty()) {</span>
+<span class="fc" id="L101">            logger.warn(&quot;Invalid activation token provided&quot;);</span>
+<span class="fc" id="L102">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;{\&quot;error\&quot;: \&quot;Invalid activation token\&quot;}&quot;);</span>
         }
 
-<span class="nc" id="L105">        Organization bank = bankOpt.get();</span>
+<span class="fc" id="L105">        Organization bank = bankOpt.get();</span>
         
         // Check if already activated
-<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (bank.getStatus() == BankStatus.ACTIVE) {</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        if (bank.getStatus() == BankStatus.ACTIVE) {</span>
 <span class="nc" id="L109">            logger.warn(&quot;Bank {} already activated&quot;, bank.getName());</span>
 <span class="nc" id="L110">            return ResponseEntity.badRequest().body(&quot;{\&quot;error\&quot;: \&quot;Bank already activated\&quot;}&quot;);</span>
         }
 
         // Check if token expired
-<span class="nc bnc" id="L114" title="All 2 branches missed.">        if (bank.getActivationTokenExpiresAt().isBefore(LocalDateTime.now())) {</span>
-<span class="nc" id="L115">            logger.warn(&quot;Activation token expired for bank {}&quot;, bank.getName());</span>
-<span class="nc" id="L116">            return ResponseEntity.badRequest().body(&quot;{\&quot;error\&quot;: \&quot;Activation token expired\&quot;}&quot;);</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if (bank.getActivationTokenExpiresAt().isBefore(LocalDateTime.now())) {</span>
+<span class="fc" id="L115">            logger.warn(&quot;Activation token expired for bank {}&quot;, bank.getName());</span>
+<span class="fc" id="L116">            return ResponseEntity.badRequest().body(&quot;{\&quot;error\&quot;: \&quot;Activation token expired\&quot;}&quot;);</span>
         }
 
         // Activate bank
-<span class="nc" id="L120">        bank.setStatus(BankStatus.ACTIVE);</span>
-<span class="nc" id="L121">        bank.setActivatedAt(LocalDateTime.now());</span>
-<span class="nc" id="L122">        bank.setActivationToken(null);  // One-time use token</span>
-<span class="nc" id="L123">        organizationRepository.save(bank);</span>
+<span class="fc" id="L120">        bank.setStatus(BankStatus.ACTIVE);</span>
+<span class="fc" id="L121">        bank.setActivatedAt(LocalDateTime.now());</span>
+<span class="fc" id="L122">        bank.setActivationToken(null);  // One-time use token</span>
+<span class="fc" id="L123">        organizationRepository.save(bank);</span>
         
         // Audit bank activation
         try {
-<span class="nc" id="L127">            auditService.logAction(&quot;Organization&quot;, bank.getId(), AuditAction.BANK_ACTIVATED,</span>
-<span class="nc" id="L128">                    null, &quot;SYSTEM&quot;);</span>
+<span class="fc" id="L127">            auditService.logAction(&quot;Organization&quot;, bank.getId(), AuditAction.BANK_ACTIVATED,</span>
+                    null, &quot;SYSTEM&quot;);
 <span class="nc" id="L129">        } catch (Exception e) {</span>
 <span class="nc" id="L130">            logger.error(&quot;Failed to audit bank activation&quot;, e);</span>
-        }
+<span class="fc" id="L131">        }</span>
 
-<span class="nc" id="L133">        logger.info(&quot;Bank {} activated successfully&quot;, bank.getName());</span>
-<span class="nc" id="L134">        String jsonResponse = String.format(&quot;{\&quot;bankId\&quot;: \&quot;%s\&quot;, \&quot;bankName\&quot;: \&quot;%s\&quot;, \&quot;status\&quot;: \&quot;ACTIVE\&quot;, \&quot;message\&quot;: \&quot;Bank activated successfully\&quot;}&quot;, </span>
-<span class="nc" id="L135">                bank.getId(), bank.getName());</span>
-<span class="nc" id="L136">        return ResponseEntity.ok(jsonResponse);</span>
+<span class="fc" id="L133">        logger.info(&quot;Bank {} activated successfully&quot;, bank.getName());</span>
+<span class="fc" id="L134">        String jsonResponse = String.format(&quot;{\&quot;bankId\&quot;: \&quot;%s\&quot;, \&quot;bankName\&quot;: \&quot;%s\&quot;, \&quot;status\&quot;: \&quot;ACTIVE\&quot;, \&quot;message\&quot;: \&quot;Bank activated successfully\&quot;}&quot;, </span>
+<span class="fc" id="L135">                bank.getId(), bank.getName());</span>
+<span class="fc" id="L136">        return ResponseEntity.ok(jsonResponse);</span>
     }
 
     @PostMapping(&quot;/login&quot;)
     public ResponseEntity&lt;LoginResponse&gt; login(@Valid @RequestBody LoginRequest request) {
-<span class="nc" id="L141">        logger.info(&quot;Login request received for email: {}&quot;, request.getEmail());</span>
-<span class="nc" id="L142">        LoginResponse response = loginService.login(request);</span>
+<span class="fc" id="L141">        logger.info(&quot;Login request received for email: {}&quot;, request.getEmail());</span>
+<span class="fc" id="L142">        LoginResponse response = loginService.login(request);</span>
         
         // Audit user login - AuditService will extract user from SecurityContext
         try {
-<span class="nc" id="L146">            auditService.logAction(&quot;User&quot;, null, AuditAction.USER_LOGGED_IN);</span>
+<span class="fc" id="L146">            auditService.logAction(&quot;User&quot;, null, AuditAction.USER_LOGGED_IN);</span>
 <span class="nc" id="L147">        } catch (Exception e) {</span>
 <span class="nc" id="L148">            logger.error(&quot;Failed to audit user login&quot;, e);</span>
-        }
+<span class="fc" id="L149">        }</span>
         
-<span class="nc" id="L151">        logger.info(&quot;User logged in successfully: {}&quot;, request.getEmail());</span>
-<span class="nc" id="L152">        return ResponseEntity.ok(response);</span>
+<span class="fc" id="L151">        logger.info(&quot;User logged in successfully: {}&quot;, request.getEmail());</span>
+<span class="fc" id="L152">        return ResponseEntity.ok(response);</span>
     }
 
     @PostMapping(&quot;/refresh&quot;)
@@ -170,7 +170,7 @@ public class AuthController {
 <span class="nc" id="L170">            auditService.logAction(&quot;User&quot;, null, AuditAction.USER_LOGGED_OUT);</span>
 <span class="nc" id="L171">        } catch (Exception e) {</span>
 <span class="nc" id="L172">            logger.error(&quot;Failed to audit user logout&quot;, e);</span>
-        }
+<span class="nc" id="L173">        }</span>
         
 <span class="nc" id="L175">        loginService.logout();</span>
 <span class="nc" id="L176">        logger.info(&quot;User logged out successfully&quot;);</span>

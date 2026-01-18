@@ -39,7 +39,7 @@ import java.util.UUID;
     @Column(name = &quot;organization_id&quot;)
     private UUID organizationId;
 
-    @Column(name = &quot;is_active&quot;, nullable = false)
+<span class="fc" id="L42">    @Column(name = &quot;is_active&quot;, nullable = false)</span>
 <span class="fc" id="L43">    private Boolean isActive = true;</span>
 
     @CreationTimestamp
@@ -54,25 +54,25 @@ import java.util.UUID;
 <span class="fc" id="L54">    public void setId(UUID id) { this.id = id; }</span>
 <span class="fc" id="L55">    public String getEmail() { return email; }</span>
 <span class="fc" id="L56">    public void setEmail(String email) { this.email = email; }</span>
-<span class="nc" id="L57">    public String getPasswordHash() { return passwordHash; }</span>
+<span class="fc" id="L57">    public String getPasswordHash() { return passwordHash; }</span>
 <span class="fc" id="L58">    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }</span>
-<span class="nc" id="L59">    public String getFirstName() { return firstName; }</span>
+<span class="fc" id="L59">    public String getFirstName() { return firstName; }</span>
 <span class="fc" id="L60">    public void setFirstName(String firstName) { this.firstName = firstName; }</span>
-<span class="nc" id="L61">    public String getLastName() { return lastName; }</span>
+<span class="fc" id="L61">    public String getLastName() { return lastName; }</span>
 <span class="fc" id="L62">    public void setLastName(String lastName) { this.lastName = lastName; }</span>
 <span class="nc" id="L63">    public String getPhone() { return phone; }</span>
-<span class="nc" id="L64">    public void setPhone(String phone) { this.phone = phone; }</span>
-<span class="nc" id="L65">    public String getPhoneNumber() { return phoneNumber; }</span>
-<span class="nc" id="L66">    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }</span>
+<span class="fc" id="L64">    public void setPhone(String phone) { this.phone = phone; }</span>
+<span class="fc" id="L65">    public String getPhoneNumber() { return phoneNumber; }</span>
+<span class="fc" id="L66">    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }</span>
 <span class="fc" id="L67">    public UserRole getRole() { return role; }</span>
 <span class="fc" id="L68">    public void setRole(UserRole role) { this.role = role; }</span>
 <span class="fc" id="L69">    public UUID getOrganizationId() { return organizationId; }</span>
 <span class="fc" id="L70">    public void setOrganizationId(UUID organizationId) { this.organizationId = organizationId; }</span>
 <span class="nc" id="L71">    public Boolean getIsActive() { return isActive; }</span>
-<span class="nc" id="L72">    public void setIsActive(Boolean isActive) { this.isActive = isActive; }</span>
-<span class="nc" id="L73">    public LocalDateTime getCreatedAt() { return createdAt; }</span>
+<span class="fc" id="L72">    public void setIsActive(Boolean isActive) { this.isActive = isActive; }</span>
+<span class="fc" id="L73">    public LocalDateTime getCreatedAt() { return createdAt; }</span>
 <span class="nc" id="L74">    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }</span>
-<span class="nc" id="L75">    public LocalDateTime getUpdatedAt() { return updatedAt; }</span>
-<span class="nc" id="L76">    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }</span>
+<span class="fc" id="L75">    public LocalDateTime getUpdatedAt() { return updatedAt; }</span>
+<span class="fc" id="L76">    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

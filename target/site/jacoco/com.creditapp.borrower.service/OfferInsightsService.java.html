@@ -27,9 +27,9 @@ public class OfferInsightsService {
     private final ApplicationRepository applicationRepository;
     private final OrganizationRepository organizationRepository;
 
-<span class="fc" id="L30">    public OfferInsightsService(OfferRepository offerRepository, </span>
+    public OfferInsightsService(OfferRepository offerRepository, 
                                ApplicationRepository applicationRepository,
-                               OrganizationRepository organizationRepository) {
+<span class="fc" id="L32">                               OrganizationRepository organizationRepository) {</span>
 <span class="fc" id="L33">        this.offerRepository = offerRepository;</span>
 <span class="fc" id="L34">        this.applicationRepository = applicationRepository;</span>
 <span class="fc" id="L35">        this.organizationRepository = organizationRepository;</span>
@@ -99,13 +99,13 @@ public class OfferInsightsService {
 <span class="fc" id="L99">                                                            bankNames.get(lowestTotalCostOffer.getBankId()));</span>
 
 <span class="fc" id="L101">        return new OfferInsightsDTO(</span>
-<span class="fc" id="L102">                bestAprDTO,</span>
-<span class="fc" id="L103">                lowestMonthlyPaymentDTO,</span>
-<span class="fc" id="L104">                lowestTotalCostDTO,</span>
-<span class="fc" id="L105">                averageApr,</span>
-<span class="fc" id="L106">                aprSpread,</span>
-<span class="fc" id="L107">                recommendedOfferId,</span>
-<span class="fc" id="L108">                savingsAnalysis</span>
+                bestAprDTO,
+                lowestMonthlyPaymentDTO,
+                lowestTotalCostDTO,
+                averageApr,
+                aprSpread,
+                recommendedOfferId,
+                savingsAnalysis
         );
     }
 
@@ -159,17 +159,17 @@ public class OfferInsightsService {
 <span class="fc" id="L159">        String worstBankName = bankNames.getOrDefault(worstOffer.getBankId(), &quot;Highest Cost Offer&quot;);</span>
 
 <span class="fc" id="L161">        String savingsMessage = String.format(</span>
-<span class="fc" id="L162">                &quot;You could save $%,.2f by choosing %s over %s&quot;,</span>
-<span class="fc" id="L163">                savingsVsWorst,</span>
-<span class="fc" id="L164">                bestBankName,</span>
-<span class="fc" id="L165">                worstBankName</span>
+                &quot;You could save $%,.2f by choosing %s over %s&quot;,
+                savingsVsWorst,
+                bestBankName,
+                worstBankName
         );
 
 <span class="fc" id="L168">        return new SavingsAnalysisDTO(</span>
 <span class="fc" id="L169">                bestOffer.getId(),</span>
-<span class="fc" id="L170">                savingsVsWorst,</span>
-<span class="fc" id="L171">                savingsVsAverage,</span>
-<span class="fc" id="L172">                savingsMessage</span>
+                savingsVsWorst,
+                savingsVsAverage,
+                savingsMessage
         );
     }
 

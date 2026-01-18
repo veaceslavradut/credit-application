@@ -2252,6 +2252,124 @@ curl -X GET https://api.creditapp.com/api/borrower/applications/550e8400-e29b-41
 
 ---
 
+## Bank Admin Dashboard API
+
+### GET /api/bank/dashboard
+**Description:** Retrieve the bank admin dashboard with key performance metrics including applications received, offers submitted/accepted, conversion rate, and average time to offer. Supports multiple time period filters.
+
+**Authentication:** Required - BANK_ADMIN role
+
+**Request Method:** GET
+
+**Request Headers:**
+- Authorization: Bearer {jwt_token}
+- Content-Type: application/json
+
+**Request Parameters:**
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| timePeriod | String | No | TODAY | Time period filter: TODAY, LAST_7_DAYS, LAST_30_DAYS |
+
+**Response Status:** 200 OK
+
+**Response Body:**
+```json
+{
+  "metrics": {
+    "applicationsReceivedToday": 5,
+    "applicationsReceivedAll": 18,
+    "offersSubmitted": 15,
+    "offersAccepted": 3,
+    "conversionRate": 20.0000,
+    "averageTimeToOfferDays": 2,
+    "lastUpdated": "2024-01-15T14:30:45Z"
+  },
+  "quickLinks": [
+    {
+      "label": "View Application Queue",
+      "url": "/api/bank/applications/queue",
+      "icon": "inbox"
+    },
+    {
+      "label": "View Rate Cards",
+      "url": "/api/bank/rate-cards",
+      "icon": "credit_card"
+    },
+    {
+      "label": "Submit Offer",
+      "url": "/api/bank/offers/submit",
+      "icon": "send"
+    }
+  ],
+  "selectedTimePeriod": "TODAY"
+}
+```
+
+**Response Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| metrics | Object | Dashboard summary metrics |
+| metrics.applicationsReceivedToday | Integer | Number of applications received today |
+| metrics.applicationsReceivedAll | Integer | Total applications in selected period |
+| metrics.offersSubmitted | Integer | Total offers submitted in period (SUBMITTED, ACCEPTED, REJECTED, EXPIRED, EXPIRED_WITH_SELECTION) |
+| metrics.offersAccepted | Integer | Total offers accepted in period (ACCEPTED, EXPIRED_WITH_SELECTION) |
+| metrics.conversionRate | BigDecimal | Percentage of submitted offers that were accepted (0-100 with 4 decimals) |
+| metrics.averageTimeToOfferDays | Integer | Average days between offer creation and submission (0 if no submitted offers) |
+| metrics.lastUpdated | LocalDateTime | Timestamp when metrics were calculated |
+| quickLinks | Array | Quick action links for common operations |
+| quickLinks[].label | String | Display label for the link |
+| quickLinks[].url | String | URL path for the action |
+| quickLinks[].icon | String | Icon name for UI rendering |
+| selectedTimePeriod | String | The time period used for calculations |
+
+**Time Period Filters:**
+- `TODAY`: Current day (from 00:00:00 to current time)
+- `LAST_7_DAYS`: Last 7 days from now
+- `LAST_30_DAYS`: Last 30 days from now
+
+**Performance Notes:**
+- Response time is optimized to be <500ms even with 1000+ offers
+- Metrics are calculated using efficient Stream API operations
+- Only returns data for the bank owner of the JWT token
+
+**Error Responses:**
+
+```json
+{
+  "status": 401,
+  "message": "Unauthorized: No valid JWT token provided",
+  "timestamp": "2024-01-15T14:30:45Z"
+}
+```
+
+```json
+{
+  "status": 403,
+  "message": "Forbidden: User does not have BANK_ADMIN role",
+  "timestamp": "2024-01-15T14:30:45Z"
+}
+```
+
+**cURL Examples:**
+
+Get today's dashboard:
+```bash
+curl -X GET https://api.creditapp.com/api/bank/dashboard \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -H "Content-Type: application/json"
+```
+
+Get last 7 days:
+```bash
+curl -X GET "https://api.creditapp.com/api/bank/dashboard?timePeriod=LAST_7_DAYS" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -H "Content-Type: application/json"
+```
+
+---
+
 ## Bank Rate Card Configuration API
 
 ### POST /api/bank/rate-cards

@@ -152,6 +152,7 @@ com\creditapp\borrower\service\WithdrawApplicationService.class
 com\creditapp\bank\dto\ApplicationQueueRequest$ApplicationQueueRequestBuilder.class
 com\creditapp\bank\dto\ApplicationStatusUpdateRequest.class
 com\creditapp\bank\dto\BankOfferSubmissionRequest$BankOfferSubmissionRequestBuilder.class
+com\creditapp\bank\controller\BankDashboardController.class
 com\creditapp\borrower\dto\OfferComparisonDTO.class
 com\creditapp\borrower\model\RatePreference.class
 com\creditapp\borrower\dto\CreateApplicationRequest.class
@@ -200,6 +201,7 @@ com\creditapp\shared\service\HelpContentService.class
 com\creditapp\shared\service\BankActivationEmailService.class
 com\creditapp\borrower\dto\ApplicationDTO.class
 com\creditapp\borrower\dto\UpdateApplicationRequest.class
+com\creditapp\borrower\service\ApplicationStatusTransitionService$1.class
 com\creditapp\shared\model\AuditAction.class
 com\creditapp\borrower\exception\ApplicationNotSubmittedException.class
 com\creditapp\bank\scheduler\OfferExpirationScheduler.class

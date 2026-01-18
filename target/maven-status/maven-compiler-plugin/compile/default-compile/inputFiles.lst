@@ -132,6 +132,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\m
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\LoginRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\SendGridEmailService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\JwtTokenService.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\BankDashboardResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\OfferHistoryResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\CompetitivePosition.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\RefreshToken.java
@@ -155,9 +156,11 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\ser
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\EmailService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\RateLimitingAspect.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\BankOfferSubmissionRequest.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\QuickLink.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\OfferHistoryRecord.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\OfferExpiredException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\common\exception\GlobalExceptionHandler.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\service\BankDashboardService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\CacheConfig.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\SubmitApplicationResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\repository\LoanPreferenceRepository.java
@@ -168,6 +171,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\common\i
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\MyBankRateCardDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\Resilience4jConfig.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\dto\NotificationEvent.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\controller\BankDashboardController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\OfferSelectionEmailService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\OfferDocumentUploadRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\NotificationType.java
@@ -187,6 +191,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\m
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\RabbitMQConfig.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\AuditLogRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\SelectOfferRequest.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\BankDashboardMetrics.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\DefaultRateCardService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\common\config\WebMvcConfig.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\DocumentStorageService.java

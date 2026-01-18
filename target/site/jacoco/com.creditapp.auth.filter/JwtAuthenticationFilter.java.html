@@ -20,7 +20,7 @@ import java.util.UUID;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 <span class="fc" id="L21">    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);</span>
     private static final String BEARER_PREFIX = &quot;Bearer &quot;;
-<span class="fc" id="L23">    private static final String AUTHORIZATION_HEADER = &quot;Authorization&quot;;</span>
+    private static final String AUTHORIZATION_HEADER = &quot;Authorization&quot;;
     private final JwtTokenService jwtTokenService;
 
 <span class="fc" id="L26">    public JwtAuthenticationFilter(JwtTokenService jwtTokenService) {</span>
@@ -35,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try {
 <span class="fc" id="L37">            String token = extractTokenFromRequest(request);</span>
-<span class="pc bpc" id="L38" title="2 of 4 branches missed.">            if (token != null &amp;&amp; jwtTokenService.validateToken(token)) {</span>
+<span class="fc bfc" id="L38" title="All 4 branches covered.">            if (token != null &amp;&amp; jwtTokenService.validateToken(token)) {</span>
 <span class="fc" id="L39">                UUID userId = jwtTokenService.extractUserId(token);</span>
 <span class="fc" id="L40">                String email = jwtTokenService.extractEmail(token);</span>
 <span class="fc" id="L41">                String role = jwtTokenService.extractRole(token);</span>
@@ -43,12 +43,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // Extract organizationId for bank admins
 <span class="fc" id="L44">                UUID organizationId = null;</span>
 <span class="fc" id="L45">                String orgIdStr = jwtTokenService.extractOrgId(token);</span>
-<span class="pc bpc" id="L46" title="2 of 4 branches missed.">                if (orgIdStr != null &amp;&amp; !orgIdStr.isEmpty()) {</span>
+<span class="pc bpc" id="L46" title="1 of 4 branches missed.">                if (orgIdStr != null &amp;&amp; !orgIdStr.isEmpty()) {</span>
                     try {
 <span class="fc" id="L48">                        organizationId = UUID.fromString(orgIdStr);</span>
-<span class="pc" id="L49">                    } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L49">                    } catch (IllegalArgumentException e) {</span>
 <span class="nc" id="L50">                        logger.debug(&quot;Invalid organizationId in JWT: {}&quot;, orgIdStr);</span>
-                    }
+<span class="fc" id="L51">                    }</span>
                 }
 
 <span class="fc" id="L54">                Collection&lt;GrantedAuthority&gt; authorities = new ArrayList&lt;&gt;();</span>
@@ -58,18 +58,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 <span class="fc" id="L58">                SecurityContextHolder.getContext().setAuthentication(authentication);</span>
 <span class="fc" id="L59">                logger.debug(&quot;JWT token validated for user: {} ({})&quot;, userId, email);</span>
             }
-<span class="pc" id="L61">        } catch (Exception e) {</span>
+<span class="nc" id="L61">        } catch (Exception e) {</span>
 <span class="nc" id="L62">            logger.debug(&quot;JWT token validation failed: {}&quot;, e.getMessage());</span>
-        }
+<span class="fc" id="L63">        }</span>
 <span class="fc" id="L64">        filterChain.doFilter(request, response);</span>
 <span class="fc" id="L65">    }</span>
 
     private String extractTokenFromRequest(HttpServletRequest request) {
 <span class="fc" id="L68">        String authHeader = request.getHeader(AUTHORIZATION_HEADER);</span>
-<span class="pc bpc" id="L69" title="2 of 4 branches missed.">        if (authHeader != null &amp;&amp; authHeader.startsWith(BEARER_PREFIX)) {</span>
+<span class="pc bpc" id="L69" title="1 of 4 branches missed.">        if (authHeader != null &amp;&amp; authHeader.startsWith(BEARER_PREFIX)) {</span>
 <span class="fc" id="L70">            return authHeader.substring(BEARER_PREFIX.length());</span>
         }
-<span class="nc" id="L72">        return null;</span>
+<span class="fc" id="L72">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

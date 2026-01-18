@@ -73,14 +73,14 @@ public class BankMarketAnalysisService {
 <span class="fc" id="L73">                    myCard.getLoanType(),</span>
 <span class="fc" id="L74">                    myCard.getCurrency(),</span>
 <span class="fc" id="L75">                    myCard.getBaseApr(),</span>
-<span class="fc" id="L76">                    percentile,</span>
-<span class="fc" id="L77">                    position,</span>
+                    percentile,
+                    position,
 <span class="fc" id="L78">                    myCard.getOriginationFeePercent(),</span>
 <span class="fc" id="L79">                    myCard.getInsurancePercent(),</span>
 <span class="fc" id="L80">                    myCard.getProcessingTimeDays()</span>
             );
 <span class="fc" id="L82">            myBankRates.add(myBankRate);</span>
-        }
+<span class="fc" id="L83">        }</span>
 
         // Calculate overall competitive position (average of all percentiles)
 <span class="fc" id="L86">        double avgPercentile = myBankRates.stream()</span>
@@ -92,12 +92,12 @@ public class BankMarketAnalysisService {
 
 <span class="fc" id="L93">        MarketVisualizationDTO visualization = buildVisualizationData(myBankRates, marketAverages);</span>
 <span class="fc" id="L94">        return new MarketAnalysisDTO(</span>
-<span class="fc" id="L95">            myBankRates,</span>
-<span class="fc" id="L96">            marketAverages,</span>
+            myBankRates,
+            marketAverages,
 <span class="fc" id="L97">            overallPosition.name(),</span>
 <span class="fc" id="L98">            LocalDateTime.now(),</span>
 <span class="fc" id="L99">            allBankIds.size(),</span>
-<span class="fc" id="L100">            visualization</span>
+            visualization
         );
     }
 
@@ -150,14 +150,14 @@ public class BankMarketAnalysisService {
 <span class="fc" id="L150">                .collect(Collectors.toSet());</span>
 
 <span class="fc" id="L152">        return new MarketAverageDTO(</span>
-<span class="fc" id="L153">                loanType,</span>
-<span class="fc" id="L154">                currency,</span>
-<span class="fc" id="L155">                avgApr,</span>
-<span class="fc" id="L156">                medianApr,</span>
-<span class="fc" id="L157">                minApr,</span>
-<span class="fc" id="L158">                maxApr,</span>
-<span class="fc" id="L159">                avgOriginationFee,</span>
-<span class="fc" id="L160">                avgInsurance,</span>
+                loanType,
+                currency,
+                avgApr,
+                medianApr,
+                minApr,
+                maxApr,
+                avgOriginationFee,
+                avgInsurance,
 <span class="fc" id="L161">                avgProcessingTime,</span>
 <span class="fc" id="L162">                uniqueBanks.size()</span>
         );
@@ -180,7 +180,7 @@ public class BankMarketAnalysisService {
             } else {
                 break;
             }
-        }
+<span class="fc" id="L183">        }</span>
 <span class="fc" id="L184">        int position = lessCount + 1;</span>
 
         // Lower APR = better = higher percentile (invert ranking)
@@ -244,7 +244,7 @@ public class BankMarketAnalysisService {
 <span class="fc" id="L244">                my.loanType(), my.currency(),</span>
 <span class="fc" id="L245">                my.processingTimeDays(), avg.averageProcessingTime()</span>
             ));
-        }
+<span class="fc" id="L247">        }</span>
 
 <span class="fc" id="L249">        return new MarketVisualizationDTO(apr, fees, times);</span>
         }

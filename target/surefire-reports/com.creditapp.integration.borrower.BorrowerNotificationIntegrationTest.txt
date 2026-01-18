@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.172 s -- in com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.458 s -- in com.creditapp.integration.borrower.BorrowerNotificationIntegrationTest

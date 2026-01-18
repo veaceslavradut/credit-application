@@ -12,7 +12,7 @@ import java.util.UUID;
 
 <span class="fc" id="L13">@Slf4j</span>
 @Service
-@RequiredArgsConstructor
+<span class="fc" id="L15">@RequiredArgsConstructor</span>
 public class BankOfferSubmissionEmailService {
 
     private final EmailService emailService;
@@ -105,7 +105,7 @@ public class BankOfferSubmissionEmailService {
 <span class="nc" id="L105">            log.error(&quot;[OFFER_EMAIL] Failed to send offer submission notification. OfferId: {}, ApplicationId: {}, Error: {}&quot;,</span>
 <span class="nc" id="L106">                    offer.getId(), application.getId(), e.getMessage(), e);</span>
             // Don't throw - email failure shouldn't fail the transaction
-        }
+<span class="nc" id="L108">        }</span>
 <span class="nc" id="L109">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

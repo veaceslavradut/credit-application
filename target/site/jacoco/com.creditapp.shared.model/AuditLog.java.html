@@ -18,61 +18,61 @@ import java.util.UUID;
         @Index(name = &quot;idx_actor_id&quot;, columnList = &quot;actor_id&quot;),
         @Index(name = &quot;idx_created_at&quot;, columnList = &quot;created_at&quot;)
 })
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+<span class="pc bnc" id="L21" title="All 94 branches missed.">@Data</span>
+<span class="fc" id="L22">@NoArgsConstructor</span>
+<span class="nc" id="L23">@AllArgsConstructor</span>
 public class AuditLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+<span class="nc" id="L27">    private Long id;</span>
 
     @Column(name = &quot;entity_type&quot;, nullable = false)
-    private String entityType;
+<span class="fc" id="L30">    private String entityType;</span>
 
     @Column(name = &quot;entity_id&quot;, nullable = false)
-    private UUID entityId;
+<span class="fc" id="L33">    private UUID entityId;</span>
 
     @Enumerated(EnumType.STRING)
     @Column(name = &quot;action&quot;, nullable = false)
-    private AuditAction action;
+<span class="fc" id="L37">    private AuditAction action;</span>
 
     @Column(name = &quot;actor_id&quot;)
-    private UUID actorId;
+<span class="nc" id="L40">    private UUID actorId;</span>
 
     @Column(name = &quot;actor_role&quot;)
-    private String actorRole;
+<span class="nc" id="L43">    private String actorRole;</span>
 
     @Type(JsonBinaryType.class)
     @Column(name = &quot;old_values&quot;, columnDefinition = &quot;jsonb&quot;)
-    private Map&lt;String, Object&gt; oldValues;
+<span class="nc" id="L47">    private Map&lt;String, Object&gt; oldValues;</span>
 
     @Type(JsonBinaryType.class)
     @Column(name = &quot;new_values&quot;, columnDefinition = &quot;jsonb&quot;)
-    private Map&lt;String, Object&gt; newValues;
+<span class="nc" id="L51">    private Map&lt;String, Object&gt; newValues;</span>
 
     @Column(name = &quot;ip_address&quot;)
-    private String ipAddress;
+<span class="nc" id="L54">    private String ipAddress;</span>
 
     @Column(name = &quot;user_agent&quot;)
-    private String userAgent;
+<span class="nc" id="L57">    private String userAgent;</span>
 
     @CreationTimestamp
     @Column(name = &quot;created_at&quot;, nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+<span class="nc" id="L61">    private LocalDateTime createdAt;</span>
 
-<span class="nc" id="L63">    public AuditLog(String entityType, UUID entityId, AuditAction action,</span>
+    public AuditLog(String entityType, UUID entityId, AuditAction action,
                    UUID actorId, String actorRole,
                    Map&lt;String, Object&gt; oldValues, Map&lt;String, Object&gt; newValues,
-                   String ipAddress, String userAgent) {
-<span class="nc" id="L67">        this.entityType = entityType;</span>
-<span class="nc" id="L68">        this.entityId = entityId;</span>
-<span class="nc" id="L69">        this.action = action;</span>
-<span class="nc" id="L70">        this.actorId = actorId;</span>
-<span class="nc" id="L71">        this.actorRole = actorRole;</span>
-<span class="nc" id="L72">        this.oldValues = oldValues;</span>
-<span class="nc" id="L73">        this.newValues = newValues;</span>
-<span class="nc" id="L74">        this.ipAddress = ipAddress;</span>
-<span class="nc" id="L75">        this.userAgent = userAgent;</span>
-<span class="nc" id="L76">    }</span>
+<span class="fc" id="L66">                   String ipAddress, String userAgent) {</span>
+<span class="fc" id="L67">        this.entityType = entityType;</span>
+<span class="fc" id="L68">        this.entityId = entityId;</span>
+<span class="fc" id="L69">        this.action = action;</span>
+<span class="fc" id="L70">        this.actorId = actorId;</span>
+<span class="fc" id="L71">        this.actorRole = actorRole;</span>
+<span class="fc" id="L72">        this.oldValues = oldValues;</span>
+<span class="fc" id="L73">        this.newValues = newValues;</span>
+<span class="fc" id="L74">        this.ipAddress = ipAddress;</span>
+<span class="fc" id="L75">        this.userAgent = userAgent;</span>
+<span class="fc" id="L76">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

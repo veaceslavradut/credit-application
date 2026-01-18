@@ -18,44 +18,44 @@ import java.util.UUID;
         @Index(name = &quot;idx_application_history_application_changed&quot;, columnList = &quot;application_id, changed_at DESC&quot;),
         @Index(name = &quot;idx_application_history_changed_at&quot;, columnList = &quot;changed_at DESC&quot;)
 })
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+<span class="nc" id="L21">@Data</span>
+<span class="fc" id="L22">@NoArgsConstructor</span>
+<span class="fc" id="L23">@AllArgsConstructor</span>
+<span class="pc" id="L24">@Builder</span>
 public class ApplicationHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+<span class="nc" id="L29">    private Long id;</span>
 
     @Column(name = &quot;application_id&quot;, nullable = false)
-    private UUID applicationId;
+<span class="nc" id="L32">    private UUID applicationId;</span>
 
     @Column(name = &quot;old_status&quot;, nullable = false)
     @Enumerated(EnumType.STRING)
-    private ApplicationStatus oldStatus;
+<span class="fc" id="L36">    private ApplicationStatus oldStatus;</span>
 
     @Column(name = &quot;new_status&quot;, nullable = false)
     @Enumerated(EnumType.STRING)
-    private ApplicationStatus newStatus;
+<span class="fc" id="L40">    private ApplicationStatus newStatus;</span>
 
     @CreationTimestamp
     @Column(name = &quot;changed_at&quot;, nullable = false, updatable = false)
-    private LocalDateTime changedAt;
+<span class="fc" id="L44">    private LocalDateTime changedAt;</span>
 
     @Column(name = &quot;changed_by_user_id&quot;)
-    private UUID changedByUserId;
+<span class="fc" id="L47">    private UUID changedByUserId;</span>
 
     @Column(name = &quot;change_reason&quot;)
-    private String changeReason;
+<span class="fc" id="L50">    private String changeReason;</span>
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;application_id&quot;, insertable = false, updatable = false)
-    private Application application;
+<span class="nc" id="L54">    private Application application;</span>
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;changed_by_user_id&quot;, insertable = false, updatable = false)
-    private User changedByUser;
+<span class="nc" id="L58">    private User changedByUser;</span>
 
     @Override
     public boolean equals(Object o) {

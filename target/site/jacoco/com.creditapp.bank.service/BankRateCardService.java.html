@@ -89,39 +89,39 @@ public class BankRateCardService {
 <span class="fc" id="L89">        validateRateCardRequest(request);</span>
         
         // Find the existing card
-<span class="pc" id="L92">        BankRateCard existingCard = bankRateCardRepository.findById(rateCardId)</span>
-<span class="pc" id="L93">            .orElseThrow(() -&gt; new RateCardNotFoundException(</span>
+<span class="fc" id="L92">        BankRateCard existingCard = bankRateCardRepository.findById(rateCardId)</span>
+<span class="fc" id="L93">            .orElseThrow(() -&gt; new RateCardNotFoundException(</span>
 <span class="fc" id="L94">                String.format(&quot;Rate card with ID %s not found&quot;, rateCardId)));</span>
         
         // Verify bank ownership
-<span class="nc bnc" id="L97" title="All 2 branches missed.">        if (!existingCard.getBankId().equals(bankId)) {</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        if (!existingCard.getBankId().equals(bankId)) {</span>
 <span class="nc" id="L98">            throw new InvalidRateCardException(</span>
-<span class="nc" id="L99">                &quot;Rate card does not belong to the requesting bank&quot;);</span>
+                &quot;Rate card does not belong to the requesting bank&quot;);
         }
         
         // Mark old card as inactive
-<span class="nc" id="L103">        existingCard.setValidTo(LocalDateTime.now());</span>
-<span class="nc" id="L104">        bankRateCardRepository.save(existingCard);</span>
+<span class="fc" id="L103">        existingCard.setValidTo(LocalDateTime.now());</span>
+<span class="fc" id="L104">        bankRateCardRepository.save(existingCard);</span>
         
         // Create new version
-<span class="nc" id="L107">        BankRateCard newCard = new BankRateCard();</span>
-<span class="nc" id="L108">        newCard.setId(UUID.randomUUID());</span>
-<span class="nc" id="L109">        newCard.setBankId(bankId);</span>
-<span class="nc" id="L110">        newCard.setLoanType(request.getLoanType());</span>
-<span class="nc" id="L111">        newCard.setCurrency(request.getCurrency());</span>
-<span class="nc" id="L112">        newCard.setMinLoanAmount(request.getMinLoanAmount());</span>
-<span class="nc" id="L113">        newCard.setMaxLoanAmount(request.getMaxLoanAmount());</span>
-<span class="nc" id="L114">        newCard.setBaseApr(request.getBaseApr());</span>
-<span class="nc" id="L115">        newCard.setAprAdjustmentRange(request.getAprAdjustmentRange());</span>
-<span class="nc" id="L116">        newCard.setOriginationFeePercent(request.getOriginationFeePercent());</span>
-<span class="nc" id="L117">        newCard.setInsurancePercent(request.getInsurancePercent());</span>
-<span class="nc" id="L118">        newCard.setValidFrom(LocalDateTime.now());</span>
-<span class="nc" id="L119">        newCard.setValidTo(null); // Active</span>
+<span class="fc" id="L107">        BankRateCard newCard = new BankRateCard();</span>
+<span class="fc" id="L108">        newCard.setId(UUID.randomUUID());</span>
+<span class="fc" id="L109">        newCard.setBankId(bankId);</span>
+<span class="fc" id="L110">        newCard.setLoanType(request.getLoanType());</span>
+<span class="fc" id="L111">        newCard.setCurrency(request.getCurrency());</span>
+<span class="fc" id="L112">        newCard.setMinLoanAmount(request.getMinLoanAmount());</span>
+<span class="fc" id="L113">        newCard.setMaxLoanAmount(request.getMaxLoanAmount());</span>
+<span class="fc" id="L114">        newCard.setBaseApr(request.getBaseApr());</span>
+<span class="fc" id="L115">        newCard.setAprAdjustmentRange(request.getAprAdjustmentRange());</span>
+<span class="fc" id="L116">        newCard.setOriginationFeePercent(request.getOriginationFeePercent());</span>
+<span class="fc" id="L117">        newCard.setInsurancePercent(request.getInsurancePercent());</span>
+<span class="fc" id="L118">        newCard.setValidFrom(LocalDateTime.now());</span>
+<span class="fc" id="L119">        newCard.setValidTo(null); // Active</span>
         
-<span class="nc" id="L121">        BankRateCard savedCard = bankRateCardRepository.save(newCard);</span>
-<span class="nc" id="L122">        auditService.logAction(&quot;RateCard&quot;, savedCard.getId(), AuditAction.RATE_CARD_UPDATED);</span>
+<span class="fc" id="L121">        BankRateCard savedCard = bankRateCardRepository.save(newCard);</span>
+<span class="fc" id="L122">        auditService.logAction(&quot;RateCard&quot;, savedCard.getId(), AuditAction.RATE_CARD_UPDATED);</span>
         
-<span class="nc" id="L124">        return mapToResponse(savedCard);</span>
+<span class="fc" id="L124">        return mapToResponse(savedCard);</span>
     }
     
     /**
@@ -143,7 +143,7 @@ public class BankRateCardService {
 <span class="nc" id="L143">            .findByBankIdAndLoanTypeAndCurrencyAndValidToIsNull(bankId, loanType, currency)</span>
 <span class="nc" id="L144">            .orElseThrow(() -&gt; new RateCardNotFoundException(</span>
 <span class="nc" id="L145">                String.format(&quot;No active rate card found for loan type %s and currency %s&quot;, </span>
-<span class="nc" id="L146">                    loanType, currency)));</span>
+                    loanType, currency)));
         
 <span class="nc" id="L148">        return mapToResponse(card);</span>
     }
@@ -174,7 +174,7 @@ public class BankRateCardService {
         
 <span class="pc bpc" id="L175" title="1 of 2 branches missed.">        if (request.getMinLoanAmount().compareTo(request.getMaxLoanAmount()) &gt; 0) {</span>
 <span class="nc" id="L176">            throw new InvalidRateCardException(</span>
-<span class="nc" id="L177">                &quot;Minimum loan amount cannot exceed maximum loan amount&quot;);</span>
+                &quot;Minimum loan amount cannot exceed maximum loan amount&quot;);
         }
         
 <span class="pc bpc" id="L180" title="2 of 4 branches missed.">        if (request.getBaseApr() == null || request.getBaseApr().signum() &lt; 0) {</span>

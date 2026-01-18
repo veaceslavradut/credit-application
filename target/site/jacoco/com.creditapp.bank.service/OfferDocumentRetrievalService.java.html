@@ -22,7 +22,7 @@ import java.util.UUID;
  * Service for retrieving offer documents.
  */
 @Service
-@RequiredArgsConstructor
+<span class="fc" id="L25">@RequiredArgsConstructor</span>
 <span class="fc" id="L26">@Slf4j</span>
 @Transactional(readOnly = true)
 public class OfferDocumentRetrievalService {
@@ -37,29 +37,29 @@ public class OfferDocumentRetrievalService {
      */
     public OfferDocumentsListResponse getDocuments(UUID offerId, UUID userId) {
         // Fetch offer
-<span class="nc" id="L40">        Offer offer = offerRepository.findById(offerId)</span>
-<span class="nc" id="L41">            .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Offer not found: &quot; + offerId));</span>
+<span class="fc" id="L40">        Offer offer = offerRepository.findById(offerId)</span>
+<span class="fc" id="L41">            .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Offer not found: &quot; + offerId));</span>
         
         // Verify access: borrower owns offer or bank officer from same bank
-<span class="nc" id="L44">        verifyAccess(offer, userId);</span>
+<span class="fc" id="L44">        verifyAccess(offer, userId);</span>
         
         // Fetch all documents for offer
-<span class="nc" id="L47">        List&lt;OfferDocument&gt; documents = offerDocumentRepository.findByOfferId(offerId);</span>
+<span class="fc" id="L47">        List&lt;OfferDocument&gt; documents = offerDocumentRepository.findByOfferId(offerId);</span>
         
         // Convert to metadata DTOs
-<span class="nc" id="L50">        List&lt;OfferDocumentMetadata&gt; metadataList = documents.stream()</span>
-<span class="nc" id="L51">            .map(this::toMetadata)</span>
-<span class="nc" id="L52">            .sorted((a, b) -&gt; b.getUploadedAt().compareTo(a.getUploadedAt())) // Newest first</span>
-<span class="nc" id="L53">            .toList();</span>
+<span class="fc" id="L50">        List&lt;OfferDocumentMetadata&gt; metadataList = documents.stream()</span>
+<span class="fc" id="L51">            .map(this::toMetadata)</span>
+<span class="pc" id="L52">            .sorted((a, b) -&gt; b.getUploadedAt().compareTo(a.getUploadedAt())) // Newest first</span>
+<span class="fc" id="L53">            .toList();</span>
         
-<span class="nc" id="L55">        log.debug(&quot;Retrieved {} documents for offer: {}&quot;, documents.size(), offerId);</span>
+<span class="fc" id="L55">        log.debug(&quot;Retrieved {} documents for offer: {}&quot;, documents.size(), offerId);</span>
         
-<span class="nc" id="L57">        return OfferDocumentsListResponse.builder()</span>
-<span class="nc" id="L58">            .offerId(offerId)</span>
-<span class="nc" id="L59">            .documents(metadataList)</span>
-<span class="nc" id="L60">            .totalCount(documents.size())</span>
-<span class="nc" id="L61">            .retrievedAt(LocalDateTime.now())</span>
-<span class="nc" id="L62">            .build();</span>
+<span class="fc" id="L57">        return OfferDocumentsListResponse.builder()</span>
+<span class="fc" id="L58">            .offerId(offerId)</span>
+<span class="fc" id="L59">            .documents(metadataList)</span>
+<span class="fc" id="L60">            .totalCount(documents.size())</span>
+<span class="fc" id="L61">            .retrievedAt(LocalDateTime.now())</span>
+<span class="fc" id="L62">            .build();</span>
     }
     
     /**
@@ -67,17 +67,17 @@ public class OfferDocumentRetrievalService {
      */
     private void verifyAccess(Offer offer, UUID userId) {
         // Check if borrower owns the offer
-<span class="nc" id="L70">        if (applicationRepository.findById(offer.getApplicationId())</span>
-<span class="nc" id="L71">            .map(app -&gt; app.getBorrowerId().equals(userId))</span>
-<span class="nc bnc" id="L72" title="All 2 branches missed.">            .orElse(false)) {</span>
-<span class="nc" id="L73">            return; // Borrower can access their offer documents</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (applicationRepository.findById(offer.getApplicationId())</span>
+<span class="fc" id="L71">            .map(app -&gt; app.getBorrowerId().equals(userId))</span>
+<span class="fc" id="L72">            .orElse(false)) {</span>
+<span class="fc" id="L73">            return; // Borrower can access their offer documents</span>
         }
         
         // Check if officer owns the bank that created the offer
         // This would require checking user's bank association (TBD)
         // For now, we assume bank_id matches officer's bank
         
-<span class="nc" id="L80">        throw new IllegalArgumentException(&quot;Unauthorized access to documents&quot;);</span>
+<span class="fc" id="L80">        throw new IllegalArgumentException(&quot;Unauthorized access to documents&quot;);</span>
     }
     
     /**
@@ -85,35 +85,35 @@ public class OfferDocumentRetrievalService {
      */
     private OfferDocumentMetadata toMetadata(OfferDocument document) {
         // Regenerate pre-signed URL if near expiration (optional)
-<span class="nc" id="L88">        String presignedUrl = document.getS3Url();</span>
-<span class="nc bnc" id="L89" title="All 2 branches missed.">        if (isUrlNearExpiration(document.getUploadedAt())) {</span>
-<span class="nc" id="L90">            presignedUrl = s3DocumentStorageService.generatePresignedUrl(</span>
-<span class="nc" id="L91">                document.getS3Key(), </span>
-<span class="nc" id="L92">                Duration.ofHours(24)</span>
+<span class="fc" id="L88">        String presignedUrl = document.getS3Url();</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (isUrlNearExpiration(document.getUploadedAt())) {</span>
+<span class="fc" id="L90">            presignedUrl = s3DocumentStorageService.generatePresignedUrl(</span>
+<span class="fc" id="L91">                document.getS3Key(), </span>
+<span class="fc" id="L92">                Duration.ofHours(24)</span>
             );
         }
         
-<span class="nc" id="L96">        return OfferDocumentMetadata.builder()</span>
-<span class="nc" id="L97">            .documentId(document.getId())</span>
-<span class="nc" id="L98">            .offerId(document.getOfferId())</span>
-<span class="nc" id="L99">            .documentType(document.getDocumentType())</span>
-<span class="nc" id="L100">            .fileName(document.getFileName())</span>
-<span class="nc" id="L101">            .fileSize(document.getFileSize())</span>
-<span class="nc" id="L102">            .uploadedAt(document.getUploadedAt())</span>
-<span class="nc" id="L103">            .uploadedByOfficerId(document.getUploadedByOfficerId())</span>
-<span class="nc" id="L104">            .uploadedByOfficerName(&quot;&quot;) // TODO: Join with User table to get officer name</span>
-<span class="nc" id="L105">            .description(document.getDescription())</span>
-<span class="nc" id="L106">            .virusScanStatus(document.getVirusScanStatus())</span>
-<span class="nc" id="L107">            .downloadUrl(presignedUrl)</span>
-<span class="nc" id="L108">            .build();</span>
+<span class="fc" id="L96">        return OfferDocumentMetadata.builder()</span>
+<span class="fc" id="L97">            .documentId(document.getId())</span>
+<span class="fc" id="L98">            .offerId(document.getOfferId())</span>
+<span class="fc" id="L99">            .documentType(document.getDocumentType())</span>
+<span class="fc" id="L100">            .fileName(document.getFileName())</span>
+<span class="fc" id="L101">            .fileSize(document.getFileSize())</span>
+<span class="fc" id="L102">            .uploadedAt(document.getUploadedAt())</span>
+<span class="fc" id="L103">            .uploadedByOfficerId(document.getUploadedByOfficerId())</span>
+<span class="fc" id="L104">            .uploadedByOfficerName(&quot;&quot;) // TODO: Join with User table to get officer name</span>
+<span class="fc" id="L105">            .description(document.getDescription())</span>
+<span class="fc" id="L106">            .virusScanStatus(document.getVirusScanStatus())</span>
+<span class="fc" id="L107">            .downloadUrl(presignedUrl)</span>
+<span class="fc" id="L108">            .build();</span>
     }
     
     /**
      * Check if URL is near expiration (within 1 hour).
      */
     private boolean isUrlNearExpiration(LocalDateTime uploadedAt) {
-<span class="nc" id="L115">        LocalDateTime expirationTime = uploadedAt.plusHours(23); // 24-hour expiration, regenerate at 23h</span>
-<span class="nc" id="L116">        return LocalDateTime.now().isAfter(expirationTime);</span>
+<span class="fc" id="L115">        LocalDateTime expirationTime = uploadedAt.plusHours(23); // 24-hour expiration, regenerate at 23h</span>
+<span class="fc" id="L116">        return LocalDateTime.now().isAfter(expirationTime);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

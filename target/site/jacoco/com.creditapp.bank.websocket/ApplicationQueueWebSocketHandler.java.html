@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-@RequiredArgsConstructor
+<span class="fc" id="L18">@RequiredArgsConstructor</span>
 <span class="fc" id="L19">@Slf4j</span>
 public class ApplicationQueueWebSocketHandler extends TextWebSocketHandler {
 
@@ -23,7 +23,7 @@ public class ApplicationQueueWebSocketHandler extends TextWebSocketHandler {
     
     // Map: bankId -&gt; Set of WebSocketSessions
 <span class="fc" id="L25">    private static final Map&lt;String, Set&lt;WebSocketSession&gt;&gt; BANK_CONNECTIONS = </span>
-<span class="fc" id="L26">        new ConcurrentHashMap&lt;&gt;();</span>
+        new ConcurrentHashMap&lt;&gt;();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -36,7 +36,7 @@ public class ApplicationQueueWebSocketHandler extends TextWebSocketHandler {
             
             // Send connection confirmation
 <span class="nc" id="L38">            sendMessage(session, createMessage(&quot;connected&quot;, &quot;Connected to application queue&quot;));</span>
-<span class="nc" id="L39">        } else {</span>
+        } else {
 <span class="nc" id="L40">            session.close(CloseStatus.BAD_DATA.withReason(&quot;Bank ID not found in URL&quot;));</span>
         }
 <span class="nc" id="L42">    }</span>
@@ -84,7 +84,7 @@ public class ApplicationQueueWebSocketHandler extends TextWebSocketHandler {
 <span class="nc" id="L84">                } catch (IOException e) {</span>
 <span class="nc" id="L85">                    log.error(&quot;[WEBSOCKET] Failed to send update to session&quot;, e);</span>
 <span class="nc" id="L86">                    connections.remove(session);</span>
-                }
+<span class="nc" id="L87">                }</span>
 <span class="nc" id="L88">            });</span>
 <span class="nc" id="L89">            log.info(&quot;[WEBSOCKET] Broadcasted application update for bank {} to {} clients&quot;,</span>
 <span class="nc" id="L90">                bankId, connections.size());</span>
@@ -95,8 +95,8 @@ public class ApplicationQueueWebSocketHandler extends TextWebSocketHandler {
      * Broadcast status change to all connected officers for a bank
      */
     public void broadcastStatusChange(String bankId, String applicationId, String oldStatus, String newStatus) {
-<span class="nc" id="L98">        Set&lt;WebSocketSession&gt; connections = BANK_CONNECTIONS.get(bankId);</span>
-<span class="nc bnc" id="L99" title="All 4 branches missed.">        if (connections != null &amp;&amp; !connections.isEmpty()) {</span>
+<span class="fc" id="L98">        Set&lt;WebSocketSession&gt; connections = BANK_CONNECTIONS.get(bankId);</span>
+<span class="pc bpc" id="L99" title="3 of 4 branches missed.">        if (connections != null &amp;&amp; !connections.isEmpty()) {</span>
 <span class="nc" id="L100">            Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();</span>
 <span class="nc" id="L101">            data.put(&quot;applicationId&quot;, applicationId);</span>
 <span class="nc" id="L102">            data.put(&quot;oldStatus&quot;, oldStatus);</span>
@@ -111,12 +111,12 @@ public class ApplicationQueueWebSocketHandler extends TextWebSocketHandler {
 <span class="nc" id="L111">                } catch (IOException e) {</span>
 <span class="nc" id="L112">                    log.error(&quot;[WEBSOCKET] Failed to send status change to session&quot;, e);</span>
 <span class="nc" id="L113">                    connections.remove(session);</span>
-                }
+<span class="nc" id="L114">                }</span>
 <span class="nc" id="L115">            });</span>
 <span class="nc" id="L116">            log.info(&quot;[WEBSOCKET] Broadcasted status change for app {} to {} clients&quot;,</span>
 <span class="nc" id="L117">                applicationId, connections.size());</span>
         }
-<span class="nc" id="L119">    }</span>
+<span class="fc" id="L119">    }</span>
 
     private String extractBankId(WebSocketSession session) {
         try {

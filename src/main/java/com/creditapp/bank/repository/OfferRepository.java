@@ -102,4 +102,15 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
      */
     @Query("SELECT MIN(o.apr) FROM Offer o WHERE o.applicationId = :applicationId")
     Optional<java.math.BigDecimal> findMinAprByApplicationId(@Param("applicationId") UUID applicationId);
+    
+    /**
+     * Find offers by bank created after a specific date/time for dashboard metrics.
+     * Used to calculate metrics filtered by time period.
+     * 
+     * @param bankId Bank UUID
+     * @param createdAfter Filter start datetime
+     * @return List of offers created after the specified time
+     */
+    @Query("SELECT o FROM Offer o WHERE o.bankId = :bankId AND o.createdAt >= :createdAfter")
+    List<Offer> findByBankIdAndCreatedAtAfter(@Param("bankId") UUID bankId, @Param("createdAfter") LocalDateTime createdAfter);
 }
