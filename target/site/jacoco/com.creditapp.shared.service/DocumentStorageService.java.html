@@ -28,9 +28,9 @@ public class DocumentStorageService {
         try {
 <span class="fc" id="L29">            Files.createDirectories(this.storageLocation);</span>
 <span class="fc" id="L30">            log.info(&quot;Document storage initialized at: {}&quot;, this.storageLocation);</span>
-<span class="pc" id="L31">        } catch (IOException ex) {</span>
+<span class="nc" id="L31">        } catch (IOException ex) {</span>
 <span class="nc" id="L32">            throw new DocumentStorageException(&quot;Could not create document storage directory&quot;, ex);</span>
-        }
+<span class="fc" id="L33">        }</span>
 <span class="fc" id="L34">    }</span>
 
     /**
@@ -70,7 +70,7 @@ public class DocumentStorageService {
 <span class="nc" id="L70">        } catch (IOException ex) {</span>
 <span class="nc" id="L71">            log.error(&quot;Failed to delete file: {}&quot;, storedFilename, ex);</span>
             // Don't throw exception - soft delete in DB is the primary mechanism
-        }
+<span class="nc" id="L73">        }</span>
 <span class="nc" id="L74">    }</span>
 
     /**

@@ -17,38 +17,38 @@ import java.util.UUID;
 @Table(name = &quot;application_details&quot;, indexes = {
         @Index(name = &quot;idx_application_details_application_id&quot;, columnList = &quot;application_id&quot;)
 })
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+<span class="nc" id="L20">@Data</span>
+<span class="nc" id="L21">@NoArgsConstructor</span>
+<span class="nc" id="L22">@AllArgsConstructor</span>
+<span class="nc" id="L23">@Builder</span>
 public class ApplicationDetails {
 
     @Id
-    private UUID id;
+<span class="nc" id="L27">    private UUID id;</span>
 
     @Column(name = &quot;application_id&quot;, nullable = false)
-    private UUID applicationId;
+<span class="nc" id="L30">    private UUID applicationId;</span>
 
     @Column(name = &quot;annual_income&quot;)
-    private BigDecimal annualIncome;
+<span class="nc" id="L33">    private BigDecimal annualIncome;</span>
 
     @Column(name = &quot;employment_status&quot;)
-    private String employmentStatus;
+<span class="nc" id="L36">    private String employmentStatus;</span>
 
     @Column(name = &quot;down_payment_amount&quot;)
-    private BigDecimal downPaymentAmount;
+<span class="nc" id="L39">    private BigDecimal downPaymentAmount;</span>
 
     @CreationTimestamp
     @Column(name = &quot;created_at&quot;, nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+<span class="nc" id="L43">    private LocalDateTime createdAt;</span>
 
     @UpdateTimestamp
     @Column(name = &quot;updated_at&quot;, nullable = false)
-    private LocalDateTime updatedAt;
+<span class="nc" id="L47">    private LocalDateTime updatedAt;</span>
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;application_id&quot;, insertable = false, updatable = false)
-    private Application application;
+<span class="nc" id="L51">    private Application application;</span>
 
     @PrePersist
     public void prePersist() {

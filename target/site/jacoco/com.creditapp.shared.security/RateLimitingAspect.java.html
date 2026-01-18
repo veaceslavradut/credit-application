@@ -35,20 +35,20 @@ public class RateLimitingAspect {
     @Before(&quot;@annotation(rateLimited)&quot;)
     public void enforceRateLimit(JoinPoint joinPoint, RateLimited rateLimited) {
         // Extract authenticated user ID from SecurityContext
-<span class="fc" id="L38">        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</span>
+<span class="nc" id="L38">        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</span>
         
-<span class="pc bpc" id="L40" title="2 of 4 branches missed.">        if (authentication == null || !authentication.isAuthenticated()) {</span>
+<span class="nc bnc" id="L40" title="All 4 branches missed.">        if (authentication == null || !authentication.isAuthenticated()) {</span>
             // Skip rate limiting for unauthenticated requests (will be rejected by @PreAuthorize anyway)
 <span class="nc" id="L42">            return;</span>
         }
 
         // Get principal (could be UUID string or UserDetails)
-<span class="fc" id="L46">        Object principal = authentication.getPrincipal();</span>
-<span class="fc" id="L47">        UUID userId = extractUserId(principal);</span>
+<span class="nc" id="L46">        Object principal = authentication.getPrincipal();</span>
+<span class="nc" id="L47">        UUID userId = extractUserId(principal);</span>
 
-<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        if (userId == null) {</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        if (userId == null) {</span>
             // Skip rate limiting if we can't extract user ID
-<span class="fc" id="L51">            return;</span>
+<span class="nc" id="L51">            return;</span>
         }
 
         // Construct rate limit key: user_id:action
@@ -60,9 +60,9 @@ public class RateLimitingAspect {
 <span class="nc bnc" id="L60" title="All 2 branches missed.">        if (!rateLimiter.isAllowed(rateLimitKey, limitPerMinute)) {</span>
 <span class="nc" id="L61">            long resetTime = rateLimiter.getResetTimeSeconds(rateLimitKey);</span>
 <span class="nc" id="L62">            throw new RateLimitExceededException(</span>
-<span class="nc" id="L63">                    &quot;Rate limit exceeded for action: &quot; + action + </span>
-<span class="nc" id="L64">                    &quot;. Maximum &quot; + limitPerMinute + &quot; request(s) per minute.&quot;,</span>
-<span class="nc" id="L65">                    (int) resetTime</span>
+                    &quot;Rate limit exceeded for action: &quot; + action + 
+                    &quot;. Maximum &quot; + limitPerMinute + &quot; request(s) per minute.&quot;,
+                    (int) resetTime
             );
         }
 <span class="nc" id="L68">    }</span>
@@ -75,11 +75,11 @@ public class RateLimitingAspect {
      * @return The user's UUID, or null if not found
      */
     private UUID extractUserId(Object principal) {
-<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        if (principal instanceof String) {</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (principal instanceof String) {</span>
             try {
 <span class="nc" id="L80">                return UUID.fromString((String) principal);</span>
-<span class="fc" id="L81">            } catch (IllegalArgumentException e) {</span>
-<span class="fc" id="L82">                return null;</span>
+<span class="nc" id="L81">            } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L82">                return null;</span>
             }
         }
         
@@ -90,7 +90,7 @@ public class RateLimitingAspect {
             }
 <span class="nc" id="L91">        } catch (Exception e) {</span>
             // Method doesn't exist or invocation failed
-        }
+<span class="nc" id="L93">        }</span>
 
 <span class="nc" id="L95">        return null;</span>
     }

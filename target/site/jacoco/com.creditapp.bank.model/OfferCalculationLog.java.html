@@ -51,9 +51,9 @@ public class OfferCalculationLog {
     // Constructors
 <span class="fc" id="L52">    public OfferCalculationLog() {}</span>
 
-<span class="nc" id="L54">    public OfferCalculationLog(UUID applicationId, UUID bankId, String calculationMethod,</span>
+    public OfferCalculationLog(UUID applicationId, UUID bankId, String calculationMethod,
                               String inputParameters, String calculatedValues,
-                              CalculationType calculationType, LocalDateTime timestamp) {
+<span class="nc" id="L56">                              CalculationType calculationType, LocalDateTime timestamp) {</span>
 <span class="nc" id="L57">        this.applicationId = applicationId;</span>
 <span class="nc" id="L58">        this.bankId = bankId;</span>
 <span class="nc" id="L59">        this.calculationMethod = calculationMethod;</span>
@@ -65,7 +65,7 @@ public class OfferCalculationLog {
 
     // Getters and Setters
     public Long getId() {
-<span class="fc" id="L68">        return id;</span>
+<span class="nc" id="L68">        return id;</span>
     }
 
     public void setId(Long id) {
@@ -77,56 +77,56 @@ public class OfferCalculationLog {
     }
 
     public void setApplicationId(UUID applicationId) {
-<span class="fc" id="L80">        this.applicationId = applicationId;</span>
-<span class="fc" id="L81">    }</span>
+<span class="nc" id="L80">        this.applicationId = applicationId;</span>
+<span class="nc" id="L81">    }</span>
 
     public UUID getBankId() {
 <span class="nc" id="L84">        return bankId;</span>
     }
 
     public void setBankId(UUID bankId) {
-<span class="fc" id="L88">        this.bankId = bankId;</span>
-<span class="fc" id="L89">    }</span>
+<span class="nc" id="L88">        this.bankId = bankId;</span>
+<span class="nc" id="L89">    }</span>
 
     public String getCalculationMethod() {
 <span class="nc" id="L92">        return calculationMethod;</span>
     }
 
     public void setCalculationMethod(String calculationMethod) {
-<span class="fc" id="L96">        this.calculationMethod = calculationMethod;</span>
-<span class="fc" id="L97">    }</span>
+<span class="nc" id="L96">        this.calculationMethod = calculationMethod;</span>
+<span class="nc" id="L97">    }</span>
 
     public String getInputParameters() {
-<span class="fc" id="L100">        return inputParameters;</span>
+<span class="nc" id="L100">        return inputParameters;</span>
     }
 
     public void setInputParameters(String inputParameters) {
-<span class="fc" id="L104">        this.inputParameters = inputParameters;</span>
-<span class="fc" id="L105">    }</span>
+<span class="nc" id="L104">        this.inputParameters = inputParameters;</span>
+<span class="nc" id="L105">    }</span>
 
     public String getCalculatedValues() {
 <span class="nc" id="L108">        return calculatedValues;</span>
     }
 
     public void setCalculatedValues(String calculatedValues) {
-<span class="fc" id="L112">        this.calculatedValues = calculatedValues;</span>
-<span class="fc" id="L113">    }</span>
+<span class="nc" id="L112">        this.calculatedValues = calculatedValues;</span>
+<span class="nc" id="L113">    }</span>
 
     public CalculationType getCalculationType() {
 <span class="nc" id="L116">        return calculationType;</span>
     }
 
     public void setCalculationType(CalculationType calculationType) {
-<span class="fc" id="L120">        this.calculationType = calculationType;</span>
-<span class="fc" id="L121">    }</span>
+<span class="nc" id="L120">        this.calculationType = calculationType;</span>
+<span class="nc" id="L121">    }</span>
 
     public LocalDateTime getTimestamp() {
 <span class="nc" id="L124">        return timestamp;</span>
     }
 
     public void setTimestamp(LocalDateTime timestamp) {
-<span class="fc" id="L128">        this.timestamp = timestamp;</span>
-<span class="fc" id="L129">    }</span>
+<span class="nc" id="L128">        this.timestamp = timestamp;</span>
+<span class="nc" id="L129">    }</span>
 
     public LocalDateTime getCreatedAt() {
 <span class="nc" id="L132">        return createdAt;</span>

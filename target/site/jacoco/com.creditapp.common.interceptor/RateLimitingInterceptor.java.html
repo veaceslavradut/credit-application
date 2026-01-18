@@ -19,9 +19,9 @@ public class RateLimitingInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
-<span class="pc bpc" id="L22" title="1 of 4 branches missed.">        if (request.getRequestURI().equals(&quot;/api/auth/register&quot;) &amp;&amp; request.getMethod().equals(&quot;POST&quot;)) {</span>
-<span class="fc" id="L23">            String clientIp = getClientIp(request);</span>
-<span class="fc" id="L24">            String key = &quot;rate_limit:registration:&quot; + clientIp;</span>
+<span class="pc bpc" id="L22" title="3 of 4 branches missed.">        if (request.getRequestURI().equals(&quot;/api/auth/register&quot;) &amp;&amp; request.getMethod().equals(&quot;POST&quot;)) {</span>
+<span class="nc" id="L23">            String clientIp = getClientIp(request);</span>
+<span class="nc" id="L24">            String key = &quot;rate_limit:registration:&quot; + clientIp;</span>
 <span class="nc" id="L25">            String countStr = redisTemplate.opsForValue().get(key);</span>
             
 <span class="nc bnc" id="L27" title="All 2 branches missed.">            if (countStr == null) {</span>
@@ -44,11 +44,11 @@ public class RateLimitingInterceptor implements HandlerInterceptor {
     }
 
     private String getClientIp(HttpServletRequest request) {
-<span class="fc" id="L47">        String xForwardedFor = request.getHeader(&quot;X-Forwarded-For&quot;);</span>
-<span class="pc bpc" id="L48" title="3 of 4 branches missed.">        if (xForwardedFor != null &amp;&amp; !xForwardedFor.isEmpty()) {</span>
+<span class="nc" id="L47">        String xForwardedFor = request.getHeader(&quot;X-Forwarded-For&quot;);</span>
+<span class="nc bnc" id="L48" title="All 4 branches missed.">        if (xForwardedFor != null &amp;&amp; !xForwardedFor.isEmpty()) {</span>
 <span class="nc" id="L49">            return xForwardedFor.split(&quot;,&quot;)[0].trim();</span>
         }
-<span class="fc" id="L51">        return request.getRemoteAddr();</span>
+<span class="nc" id="L51">        return request.getRemoteAddr();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

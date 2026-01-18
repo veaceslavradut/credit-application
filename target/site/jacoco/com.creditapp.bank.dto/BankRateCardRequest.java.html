@@ -46,84 +46,84 @@ public class BankRateCardRequest {
     private BigDecimal insurancePercent;
     
     // Constructors
-<span class="fc" id="L49">    public BankRateCardRequest() {}</span>
+<span class="nc" id="L49">    public BankRateCardRequest() {}</span>
     
-<span class="fc" id="L51">    public BankRateCardRequest(LoanType loanType, Currency currency, BigDecimal minLoanAmount,</span>
+    public BankRateCardRequest(LoanType loanType, Currency currency, BigDecimal minLoanAmount,
             BigDecimal maxLoanAmount, BigDecimal baseApr, BigDecimal aprAdjustmentRange,
-            BigDecimal originationFeePercent, BigDecimal insurancePercent) {
-<span class="fc" id="L54">        this.loanType = loanType;</span>
-<span class="fc" id="L55">        this.currency = currency;</span>
-<span class="fc" id="L56">        this.minLoanAmount = minLoanAmount;</span>
-<span class="fc" id="L57">        this.maxLoanAmount = maxLoanAmount;</span>
-<span class="fc" id="L58">        this.baseApr = baseApr;</span>
-<span class="fc" id="L59">        this.aprAdjustmentRange = aprAdjustmentRange;</span>
-<span class="fc" id="L60">        this.originationFeePercent = originationFeePercent;</span>
-<span class="fc" id="L61">        this.insurancePercent = insurancePercent;</span>
-<span class="fc" id="L62">    }</span>
+<span class="nc" id="L53">            BigDecimal originationFeePercent, BigDecimal insurancePercent) {</span>
+<span class="nc" id="L54">        this.loanType = loanType;</span>
+<span class="nc" id="L55">        this.currency = currency;</span>
+<span class="nc" id="L56">        this.minLoanAmount = minLoanAmount;</span>
+<span class="nc" id="L57">        this.maxLoanAmount = maxLoanAmount;</span>
+<span class="nc" id="L58">        this.baseApr = baseApr;</span>
+<span class="nc" id="L59">        this.aprAdjustmentRange = aprAdjustmentRange;</span>
+<span class="nc" id="L60">        this.originationFeePercent = originationFeePercent;</span>
+<span class="nc" id="L61">        this.insurancePercent = insurancePercent;</span>
+<span class="nc" id="L62">    }</span>
     
     // Getters and Setters
     public LoanType getLoanType() {
-<span class="fc" id="L66">        return loanType;</span>
+<span class="nc" id="L66">        return loanType;</span>
     }
     
     public void setLoanType(LoanType loanType) {
-<span class="fc" id="L70">        this.loanType = loanType;</span>
-<span class="fc" id="L71">    }</span>
+<span class="nc" id="L70">        this.loanType = loanType;</span>
+<span class="nc" id="L71">    }</span>
     
     public Currency getCurrency() {
-<span class="fc" id="L74">        return currency;</span>
+<span class="nc" id="L74">        return currency;</span>
     }
     
     public void setCurrency(Currency currency) {
-<span class="fc" id="L78">        this.currency = currency;</span>
-<span class="fc" id="L79">    }</span>
+<span class="nc" id="L78">        this.currency = currency;</span>
+<span class="nc" id="L79">    }</span>
     
     public BigDecimal getMinLoanAmount() {
-<span class="fc" id="L82">        return minLoanAmount;</span>
+<span class="nc" id="L82">        return minLoanAmount;</span>
     }
     
     public void setMinLoanAmount(BigDecimal minLoanAmount) {
-<span class="fc" id="L86">        this.minLoanAmount = minLoanAmount;</span>
-<span class="fc" id="L87">    }</span>
+<span class="nc" id="L86">        this.minLoanAmount = minLoanAmount;</span>
+<span class="nc" id="L87">    }</span>
     
     public BigDecimal getMaxLoanAmount() {
-<span class="fc" id="L90">        return maxLoanAmount;</span>
+<span class="nc" id="L90">        return maxLoanAmount;</span>
     }
     
     public void setMaxLoanAmount(BigDecimal maxLoanAmount) {
-<span class="fc" id="L94">        this.maxLoanAmount = maxLoanAmount;</span>
-<span class="fc" id="L95">    }</span>
+<span class="nc" id="L94">        this.maxLoanAmount = maxLoanAmount;</span>
+<span class="nc" id="L95">    }</span>
     
     public BigDecimal getBaseApr() {
-<span class="fc" id="L98">        return baseApr;</span>
+<span class="nc" id="L98">        return baseApr;</span>
     }
     
     public void setBaseApr(BigDecimal baseApr) {
-<span class="fc" id="L102">        this.baseApr = baseApr;</span>
-<span class="fc" id="L103">    }</span>
+<span class="nc" id="L102">        this.baseApr = baseApr;</span>
+<span class="nc" id="L103">    }</span>
     
     public BigDecimal getAprAdjustmentRange() {
-<span class="fc" id="L106">        return aprAdjustmentRange;</span>
+<span class="nc" id="L106">        return aprAdjustmentRange;</span>
     }
     
     public void setAprAdjustmentRange(BigDecimal aprAdjustmentRange) {
-<span class="fc" id="L110">        this.aprAdjustmentRange = aprAdjustmentRange;</span>
-<span class="fc" id="L111">    }</span>
+<span class="nc" id="L110">        this.aprAdjustmentRange = aprAdjustmentRange;</span>
+<span class="nc" id="L111">    }</span>
     
     public BigDecimal getOriginationFeePercent() {
-<span class="fc" id="L114">        return originationFeePercent;</span>
+<span class="nc" id="L114">        return originationFeePercent;</span>
     }
     
     public void setOriginationFeePercent(BigDecimal originationFeePercent) {
-<span class="fc" id="L118">        this.originationFeePercent = originationFeePercent;</span>
-<span class="fc" id="L119">    }</span>
+<span class="nc" id="L118">        this.originationFeePercent = originationFeePercent;</span>
+<span class="nc" id="L119">    }</span>
     
     public BigDecimal getInsurancePercent() {
-<span class="fc" id="L122">        return insurancePercent;</span>
+<span class="nc" id="L122">        return insurancePercent;</span>
     }
     
     public void setInsurancePercent(BigDecimal insurancePercent) {
-<span class="fc" id="L126">        this.insurancePercent = insurancePercent;</span>
-<span class="fc" id="L127">    }</span>
+<span class="nc" id="L126">        this.insurancePercent = insurancePercent;</span>
+<span class="nc" id="L127">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

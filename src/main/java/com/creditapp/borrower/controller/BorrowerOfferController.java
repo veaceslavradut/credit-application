@@ -1,8 +1,8 @@
 package com.creditapp.borrower.controller;
 
-import com.creditapp.borrower.dto.OfferComparisonTableRequest;
-import com.creditapp.borrower.dto.OfferComparisonTableResponse;
+import com.creditapp.borrower.dto.*;
 import com.creditapp.borrower.service.OfferComparisonTableService;
+import com.creditapp.borrower.service.OfferSelectionService;
 import com.creditapp.shared.security.AuthorizationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,26 @@ import java.util.UUID;
 public class BorrowerOfferController {
     
     private final OfferComparisonTableService offerComparisonTableService;
+    private final OfferSelectionService offerSelectionService;
     private final AuthorizationService authorizationService;
+    
+    @GetMapping("/{applicationId}/offers")
+    @PreAuthorize("hasAuthority('BORROWER')")
+    public ResponseEntity<OfferComparisonTableResponse> getOffers(
+            @PathVariable UUID applicationId,
+            @Valid @ModelAttribute OfferComparisonTableRequest request) {
+        
+        UUID borrowerId = authorizationService.getCurrentUserId();
+        log.info("GET /api/borrower/applications/{}/offers by borrower {}", applicationId, borrowerId);
+        
+        OfferComparisonTableResponse response = offerComparisonTableService.getOffersTable(
+                applicationId, 
+                borrowerId, 
+                request
+        );
+        
+        return ResponseEntity.ok(response);
+    }
     
     @GetMapping("/{applicationId}/offers-table")
     @PreAuthorize("hasAuthority('BORROWER')")
@@ -35,6 +54,24 @@ public class BorrowerOfferController {
                 applicationId, 
                 borrowerId, 
                 request
+        );
+        
+        return ResponseEntity.ok(response);
+    }
+    
+    @PostMapping("/{applicationId}/select-offer")
+    @PreAuthorize("hasAuthority('BORROWER')")
+    public ResponseEntity<SelectOfferResponse> selectOffer(
+            @PathVariable UUID applicationId,
+            @Valid @RequestBody SelectOfferRequest request) {
+        
+        UUID borrowerId = authorizationService.getCurrentUserId();
+        log.info("POST /api/borrower/applications/{}/select-offer by borrower {}", applicationId, borrowerId);
+        
+        SelectOfferResponse response = offerSelectionService.selectOffer(
+                applicationId,
+                borrowerId,
+                request.getOfferId()
         );
         
         return ResponseEntity.ok(response);

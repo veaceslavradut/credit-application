@@ -19,8 +19,8 @@ public class AuditLogArchivalService {
     @Value(&quot;${audit.retention.years:3}&quot;)
     private int retentionYears;
 
-<span class="fc" id="L22">    public AuditLogArchivalService(EntityManager entityManager,</span>
-                                   AuditLogRepository auditLogRepository) {
+    public AuditLogArchivalService(EntityManager entityManager,
+<span class="fc" id="L23">                                   AuditLogRepository auditLogRepository) {</span>
 <span class="fc" id="L24">        this.entityManager = entityManager;</span>
 <span class="fc" id="L25">        this.auditLogRepository = auditLogRepository;</span>
 <span class="fc" id="L26">    }</span>
@@ -34,7 +34,7 @@ public class AuditLogArchivalService {
 <span class="nc" id="L34">            log.info(&quot;Archived {} audit log entries to audit_logs_archive table&quot;, rowsAffected);</span>
 <span class="nc" id="L35">        } catch (Exception e) {</span>
 <span class="nc" id="L36">            log.error(&quot;Failed to archive old audit logs&quot;, e);</span>
-        }
+<span class="nc" id="L37">        }</span>
 <span class="nc" id="L38">    }</span>
 
     private long archiveLogsOlderThan(LocalDateTime cutoffDate) {

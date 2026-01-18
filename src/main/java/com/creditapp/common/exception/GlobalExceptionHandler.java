@@ -132,13 +132,21 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException ex, WebRequest request) {
         Map<String, Object> response = new HashMap<>();
         Map<String, String> fieldErrors = new HashMap<>();
+        String firstErrorMessage = "Validation failed";
+        
+        var errors = ex.getBindingResult().getAllErrors();
+        if (!errors.isEmpty()) {
+            FieldError firstFieldError = (FieldError) errors.get(0);
+            firstErrorMessage = firstFieldError.getDefaultMessage();
+        }
+        
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             fieldErrors.put(fieldName, errorMessage);
         });
         response.put("error", "Bad Request");
-        response.put("message", "Validation failed");
+        response.put("message", firstErrorMessage);
         response.put("fieldErrors", fieldErrors);
         response.put("timestamp", LocalDateTime.now().toString());
         response.put("path", request.getDescription(false).replace("uri=", ""));

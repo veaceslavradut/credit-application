@@ -5,11 +5,11 @@ import java.math.RoundingMode;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class CalculationUtils {
+<span class="nc" id="L8">public class CalculationUtils {</span>
     
 <span class="nc" id="L10">    private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);</span>
 <span class="nc" id="L11">    private static final BigDecimal TWELVE = BigDecimal.valueOf(12);</span>
-<span class="nc" id="L12">    private static final int SCALE = 2;</span>
+    private static final int SCALE = 2;
     
     public static BigDecimal calculateMonthlyPayment(BigDecimal principal, int months, BigDecimal apr) {
 <span class="nc bnc" id="L15" title="All 6 branches missed.">        if (principal == null || apr == null || months &lt;= 0) {</span>

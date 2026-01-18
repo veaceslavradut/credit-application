@@ -67,7 +67,7 @@ public class BankRegistrationIntegrationTest {
 
         Optional<User> savedAdmin = userRepository.findByEmail("admin@testbank.com");
         assertTrue(savedAdmin.isPresent());
-        assertEquals("BANK_ADMIN", savedAdmin.get().getRole());
+        assertEquals("BANK_ADMIN", savedAdmin.get().getRole().name());
         assertEquals("John", savedAdmin.get().getFirstName());
     }
 

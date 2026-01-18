@@ -22,8 +22,8 @@ public class BankRegistrationService {
     private final PasswordHasher passwordHasher;
     private final ActivationTokenService activationTokenService;
 
-<span class="fc" id="L25">    public BankRegistrationService(OrganizationRepository organizationRepository, UserRepository userRepository,</span>
-                                   PasswordHasher passwordHasher, ActivationTokenService activationTokenService) {
+    public BankRegistrationService(OrganizationRepository organizationRepository, UserRepository userRepository,
+<span class="fc" id="L26">                                   PasswordHasher passwordHasher, ActivationTokenService activationTokenService) {</span>
 <span class="fc" id="L27">        this.organizationRepository = organizationRepository;</span>
 <span class="fc" id="L28">        this.userRepository = userRepository;</span>
 <span class="fc" id="L29">        this.passwordHasher = passwordHasher;</span>
@@ -37,9 +37,9 @@ public class BankRegistrationService {
         }
 
         // Check for duplicate registration number
-<span class="fc bfc" id="L40" title="All 2 branches covered.">        if (organizationRepository.findByRegistrationNumber(request.getRegistrationNumber()).isPresent()) {</span>
-<span class="fc" id="L41">            throw new DuplicateBankRegistrationException(</span>
-<span class="fc" id="L42">                    &quot;Bank with registration number &quot; + request.getRegistrationNumber() + &quot; already exists&quot;</span>
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">        if (organizationRepository.findByRegistrationNumber(request.getRegistrationNumber()).isPresent()) {</span>
+<span class="nc" id="L41">            throw new DuplicateBankRegistrationException(</span>
+<span class="nc" id="L42">                    &quot;Bank with registration number &quot; + request.getRegistrationNumber() + &quot; already exists&quot;</span>
             );
         }
 

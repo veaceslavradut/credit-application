@@ -22,7 +22,7 @@ public class HelpContentController {
 
     @GetMapping(&quot;/api/help/topics&quot;)
     public ResponseEntity&lt;List&lt;HelpArticleListDTO&gt;&gt; listTopics(@RequestParam(name = &quot;language&quot;, defaultValue = &quot;en&quot;) String language) {
-<span class="fc" id="L25">        return ResponseEntity.ok(helpContentService.listHelpTopics(language));</span>
+<span class="nc" id="L25">        return ResponseEntity.ok(helpContentService.listHelpTopics(language));</span>
     }
 
     @GetMapping(&quot;/api/help/{topic}&quot;)

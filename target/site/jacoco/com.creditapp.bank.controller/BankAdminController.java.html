@@ -15,10 +15,10 @@ import java.util.Map;
     @RequiresBankAdmin
     @GetMapping(&quot;/queue&quot;)
     public ResponseEntity&lt;?&gt; getApplicationQueue() {
-<span class="fc" id="L18">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L19">        response.put(&quot;applications&quot;, Collections.emptyList());</span>
-<span class="fc" id="L20">        response.put(&quot;message&quot;, &quot;Placeholder endpoint - Epic 3/4 implementation pending&quot;);</span>
-<span class="fc" id="L21">        return ResponseEntity.ok(response);</span>
+<span class="nc" id="L18">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L19">        response.put(&quot;applications&quot;, Collections.emptyList());</span>
+<span class="nc" id="L20">        response.put(&quot;message&quot;, &quot;Placeholder endpoint - Epic 3/4 implementation pending&quot;);</span>
+<span class="nc" id="L21">        return ResponseEntity.ok(response);</span>
     }
 
     @RequiresBankAdmin

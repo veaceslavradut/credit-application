@@ -7,9 +7,9 @@ public class OfferExpiredException extends RuntimeException {
     private final LocalDateTime expiresAt;
 
     public OfferExpiredException(String message, LocalDateTime expiresAt) {
-<span class="fc" id="L10">        super(message);</span>
-<span class="fc" id="L11">        this.expiresAt = expiresAt;</span>
-<span class="fc" id="L12">    }</span>
+<span class="nc" id="L10">        super(message);</span>
+<span class="nc" id="L11">        this.expiresAt = expiresAt;</span>
+<span class="nc" id="L12">    }</span>
 
     public LocalDateTime getExpiresAt() {
 <span class="nc" id="L15">        return expiresAt;</span>

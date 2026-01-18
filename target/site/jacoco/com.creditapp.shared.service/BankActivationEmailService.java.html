@@ -40,9 +40,9 @@ import org.springframework.stereotype.Service;
     private String buildHtmlEmail(String bankName, String activationLink) {
 <span class="fc" id="L41">        return &quot;&lt;html&gt;&lt;body&gt;&quot; +</span>
                 &quot;&lt;h2&gt;Welcome to Credit Application Platform&lt;/h2&gt;&quot; +
-<span class="fc" id="L43">                &quot;&lt;p&gt;Thank you for registering &quot; + bankName + &quot;.&lt;/p&gt;&quot; +</span>
+                &quot;&lt;p&gt;Thank you for registering &quot; + bankName + &quot;.&lt;/p&gt;&quot; +
                 &quot;&lt;p&gt;Please activate your account by clicking the link below:&lt;/p&gt;&quot; +
-<span class="fc" id="L45">                &quot;&lt;p&gt;&lt;a href='&quot; + activationLink + &quot;'&gt;Activate Account&lt;/a&gt;&lt;/p&gt;&quot; +</span>
+                &quot;&lt;p&gt;&lt;a href='&quot; + activationLink + &quot;'&gt;Activate Account&lt;/a&gt;&lt;/p&gt;&quot; +
                 &quot;&lt;p&gt;This link will expire in 7 days.&lt;/p&gt;&quot; +
                 &quot;&lt;p&gt;If you did not request this, please ignore this email.&lt;/p&gt;&quot; +
                 &quot;&lt;/body&gt;&lt;/html&gt;&quot;;

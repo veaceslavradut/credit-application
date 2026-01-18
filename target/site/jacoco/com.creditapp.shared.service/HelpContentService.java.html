@@ -26,24 +26,24 @@ public class HelpContentService {
 
     @Cacheable(value = &quot;helpArticles&quot;, key = &quot;#topic + ':' + #language&quot;)
     public HelpArticleDTO getHelpArticle(String topic, String language) {
-<span class="fc" id="L29">        Optional&lt;HelpArticle&gt; articleOpt = helpArticleRepository.findByTopicAndLanguageAndStatus(topic, language, HelpArticleStatus.PUBLISHED);</span>
-<span class="fc" id="L30">        HelpArticle article = articleOpt.orElseGet(() -&gt; helpArticleRepository</span>
-<span class="fc" id="L31">                .findByTopicAndLanguageAndStatus(topic, &quot;en&quot;, HelpArticleStatus.PUBLISHED)</span>
-<span class="fc" id="L32">                .orElseThrow(() -&gt; new HelpArticleNotFoundException(topic, language)));</span>
+<span class="nc" id="L29">        Optional&lt;HelpArticle&gt; articleOpt = helpArticleRepository.findByTopicAndLanguageAndStatus(topic, language, HelpArticleStatus.PUBLISHED);</span>
+<span class="nc" id="L30">        HelpArticle article = articleOpt.orElseGet(() -&gt; helpArticleRepository</span>
+<span class="nc" id="L31">                .findByTopicAndLanguageAndStatus(topic, &quot;en&quot;, HelpArticleStatus.PUBLISHED)</span>
+<span class="nc" id="L32">                .orElseThrow(() -&gt; new HelpArticleNotFoundException(topic, language)));</span>
 
-<span class="fc" id="L34">        return toDto(article);</span>
+<span class="nc" id="L34">        return toDto(article);</span>
     }
 
     public List&lt;HelpArticleListDTO&gt; listHelpTopics(String language) {
-<span class="fc" id="L38">        Page&lt;HelpArticle&gt; page = helpArticleRepository.findByLanguageAndStatus(language, HelpArticleStatus.PUBLISHED, PageRequest.of(0, 100));</span>
-<span class="fc" id="L39">        return page.getContent().stream()</span>
-<span class="pc" id="L40">                .map(a -&gt; HelpArticleListDTO.builder()</span>
+<span class="nc" id="L38">        Page&lt;HelpArticle&gt; page = helpArticleRepository.findByLanguageAndStatus(language, HelpArticleStatus.PUBLISHED, PageRequest.of(0, 100));</span>
+<span class="nc" id="L39">        return page.getContent().stream()</span>
+<span class="nc" id="L40">                .map(a -&gt; HelpArticleListDTO.builder()</span>
 <span class="nc" id="L41">                        .topic(a.getTopic())</span>
 <span class="nc" id="L42">                        .title(a.getTitle())</span>
 <span class="nc" id="L43">                        .description(a.getDescription())</span>
 <span class="nc" id="L44">                        .language(a.getLanguage())</span>
 <span class="nc" id="L45">                        .build())</span>
-<span class="fc" id="L46">                .collect(Collectors.toList());</span>
+<span class="nc" id="L46">                .collect(Collectors.toList());</span>
     }
 
     public List&lt;HelpArticleDTO&gt; getHelpArticlesByTopic(String topic) {
@@ -54,36 +54,36 @@ public class HelpContentService {
     }
 
     private HelpArticleDTO toDto(HelpArticle article) {
-<span class="fc" id="L57">        List&lt;HelpSectionDTO&gt; sections = Optional.ofNullable(article.getSections()).orElse(List.of()).stream()</span>
-<span class="pc" id="L58">                .sorted((s1, s2) -&gt; Integer.compare(s1.getDisplayOrder(), s2.getDisplayOrder()))</span>
-<span class="pc" id="L59">                .map(s -&gt; HelpSectionDTO.builder()</span>
+<span class="nc" id="L57">        List&lt;HelpSectionDTO&gt; sections = Optional.ofNullable(article.getSections()).orElse(List.of()).stream()</span>
+<span class="nc" id="L58">                .sorted((s1, s2) -&gt; Integer.compare(s1.getDisplayOrder(), s2.getDisplayOrder()))</span>
+<span class="nc" id="L59">                .map(s -&gt; HelpSectionDTO.builder()</span>
 <span class="nc" id="L60">                        .heading(s.getHeading())</span>
 <span class="nc" id="L61">                        .content(s.getContent())</span>
 <span class="nc" id="L62">                        .order(s.getDisplayOrder())</span>
 <span class="nc" id="L63">                        .build())</span>
-<span class="fc" id="L64">                .collect(Collectors.toList());</span>
+<span class="nc" id="L64">                .collect(Collectors.toList());</span>
 
-<span class="fc" id="L66">        List&lt;HelpFAQDTO&gt; faqs = Optional.ofNullable(article.getFaqs()).orElse(List.of()).stream()</span>
-<span class="pc" id="L67">                .sorted((f1, f2) -&gt; Integer.compare(f1.getOrder(), f2.getOrder()))</span>
-<span class="pc" id="L68">                .map(f -&gt; HelpFAQDTO.builder()</span>
+<span class="nc" id="L66">        List&lt;HelpFAQDTO&gt; faqs = Optional.ofNullable(article.getFaqs()).orElse(List.of()).stream()</span>
+<span class="nc" id="L67">                .sorted((f1, f2) -&gt; Integer.compare(f1.getOrder(), f2.getOrder()))</span>
+<span class="nc" id="L68">                .map(f -&gt; HelpFAQDTO.builder()</span>
 <span class="nc" id="L69">                        .question(f.getQuestion())</span>
 <span class="nc" id="L70">                        .answer(f.getAnswer())</span>
 <span class="nc" id="L71">                        .order(f.getOrder())</span>
 <span class="nc" id="L72">                        .build())</span>
-<span class="fc" id="L73">                .collect(Collectors.toList());</span>
+<span class="nc" id="L73">                .collect(Collectors.toList());</span>
 
-<span class="fc" id="L75">        return HelpArticleDTO.builder()</span>
-<span class="fc" id="L76">                .id(article.getId())</span>
-<span class="fc" id="L77">                .topic(article.getTopic())</span>
-<span class="fc" id="L78">                .title(article.getTitle())</span>
-<span class="fc" id="L79">                .description(article.getDescription())</span>
-<span class="fc" id="L80">                .content(article.getContent())</span>
-<span class="fc" id="L81">                .version(article.getVersion())</span>
-<span class="fc" id="L82">                .language(article.getLanguage())</span>
-<span class="fc" id="L83">                .sections(sections)</span>
-<span class="fc" id="L84">                .faqs(faqs)</span>
-<span class="fc" id="L85">                .lastUpdated(article.getUpdatedAt())</span>
-<span class="fc" id="L86">                .build();</span>
+<span class="nc" id="L75">        return HelpArticleDTO.builder()</span>
+<span class="nc" id="L76">                .id(article.getId())</span>
+<span class="nc" id="L77">                .topic(article.getTopic())</span>
+<span class="nc" id="L78">                .title(article.getTitle())</span>
+<span class="nc" id="L79">                .description(article.getDescription())</span>
+<span class="nc" id="L80">                .content(article.getContent())</span>
+<span class="nc" id="L81">                .version(article.getVersion())</span>
+<span class="nc" id="L82">                .language(article.getLanguage())</span>
+<span class="nc" id="L83">                .sections(sections)</span>
+<span class="nc" id="L84">                .faqs(faqs)</span>
+<span class="nc" id="L85">                .lastUpdated(article.getUpdatedAt())</span>
+<span class="nc" id="L86">                .build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -16,46 +16,46 @@ import java.util.UUID;
         @Index(name = &quot;idx_documents_upload_date&quot;, columnList = &quot;upload_date&quot;),
         @Index(name = &quot;idx_documents_application_deleted&quot;, columnList = &quot;application_id, deleted_at&quot;)
 })
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+<span class="nc bnc" id="L19" title="All 94 branches missed.">@Data</span>
+<span class="nc" id="L20">@NoArgsConstructor</span>
+<span class="nc" id="L21">@AllArgsConstructor</span>
+<span class="nc" id="L22">@Builder</span>
 public class ApplicationDocument {
 
     @Id
-    private UUID id;
+<span class="nc" id="L26">    private UUID id;</span>
 
     @Column(name = &quot;application_id&quot;, nullable = false)
-    private UUID applicationId;
+<span class="nc" id="L29">    private UUID applicationId;</span>
 
     @Column(name = &quot;document_type&quot;, nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
-    private DocumentType documentType;
+<span class="nc" id="L33">    private DocumentType documentType;</span>
 
     @Column(name = &quot;original_filename&quot;, nullable = false)
-    private String originalFilename;
+<span class="nc" id="L36">    private String originalFilename;</span>
 
     @Column(name = &quot;stored_filename&quot;, nullable = false, unique = true)
-    private String storedFilename;
+<span class="nc" id="L39">    private String storedFilename;</span>
 
     @Column(name = &quot;file_size&quot;, nullable = false)
-    private Long fileSize;
+<span class="nc" id="L42">    private Long fileSize;</span>
 
     @Column(name = &quot;mime_type&quot;, nullable = false, length = 100)
-    private String mimeType;
+<span class="nc" id="L45">    private String mimeType;</span>
 
     @Column(name = &quot;upload_date&quot;, nullable = false)
-    private LocalDateTime uploadDate;
+<span class="nc" id="L48">    private LocalDateTime uploadDate;</span>
 
     @Column(name = &quot;deleted_at&quot;)
-    private LocalDateTime deletedAt;
+<span class="nc" id="L51">    private LocalDateTime deletedAt;</span>
 
     @Column(name = &quot;uploaded_by_user_id&quot;)
-    private UUID uploadedByUserId;
+<span class="nc" id="L54">    private UUID uploadedByUserId;</span>
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;application_id&quot;, insertable = false, updatable = false)
-    private Application application;
+<span class="nc" id="L58">    private Application application;</span>
 
     /**
      * Check if this document has been soft-deleted.
