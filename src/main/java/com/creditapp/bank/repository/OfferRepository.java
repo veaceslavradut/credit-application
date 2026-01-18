@@ -41,4 +41,18 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
         @Param("applicationId") UUID applicationId,
         @Param("excludedStatus") OfferStatus excludedStatus
     );
+    
+    /**
+     * Retrieve all offers for a specific borrower with pagination and sorting.
+     * Joins Offer with Application to filter by borrowerId.
+     * 
+     * @param borrowerId Borrower UUID
+     * @param pageable Pagination and sorting information
+     * @return Page of offers for the borrower
+     */
+    @Query("SELECT o FROM Offer o JOIN Application a ON o.applicationId = a.id WHERE a.borrowerId = :borrowerId ORDER BY o.createdAt DESC")
+    Page<Offer> findOffersByBorrowerId(
+        @Param("borrowerId") UUID borrowerId,
+        Pageable pageable
+    );
 }
