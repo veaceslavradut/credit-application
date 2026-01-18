@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EmailRateLimiter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.util</a> &gt; <span class="el_source">EmailRateLimiter.java</span></div><h1>EmailRateLimiter.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.util;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * EmailRateLimiter provides distributed rate limiting for email sending
+ * Uses Redis to track email send counts across application instances
+ */
+@Component
+<span class="fc" id="L18">@RequiredArgsConstructor</span>
+<span class="fc" id="L19">@Slf4j</span>
+public class EmailRateLimiter {
+    
+    private final RedisTemplate&lt;String, String&gt; redisTemplate;
+    
+    @Value(&quot;${notification.rate-limit.emails-per-minute:100}&quot;)
+    private int emailsPerMinute;
+    
+<span class="fc" id="L27">    private static final DateTimeFormatter MINUTE_FORMATTER = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd-HH-mm&quot;);</span>
+    
+    /**
+     * Check if rate limit allows sending another email
+     * @return true if allowed, false if rate limit exceeded
+     */
+    public boolean checkRateLimit() {
+<span class="nc" id="L34">        String key = getRateLimitKey();</span>
+        
+        try {
+<span class="nc" id="L37">            Long count = redisTemplate.opsForValue().increment(key);</span>
+            
+<span class="nc bnc" id="L39" title="All 2 branches missed.">            if (count == null) {</span>
+<span class="nc" id="L40">                log.warn(&quot;Redis increment returned null for key: {}&quot;, key);</span>
+<span class="nc" id="L41">                return true; // Allow on Redis failure</span>
+            }
+            
+            // Set expiry on first increment
+<span class="nc bnc" id="L45" title="All 2 branches missed.">            if (count == 1) {</span>
+<span class="nc" id="L46">                redisTemplate.expire(key, 60, TimeUnit.SECONDS);</span>
+            }
+            
+<span class="nc bnc" id="L49" title="All 2 branches missed.">            if (count &gt; emailsPerMinute) {</span>
+<span class="nc" id="L50">                log.warn(&quot;Email rate limit exceeded: {} emails sent this minute (limit: {})&quot;, </span>
+<span class="nc" id="L51">                    count, emailsPerMinute);</span>
+<span class="nc" id="L52">                return false;</span>
+            }
+            
+<span class="nc" id="L55">            return true;</span>
+<span class="nc" id="L56">        } catch (Exception e) {</span>
+<span class="nc" id="L57">            log.error(&quot;Error checking rate limit, allowing email send&quot;, e);</span>
+<span class="nc" id="L58">            return true; // Allow on error (fail open)</span>
+        }
+    }
+    
+    /**
+     * Get current count of emails sent this minute
+     * @return email count
+     */
+    public long getCurrentCount() {
+<span class="nc" id="L67">        String key = getRateLimitKey();</span>
+        try {
+<span class="nc" id="L69">            String value = redisTemplate.opsForValue().get(key);</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">            return value != null ? Long.parseLong(value) : 0;</span>
+<span class="nc" id="L71">        } catch (Exception e) {</span>
+<span class="nc" id="L72">            log.error(&quot;Error getting rate limit count&quot;, e);</span>
+<span class="nc" id="L73">            return 0;</span>
+        }
+    }
+    
+    /**
+     * Reset rate limit counter (for testing)
+     */
+    public void reset() {
+<span class="nc" id="L81">        String key = getRateLimitKey();</span>
+<span class="nc" id="L82">        redisTemplate.delete(key);</span>
+<span class="nc" id="L83">    }</span>
+    
+    /**
+     * Generate Redis key for current minute
+     * Format: email:sent_count:YYYY-MM-DD-HH-mm
+     */
+    private String getRateLimitKey() {
+<span class="nc" id="L90">        String minute = LocalDateTime.now().format(MINUTE_FORMATTER);</span>
+<span class="nc" id="L91">        return &quot;email:sent_count:&quot; + minute;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

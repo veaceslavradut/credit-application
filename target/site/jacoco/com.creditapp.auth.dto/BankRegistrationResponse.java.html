@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankRegistrationResponse.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.auth.dto</a> &gt; <span class="el_source">BankRegistrationResponse.java</span></div><h1>BankRegistrationResponse.java</h1><pre class="source lang-java linenums">package com.creditapp.auth.dto;
+
+import java.util.UUID;
+
+public class BankRegistrationResponse {
+    private UUID bankId;
+    private String bankName;
+    private UUID adminUserId;
+    private String status;
+    private String message;
+
+<span class="nc" id="L12">    public BankRegistrationResponse(UUID bankId, String bankName, UUID adminUserId, String status, String message) {</span>
+<span class="nc" id="L13">        this.bankId = bankId;</span>
+<span class="nc" id="L14">        this.bankName = bankName;</span>
+<span class="nc" id="L15">        this.adminUserId = adminUserId;</span>
+<span class="nc" id="L16">        this.status = status;</span>
+<span class="nc" id="L17">        this.message = message;</span>
+<span class="nc" id="L18">    }</span>
+
+<span class="nc" id="L20">    public UUID getBankId() { return bankId; }</span>
+<span class="nc" id="L21">    public void setBankId(UUID bankId) { this.bankId = bankId; }</span>
+<span class="nc" id="L22">    public String getBankName() { return bankName; }</span>
+<span class="nc" id="L23">    public void setBankName(String bankName) { this.bankName = bankName; }</span>
+<span class="nc" id="L24">    public UUID getAdminUserId() { return adminUserId; }</span>
+<span class="nc" id="L25">    public void setAdminUserId(UUID adminUserId) { this.adminUserId = adminUserId; }</span>
+<span class="nc" id="L26">    public String getStatus() { return status; }</span>
+<span class="nc" id="L27">    public void setStatus(String status) { this.status = status; }</span>
+<span class="nc" id="L28">    public String getMessage() { return message; }</span>
+<span class="nc" id="L29">    public void setMessage(String message) { this.message = message; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankActivationEmailService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.service</a> &gt; <span class="el_source">BankActivationEmailService.java</span></div><h1>BankActivationEmailService.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+@Service
+<span class="fc" id="L10">public class BankActivationEmailService {</span>
+<span class="fc" id="L11">    private static final Logger logger = LoggerFactory.getLogger(BankActivationEmailService.class);</span>
+
+    @Value(&quot;${sendgrid.api-key:}&quot;)
+    private String sendGridApiKey;
+
+    @Value(&quot;${sendgrid.from-email:noreply@creditapp.com}&quot;)
+    private String fromEmail;
+
+    @Value(&quot;${app.base-url:http://localhost:8080}&quot;)
+    private String baseUrl;
+
+    @Async
+    public void sendActivationEmail(String email, String bankName, String activationToken) {
+<span class="nc bnc" id="L24" title="All 4 branches missed.">        if (sendGridApiKey == null || sendGridApiKey.isEmpty()) {</span>
+<span class="nc" id="L25">            logger.warn(&quot;SendGrid API key not configured. Activation email not sent for bank: {}&quot;, bankName);</span>
+<span class="nc" id="L26">            return;</span>
+        }
+
+<span class="nc" id="L29">        String activationLink = baseUrl + &quot;/auth/activate?token=&quot; + activationToken;</span>
+<span class="nc" id="L30">        String subject = &quot;Activate Your &quot; + bankName + &quot; Account&quot;;</span>
+        // Build HTML email for future SendGrid integration
+        @SuppressWarnings(&quot;unused&quot;)
+<span class="nc" id="L33">        String htmlContent = buildHtmlEmail(bankName, activationLink);</span>
+
+<span class="nc" id="L35">        logger.info(&quot;Sending activation email to {} for bank {}&quot;, email, bankName);</span>
+        // MVP: Log instead of calling SendGrid
+<span class="nc" id="L37">        logger.debug(&quot;Activation email content: subject={}, to={}, link={}&quot;, subject, email, activationLink);</span>
+<span class="nc" id="L38">    }</span>
+
+    private String buildHtmlEmail(String bankName, String activationLink) {
+<span class="nc" id="L41">        return &quot;&lt;html&gt;&lt;body&gt;&quot; +</span>
+                &quot;&lt;h2&gt;Welcome to Credit Application Platform&lt;/h2&gt;&quot; +
+                &quot;&lt;p&gt;Thank you for registering &quot; + bankName + &quot;.&lt;/p&gt;&quot; +
+                &quot;&lt;p&gt;Please activate your account by clicking the link below:&lt;/p&gt;&quot; +
+                &quot;&lt;p&gt;&lt;a href='&quot; + activationLink + &quot;'&gt;Activate Account&lt;/a&gt;&lt;/p&gt;&quot; +
+                &quot;&lt;p&gt;This link will expire in 7 days.&lt;/p&gt;&quot; +
+                &quot;&lt;p&gt;If you did not request this, please ignore this email.&lt;/p&gt;&quot; +
+                &quot;&lt;/body&gt;&lt;/html&gt;&quot;;
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

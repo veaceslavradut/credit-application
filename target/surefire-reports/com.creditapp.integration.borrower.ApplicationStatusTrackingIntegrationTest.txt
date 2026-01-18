@@ -1,13 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.creditapp.integration.borrower.ApplicationStatusTrackingIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 6, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 28.83 s <<< FAILURE! -- in com.creditapp.integration.borrower.ApplicationStatusTrackingIntegrationTest
-com.creditapp.integration.borrower.ApplicationStatusTrackingIntegrationTest.testProgressionPercentageCalculation -- Time elapsed: 0.242 s <<< ERROR!
-jakarta.persistence.TransactionRequiredException: No EntityManager with actual transaction available for current thread - cannot reliably process 'flush' call
-	at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:303)
-	at jdk.proxy2/jdk.proxy2.$Proxy181.flush(Unknown Source)
-	at com.creditapp.integration.borrower.ApplicationStatusTrackingIntegrationTest.testProgressionPercentageCalculation(ApplicationStatusTrackingIntegrationTest.java:281)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.005 s -- in com.creditapp.integration.borrower.ApplicationStatusTrackingIntegrationTest
