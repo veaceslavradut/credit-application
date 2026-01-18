@@ -30,8 +30,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class ApplicationStatusUpdateServiceTest {
 
     @MockBean
@@ -95,6 +97,12 @@ class ApplicationStatusUpdateServiceTest {
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
         when(offerRepository.findByApplicationIdAndBankId(applicationId, bankId))
             .thenReturn(Optional.of(acceptedOffer));
+        when(applicationRepository.save(any(Application.class)))
+            .thenAnswer(invocation -> {
+                Application app = invocation.getArgument(0);
+                app.setUpdatedAt(LocalDateTime.now());
+                return app;
+            });
 
         // Act
         ApplicationStatusUpdateResponse response = applicationStatusUpdateService.updateApplicationStatus(
@@ -218,6 +226,12 @@ class ApplicationStatusUpdateServiceTest {
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
         when(offerRepository.findByApplicationIdAndBankId(applicationId, bankId))
             .thenReturn(Optional.of(acceptedOffer));
+        when(applicationRepository.save(any(Application.class)))
+            .thenAnswer(invocation -> {
+                Application app = invocation.getArgument(0);
+                app.setUpdatedAt(LocalDateTime.now());
+                return app;
+            });
 
         LocalDateTime beforeUpdate = LocalDateTime.now();
 

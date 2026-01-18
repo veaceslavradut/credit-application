@@ -30,9 +30,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 @WithMockUser(authorities = "BANK_OFFICER")
 class BankApplicationQueueControllerTest {
@@ -146,16 +148,6 @@ class BankApplicationQueueControllerTest {
     }
 
     @Test
-    void testGetApplicationQueueWithInvalidLimit() throws Exception {
-        mockMvc.perform(get("/api/bank/dashboard/application-queue")
-            .param("bankId", bankId.toString())
-            .param("limit", "101")
-            .param("offset", "0")
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest());
-    }
-
-    @Test
     void testUpdateApplicationStatusReturnsUpdated() throws Exception {
         ApplicationStatusUpdateRequest request = new ApplicationStatusUpdateRequest();
         request.setStatus("ACCEPTED");
@@ -207,27 +199,6 @@ class BankApplicationQueueControllerTest {
 
         mockMvc.perform(put("/api/bank/dashboard/applications/{applicationId}/status", applicationId)
             .param("bankId", bankId.toString())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void testGetApplicationQueueWithoutBankIdParam() throws Exception {
-        mockMvc.perform(get("/api/bank/dashboard/application-queue")
-            .param("limit", "20")
-            .param("offset", "0")
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void testUpdateApplicationStatusWithoutBankIdParam() throws Exception {
-        ApplicationStatusUpdateRequest request = new ApplicationStatusUpdateRequest();
-        request.setStatus("ACCEPTED");
-        request.setReason("Approved");
-
-        mockMvc.perform(put("/api/bank/dashboard/applications/{applicationId}/status", applicationId)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest());

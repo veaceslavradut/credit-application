@@ -9,10 +9,9 @@ import com.creditapp.bank.validator.ApplicationStatusValidator;
 import com.creditapp.borrower.model.Application;
 import com.creditapp.borrower.model.ApplicationStatus;
 import com.creditapp.borrower.repository.ApplicationRepository;
+import com.creditapp.shared.exception.NotFoundException;
 import com.creditapp.shared.service.AuditService;
-import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,12 +39,12 @@ public class ApplicationStatusUpdateService {
         log.debug("[QUEUE] Updating application {} status to {} for bank {}", applicationId, request.getStatus(), bankId);
 
         Application application = applicationRepository.findById(applicationId)
-            .orElseThrow(() -> new EntityNotFoundException("Application not found: " + applicationId));
+            .orElseThrow(() -> new NotFoundException("Application not found: " + applicationId));
 
         Optional<Offer> bankOffer = offerRepository.findByApplicationIdAndBankId(applicationId, bankId);
         if (bankOffer.isEmpty()) {
             log.warn("[QUEUE] Bank {} has no offer for application {}", bankId, applicationId);
-            throw new IllegalArgumentException("Bank has no offer for this application");
+            throw new NotFoundException("Bank has no offer for this application");
         }
 
         Offer offer = bankOffer.get();
