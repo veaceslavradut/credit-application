@@ -50,7 +50,9 @@ public class OfferHistoryService {
     @Transactional(readOnly = true)
     @Cacheable(value = "borrowerOfferHistory", key = "#borrowerId")
     public OfferHistoryResponse getOfferHistory(UUID borrowerId, Integer limit, Integer offset, String sortBy) {
-        log.debug("Retrieving offer history for borrower: {}, limit: {}, offset: {}", borrowerId, limit, offset);
+        long startTime = System.currentTimeMillis();
+        log.debug("[HISTORY] Retrieving offer history for borrower: {}, limit: {}, offset: {}, sortBy: {}", 
+            borrowerId, limit, offset, sortBy);
         
         if (limit == null || limit <= 0) {
             limit = 20;
@@ -73,6 +75,11 @@ public class OfferHistoryService {
         
         long totalCount = offerPage.getTotalElements();
         
+        // Warn if large history detected
+        if (totalCount > 1000) {
+            log.warn("[HISTORY] Large offer history detected for borrower {}: {} total offers", borrowerId, totalCount);
+        }
+        
         // Pre-load all related applications and organizations to avoid N+1 queries
         Map<UUID, Application> applicationCache = new HashMap<>();
         Map<UUID, Organization> organizationCache = new HashMap<>();
@@ -83,7 +90,9 @@ public class OfferHistoryService {
 
         boolean hasMore = (offset + limit) < totalCount;
 
-        log.info("Retrieved {} offers for borrower {}, total: {}", records.size(), borrowerId, totalCount);
+        long queryTimeMs = System.currentTimeMillis() - startTime;
+        log.info("[HISTORY] Retrieved {} offers for borrower {} in {}ms, total: {}, hasMore: {}", 
+            records.size(), borrowerId, queryTimeMs, totalCount, hasMore);
 
         return OfferHistoryResponse.builder()
             .offers(records)

@@ -45,7 +45,10 @@ public class ApplicationHistoryService {
     @Transactional(readOnly = true)
     @Cacheable(value = "borrowerApplicationHistory", key = "#borrowerId")
     public ApplicationHistoryResponse getApplicationHistory(UUID borrowerId, ApplicationHistoryRequest request) {
-        log.debug("Retrieving application history for borrower: {} with filters: {}", borrowerId, request);
+        long startTime = System.currentTimeMillis();
+        log.debug("[HISTORY] Retrieving application history for borrower: {} with filters: status={}, dateRange=[{} to {}], loanAmount=[{} to {}]", 
+            borrowerId, request.getStatus(), request.getDateRangeStart(), request.getDateRangeEnd(), 
+            request.getLoanAmountMin(), request.getLoanAmountMax());
 
         // Defaults
         Integer limit = request.getLimit() != null ? request.getLimit() : 20;
@@ -66,6 +69,11 @@ public class ApplicationHistoryService {
         
         long totalCount = applications.getTotalElements();
         
+        // Warn if large history detected
+        if (totalCount > 1000) {
+            log.warn("[HISTORY] Large application history detected for borrower {}: {} total applications", borrowerId, totalCount);
+        }
+        
         List<ApplicationHistoryRecord> records = applications.getContent().stream()
             .filter(app -> applyStatusFilter(app, request.getStatus()))
             .filter(app -> applyDateRangeFilter(app, request.getDateRangeStart(), request.getDateRangeEnd()))
@@ -75,7 +83,9 @@ public class ApplicationHistoryService {
 
         boolean hasMore = (offset + limit) < totalCount;
 
-        log.info("Retrieved {} applications for borrower {}, total: {}", records.size(), borrowerId, totalCount);
+        long queryTimeMs = System.currentTimeMillis() - startTime;
+        log.info("[HISTORY] Retrieved {} applications for borrower {} in {}ms, total: {}, hasMore: {}", 
+            records.size(), borrowerId, queryTimeMs, totalCount, hasMore);
 
         return ApplicationHistoryResponse.builder()
             .applications(records)

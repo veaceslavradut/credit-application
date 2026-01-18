@@ -9,9 +9,11 @@ com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest.class
 com\creditapp\integration\borrower\HelpContentIntegrationTest.class
 com\creditapp\integration\security\RBACIntegrationTest.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$9.class
+com\creditapp\unit\borrower\BorrowerHistoryControllerTest.class
 com\creditapp\shared\config\TestSecurityConfig.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$2.class
 com\creditapp\integration\borrower\ApplicationStatusTrackingIntegrationTest.class
+com\creditapp\unit\borrower\ApplicationHistoryServiceTest.class
 com\creditapp\unit\shared\model\OrganizationEntityTest.class
 com\creditapp\integration\borrower\OfferRetrievalIntegrationTest.class
 com\creditapp\unit\borrower\ApplicationUpdateServiceTest.class
@@ -31,6 +33,7 @@ com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$8.class
 com\creditapp\integration\borrower\OfferHistoryIntegrationTest.class
 com\creditapp\unit\auth\model\UserEntityTest.class
 com\creditapp\integration\auth\BankRegistrationIntegrationTest.class
+com\creditapp\unit\borrower\OfferHistoryServiceTest.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$1.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$4.class
 com\creditapp\unit\borrower\ApplicationCreationUnitTest.class

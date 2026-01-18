@@ -991,6 +991,314 @@ curl -X POST https://api.creditapp.com/api/borrower/applications/550e8400-e29b-4
 
 ---
 
+### GET /api/borrower/history/offers
+
+**Description:** Retrieve borrower's complete offer history across all applications with pagination and sorting.
+
+**Authentication:** Required (BORROWER role)
+
+**Path:** GET /api/borrower/history/offers
+
+**Request Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Query Parameters:**
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| limit | Integer | No | 20 | Number of offers per page (max 100) |
+| offset | Integer | No | 0 | Number of offers to skip |
+| sortBy | String | No | createdAt | Sort field: "createdAt", "apr", "monthlyPayment" |
+
+**Success Response (200 OK):**
+```json
+{
+  "offers": [
+    {
+      "offerId": "550e8400-e29b-41d4-a716-446655440001",
+      "applicationId": "550e8400-e29b-41d4-a716-446655440000",
+      "bankName": "Example Bank",
+      "apr": 8.5,
+      "monthlyPayment": 775.67,
+      "totalCost": 27944.12,
+      "originationFee": 250.00,
+      "insuranceCost": 120.00,
+      "loanTermMonths": 36,
+      "validityPeriodDays": 30,
+      "expiresAt": "2026-02-15T10:30:00Z",
+      "offerStatus": "ACCEPTED",
+      "createdAt": "2026-01-15T10:30:00Z",
+      "borrowerSelectedAt": "2026-01-16T14:20:00Z",
+      "bankAcceptedAt": null
+    },
+    {
+      "offerId": "660e8400-e29b-41d4-a716-446655440002",
+      "applicationId": "660e8400-e29b-41d4-a716-446655440001",
+      "bankName": "National Bank",
+      "apr": 9.2,
+      "monthlyPayment": 810.45,
+      "totalCost": 29176.20,
+      "originationFee": 300.00,
+      "insuranceCost": 150.00,
+      "loanTermMonths": 36,
+      "validityPeriodDays": 30,
+      "expiresAt": "2026-01-10T08:00:00Z",
+      "offerStatus": "EXPIRED",
+      "createdAt": "2025-12-10T08:00:00Z",
+      "borrowerSelectedAt": null,
+      "bankAcceptedAt": null
+    }
+  ],
+  "totalCount": 45,
+  "limit": 20,
+  "offset": 0,
+  "hasMore": true,
+  "retrievedAt": "2026-01-18T10:00:00Z"
+}
+```
+
+**Response Fields:**
+| Field | Type | Description |
+|-------|------|-------------|
+| offers | Array | List of OfferHistoryRecord objects |
+| totalCount | Integer | Total number of offers across all applications |
+| limit | Integer | Number of results per page |
+| offset | Integer | Current offset in result set |
+| hasMore | Boolean | True if more results available |
+| retrievedAt | ISO-8601 DateTime | Timestamp of query execution |
+
+**OfferHistoryRecord Fields:**
+| Field | Type | Description |
+|-------|------|-------------|
+| offerId | UUID | Unique offer identifier |
+| applicationId | UUID | Associated application ID |
+| bankName | String | Name of bank that made offer |
+| apr | BigDecimal | Annual Percentage Rate |
+| monthlyPayment | BigDecimal | Monthly payment amount |
+| totalCost | BigDecimal | Total cost over loan term |
+| originationFee | BigDecimal | Origination fee amount |
+| insuranceCost | BigDecimal | Insurance cost |
+| loanTermMonths | Integer | Loan term in months |
+| validityPeriodDays | Integer | Number of days offer is valid |
+| expiresAt | ISO-8601 DateTime | When offer expires |
+| offerStatus | String | CALCULATED, ACCEPTED, EXPIRED |
+| createdAt | ISO-8601 DateTime | When offer was created |
+| borrowerSelectedAt | ISO-8601 DateTime | When borrower selected (nullable) |
+| bankAcceptedAt | ISO-8601 DateTime | When bank accepted (nullable) |
+
+**Error Responses:**
+
+**400 Bad Request** - Invalid parameters
+```json
+{
+  "error": "Invalid Parameters",
+  "message": "Limit must be between 1 and 100",
+  "timestamp": "2026-01-18T10:00:00Z"
+}
+```
+
+**401 Unauthorized** - Not authenticated
+```json
+{
+  "error": "Unauthorized",
+  "message": "Authentication required",
+  "timestamp": "2026-01-18T10:00:00Z"
+}
+```
+
+**403 Forbidden** - Wrong role
+```json
+{
+  "error": "Forbidden",
+  "message": "BORROWER role required",
+  "timestamp": "2026-01-18T10:00:00Z"
+}
+```
+
+**Notes:**
+- Retrieves all offers across all borrower applications (historical)
+- Results sorted by createdAt descending (newest first) by default
+- Pagination: default 20 results per page, maximum 100
+- Response cached for 1 hour per borrower
+- Cache invalidated when new offer created or modified
+- Includes offer status and selection timestamps for audit trail
+- Only borrower's own offers are returned (secured by authentication)
+
+**cURL Example:**
+```bash
+curl -X GET "https://api.creditapp.com/api/borrower/history/offers?limit=20&offset=0&sortBy=createdAt" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."
+```
+
+---
+
+### GET /api/borrower/history/applications
+
+**Description:** Retrieve borrower's complete application history with filtering, pagination, and sorting. Each application includes offer count, best APR, and expiration status.
+
+**Authentication:** Required (BORROWER role)
+
+**Path:** GET /api/borrower/history/applications
+
+**Request Headers:**
+```
+Authorization: Bearer {jwt_token}
+```
+
+**Query Parameters:**
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| status | String | No | - | Filter by status: DRAFT, SUBMITTED, UNDER_REVIEW, OFFERS_AVAILABLE, ACCEPTED, REJECTED, EXPIRED, WITHDRAWN |
+| dateRangeStart | String | No | - | ISO-8601 DateTime: filter applications created after this date |
+| dateRangeEnd | String | No | - | ISO-8601 DateTime: filter applications created before this date |
+| loanAmountMin | BigDecimal | No | - | Filter applications with loan amount >= this value |
+| loanAmountMax | BigDecimal | No | - | Filter applications with loan amount <= this value |
+| limit | Integer | No | 20 | Number of applications per page (max 100) |
+| offset | Integer | No | 0 | Number of applications to skip |
+| sortBy | String | No | submittedAt | Sort field: "submittedAt", "createdAt", "loanAmount" |
+
+**Success Response (200 OK):**
+```json
+{
+  "applications": [
+    {
+      "applicationId": "550e8400-e29b-41d4-a716-446655440000",
+      "referenceNumber": "APP-2026-001234",
+      "status": "ACCEPTED",
+      "loanAmount": 25000.00,
+      "loanTermMonths": 36,
+      "loanPurpose": "PERSONAL",
+      "createdAt": "2026-01-14T09:00:00Z",
+      "submittedAt": "2026-01-15T10:30:00Z",
+      "closedAt": null,
+      "offerCount": 3,
+      "bestAPR": 8.5,
+      "selectedOfferId": "550e8400-e29b-41d4-a716-446655440001",
+      "expirationStatus": "all_active"
+    },
+    {
+      "applicationId": "660e8400-e29b-41d4-a716-446655440001",
+      "referenceNumber": "APP-2025-005678",
+      "status": "EXPIRED",
+      "loanAmount": 15000.00,
+      "loanTermMonths": 24,
+      "loanPurpose": "AUTO",
+      "createdAt": "2025-11-10T08:00:00Z",
+      "submittedAt": "2025-11-11T12:00:00Z",
+      "closedAt": "2025-12-11T08:00:00Z",
+      "offerCount": 2,
+      "bestAPR": 9.2,
+      "selectedOfferId": null,
+      "expirationStatus": "all_expired"
+    }
+  ],
+  "totalCount": 12,
+  "limit": 20,
+  "offset": 0,
+  "hasMore": false,
+  "retrievedAt": "2026-01-18T10:00:00Z"
+}
+```
+
+**Response Fields:**
+| Field | Type | Description |
+|-------|------|-------------|
+| applications | Array | List of ApplicationHistoryRecord objects |
+| totalCount | Integer | Total matching applications |
+| limit | Integer | Number of results per page |
+| offset | Integer | Current offset in result set |
+| hasMore | Boolean | True if more results available |
+| retrievedAt | ISO-8601 DateTime | Timestamp of query execution |
+
+**ApplicationHistoryRecord Fields:**
+| Field | Type | Description |
+|-------|------|-------------|
+| applicationId | UUID | Unique application identifier |
+| referenceNumber | String | Human-readable reference (e.g., APP-2026-001234) |
+| status | String | Current application status |
+| loanAmount | BigDecimal | Requested loan amount |
+| loanTermMonths | Integer | Loan term in months |
+| loanPurpose | String | Loan purpose/type |
+| createdAt | ISO-8601 DateTime | When application was created |
+| submittedAt | ISO-8601 DateTime | When application was submitted (nullable) |
+| closedAt | ISO-8601 DateTime | When application was closed (nullable) |
+| offerCount | Integer | Number of offers received |
+| bestAPR | BigDecimal | Minimum APR from all offers (nullable) |
+| selectedOfferId | UUID | ID of selected offer (nullable) |
+| expirationStatus | String | "all_active", "all_expired", "mixed", "no_offers" |
+
+**Expiration Status Values:**
+- **all_active**: All offers still valid (expiresAt > now)
+- **all_expired**: All offers have expired
+- **mixed**: Some valid, some expired
+- **no_offers**: No offers received for application
+
+**Error Responses:**
+
+**400 Bad Request** - Invalid parameters
+```json
+{
+  "error": "Invalid Parameters",
+  "message": "Invalid status value. Must be one of: DRAFT, SUBMITTED, UNDER_REVIEW, OFFERS_AVAILABLE, ACCEPTED, REJECTED, EXPIRED, WITHDRAWN",
+  "timestamp": "2026-01-18T10:00:00Z"
+}
+```
+
+**401 Unauthorized** - Not authenticated
+```json
+{
+  "error": "Unauthorized",
+  "message": "Authentication required",
+  "timestamp": "2026-01-18T10:00:00Z"
+}
+```
+
+**403 Forbidden** - Wrong role
+```json
+{
+  "error": "Forbidden",
+  "message": "BORROWER role required",
+  "timestamp": "2026-01-18T10:00:00Z"
+}
+```
+
+**Notes:**
+- Retrieves all applications for authenticated borrower with detailed aggregations
+- All filters applied with AND logic (status AND date range AND loan amount)
+- Results sorted by submittedAt descending (newest first) by default
+- Offer count and best APR calculated via SQL aggregations (not application-side)
+- Expiration status determined based on current time vs offer expiresAt
+- Response cached for 1 hour per borrower
+- Cache invalidated when application status changes
+- Only borrower's own applications returned (secured by authentication)
+- Pagination: default 20 results per page, maximum 100
+
+**Filter Examples:**
+
+Filter by status and date range:
+```
+GET /api/borrower/history/applications?status=ACCEPTED&dateRangeStart=2025-01-01T00:00:00Z&dateRangeEnd=2026-01-01T00:00:00Z
+```
+
+Filter by loan amount range:
+```
+GET /api/borrower/history/applications?loanAmountMin=10000&loanAmountMax=50000
+```
+
+Combined filters with pagination:
+```
+GET /api/borrower/history/applications?status=SUBMITTED&loanAmountMin=20000&limit=10&offset=0
+```
+
+**cURL Example:**
+```bash
+curl -X GET "https://api.creditapp.com/api/borrower/history/applications?status=ACCEPTED&limit=20&offset=0" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."
+```
+
+---
+
 ## Help Content API
 
 ### GET /api/help/topics
@@ -1115,6 +1423,8 @@ curl -X GET "http://localhost:8080/api/help/loan-types?language=en"
 | /api/borrower/applications/{id}/status | GET |  | ✓ |  |  |
 | /api/borrower/applications/{id}/offers | GET |  | ✓ |  |  |
 | /api/borrower/applications/{id}/withdraw | POST |  | ✓ |  |  |
+| /api/borrower/history/offers | GET |  | ✓ |  |  |
+| /api/borrower/history/applications | GET |  | ✓ |  |  |
 | /api/help/topics | GET | ✓ |  |  |  |
 | /api/help/{topic} | GET | ✓ |  |  |  |
 | /api/health | GET |  |  |  |  |
