@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Bank Application Queue - WebSocket Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .connected { background-color: #d4edda; color: #155724; }
+        .disconnected { background-color: #f8d7da; color: #721c24; }
+        #messages { border: 1px solid #ccc; height: 400px; overflow-y: scroll; padding: 10px; }
+        .message { margin: 5px 0; padding: 5px; background: #f8f9fa; border-left: 3px solid #007bff; }
+        .application_update { border-left-color: #28a745; }
+        .status_changed { border-left-color: #ffc107; }
+        button { padding: 10px 20px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Bank Application Queue - Real-Time Updates</h1>
+    
+    <div>
+        <label for="bankId">Bank ID:</label>
+        <input type="text" id="bankId" placeholder="Enter UUID" style="width: 300px;">
+        <button onclick="connect()">Connect</button>
+        <button onclick="disconnect()">Disconnect</button>
+        <button onclick="sendPing()">Send Ping</button>
+    </div>
+    
+    <div id="status" class="disconnected">Disconnected</div>
+    
+    <h2>Messages:</h2>
+    <div id="messages"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script>
+        let socket = null;
+        let stompClient = null;
+        
+        function connect() {
+            const bankId = document.getElementById('bankId').value;
+            if (!bankId) {
+                alert('Please enter a bank ID');
+                return;
+            }
+            
+            const url = `http://localhost:8080/ws/bank/${bankId}/applications`;
+            socket = new SockJS(url);
+            
+            socket.onopen = function() {
+                updateStatus(true);
+                addMessage('Connected', 'System');
+            };
+            
+            socket.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                addMessage(JSON.stringify(data, null, 2), data.type);
+            };
+            
+            socket.onerror = function(error) {
+                addMessage('Error: ' + error, 'error');
+            };
+            
+            socket.onclose = function() {
+                updateStatus(false);
+                addMessage('Disconnected', 'System');
+            };
+        }
+        
+        function disconnect() {
+            if (socket) {
+                socket.close();
+                socket = null;
+            }
+        }
+        
+        function sendPing() {
+            if (socket && socket.readyState === SockJS.OPEN) {
+                socket.send('ping');
+            } else {
+                alert('Not connected');
+            }
+        }
+        
+        function updateStatus(connected) {
+            const statusEl = document.getElementById('status');
+            if (connected) {
+                statusEl.textContent = 'Connected';
+                statusEl.className = 'connected';
+            } else {
+                statusEl.textContent = 'Disconnected';
+                statusEl.className = 'disconnected';
+            }
+        }
+        
+        function addMessage(text, type) {
+            const messagesEl = document.getElementById('messages');
+            const messageEl = document.createElement('div');
+            messageEl.className = 'message ' + (type || '');
+            messageEl.textContent = new Date().toLocaleTimeString() + ' - ' + text;
+            messagesEl.appendChild(messageEl);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+    </script>
+</body>
+</html>

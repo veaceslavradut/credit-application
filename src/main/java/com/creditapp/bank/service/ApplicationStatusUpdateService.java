@@ -6,6 +6,7 @@ import com.creditapp.bank.model.Offer;
 import com.creditapp.bank.model.OfferStatus;
 import com.creditapp.bank.repository.OfferRepository;
 import com.creditapp.bank.validator.ApplicationStatusValidator;
+import com.creditapp.bank.websocket.ApplicationQueueWebSocketHandler;
 import com.creditapp.borrower.model.Application;
 import com.creditapp.borrower.model.ApplicationStatus;
 import com.creditapp.borrower.repository.ApplicationRepository;
@@ -28,6 +29,7 @@ public class ApplicationStatusUpdateService {
     private final ApplicationRepository applicationRepository;
     private final OfferRepository offerRepository;
     private final AuditService auditService;
+    private final ApplicationQueueWebSocketHandler webSocketHandler;
 
     @Transactional
     public ApplicationStatusUpdateResponse updateApplicationStatus(
@@ -94,6 +96,18 @@ public class ApplicationStatusUpdateService {
             );
         } catch (Exception e) {
             log.error("[QUEUE] Failed to log audit event for application {} status change", applicationId, e);
+        }
+
+        // Broadcast status change to connected WebSocket clients
+        try {
+            webSocketHandler.broadcastStatusChange(
+                bankId.toString(),
+                applicationId.toString(),
+                previousStatus.name(),
+                targetStatus.name()
+            );
+        } catch (Exception e) {
+            log.error("[QUEUE] Failed to broadcast status change via WebSocket", e);
         }
 
         long took = System.currentTimeMillis() - start;

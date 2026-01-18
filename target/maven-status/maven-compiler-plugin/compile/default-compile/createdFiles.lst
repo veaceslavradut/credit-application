@@ -119,6 +119,7 @@ com\creditapp\shared\messaging\NotificationEventPublisher.class
 com\creditapp\borrower\model\BorrowerNotification.class
 com\creditapp\borrower\dto\HelpArticleListDTO$HelpArticleListDTOBuilder.class
 com\creditapp\bank\dto\ApplicationQueueResponse$ApplicationQueueResponseBuilder.class
+com\creditapp\shared\config\WebSocketConfig.class
 com\creditapp\borrower\dto\ApplicationHistoryRecord.class
 com\creditapp\borrower\service\ApplicationStatusTrackingService.class
 com\creditapp\borrower\service\OfferRetrievalService.class
@@ -170,6 +171,7 @@ com\creditapp\shared\model\DeliveryStatus.class
 com\creditapp\borrower\dto\CalculateScenarioRequest.class
 com\creditapp\shared\model\HelpFAQ.class
 com\creditapp\bank\service\ApplicationQueueService$1.class
+com\creditapp\bank\websocket\ApplicationQueueWebSocketHandler.class
 com\creditapp\borrower\dto\ApplicationHistoryResponse$ApplicationHistoryResponseBuilder.class
 com\creditapp\shared\exception\RateLimitExceededException.class
 com\creditapp\shared\util\RateLimitInterceptor.class
@@ -195,6 +197,7 @@ com\creditapp\auth\repository\UserRepository.class
 com\creditapp\borrower\dto\CalculateScenarioResponse$CalculateScenarioResponseBuilder.class
 com\creditapp\borrower\dto\UpdateApplicationResponse$UpdateApplicationResponseBuilder.class
 com\creditapp\shared\service\PasswordValidationService$ValidationResult.class
+com\creditapp\bank\service\ApplicationQueueNotificationService.class
 com\creditapp\auth\controller\UserProfileController.class
 com\creditapp\shared\model\EmailDeliveryLog$EmailDeliveryLogBuilder.class
 com\creditapp\auth\dto\RegistrationRequest.class
@@ -208,6 +211,7 @@ com\creditapp\borrower\service\OfferHistoryService.class
 com\creditapp\shared\listener\EmailNotificationListener.class
 com\creditapp\shared\dto\EmailMetricsDTO$EmailMetricsDTOBuilder.class
 com\creditapp\shared\security\RequiresBorrowerRole.class
+com\creditapp\bank\websocket\ApplicationQueueWebSocketInterceptor.class
 com\creditapp\borrower\model\DocumentType.class
 com\creditapp\shared\model\EmailTemplate.class
 com\creditapp\shared\service\ActivationTokenService.class
