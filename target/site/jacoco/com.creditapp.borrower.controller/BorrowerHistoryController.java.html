@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BorrowerHistoryController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.borrower.controller</a> &gt; <span class="el_source">BorrowerHistoryController.java</span></div><h1>BorrowerHistoryController.java</h1><pre class="source lang-java linenums">package com.creditapp.borrower.controller;
+
+import com.creditapp.borrower.dto.ApplicationHistoryRequest;
+import com.creditapp.borrower.dto.ApplicationHistoryResponse;
+import com.creditapp.borrower.dto.OfferHistoryResponse;
+import com.creditapp.borrower.service.ApplicationHistoryService;
+import com.creditapp.borrower.service.OfferHistoryService;
+import com.creditapp.shared.security.AuthorizationService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
+
+/**
+ * REST Controller for borrower's application and offer history endpoints.
+ * Provides access to historical data with filtering, sorting, and pagination.
+ */
+@RestController
+@RequestMapping(&quot;/api/borrower/history&quot;)
+<span class="fc" id="L23">@RequiredArgsConstructor</span>
+<span class="fc" id="L24">@Slf4j</span>
+public class BorrowerHistoryController {
+    private final OfferHistoryService offerHistoryService;
+    private final ApplicationHistoryService applicationHistoryService;
+    private final AuthorizationService authorizationService;
+
+    /**
+     * GET /api/borrower/history/offers
+     * Retrieve borrower's offer history with pagination.
+     * 
+     * @param limit Maximum number of records (default 20, max 100)
+     * @param offset Pagination offset (default 0)
+     * @param sortBy Sort field (default offerReceivedAt)
+     * @return OfferHistoryResponse with paginated offers
+     */
+    @GetMapping(&quot;/offers&quot;)
+    @PreAuthorize(&quot;hasAuthority('BORROWER')&quot;)
+    public ResponseEntity&lt;OfferHistoryResponse&gt; getOfferHistory(
+            @RequestParam(name = &quot;limit&quot;, defaultValue = &quot;20&quot;) Integer limit,
+            @RequestParam(name = &quot;offset&quot;, defaultValue = &quot;0&quot;) Integer offset,
+            @RequestParam(name = &quot;sortBy&quot;, defaultValue = &quot;offerReceivedAt&quot;) String sortBy) {
+        
+<span class="nc" id="L46">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L47">        log.info(&quot;Retrieving offer history for borrower: {}&quot;, borrowerId);</span>
+        
+<span class="nc" id="L49">        OfferHistoryResponse response = offerHistoryService.getOfferHistory(borrowerId, limit, offset, sortBy);</span>
+<span class="nc" id="L50">        return ResponseEntity.ok(response);</span>
+    }
+
+    /**
+     * GET /api/borrower/history/applications
+     * Retrieve borrower's application history with filtering and pagination.
+     * 
+     * @param request Application history request with filters
+     * @return ApplicationHistoryResponse with paginated applications
+     */
+    @GetMapping(&quot;/applications&quot;)
+    @PreAuthorize(&quot;hasAuthority('BORROWER')&quot;)
+    public ResponseEntity&lt;ApplicationHistoryResponse&gt; getApplicationHistory(
+            @RequestParam(name = &quot;limit&quot;, required = false) Integer limit,
+            @RequestParam(name = &quot;offset&quot;, required = false) Integer offset,
+            @RequestParam(name = &quot;status&quot;, required = false) String status,
+            @RequestParam(name = &quot;dateRangeStart&quot;, required = false) String dateRangeStart,
+            @RequestParam(name = &quot;dateRangeEnd&quot;, required = false) String dateRangeEnd,
+            @RequestParam(name = &quot;loanAmountMin&quot;, required = false) java.math.BigDecimal loanAmountMin,
+            @RequestParam(name = &quot;loanAmountMax&quot;, required = false) java.math.BigDecimal loanAmountMax,
+            @RequestParam(name = &quot;sortBy&quot;, required = false) String sortBy) {
+        
+<span class="nc" id="L72">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L73">        log.info(&quot;Retrieving application history for borrower: {}&quot;, borrowerId);</span>
+        
+<span class="nc" id="L75">        ApplicationHistoryRequest request = ApplicationHistoryRequest.builder()</span>
+<span class="nc" id="L76">            .limit(limit)</span>
+<span class="nc" id="L77">            .offset(offset)</span>
+<span class="nc" id="L78">            .status(status)</span>
+<span class="nc" id="L79">            .loanAmountMin(loanAmountMin)</span>
+<span class="nc" id="L80">            .loanAmountMax(loanAmountMax)</span>
+<span class="nc" id="L81">            .sortBy(sortBy)</span>
+<span class="nc" id="L82">            .build();</span>
+        
+<span class="nc" id="L84">        ApplicationHistoryResponse response = applicationHistoryService.getApplicationHistory(borrowerId, request);</span>
+<span class="nc" id="L85">        return ResponseEntity.ok(response);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

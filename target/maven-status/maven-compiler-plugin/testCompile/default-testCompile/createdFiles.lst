@@ -28,14 +28,17 @@ com\creditapp\test\config\TestSecurityConfig.class
 com\creditapp\unit\security\AuthorizationUnitTest.class
 com\creditapp\borrower\service\ApplicationSubmissionNotificationTest.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$8.class
+com\creditapp\integration\borrower\OfferHistoryIntegrationTest.class
 com\creditapp\unit\auth\model\UserEntityTest.class
 com\creditapp\integration\auth\BankRegistrationIntegrationTest.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$1.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$4.class
 com\creditapp\unit\borrower\ApplicationCreationUnitTest.class
+com\creditapp\integration\borrower\ScenarioCalculatorIntegrationTest.class
 com\creditapp\unit\auth\LoginServiceUnitTest.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$7.class
 com\creditapp\borrower\service\ApplicationServiceTest.class
+com\creditapp\integration\borrower\ApplicationHistoryIntegrationTest.class
 com\creditapp\integration\bank\BankRateCardIntegrationTest.class
 com\creditapp\unit\borrower\BorrowerNotificationUnitTest.class
 com\creditapp\integration\bank\OfferDataModelIntegrationTest.class

@@ -38,7 +38,7 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping(&quot;/api/borrower/applications&quot;)
-@RequiredArgsConstructor
+<span class="fc" id="L41">@RequiredArgsConstructor</span>
 <span class="fc" id="L42">@Slf4j</span>
 public class BorrowerApplicationController {
 
@@ -159,7 +159,7 @@ public class BorrowerApplicationController {
 <span class="nc" id="L159">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
         
 <span class="nc" id="L161">        log.info(&quot;Uploading document to application: {} by borrower: {}, type: {}&quot;, </span>
-<span class="nc" id="L162">                applicationId, borrowerId, documentType);</span>
+                applicationId, borrowerId, documentType);
         
 <span class="nc" id="L164">        DocumentDTO document = documentService.uploadDocument(applicationId, borrowerId, file, documentType);</span>
         
@@ -196,7 +196,7 @@ public class BorrowerApplicationController {
 <span class="nc" id="L196">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
         
 <span class="nc" id="L198">        log.info(&quot;Deleting document: {} from application: {} by borrower: {}&quot;, </span>
-<span class="nc" id="L199">                documentId, applicationId, borrowerId);</span>
+                documentId, applicationId, borrowerId);
         
 <span class="nc" id="L201">        documentService.deleteDocument(applicationId, borrowerId, documentId);</span>
         
@@ -238,7 +238,7 @@ public class BorrowerApplicationController {
 <span class="nc" id="L238">        log.info(&quot;Withdrawing application: {} by borrower: {}&quot;, applicationId, borrowerId);</span>
         
 <span class="nc" id="L240">        WithdrawApplicationResponse response = withdrawApplicationService.withdrawApplication(</span>
-<span class="nc" id="L241">                applicationId, borrowerId, request);</span>
+                applicationId, borrowerId, request);
         
 <span class="nc" id="L243">        log.info(&quot;Application withdrawn successfully: {}&quot;, applicationId);</span>
         

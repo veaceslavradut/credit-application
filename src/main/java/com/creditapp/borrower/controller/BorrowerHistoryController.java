@@ -5,11 +5,11 @@ import com.creditapp.borrower.dto.ApplicationHistoryResponse;
 import com.creditapp.borrower.dto.OfferHistoryResponse;
 import com.creditapp.borrower.service.ApplicationHistoryService;
 import com.creditapp.borrower.service.OfferHistoryService;
+import com.creditapp.shared.security.AuthorizationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -25,6 +25,7 @@ import java.util.UUID;
 public class BorrowerHistoryController {
     private final OfferHistoryService offerHistoryService;
     private final ApplicationHistoryService applicationHistoryService;
+    private final AuthorizationService authorizationService;
 
     /**
      * GET /api/borrower/history/offers
@@ -40,10 +41,9 @@ public class BorrowerHistoryController {
     public ResponseEntity<OfferHistoryResponse> getOfferHistory(
             @RequestParam(name = "limit", defaultValue = "20") Integer limit,
             @RequestParam(name = "offset", defaultValue = "0") Integer offset,
-            @RequestParam(name = "sortBy", defaultValue = "offerReceivedAt") String sortBy,
-            Authentication authentication) {
+            @RequestParam(name = "sortBy", defaultValue = "offerReceivedAt") String sortBy) {
         
-        UUID borrowerId = extractBorrowerId(authentication);
+        UUID borrowerId = authorizationService.getCurrentUserId();
         log.info("Retrieving offer history for borrower: {}", borrowerId);
         
         OfferHistoryResponse response = offerHistoryService.getOfferHistory(borrowerId, limit, offset, sortBy);
@@ -67,10 +67,9 @@ public class BorrowerHistoryController {
             @RequestParam(name = "dateRangeEnd", required = false) String dateRangeEnd,
             @RequestParam(name = "loanAmountMin", required = false) java.math.BigDecimal loanAmountMin,
             @RequestParam(name = "loanAmountMax", required = false) java.math.BigDecimal loanAmountMax,
-            @RequestParam(name = "sortBy", required = false) String sortBy,
-            Authentication authentication) {
+            @RequestParam(name = "sortBy", required = false) String sortBy) {
         
-        UUID borrowerId = extractBorrowerId(authentication);
+        UUID borrowerId = authorizationService.getCurrentUserId();
         log.info("Retrieving application history for borrower: {}", borrowerId);
         
         ApplicationHistoryRequest request = ApplicationHistoryRequest.builder()
@@ -84,9 +83,5 @@ public class BorrowerHistoryController {
         
         ApplicationHistoryResponse response = applicationHistoryService.getApplicationHistory(borrowerId, request);
         return ResponseEntity.ok(response);
-    }
-
-    private UUID extractBorrowerId(Authentication authentication) {
-        return UUID.fromString(authentication.getName());
     }
 }

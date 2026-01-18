@@ -1,9 +1,11 @@
+com\creditapp\borrower\dto\ApplicationHistoryRequest$ApplicationHistoryRequestBuilder.class
 com\creditapp\shared\config\JwtConfig$JwtProperties.class
 com\creditapp\shared\config\JwtConfig$RefreshExpiration.class
 com\creditapp\bank\dto\OfferDTO.class
 com\creditapp\shared\model\NotificationType.class
 com\creditapp\borrower\dto\CreateApplicationRequest$CreateApplicationRequestBuilder.class
 com\creditapp\shared\service\OfferSelectionEmailService.class
+com\creditapp\borrower\dto\OfferHistoryRecord$OfferHistoryRecordBuilder.class
 com\creditapp\borrower\model\ApplicationStatus.class
 com\creditapp\shared\audit\BusinessAudit.class
 com\creditapp\shared\config\RedisConfig.class
@@ -14,6 +16,7 @@ com\creditapp\auth\service\ProfileService.class
 com\creditapp\borrower\dto\OfferComparisonTableResponse.class
 com\creditapp\shared\service\PasswordValidationService.class
 com\creditapp\shared\repository\AuditLogRepository.class
+com\creditapp\borrower\controller\BorrowerHistoryController.class
 com\creditapp\borrower\service\OfferSelectionService.class
 com\creditapp\borrower\dto\ApplicationHistoryDTO.class
 com\creditapp\borrower\dto\HelpSectionDTO.class
@@ -41,6 +44,7 @@ com\creditapp\borrower\exception\InvalidApplicationException.class
 com\creditapp\borrower\dto\CalculateScenarioResponse.class
 com\creditapp\borrower\service\ApplicationService.class
 com\creditapp\shared\model\BankStatus.class
+com\creditapp\borrower\dto\ApplicationHistoryRequest.class
 com\creditapp\borrower\service\ScenarioCalculatorService.class
 com\creditapp\bank\service\OfferCalculationService.class
 com\creditapp\auth\service\InvalidPasswordException.class
@@ -66,6 +70,7 @@ com\creditapp\common\exception\GlobalExceptionHandler.class
 com\creditapp\borrower\dto\SubmitApplicationRequest$SubmitApplicationRequestBuilder.class
 com\creditapp\borrower\repository\ApplicationDetailsRepository.class
 com\creditapp\borrower\exception\InvalidOfferException.class
+com\creditapp\borrower\dto\ApplicationHistoryResponse.class
 com\creditapp\bank\model\OfferStatus.class
 com\creditapp\borrower\controller\ScenarioCalculatorController.class
 com\creditapp\borrower\model\Currency.class
@@ -107,6 +112,7 @@ com\creditapp\borrower\dto\ApplicationDetailsDTO$ApplicationDetailsDTOBuilder.cl
 com\creditapp\shared\messaging\NotificationEventPublisher.class
 com\creditapp\borrower\model\BorrowerNotification.class
 com\creditapp\borrower\dto\HelpArticleListDTO$HelpArticleListDTOBuilder.class
+com\creditapp\borrower\dto\ApplicationHistoryRecord.class
 com\creditapp\borrower\service\ApplicationStatusTrackingService.class
 com\creditapp\borrower\service\OfferRetrievalService.class
 com\creditapp\borrower\exception\ApplicationAlreadySubmittedException.class
@@ -128,8 +134,10 @@ com\creditapp\borrower\dto\CreateApplicationRequest.class
 com\creditapp\borrower\dto\SubmitApplicationResponse.class
 com\creditapp\shared\controller\HealthController.class
 com\creditapp\bank\service\OfferService.class
+com\creditapp\borrower\service\ApplicationHistoryService.class
 com\creditapp\shared\exception\LoginRateLimitExceededException.class
 com\creditapp\auth\dto\UserProfileResponse.class
+com\creditapp\borrower\dto\OfferHistoryResponse$OfferHistoryResponseBuilder.class
 com\creditapp\shared\security\RequiresComplianceOfficer.class
 com\creditapp\borrower\model\ApplicationDocument$ApplicationDocumentBuilder.class
 com\creditapp\auth\service\UserRegistrationService.class
@@ -149,6 +157,7 @@ com\creditapp\borrower\controller\HelpContentController.class
 com\creditapp\shared\model\DeliveryStatus.class
 com\creditapp\borrower\dto\CalculateScenarioRequest.class
 com\creditapp\shared\model\HelpFAQ.class
+com\creditapp\borrower\dto\ApplicationHistoryResponse$ApplicationHistoryResponseBuilder.class
 com\creditapp\shared\exception\RateLimitExceededException.class
 com\creditapp\shared\util\RateLimitInterceptor.class
 com\creditapp\shared\security\RateLimited.class
@@ -180,6 +189,7 @@ com\creditapp\auth\dto\BankRegistrationResponse.class
 com\creditapp\borrower\exception\SubmissionValidationException.class
 com\creditapp\auth\service\PasswordValidator.class
 com\creditapp\borrower\dto\StatusTransitionDTO$StatusTransitionDTOBuilder.class
+com\creditapp\borrower\service\OfferHistoryService.class
 com\creditapp\shared\listener\EmailNotificationListener.class
 com\creditapp\shared\dto\EmailMetricsDTO$EmailMetricsDTOBuilder.class
 com\creditapp\shared\security\RequiresBorrowerRole.class
@@ -188,6 +198,7 @@ com\creditapp\shared\model\EmailTemplate.class
 com\creditapp\shared\service\ActivationTokenService.class
 com\creditapp\borrower\dto\UpdateApplicationRequest$UpdateApplicationRequestBuilder.class
 com\creditapp\auth\exception\BankNotActivatedException.class
+com\creditapp\borrower\dto\OfferHistoryRecord.class
 com\creditapp\borrower\repository\ApplicationDocumentRepository.class
 com\creditapp\shared\model\User.class
 com\creditapp\bank\exception\InvalidRateCardException.class
@@ -203,7 +214,9 @@ com\creditapp\auth\dto\BankRegistrationRequest.class
 com\creditapp\borrower\service\ApplicationDocumentService.class
 com\creditapp\borrower\dto\NotificationDTO$NotificationDTOBuilder.class
 com\creditapp\shared\messaging\NotificationEventConsumer.class
+com\creditapp\borrower\dto\OfferHistoryResponse.class
 com\creditapp\auth\event\UserRegisteredEvent.class
+com\creditapp\borrower\dto\ApplicationHistoryRecord$ApplicationHistoryRecordBuilder.class
 com\creditapp\bank\repository\OfferRepository.class
 com\creditapp\shared\listener\EntityAuditListener.class
 com\creditapp\bank\exception\DuplicateRateCardException.class

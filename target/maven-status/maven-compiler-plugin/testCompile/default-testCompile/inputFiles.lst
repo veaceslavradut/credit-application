@@ -1,6 +1,7 @@
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\OfferRetrievalIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\OfferRetrievalServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ScenarioCalculatorIntegrationTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\OfferHistoryIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\auth\model\UserEntityTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\test\config\TestSecurityConfig.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\controller\HealthControllerTest.java
@@ -30,6 +31,7 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\sha
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\ListApplicationsServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\borrower\service\ApplicationServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\ApplicationCreationUnitTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ApplicationHistoryIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\ApplicationSubmissionServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\auth\LoginServiceUnitTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\BorrowerNotificationUnitTest.java
