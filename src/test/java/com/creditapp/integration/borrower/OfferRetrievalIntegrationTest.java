@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -26,6 +25,8 @@ import com.creditapp.shared.model.User;
 import com.creditapp.shared.model.UserRole;
 import com.creditapp.shared.repository.OrganizationRepository;
 import com.creditapp.auth.repository.UserRepository;
+import com.creditapp.shared.service.JwtTokenService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -59,9 +60,16 @@ public class OfferRetrievalIntegrationTest {
     @Autowired
     private OrganizationRepository organizationRepository;
 
+    @Autowired
+    private JwtTokenService jwtTokenService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private UUID borrowerId;
     private UUID applicationId;
     private UUID bankId;
+    private String borrowerToken;
 
     @BeforeEach
     void setUp() {
@@ -77,12 +85,13 @@ public class OfferRetrievalIntegrationTest {
         User borrower = new User();
         borrower.setId(UUID.randomUUID());
         borrower.setEmail("borrower@test.com");
-        borrower.setPasswordHash("hashed");
+        borrower.setPasswordHash(passwordEncoder.encode("TestPassword123!"));
         borrower.setFirstName("John");
         borrower.setLastName("Doe");
         borrower.setRole(UserRole.BORROWER);
         borrower = userRepository.save(borrower);
         borrowerId = borrower.getId();
+        borrowerToken = jwtTokenService.generateToken(borrower);
 
         Organization bank = new Organization();
         bank.setId(bankId);
@@ -136,9 +145,9 @@ public class OfferRetrievalIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "borrower@example.com", authorities = {"BORROWER"})
     void testGetOffersSuccessful() throws Exception {
-        mockMvc.perform(get("/api/borrower/applications/{applicationId}/offers", applicationId))
+        mockMvc.perform(get("/api/borrower/applications/{applicationId}/offers", applicationId)
+                .header("Authorization", "Bearer " + borrowerToken))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.offers", hasSize(2)))
             .andExpect(jsonPath("$.totalOffersCount", is(2)))
@@ -148,31 +157,40 @@ public class OfferRetrievalIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "borrower@example.com", authorities = {"BORROWER"})
     void testOffersSortedByAprAscending() throws Exception {
-        mockMvc.perform(get("/api/borrower/applications/{applicationId}/offers", applicationId))
+        mockMvc.perform(get("/api/borrower/applications/{applicationId}/offers", applicationId)
+                .header("Authorization", "Bearer " + borrowerToken))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.offers[0].apr", is(3.50)))
             .andExpect(jsonPath("$.offers[1].apr", is(4.25)));
     }
 
     @Test
-    @WithMockUser(username = "wrongborrower@example.com", authorities = {"BORROWER"})
     void testAccessDeniedDifferentBorrower() throws Exception {
-        mockMvc.perform(get("/api/borrower/applications/{applicationId}/offers", applicationId))
+        User differentBorrower = new User();
+        differentBorrower.setId(UUID.randomUUID());
+        differentBorrower.setEmail("different@test.com");
+        differentBorrower.setPasswordHash(passwordEncoder.encode("TestPassword123!"));
+        differentBorrower.setFirstName("Different");
+        differentBorrower.setLastName("Borrower");
+        differentBorrower.setRole(UserRole.BORROWER);
+        differentBorrower = userRepository.save(differentBorrower);
+        String differentToken = jwtTokenService.generateToken(differentBorrower);
+        
+        mockMvc.perform(get("/api/borrower/applications/{applicationId}/offers", applicationId)
+                .header("Authorization", "Bearer " + differentToken))
             .andExpect(status().isForbidden());
     }
 
     @Test
-    @WithMockUser(username = "borrower@example.com", authorities = {"BORROWER"})
     void testApplicationNotFound() throws Exception {
         UUID nonExistentId = UUID.randomUUID();
-        mockMvc.perform(get("/api/borrower/applications/{applicationId}/offers", nonExistentId))
+        mockMvc.perform(get("/api/borrower/applications/{applicationId}/offers", nonExistentId)
+                .header("Authorization", "Bearer " + borrowerToken))
             .andExpect(status().isNotFound());
     }
 
     @Test
-    @WithMockUser(username = "borrower@example.com", authorities = {"BORROWER"})
     void testDraftApplicationNotAllowed() throws Exception {
         Application draftApp = new Application();
         draftApp.setId(UUID.randomUUID());
@@ -184,12 +202,12 @@ public class OfferRetrievalIntegrationTest {
         draftApp.setStatus(ApplicationStatus.DRAFT);
         applicationRepository.save(draftApp);
 
-        mockMvc.perform(get("/api/borrower/applications/{applicationId}/offers", draftApp.getId()))
+        mockMvc.perform(get("/api/borrower/applications/{applicationId}/offers", draftApp.getId())
+                .header("Authorization", "Bearer " + borrowerToken))
             .andExpect(status().isBadRequest());
     }
 
     @Test
-    @WithMockUser(username = "borrower@example.com", authorities = {"BORROWER"})
     void testEmptyOffersReturnsEmptyArray() throws Exception {
         Application emptyApp = new Application();
         emptyApp.setId(UUID.randomUUID());
@@ -201,7 +219,8 @@ public class OfferRetrievalIntegrationTest {
         emptyApp.setStatus(ApplicationStatus.SUBMITTED);
         applicationRepository.save(emptyApp);
 
-        mockMvc.perform(get("/api/borrower/applications/{applicationId}/offers", emptyApp.getId()))
+        mockMvc.perform(get("/api/borrower/applications/{applicationId}/offers", emptyApp.getId())
+                .header("Authorization", "Bearer " + borrowerToken))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.offers", hasSize(0)))
             .andExpect(jsonPath("$.totalOffersCount", is(0)));
@@ -210,6 +229,6 @@ public class OfferRetrievalIntegrationTest {
     @Test
     void testUnauthenticatedAccessForbidden() throws Exception {
         mockMvc.perform(get("/api/borrower/applications/{applicationId}/offers", applicationId))
-            .andExpect(status().isForbidden());
+            .andExpect(status().isUnauthorized());
     }
 }
