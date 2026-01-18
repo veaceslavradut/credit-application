@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FileValidationService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.service</a> &gt; <span class="el_source">FileValidationService.java</span></div><h1>FileValidationService.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.service;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * Service for validating uploaded files.
+ * Checks file size, MIME type, and extension.
+ */
+@Service
+<span class="fc" id="L16">@Slf4j</span>
+<span class="nc" id="L17">public class FileValidationService {</span>
+    
+    private static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+<span class="fc" id="L20">    private static final Set&lt;String&gt; ALLOWED_EXTENSIONS = new HashSet&lt;&gt;(Arrays.asList(</span>
+        &quot;pdf&quot;, &quot;doc&quot;, &quot;docx&quot;, &quot;xls&quot;, &quot;xlsx&quot;
+    ));
+<span class="fc" id="L23">    private static final Set&lt;String&gt; ALLOWED_MIME_TYPES = new HashSet&lt;&gt;(Arrays.asList(</span>
+        &quot;application/pdf&quot;,
+        &quot;application/msword&quot;,
+        &quot;application/vnd.openxmlformats-officedocument.wordprocessingml.document&quot;,
+        &quot;application/vnd.ms-excel&quot;,
+        &quot;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&quot;
+    ));
+    
+    /**
+     * Validate uploaded file.
+     */
+    public ValidationResult validateFile(MultipartFile file) {
+<span class="nc bnc" id="L35" title="All 4 branches missed.">        if (file == null || file.isEmpty()) {</span>
+<span class="nc" id="L36">            return ValidationResult.invalid(&quot;File is empty&quot;);</span>
+        }
+        
+        // Check file size
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if (file.getSize() &gt; MAX_FILE_SIZE) {</span>
+<span class="nc" id="L41">            return ValidationResult.invalid(&quot;File size exceeds 10MB limit&quot;);</span>
+        }
+        
+        // Get file extension
+<span class="nc" id="L45">        String fileName = file.getOriginalFilename();</span>
+<span class="nc bnc" id="L46" title="All 4 branches missed.">        if (fileName == null || !fileName.contains(&quot;.&quot;)) {</span>
+<span class="nc" id="L47">            return ValidationResult.invalid(&quot;File has no extension&quot;);</span>
+        }
+        
+<span class="nc" id="L50">        String extension = fileName.substring(fileName.lastIndexOf(&quot;.&quot;) + 1).toLowerCase();</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        if (!ALLOWED_EXTENSIONS.contains(extension)) {</span>
+<span class="nc" id="L52">            return ValidationResult.invalid(&quot;File type not allowed: &quot; + extension);</span>
+        }
+        
+        // Check MIME type
+<span class="nc" id="L56">        String mimeType = file.getContentType();</span>
+<span class="nc bnc" id="L57" title="All 4 branches missed.">        if (mimeType == null || !ALLOWED_MIME_TYPES.contains(mimeType)) {</span>
+<span class="nc" id="L58">            return ValidationResult.invalid(&quot;MIME type not allowed: &quot; + mimeType);</span>
+        }
+        
+        // Verify extension matches MIME type (basic check)
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (!isValidMimeTypeForExtension(extension, mimeType)) {</span>
+<span class="nc" id="L63">            return ValidationResult.invalid(&quot;File extension does not match MIME type&quot;);</span>
+        }
+        
+<span class="nc" id="L66">        log.debug(&quot;File validation passed: {} ({}bytes, {})&quot;, fileName, file.getSize(), mimeType);</span>
+<span class="nc" id="L67">        return ValidationResult.valid();</span>
+    }
+    
+    private boolean isValidMimeTypeForExtension(String extension, String mimeType) {
+<span class="nc bnc" id="L71" title="All 6 branches missed.">        return switch (extension) {</span>
+<span class="nc" id="L72">            case &quot;pdf&quot; -&gt; mimeType.equals(&quot;application/pdf&quot;);</span>
+<span class="nc" id="L73">            case &quot;doc&quot; -&gt; mimeType.equals(&quot;application/msword&quot;);</span>
+<span class="nc" id="L74">            case &quot;docx&quot; -&gt; mimeType.equals(&quot;application/vnd.openxmlformats-officedocument.wordprocessingml.document&quot;);</span>
+<span class="nc" id="L75">            case &quot;xls&quot; -&gt; mimeType.equals(&quot;application/vnd.ms-excel&quot;);</span>
+<span class="nc" id="L76">            case &quot;xlsx&quot; -&gt; mimeType.equals(&quot;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&quot;);</span>
+<span class="nc" id="L77">            default -&gt; false;</span>
+        };
+    }
+    
+    /**
+     * Validation result containing status and error message.
+     */
+    public static class ValidationResult {
+        public final boolean valid;
+        public final String errorMessage;
+        
+<span class="fc" id="L88">        private ValidationResult(boolean valid, String errorMessage) {</span>
+<span class="fc" id="L89">            this.valid = valid;</span>
+<span class="fc" id="L90">            this.errorMessage = errorMessage;</span>
+<span class="fc" id="L91">        }</span>
+        
+        public static ValidationResult valid() {
+<span class="fc" id="L94">            return new ValidationResult(true, null);</span>
+        }
+        
+        public static ValidationResult invalid(String errorMessage) {
+<span class="fc" id="L98">            return new ValidationResult(false, errorMessage);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
