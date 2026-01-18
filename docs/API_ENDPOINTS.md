@@ -2112,6 +2112,146 @@ curl -X GET https://api.creditapp.com/api/borrower/applications/550e8400-e29b-41
 
 ---
 
+### GET /api/borrower/applications/{applicationId}/offers/insights
+**Description:** Get analytics and insights comparing all offers for an application. Calculates best APR, lowest payment, lowest total cost, recommended offer using weighted scoring, and savings analysis.
+
+**Authentication:** Required - BORROWER role
+
+**Request Method:** GET
+
+**Path Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| applicationId | UUID | Yes | Unique identifier of the application |
+
+**Business Logic:**
+- **Minimum Offers Required:** 2 (returns 204 No Content if < 2 offers)
+- **Weighted Scoring Algorithm:**
+  - APR: 40% weight (lower is better)
+  - Monthly Payment: 30% weight (lower is better)
+  - Total Cost: 20% weight (lower is better)
+  - Processing Time: 10% weight (faster is better)
+- **Savings Calculation:** Difference between best and worst total cost
+
+**Response (200 OK):** Returns OfferInsightsDTO with comparison analytics
+
+**Response Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| bestAprOffer | OfferSummaryDTO | Offer with lowest APR |
+| lowestMonthlyPaymentOffer | OfferSummaryDTO | Offer with lowest monthly payment |
+| lowestTotalCostOffer | OfferSummaryDTO | Offer with lowest total cost (best value) |
+| averageApr | BigDecimal | Average APR across all offers (2 decimal places) |
+| aprSpread | BigDecimal | Difference between highest and lowest APR (2 decimal places) |
+| recommendedOfferId | UUID | ID of recommended offer (highest weighted score) |
+| savingsAnalysis | SavingsAnalysisDTO | Savings calculations and message |
+
+**OfferSummaryDTO Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| offerId | UUID | Unique identifier of the offer |
+| bankName | String | Display name of the bank |
+| apr | BigDecimal | Annual Percentage Rate (2 decimal places) |
+| monthlyPayment | BigDecimal | Monthly payment amount (2 decimal places) |
+| totalCost | BigDecimal | Total cost over loan term (2 decimal places) |
+
+**SavingsAnalysisDTO Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| bestOfferId | UUID | ID of offer with lowest total cost |
+| comparedToWorstOffer | BigDecimal | Savings vs highest cost offer (2 decimal places) |
+| comparedToAverageOffer | BigDecimal | Savings vs average cost offer (2 decimal places) |
+| savingsMessage | String | Human-readable savings message |
+
+**Example Response (200 OK):**
+```json
+{
+  "bestAprOffer": {
+    "offerId": "660e8400-e29b-41d4-a716-446655440001",
+    "bankName": "Bank A",
+    "apr": 5.50,
+    "monthlyPayment": 450.00,
+    "totalCost": 52000.00
+  },
+  "lowestMonthlyPaymentOffer": {
+    "offerId": "770e8400-e29b-41d4-a716-446655440002",
+    "bankName": "Bank B",
+    "apr": 6.00,
+    "monthlyPayment": 420.00,
+    "totalCost": 53000.00
+  },
+  "lowestTotalCostOffer": {
+    "offerId": "880e8400-e29b-41d4-a716-446655440003",
+    "bankName": "Bank C",
+    "apr": 5.80,
+    "monthlyPayment": 440.00,
+    "totalCost": 51000.00
+  },
+  "averageApr": 5.77,
+  "aprSpread": 0.50,
+  "recommendedOfferId": "880e8400-e29b-41d4-a716-446655440003",
+  "savingsAnalysis": {
+    "bestOfferId": "880e8400-e29b-41d4-a716-446655440003",
+    "comparedToWorstOffer": 2000.00,
+    "comparedToAverageOffer": 1000.00,
+    "savingsMessage": "You could save $2,000.00 by choosing Bank C over Bank B"
+  }
+}
+```
+
+**Response (204 No Content):** Returned when application has fewer than 2 offers (insufficient data for comparison)
+
+**Error Responses:**
+
+**403 Forbidden** - Borrower does not own this application
+```json
+{
+  "error": "Forbidden",
+  "message": "Cannot access another borrower's application",
+  "timestamp": "2026-01-18T10:30:00Z"
+}
+```
+
+**404 Not Found** - Application not found
+```json
+{
+  "error": "Not Found",
+  "message": "Application not found",
+  "timestamp": "2026-01-18T10:30:00Z"
+}
+```
+
+**Use Cases:**
+- Borrower reviewing multiple offers to make informed decision
+- Comparing offers across different metrics (APR vs monthly payment vs total cost)
+- Understanding potential savings by choosing one offer over another
+- Identifying recommended offer based on weighted scoring algorithm
+
+**UI Integration Tips:**
+- Display bestAprOffer, lowestMonthlyPaymentOffer, lowestTotalCostOffer as highlighted cards
+- Show recommendedOfferId with a "Recommended" badge
+- Use savingsMessage as prominent call-to-action text
+- Visualize aprSpread with a bar chart or range indicator
+- Handle 204 response by showing "Need at least 2 offers for comparison" message
+
+**Authorization:**
+- Only BORROWER role can access this endpoint
+- Borrower can only view insights for their own applications
+- Returns 403 Forbidden if accessing another borrower's application
+
+**cURL Example:**
+```bash
+curl -X GET https://api.creditapp.com/api/borrower/applications/550e8400-e29b-41d4-a716-446655440000/offers/insights \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -H "Content-Type: application/json"
+```
+
+---
+
 ## Bank Rate Card Configuration API
 
 ### POST /api/bank/rate-cards
