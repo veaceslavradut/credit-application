@@ -2,6 +2,7 @@ package com.creditapp.borrower.controller;
 
 import com.creditapp.borrower.dto.*;
 import com.creditapp.borrower.service.OfferComparisonTableService;
+import com.creditapp.borrower.service.OfferInsightsService;
 import com.creditapp.borrower.service.OfferSelectionService;
 import com.creditapp.shared.security.AuthorizationService;
 import jakarta.validation.Valid;
@@ -21,6 +22,7 @@ public class BorrowerOfferController {
     
     private final OfferComparisonTableService offerComparisonTableService;
     private final OfferSelectionService offerSelectionService;
+    private final OfferInsightsService offerInsightsService;
     private final AuthorizationService authorizationService;
     
     @GetMapping("/{applicationId}/offers")
@@ -75,5 +77,21 @@ public class BorrowerOfferController {
         );
         
         return ResponseEntity.ok(response);
+    }
+    
+    @GetMapping("/{applicationId}/offers/insights")
+    @PreAuthorize("hasAuthority('BORROWER')")
+    public ResponseEntity<OfferInsightsDTO> getOfferInsights(@PathVariable UUID applicationId) {
+        UUID borrowerId = authorizationService.getCurrentUserId();
+        log.info("GET /api/borrower/applications/{}/offers/insights by borrower {}", applicationId, borrowerId);
+        
+        OfferInsightsDTO insights = offerInsightsService.calculateInsights(applicationId, borrowerId);
+        
+        // If < 2 offers, return 204 No Content
+        if (insights == null) {
+            return ResponseEntity.noContent().build();
+        }
+        
+        return ResponseEntity.ok(insights);
     }
 }

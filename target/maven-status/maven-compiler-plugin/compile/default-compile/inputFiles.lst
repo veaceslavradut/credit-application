@@ -41,6 +41,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\ApplicationNotSubmittedException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\LoanPreferenceDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\RatePreference.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\OfferInsightsService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\controller\BorrowerHistoryController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\exception\DuplicateEmailException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\AuditLogArchivalService.java
@@ -185,7 +186,9 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\audit\AuditLogListener.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\HelpArticleListDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\exception\InvalidRateCardException.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\OfferSummaryDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\ScenarioCalculatorService.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\SavingsAnalysisDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\RegistrationResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\ApplicationHistoryResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\SubmissionValidationException.java
@@ -206,6 +209,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\WithdrawApplicationRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\DocumentType.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\ApplicationNotEditableException.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\OfferInsightsDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\ApplicationHistoryRecord.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\NotificationDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\Application.java
