@@ -1,6 +1,7 @@
 com\creditapp\integration\borrower\BorrowerNotificationIntegrationTest.class
 com\creditapp\integration\security\RBACIntegrationTest$TestConfig.class
 com\creditapp\unit\bank\BankOfferSubmissionServiceTest.class
+com\creditapp\integration\bank\OfferDocumentIntegrationTest.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$6.class
 com\creditapp\shared\service\AuditServiceTest.class
 com\creditapp\unit\bank\OfferServiceUnitTest.class
@@ -21,7 +22,6 @@ com\creditapp\integration\borrower\OfferRetrievalIntegrationTest.class
 com\creditapp\unit\borrower\ApplicationUpdateServiceTest.class
 com\creditapp\unit\borrower\ListApplicationsServiceTest.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$5.class
-com\creditapp\unit\bank\OfferDocumentControllerTest$TestConfig.class
 com\creditapp\unit\bank\OfferDocumentUploadServiceTest.class
 com\creditapp\unit\bank\OfferEntityTest.class
 com\creditapp\unit\borrower\OfferComparisonTableServiceTest.class

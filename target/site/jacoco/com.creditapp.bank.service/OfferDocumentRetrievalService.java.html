@@ -49,7 +49,7 @@ public class OfferDocumentRetrievalService {
         // Convert to metadata DTOs
 <span class="fc" id="L50">        List&lt;OfferDocumentMetadata&gt; metadataList = documents.stream()</span>
 <span class="fc" id="L51">            .map(this::toMetadata)</span>
-<span class="fc" id="L52">            .sorted((a, b) -&gt; b.getUploadedAt().compareTo(a.getUploadedAt())) // Newest first</span>
+<span class="pc" id="L52">            .sorted((a, b) -&gt; b.getUploadedAt().compareTo(a.getUploadedAt())) // Newest first</span>
 <span class="fc" id="L53">            .toList();</span>
         
 <span class="fc" id="L55">        log.debug(&quot;Retrieved {} documents for offer: {}&quot;, documents.size(), offerId);</span>
