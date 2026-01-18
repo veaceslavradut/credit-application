@@ -1,410 +1,81 @@
 -------------------------------------------------------------------------------
 Test set: com.creditapp.integration.borrower.OfferRetrievalIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 7, Skipped: 0, Time elapsed: 4.281 s <<< FAILURE! -- in com.creditapp.integration.borrower.OfferRetrievalIntegrationTest
-com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testGetOffersSuccessful -- Time elapsed: 0.052 s <<< ERROR!
-org.springframework.dao.DataIntegrityViolationException: 
-could not execute batch [NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]] [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; constraint [null]
-	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:290)
-	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
-	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:565)
-	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:794)
-	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:757)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:669)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:419)
-	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:164)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:249)
-	at jdk.proxy2/jdk.proxy2.$Proxy226.save(Unknown Source)
-	at com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.setUp(OfferRetrievalIntegrationTest.java:75)
+Tests run: 7, Failures: 7, Errors: 0, Skipped: 0, Time elapsed: 25.22 s <<< FAILURE! -- in com.creditapp.integration.borrower.OfferRetrievalIntegrationTest
+com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testGetOffersSuccessful -- Time elapsed: 1.280 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<200> but was:<500>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testGetOffersSuccessful(OfferRetrievalIntegrationTest.java:142)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-Caused by: org.hibernate.exception.ConstraintViolationException: could not execute batch [NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]] [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]
-	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:97)
-	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
-	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.lambda$performExecution$2(BatchImpl.java:294)
-	at org.hibernate.engine.jdbc.mutation.internal.PreparedStatementGroupSingleTable.forEachStatement(PreparedStatementGroupSingleTable.java:59)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.performExecution(BatchImpl.java:264)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.execute(BatchImpl.java:242)
-	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.executeBatch(JdbcCoordinatorImpl.java:188)
-	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:662)
-	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:499)
-	at org.hibernate.event.internal.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:363)
-	at org.hibernate.event.internal.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:41)
-	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
-	at org.hibernate.internal.SessionImpl.doFlush(SessionImpl.java:1423)
-	at org.hibernate.internal.SessionImpl.managedFlush(SessionImpl.java:504)
-	at org.hibernate.internal.SessionImpl.flushBeforeTransactionCompletion(SessionImpl.java:2339)
-	at org.hibernate.internal.SessionImpl.beforeTransactionCompletion(SessionImpl.java:1996)
-	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.beforeTransactionCompletion(JdbcCoordinatorImpl.java:439)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl.beforeCompletionCallback(JdbcResourceLocalTransactionCoordinatorImpl.java:169)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.commit(JdbcResourceLocalTransactionCoordinatorImpl.java:267)
-	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:101)
-	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:561)
-	... 18 more
-Caused by: org.h2.jdbc.JdbcBatchUpdateException: NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]
-	at org.h2.jdbc.JdbcPreparedStatement.executeBatch(JdbcPreparedStatement.java:1282)
-	at com.zaxxer.hikari.pool.ProxyStatement.executeBatch(ProxyStatement.java:127)
-	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeBatch(HikariProxyPreparedStatement.java)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.lambda$performExecution$2(BatchImpl.java:279)
-	... 36 more
 
-com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testUnauthenticatedAccessForbidden -- Time elapsed: 0.015 s <<< ERROR!
-org.springframework.dao.DataIntegrityViolationException: 
-could not execute batch [NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]] [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; constraint [null]
-	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:290)
-	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
-	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:565)
-	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:794)
-	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:757)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:669)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:419)
-	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:164)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:249)
-	at jdk.proxy2/jdk.proxy2.$Proxy226.save(Unknown Source)
-	at com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.setUp(OfferRetrievalIntegrationTest.java:75)
+com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testUnauthenticatedAccessForbidden -- Time elapsed: 0.091 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<403> but was:<401>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testUnauthenticatedAccessForbidden(OfferRetrievalIntegrationTest.java:213)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-Caused by: org.hibernate.exception.ConstraintViolationException: could not execute batch [NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]] [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]
-	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:97)
-	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
-	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.lambda$performExecution$2(BatchImpl.java:294)
-	at org.hibernate.engine.jdbc.mutation.internal.PreparedStatementGroupSingleTable.forEachStatement(PreparedStatementGroupSingleTable.java:59)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.performExecution(BatchImpl.java:264)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.execute(BatchImpl.java:242)
-	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.executeBatch(JdbcCoordinatorImpl.java:188)
-	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:662)
-	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:499)
-	at org.hibernate.event.internal.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:363)
-	at org.hibernate.event.internal.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:41)
-	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
-	at org.hibernate.internal.SessionImpl.doFlush(SessionImpl.java:1423)
-	at org.hibernate.internal.SessionImpl.managedFlush(SessionImpl.java:504)
-	at org.hibernate.internal.SessionImpl.flushBeforeTransactionCompletion(SessionImpl.java:2339)
-	at org.hibernate.internal.SessionImpl.beforeTransactionCompletion(SessionImpl.java:1996)
-	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.beforeTransactionCompletion(JdbcCoordinatorImpl.java:439)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl.beforeCompletionCallback(JdbcResourceLocalTransactionCoordinatorImpl.java:169)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.commit(JdbcResourceLocalTransactionCoordinatorImpl.java:267)
-	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:101)
-	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:561)
-	... 18 more
-Caused by: org.h2.jdbc.JdbcBatchUpdateException: NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]
-	at org.h2.jdbc.JdbcPreparedStatement.executeBatch(JdbcPreparedStatement.java:1282)
-	at com.zaxxer.hikari.pool.ProxyStatement.executeBatch(ProxyStatement.java:127)
-	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeBatch(HikariProxyPreparedStatement.java)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.lambda$performExecution$2(BatchImpl.java:279)
-	... 36 more
 
-com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testOffersSortedByAprAscending -- Time elapsed: 0.016 s <<< ERROR!
-org.springframework.dao.DataIntegrityViolationException: 
-could not execute batch [NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]] [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; constraint [null]
-	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:290)
-	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
-	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:565)
-	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:794)
-	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:757)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:669)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:419)
-	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:164)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:249)
-	at jdk.proxy2/jdk.proxy2.$Proxy226.save(Unknown Source)
-	at com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.setUp(OfferRetrievalIntegrationTest.java:75)
+com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testOffersSortedByAprAscending -- Time elapsed: 0.051 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<200> but was:<500>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testOffersSortedByAprAscending(OfferRetrievalIntegrationTest.java:154)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-Caused by: org.hibernate.exception.ConstraintViolationException: could not execute batch [NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]] [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]
-	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:97)
-	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
-	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.lambda$performExecution$2(BatchImpl.java:294)
-	at org.hibernate.engine.jdbc.mutation.internal.PreparedStatementGroupSingleTable.forEachStatement(PreparedStatementGroupSingleTable.java:59)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.performExecution(BatchImpl.java:264)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.execute(BatchImpl.java:242)
-	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.executeBatch(JdbcCoordinatorImpl.java:188)
-	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:662)
-	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:499)
-	at org.hibernate.event.internal.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:363)
-	at org.hibernate.event.internal.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:41)
-	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
-	at org.hibernate.internal.SessionImpl.doFlush(SessionImpl.java:1423)
-	at org.hibernate.internal.SessionImpl.managedFlush(SessionImpl.java:504)
-	at org.hibernate.internal.SessionImpl.flushBeforeTransactionCompletion(SessionImpl.java:2339)
-	at org.hibernate.internal.SessionImpl.beforeTransactionCompletion(SessionImpl.java:1996)
-	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.beforeTransactionCompletion(JdbcCoordinatorImpl.java:439)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl.beforeCompletionCallback(JdbcResourceLocalTransactionCoordinatorImpl.java:169)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.commit(JdbcResourceLocalTransactionCoordinatorImpl.java:267)
-	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:101)
-	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:561)
-	... 18 more
-Caused by: org.h2.jdbc.JdbcBatchUpdateException: NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]
-	at org.h2.jdbc.JdbcPreparedStatement.executeBatch(JdbcPreparedStatement.java:1282)
-	at com.zaxxer.hikari.pool.ProxyStatement.executeBatch(ProxyStatement.java:127)
-	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeBatch(HikariProxyPreparedStatement.java)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.lambda$performExecution$2(BatchImpl.java:279)
-	... 36 more
 
-com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testApplicationNotFound -- Time elapsed: 0.015 s <<< ERROR!
-org.springframework.dao.DataIntegrityViolationException: 
-could not execute batch [NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]] [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; constraint [null]
-	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:290)
-	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
-	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:565)
-	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:794)
-	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:757)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:669)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:419)
-	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:164)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:249)
-	at jdk.proxy2/jdk.proxy2.$Proxy226.save(Unknown Source)
-	at com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.setUp(OfferRetrievalIntegrationTest.java:75)
+com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testApplicationNotFound -- Time elapsed: 0.056 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<404> but was:<500>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testApplicationNotFound(OfferRetrievalIntegrationTest.java:171)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-Caused by: org.hibernate.exception.ConstraintViolationException: could not execute batch [NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]] [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]
-	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:97)
-	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
-	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.lambda$performExecution$2(BatchImpl.java:294)
-	at org.hibernate.engine.jdbc.mutation.internal.PreparedStatementGroupSingleTable.forEachStatement(PreparedStatementGroupSingleTable.java:59)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.performExecution(BatchImpl.java:264)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.execute(BatchImpl.java:242)
-	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.executeBatch(JdbcCoordinatorImpl.java:188)
-	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:662)
-	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:499)
-	at org.hibernate.event.internal.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:363)
-	at org.hibernate.event.internal.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:41)
-	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
-	at org.hibernate.internal.SessionImpl.doFlush(SessionImpl.java:1423)
-	at org.hibernate.internal.SessionImpl.managedFlush(SessionImpl.java:504)
-	at org.hibernate.internal.SessionImpl.flushBeforeTransactionCompletion(SessionImpl.java:2339)
-	at org.hibernate.internal.SessionImpl.beforeTransactionCompletion(SessionImpl.java:1996)
-	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.beforeTransactionCompletion(JdbcCoordinatorImpl.java:439)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl.beforeCompletionCallback(JdbcResourceLocalTransactionCoordinatorImpl.java:169)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.commit(JdbcResourceLocalTransactionCoordinatorImpl.java:267)
-	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:101)
-	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:561)
-	... 18 more
-Caused by: org.h2.jdbc.JdbcBatchUpdateException: NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]
-	at org.h2.jdbc.JdbcPreparedStatement.executeBatch(JdbcPreparedStatement.java:1282)
-	at com.zaxxer.hikari.pool.ProxyStatement.executeBatch(ProxyStatement.java:127)
-	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeBatch(HikariProxyPreparedStatement.java)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.lambda$performExecution$2(BatchImpl.java:279)
-	... 36 more
 
-com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testEmptyOffersReturnsEmptyArray -- Time elapsed: 0.017 s <<< ERROR!
-org.springframework.dao.DataIntegrityViolationException: 
-could not execute batch [NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]] [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; constraint [null]
-	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:290)
-	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
-	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:565)
-	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:794)
-	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:757)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:669)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:419)
-	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:164)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:249)
-	at jdk.proxy2/jdk.proxy2.$Proxy226.save(Unknown Source)
-	at com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.setUp(OfferRetrievalIntegrationTest.java:75)
+com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testEmptyOffersReturnsEmptyArray -- Time elapsed: 0.055 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<200> but was:<500>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testEmptyOffersReturnsEmptyArray(OfferRetrievalIntegrationTest.java:205)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-Caused by: org.hibernate.exception.ConstraintViolationException: could not execute batch [NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]] [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]
-	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:97)
-	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
-	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.lambda$performExecution$2(BatchImpl.java:294)
-	at org.hibernate.engine.jdbc.mutation.internal.PreparedStatementGroupSingleTable.forEachStatement(PreparedStatementGroupSingleTable.java:59)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.performExecution(BatchImpl.java:264)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.execute(BatchImpl.java:242)
-	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.executeBatch(JdbcCoordinatorImpl.java:188)
-	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:662)
-	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:499)
-	at org.hibernate.event.internal.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:363)
-	at org.hibernate.event.internal.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:41)
-	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
-	at org.hibernate.internal.SessionImpl.doFlush(SessionImpl.java:1423)
-	at org.hibernate.internal.SessionImpl.managedFlush(SessionImpl.java:504)
-	at org.hibernate.internal.SessionImpl.flushBeforeTransactionCompletion(SessionImpl.java:2339)
-	at org.hibernate.internal.SessionImpl.beforeTransactionCompletion(SessionImpl.java:1996)
-	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.beforeTransactionCompletion(JdbcCoordinatorImpl.java:439)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl.beforeCompletionCallback(JdbcResourceLocalTransactionCoordinatorImpl.java:169)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.commit(JdbcResourceLocalTransactionCoordinatorImpl.java:267)
-	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:101)
-	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:561)
-	... 18 more
-Caused by: org.h2.jdbc.JdbcBatchUpdateException: NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]
-	at org.h2.jdbc.JdbcPreparedStatement.executeBatch(JdbcPreparedStatement.java:1282)
-	at com.zaxxer.hikari.pool.ProxyStatement.executeBatch(ProxyStatement.java:127)
-	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeBatch(HikariProxyPreparedStatement.java)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.lambda$performExecution$2(BatchImpl.java:279)
-	... 36 more
 
-com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testAccessDeniedDifferentBorrower -- Time elapsed: 0.016 s <<< ERROR!
-org.springframework.dao.DataIntegrityViolationException: 
-could not execute batch [NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]] [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; constraint [null]
-	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:290)
-	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
-	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:565)
-	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:794)
-	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:757)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:669)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:419)
-	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:164)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:249)
-	at jdk.proxy2/jdk.proxy2.$Proxy226.save(Unknown Source)
-	at com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.setUp(OfferRetrievalIntegrationTest.java:75)
+com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testAccessDeniedDifferentBorrower -- Time elapsed: 0.047 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<403> but was:<500>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testAccessDeniedDifferentBorrower(OfferRetrievalIntegrationTest.java:163)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-Caused by: org.hibernate.exception.ConstraintViolationException: could not execute batch [NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]] [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]
-	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:97)
-	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
-	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.lambda$performExecution$2(BatchImpl.java:294)
-	at org.hibernate.engine.jdbc.mutation.internal.PreparedStatementGroupSingleTable.forEachStatement(PreparedStatementGroupSingleTable.java:59)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.performExecution(BatchImpl.java:264)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.execute(BatchImpl.java:242)
-	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.executeBatch(JdbcCoordinatorImpl.java:188)
-	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:662)
-	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:499)
-	at org.hibernate.event.internal.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:363)
-	at org.hibernate.event.internal.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:41)
-	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
-	at org.hibernate.internal.SessionImpl.doFlush(SessionImpl.java:1423)
-	at org.hibernate.internal.SessionImpl.managedFlush(SessionImpl.java:504)
-	at org.hibernate.internal.SessionImpl.flushBeforeTransactionCompletion(SessionImpl.java:2339)
-	at org.hibernate.internal.SessionImpl.beforeTransactionCompletion(SessionImpl.java:1996)
-	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.beforeTransactionCompletion(JdbcCoordinatorImpl.java:439)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl.beforeCompletionCallback(JdbcResourceLocalTransactionCoordinatorImpl.java:169)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.commit(JdbcResourceLocalTransactionCoordinatorImpl.java:267)
-	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:101)
-	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:561)
-	... 18 more
-Caused by: org.h2.jdbc.JdbcBatchUpdateException: NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]
-	at org.h2.jdbc.JdbcPreparedStatement.executeBatch(JdbcPreparedStatement.java:1282)
-	at com.zaxxer.hikari.pool.ProxyStatement.executeBatch(ProxyStatement.java:127)
-	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeBatch(HikariProxyPreparedStatement.java)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.lambda$performExecution$2(BatchImpl.java:279)
-	... 36 more
 
-com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testDraftApplicationNotAllowed -- Time elapsed: 0.016 s <<< ERROR!
-org.springframework.dao.DataIntegrityViolationException: 
-could not execute batch [NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]] [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]; constraint [null]
-	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:290)
-	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
-	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:565)
-	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:794)
-	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:757)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:669)
-	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:419)
-	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:164)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
-	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
-	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:249)
-	at jdk.proxy2/jdk.proxy2.$Proxy226.save(Unknown Source)
-	at com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.setUp(OfferRetrievalIntegrationTest.java:75)
+com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testDraftApplicationNotAllowed -- Time elapsed: 0.051 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<400> but was:<500>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:637)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testDraftApplicationNotAllowed(OfferRetrievalIntegrationTest.java:188)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-Caused by: org.hibernate.exception.ConstraintViolationException: could not execute batch [NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]] [insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)]
-	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:97)
-	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
-	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.lambda$performExecution$2(BatchImpl.java:294)
-	at org.hibernate.engine.jdbc.mutation.internal.PreparedStatementGroupSingleTable.forEachStatement(PreparedStatementGroupSingleTable.java:59)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.performExecution(BatchImpl.java:264)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.execute(BatchImpl.java:242)
-	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.executeBatch(JdbcCoordinatorImpl.java:188)
-	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:662)
-	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:499)
-	at org.hibernate.event.internal.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:363)
-	at org.hibernate.event.internal.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:41)
-	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
-	at org.hibernate.internal.SessionImpl.doFlush(SessionImpl.java:1423)
-	at org.hibernate.internal.SessionImpl.managedFlush(SessionImpl.java:504)
-	at org.hibernate.internal.SessionImpl.flushBeforeTransactionCompletion(SessionImpl.java:2339)
-	at org.hibernate.internal.SessionImpl.beforeTransactionCompletion(SessionImpl.java:1996)
-	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.beforeTransactionCompletion(JdbcCoordinatorImpl.java:439)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl.beforeCompletionCallback(JdbcResourceLocalTransactionCoordinatorImpl.java:169)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.commit(JdbcResourceLocalTransactionCoordinatorImpl.java:267)
-	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:101)
-	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:561)
-	... 18 more
-Caused by: org.h2.jdbc.JdbcBatchUpdateException: NULL not allowed for column "TAX_ID"; SQL statement:
-insert into organizations (activated_at,activation_token,activation_token_expires_at,is_active,country_code,created_at,deleted_at,logo_url,name,registration_number,status,tax_id,updated_at,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?) [23502-224]
-	at org.h2.jdbc.JdbcPreparedStatement.executeBatch(JdbcPreparedStatement.java:1282)
-	at com.zaxxer.hikari.pool.ProxyStatement.executeBatch(ProxyStatement.java:127)
-	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeBatch(HikariProxyPreparedStatement.java)
-	at org.hibernate.engine.jdbc.batch.internal.BatchImpl.lambda$performExecution$2(BatchImpl.java:279)
-	... 36 more
 

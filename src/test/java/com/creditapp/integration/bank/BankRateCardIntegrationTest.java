@@ -63,6 +63,7 @@ public class BankRateCardIntegrationTest {
         Organization bank = new Organization();
         bank.setId(UUID.randomUUID());
         bank.setName("Test Bank");
+        bank.setTaxId("TAX" + System.currentTimeMillis());
         bank.setRegistrationNumber("TST" + System.currentTimeMillis());
         bank.setStatus(BankStatus.ACTIVE);
         organizationRepository.save(bank);

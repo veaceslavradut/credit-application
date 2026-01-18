@@ -8,7 +8,10 @@ import com.creditapp.borrower.model.Application;
 import com.creditapp.borrower.model.ApplicationStatus;
 import com.creditapp.borrower.repository.ApplicationRepository;
 import com.creditapp.shared.model.Organization;
+import com.creditapp.shared.model.User;
+import com.creditapp.shared.model.UserRole;
 import com.creditapp.shared.repository.OrganizationRepository;
+import com.creditapp.auth.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,6 +60,9 @@ public class OfferSelectionIntegrationTest {
     private OrganizationRepository organizationRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     private UUID borrowerId;
@@ -68,17 +74,29 @@ public class OfferSelectionIntegrationTest {
     void setUp() {
         offerRepository.deleteAll();
         applicationRepository.deleteAll();
+        userRepository.deleteAll();
         organizationRepository.deleteAll();
 
-        borrowerId = UUID.randomUUID();
         applicationId = UUID.randomUUID();
         bankId = UUID.randomUUID();
         offerId = UUID.randomUUID();
+
+        // Create borrower user
+        User borrower = new User();
+        borrower.setId(UUID.randomUUID());
+        borrower.setEmail("borrower@test.com");
+        borrower.setPasswordHash("hashed");
+        borrower.setFirstName("John");
+        borrower.setLastName("Doe");
+        borrower.setRole(UserRole.BORROWER);
+        borrower = userRepository.save(borrower);
+        borrowerId = borrower.getId();
 
         // Create organization (bank)
         Organization bank = new Organization();
         bank.setId(bankId);
         bank.setName("Test Bank");
+        bank.setTaxId("TAX-002");
         bank.setCountryCode("MD");
         bank.setLogoUrl("https://testbank.com/logo.png");
         organizationRepository.save(bank);
@@ -87,9 +105,11 @@ public class OfferSelectionIntegrationTest {
         Application app = new Application();
         app.setId(applicationId);
         app.setBorrowerId(borrowerId);
+        app.setLoanType("PERSONAL");
         app.setStatus(ApplicationStatus.SUBMITTED);
         app.setLoanAmount(new BigDecimal("25000"));
         app.setLoanTermMonths(36);
+        app.setCurrency("MDL");
         applicationRepository.save(app);
 
         // Create offer

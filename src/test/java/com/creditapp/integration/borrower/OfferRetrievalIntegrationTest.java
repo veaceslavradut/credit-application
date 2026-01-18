@@ -22,7 +22,10 @@ import com.creditapp.borrower.model.Application;
 import com.creditapp.borrower.model.ApplicationStatus;
 import com.creditapp.borrower.repository.ApplicationRepository;
 import com.creditapp.shared.model.Organization;
+import com.creditapp.shared.model.User;
+import com.creditapp.shared.model.UserRole;
 import com.creditapp.shared.repository.OrganizationRepository;
+import com.creditapp.auth.repository.UserRepository;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -51,6 +54,9 @@ public class OfferRetrievalIntegrationTest {
     private OfferRepository offerRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private OrganizationRepository organizationRepository;
 
     private UUID borrowerId;
@@ -61,15 +67,27 @@ public class OfferRetrievalIntegrationTest {
     void setUp() {
         offerRepository.deleteAll();
         applicationRepository.deleteAll();
+        userRepository.deleteAll();
         organizationRepository.deleteAll();
 
-        borrowerId = UUID.randomUUID();
         applicationId = UUID.randomUUID();
         bankId = UUID.randomUUID();
+
+        // Create borrower user
+        User borrower = new User();
+        borrower.setId(UUID.randomUUID());
+        borrower.setEmail("borrower@test.com");
+        borrower.setPasswordHash("hashed");
+        borrower.setFirstName("John");
+        borrower.setLastName("Doe");
+        borrower.setRole(UserRole.BORROWER);
+        borrower = userRepository.save(borrower);
+        borrowerId = borrower.getId();
 
         Organization bank = new Organization();
         bank.setId(bankId);
         bank.setName("Test Bank");
+        bank.setTaxId("TAX-001");
         bank.setCountryCode("MD");
         bank.setLogoUrl("https://bank.com/logo.png");
         organizationRepository.save(bank);
@@ -77,10 +95,15 @@ public class OfferRetrievalIntegrationTest {
         Application app = new Application();
         app.setId(applicationId);
         app.setBorrowerId(borrowerId);
+        app.setLoanType("PERSONAL");
+        app.setLoanAmount(new BigDecimal("50000.00"));
+        app.setLoanTermMonths(36);
+        app.setCurrency("MDL");
         app.setStatus(ApplicationStatus.SUBMITTED);
         applicationRepository.save(app);
 
         Offer offer1 = new Offer();
+        offer1.setId(UUID.randomUUID());
         offer1.setApplicationId(applicationId);
         offer1.setBankId(bankId);
         offer1.setApr(new BigDecimal("3.50"));
@@ -96,6 +119,7 @@ public class OfferRetrievalIntegrationTest {
         offerRepository.save(offer1);
 
         Offer offer2 = new Offer();
+        offer2.setId(UUID.randomUUID());
         offer2.setApplicationId(applicationId);
         offer2.setBankId(bankId);
         offer2.setApr(new BigDecimal("4.25"));
@@ -153,6 +177,10 @@ public class OfferRetrievalIntegrationTest {
         Application draftApp = new Application();
         draftApp.setId(UUID.randomUUID());
         draftApp.setBorrowerId(borrowerId);
+        draftApp.setLoanType("PERSONAL");
+        draftApp.setLoanAmount(new BigDecimal("10000.00"));
+        draftApp.setLoanTermMonths(24);
+        draftApp.setCurrency("MDL");
         draftApp.setStatus(ApplicationStatus.DRAFT);
         applicationRepository.save(draftApp);
 
@@ -166,6 +194,10 @@ public class OfferRetrievalIntegrationTest {
         Application emptyApp = new Application();
         emptyApp.setId(UUID.randomUUID());
         emptyApp.setBorrowerId(borrowerId);
+        emptyApp.setLoanType("PERSONAL");
+        emptyApp.setLoanAmount(new BigDecimal("15000.00"));
+        emptyApp.setLoanTermMonths(30);
+        emptyApp.setCurrency("MDL");
         emptyApp.setStatus(ApplicationStatus.SUBMITTED);
         applicationRepository.save(emptyApp);
 
