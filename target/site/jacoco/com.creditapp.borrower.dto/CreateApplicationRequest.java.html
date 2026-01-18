@@ -8,28 +8,28 @@ import java.math.BigDecimal;
 /**
  * Request DTO for creating a new application.
  */
-<span class="nc bnc" id="L11" title="All 46 branches missed.">@Data</span>
-<span class="nc" id="L12">@NoArgsConstructor</span>
-<span class="nc" id="L13">@AllArgsConstructor</span>
-<span class="nc" id="L14">@Builder</span>
+<span class="pc bnc" id="L11" title="All 46 branches missed.">@Data</span>
+<span class="fc" id="L12">@NoArgsConstructor</span>
+<span class="fc" id="L13">@AllArgsConstructor</span>
+<span class="pc" id="L14">@Builder</span>
 public class CreateApplicationRequest {
 
     @NotBlank(message = &quot;Loan type is required&quot;)
-<span class="nc" id="L18">    private String loanType;</span>
+<span class="fc" id="L18">    private String loanType;</span>
 
     @NotNull(message = &quot;Loan amount is required&quot;)
     @DecimalMin(value = &quot;100&quot;, message = &quot;Loan amount must be at least 100&quot;)
     @DecimalMax(value = &quot;1000000&quot;, message = &quot;Loan amount cannot exceed 1,000,000&quot;)
-<span class="nc" id="L23">    private BigDecimal loanAmount;</span>
+<span class="fc" id="L23">    private BigDecimal loanAmount;</span>
 
     @NotNull(message = &quot;Loan term is required&quot;)
     @Min(value = 6, message = &quot;Loan term must be at least 6 months&quot;)
     @Max(value = 360, message = &quot;Loan term cannot exceed 360 months&quot;)
-<span class="nc" id="L28">    private Integer loanTermMonths;</span>
+<span class="fc" id="L28">    private Integer loanTermMonths;</span>
 
     @NotBlank(message = &quot;Currency is required&quot;)
-<span class="nc" id="L31">    private String currency;</span>
+<span class="fc" id="L31">    private String currency;</span>
 
-<span class="nc" id="L33">    private String ratePreference;</span>
+<span class="fc" id="L33">    private String ratePreference;</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

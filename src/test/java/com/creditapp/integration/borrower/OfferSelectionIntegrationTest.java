@@ -7,11 +7,13 @@ import com.creditapp.borrower.dto.SelectOfferRequest;
 import com.creditapp.borrower.model.Application;
 import com.creditapp.borrower.model.ApplicationStatus;
 import com.creditapp.borrower.repository.ApplicationRepository;
+import com.creditapp.shared.model.BankStatus;
 import com.creditapp.shared.model.Organization;
 import com.creditapp.shared.model.User;
 import com.creditapp.shared.model.UserRole;
 import com.creditapp.shared.repository.OrganizationRepository;
 import com.creditapp.auth.repository.UserRepository;
+import com.creditapp.shared.service.JwtTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -65,10 +67,17 @@ public class OfferSelectionIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private JwtTokenService jwtTokenService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private UUID borrowerId;
     private UUID applicationId;
     private UUID bankId;
     private UUID offerId;
+    private String borrowerToken;
 
     @BeforeEach
     void setUp() {
@@ -78,28 +87,30 @@ public class OfferSelectionIntegrationTest {
         organizationRepository.deleteAll();
 
         applicationId = UUID.randomUUID();
-        bankId = UUID.randomUUID();
         offerId = UUID.randomUUID();
 
         // Create borrower user
         User borrower = new User();
         borrower.setId(UUID.randomUUID());
         borrower.setEmail("borrower@test.com");
-        borrower.setPasswordHash("hashed");
+        borrower.setPasswordHash(passwordEncoder.encode("TestPassword123!"));
         borrower.setFirstName("John");
         borrower.setLastName("Doe");
         borrower.setRole(UserRole.BORROWER);
         borrower = userRepository.save(borrower);
         borrowerId = borrower.getId();
+        borrowerToken = jwtTokenService.generateToken(borrower);
 
-        // Create organization (bank)
+        // Create organization (bank) - don't set ID, let JPA generate it
         Organization bank = new Organization();
-        bank.setId(bankId);
         bank.setName("Test Bank");
         bank.setTaxId("TAX-002");
         bank.setCountryCode("MD");
         bank.setLogoUrl("https://testbank.com/logo.png");
-        organizationRepository.save(bank);
+        bank.setActive(true);
+        bank.setStatus(BankStatus.ACTIVE);
+        bank = organizationRepository.save(bank);
+        bankId = bank.getId(); // Use the generated ID
 
         // Create application
         Application app = new Application();
@@ -131,7 +142,6 @@ public class OfferSelectionIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "borrower", authorities = {"BORROWER"})
     void testSelectOfferSuccessfully() throws Exception {
         SelectOfferRequest request = new SelectOfferRequest();
         request.setOfferId(offerId);
@@ -139,7 +149,7 @@ public class OfferSelectionIntegrationTest {
         mockMvc.perform(post("/api/borrower/applications/{applicationId}/select-offer", applicationId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
-                .requestAttr("borrowerId", borrowerId))
+                .header("Authorization", "Bearer " + borrowerToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.selectedOfferId").value(offerId.toString()))
                 .andExpect(jsonPath("$.bankName").value("Test Bank"))
@@ -159,7 +169,6 @@ public class OfferSelectionIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "borrower", authorities = {"BORROWER"})
     void testSelectExpiredOffer() throws Exception {
         // Create expired offer
         UUID expiredOfferId = UUID.randomUUID();
@@ -185,13 +194,12 @@ public class OfferSelectionIntegrationTest {
         mockMvc.perform(post("/api/borrower/applications/{applicationId}/select-offer", applicationId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
-                .requestAttr("borrowerId", borrowerId))
+                .header("Authorization", "Bearer " + borrowerToken))
                 .andExpect(status().isGone())
                 .andExpect(jsonPath("$.error").value("Offer Expired"));
     }
 
     @Test
-    @WithMockUser(username = "borrower", authorities = {"BORROWER"})
     void testChangeOfferSelection() throws Exception {
         // Select first offer
         SelectOfferRequest request1 = new SelectOfferRequest();
@@ -200,7 +208,7 @@ public class OfferSelectionIntegrationTest {
         mockMvc.perform(post("/api/borrower/applications/{applicationId}/select-offer", applicationId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request1))
-                .requestAttr("borrowerId", borrowerId))
+                .header("Authorization", "Bearer " + borrowerToken))
                 .andExpect(status().isOk());
 
         // Create second offer
@@ -228,7 +236,7 @@ public class OfferSelectionIntegrationTest {
         mockMvc.perform(post("/api/borrower/applications/{applicationId}/select-offer", applicationId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request2))
-                .requestAttr("borrowerId", borrowerId))
+                .header("Authorization", "Bearer " + borrowerToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.selectedOfferId").value(offerId2.toString()));
 
@@ -242,9 +250,17 @@ public class OfferSelectionIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "other-borrower", authorities = {"BORROWER"})
     void testSelectOfferDifferentBorrower() throws Exception {
-        UUID otherBorrowerId = UUID.randomUUID();
+        // Create another borrower with different ID
+        User otherBorrower = new User();
+        otherBorrower.setId(UUID.randomUUID());
+        otherBorrower.setEmail("other@test.com");
+        otherBorrower.setPasswordHash(passwordEncoder.encode("TestPassword123!"));
+        otherBorrower.setFirstName("Jane");
+        otherBorrower.setLastName("Smith");
+        otherBorrower.setRole(UserRole.BORROWER);
+        otherBorrower = userRepository.save(otherBorrower);
+        String otherToken = jwtTokenService.generateToken(otherBorrower);
 
         SelectOfferRequest request = new SelectOfferRequest();
         request.setOfferId(offerId);
@@ -252,12 +268,11 @@ public class OfferSelectionIntegrationTest {
         mockMvc.perform(post("/api/borrower/applications/{applicationId}/select-offer", applicationId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
-                .requestAttr("borrowerId", otherBorrowerId))
+                .header("Authorization", "Bearer " + otherToken))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    @WithMockUser(username = "borrower", authorities = {"BORROWER"})
     void testSelectOfferInvalidOfferId() throws Exception {
         UUID invalidOfferId = UUID.randomUUID();
 
@@ -267,7 +282,7 @@ public class OfferSelectionIntegrationTest {
         mockMvc.perform(post("/api/borrower/applications/{applicationId}/select-offer", applicationId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
-                .requestAttr("borrowerId", borrowerId))
+                .header("Authorization", "Bearer " + borrowerToken))
                 .andExpect(status().isBadRequest());
     }
 
@@ -283,7 +298,6 @@ public class OfferSelectionIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "borrower", authorities = {"BORROWER"})
     void testSelectOfferApplicationNotFound() throws Exception {
         UUID nonExistentAppId = UUID.randomUUID();
 
@@ -293,12 +307,11 @@ public class OfferSelectionIntegrationTest {
         mockMvc.perform(post("/api/borrower/applications/{applicationId}/select-offer", nonExistentAppId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
-                .requestAttr("borrowerId", borrowerId))
+                .header("Authorization", "Bearer " + borrowerToken))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @WithMockUser(username = "borrower", authorities = {"BORROWER"})
     void testSelectOfferVerifyNextStepsIncluded() throws Exception {
         SelectOfferRequest request = new SelectOfferRequest();
         request.setOfferId(offerId);
@@ -306,14 +319,13 @@ public class OfferSelectionIntegrationTest {
         mockMvc.perform(post("/api/borrower/applications/{applicationId}/select-offer", applicationId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
-                .requestAttr("borrowerId", borrowerId))
+                .header("Authorization", "Bearer " + borrowerToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nextSteps").isArray())
                 .andExpect(jsonPath("$.nextSteps", hasSize(greaterThan(0))));
     }
 
     @Test
-    @WithMockUser(username = "borrower", authorities = {"BORROWER"})
     void testSelectOfferVerifyBorrowerSelectedAtTimestamp() throws Exception {
         SelectOfferRequest request = new SelectOfferRequest();
         request.setOfferId(offerId);
@@ -323,7 +335,7 @@ public class OfferSelectionIntegrationTest {
         mockMvc.perform(post("/api/borrower/applications/{applicationId}/select-offer", applicationId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
-                .requestAttr("borrowerId", borrowerId))
+                .header("Authorization", "Bearer " + borrowerToken))
                 .andExpect(status().isOk());
 
         LocalDateTime afterSelection = LocalDateTime.now();

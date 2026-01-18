@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.creditapp.integration.security.RBACIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 5, Errors: 0, Skipped: 0, Time elapsed: 11.60 s <<< FAILURE! -- in com.creditapp.integration.security.RBACIntegrationTest
-com.creditapp.integration.security.RBACIntegrationTest.testBankAdminCannotAccessBorrowerEndpoints -- Time elapsed: 1.280 s <<< FAILURE!
+Tests run: 8, Failures: 5, Errors: 0, Skipped: 0, Time elapsed: 19.16 s <<< FAILURE! -- in com.creditapp.integration.security.RBACIntegrationTest
+com.creditapp.integration.security.RBACIntegrationTest.testBankAdminCannotAccessBorrowerEndpoints -- Time elapsed: 1.767 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <403 FORBIDDEN> but was: <401 UNAUTHORIZED>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
@@ -15,7 +15,7 @@ org.opentest4j.AssertionFailedError: expected: <403 FORBIDDEN> but was: <401 UNA
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 
-com.creditapp.integration.security.RBACIntegrationTest.testUnauthenticatedAccessReturnsForbidden -- Time elapsed: 1.094 s <<< FAILURE!
+com.creditapp.integration.security.RBACIntegrationTest.testUnauthenticatedAccessReturnsForbidden -- Time elapsed: 1.332 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <403 FORBIDDEN> but was: <401 UNAUTHORIZED>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
@@ -28,7 +28,7 @@ org.opentest4j.AssertionFailedError: expected: <403 FORBIDDEN> but was: <401 UNA
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 
-com.creditapp.integration.security.RBACIntegrationTest.testMultipleEndpointsWithSameRole -- Time elapsed: 1.083 s <<< FAILURE!
+com.creditapp.integration.security.RBACIntegrationTest.testMultipleEndpointsWithSameRole -- Time elapsed: 1.413 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <201 CREATED> but was: <500 INTERNAL_SERVER_ERROR>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
@@ -41,7 +41,7 @@ org.opentest4j.AssertionFailedError: expected: <201 CREATED> but was: <500 INTER
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 
-com.creditapp.integration.security.RBACIntegrationTest.testAccessDeniedReturns403WithMessage -- Time elapsed: 0.967 s <<< FAILURE!
+com.creditapp.integration.security.RBACIntegrationTest.testAccessDeniedReturns403WithMessage -- Time elapsed: 1.332 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <403 FORBIDDEN> but was: <401 UNAUTHORIZED>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
@@ -54,7 +54,7 @@ org.opentest4j.AssertionFailedError: expected: <403 FORBIDDEN> but was: <401 UNA
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 
-com.creditapp.integration.security.RBACIntegrationTest.testBorrowerCannotAccessBankEndpoints -- Time elapsed: 0.959 s <<< FAILURE!
+com.creditapp.integration.security.RBACIntegrationTest.testBorrowerCannotAccessBankEndpoints -- Time elapsed: 1.364 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <403 FORBIDDEN> but was: <401 UNAUTHORIZED>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)

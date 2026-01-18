@@ -23,11 +23,11 @@ public class OfferService {
      * Get all offers for a given application, sorted by APR ascending.
      */
     public List&lt;OfferDTO&gt; getOffersByApplication(UUID applicationId) {
-<span class="nc" id="L26">        return offerRepository.findByApplicationId(applicationId)</span>
-<span class="nc" id="L27">                .stream()</span>
-<span class="nc" id="L28">                .sorted(Comparator.comparing(Offer::getApr))</span>
-<span class="nc" id="L29">                .map(this::toDTO)</span>
-<span class="nc" id="L30">                .collect(Collectors.toList());</span>
+<span class="fc" id="L26">        return offerRepository.findByApplicationId(applicationId)</span>
+<span class="fc" id="L27">                .stream()</span>
+<span class="fc" id="L28">                .sorted(Comparator.comparing(Offer::getApr))</span>
+<span class="fc" id="L29">                .map(this::toDTO)</span>
+<span class="fc" id="L30">                .collect(Collectors.toList());</span>
     }
 
     /**
@@ -49,23 +49,23 @@ public class OfferService {
     }
 
     private OfferDTO toDTO(Offer offer) {
-<span class="nc" id="L52">        OfferDTO dto = new OfferDTO();</span>
-<span class="nc" id="L53">        dto.id = offer.getId();</span>
-<span class="nc" id="L54">        dto.applicationId = offer.getApplicationId();</span>
-<span class="nc" id="L55">        dto.bankId = offer.getBankId();</span>
-<span class="nc" id="L56">        dto.offerStatus = offer.getOfferStatus();</span>
-<span class="nc" id="L57">        dto.apr = offer.getApr();</span>
-<span class="nc" id="L58">        dto.monthlyPayment = offer.getMonthlyPayment();</span>
-<span class="nc" id="L59">        dto.totalCost = offer.getTotalCost();</span>
-<span class="nc" id="L60">        dto.originationFee = offer.getOriginationFee();</span>
-<span class="nc" id="L61">        dto.insuranceCost = offer.getInsuranceCost();</span>
-<span class="nc" id="L62">        dto.processingTimeDays = offer.getProcessingTimeDays();</span>
-<span class="nc" id="L63">        dto.validityPeriodDays = offer.getValidityPeriodDays();</span>
-<span class="nc" id="L64">        dto.requiredDocuments = offer.getRequiredDocuments();</span>
-<span class="nc" id="L65">        dto.createdAt = offer.getCreatedAt();</span>
-<span class="nc" id="L66">        dto.expiresAt = offer.getExpiresAt();</span>
-<span class="nc" id="L67">        dto.offerSubmittedAt = offer.getOfferSubmittedAt();</span>
-<span class="nc" id="L68">        return dto;</span>
+<span class="fc" id="L52">        OfferDTO dto = new OfferDTO();</span>
+<span class="fc" id="L53">        dto.id = offer.getId();</span>
+<span class="fc" id="L54">        dto.applicationId = offer.getApplicationId();</span>
+<span class="fc" id="L55">        dto.bankId = offer.getBankId();</span>
+<span class="fc" id="L56">        dto.offerStatus = offer.getOfferStatus();</span>
+<span class="fc" id="L57">        dto.apr = offer.getApr();</span>
+<span class="fc" id="L58">        dto.monthlyPayment = offer.getMonthlyPayment();</span>
+<span class="fc" id="L59">        dto.totalCost = offer.getTotalCost();</span>
+<span class="fc" id="L60">        dto.originationFee = offer.getOriginationFee();</span>
+<span class="fc" id="L61">        dto.insuranceCost = offer.getInsuranceCost();</span>
+<span class="fc" id="L62">        dto.processingTimeDays = offer.getProcessingTimeDays();</span>
+<span class="fc" id="L63">        dto.validityPeriodDays = offer.getValidityPeriodDays();</span>
+<span class="fc" id="L64">        dto.requiredDocuments = offer.getRequiredDocuments();</span>
+<span class="fc" id="L65">        dto.createdAt = offer.getCreatedAt();</span>
+<span class="fc" id="L66">        dto.expiresAt = offer.getExpiresAt();</span>
+<span class="fc" id="L67">        dto.offerSubmittedAt = offer.getOfferSubmittedAt();</span>
+<span class="fc" id="L68">        return dto;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

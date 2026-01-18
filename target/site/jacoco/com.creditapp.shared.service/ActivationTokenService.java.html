@@ -13,12 +13,12 @@ import java.util.regex.Pattern;
 <span class="fc" id="L13">    private final SecureRandom secureRandom = new SecureRandom();</span>
 
     public String generateToken() {
-<span class="nc" id="L16">        StringBuilder token = new StringBuilder(TOKEN_LENGTH);</span>
-<span class="nc bnc" id="L17" title="All 2 branches missed.">        for (int i = 0; i &lt; TOKEN_LENGTH; i++) {</span>
-<span class="nc" id="L18">            int randomIndex = secureRandom.nextInt(TOKEN_CHARSET.length());</span>
-<span class="nc" id="L19">            token.append(TOKEN_CHARSET.charAt(randomIndex));</span>
+<span class="fc" id="L16">        StringBuilder token = new StringBuilder(TOKEN_LENGTH);</span>
+<span class="fc bfc" id="L17" title="All 2 branches covered.">        for (int i = 0; i &lt; TOKEN_LENGTH; i++) {</span>
+<span class="fc" id="L18">            int randomIndex = secureRandom.nextInt(TOKEN_CHARSET.length());</span>
+<span class="fc" id="L19">            token.append(TOKEN_CHARSET.charAt(randomIndex));</span>
         }
-<span class="nc" id="L21">        return token.toString();</span>
+<span class="fc" id="L21">        return token.toString();</span>
     }
 
     public boolean validateToken(String token) {

@@ -29,16 +29,16 @@ public class BorrowerOfferController {
             @PathVariable UUID applicationId,
             @Valid @ModelAttribute OfferComparisonTableRequest request) {
         
-<span class="nc" id="L32">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
-<span class="nc" id="L33">        log.info(&quot;GET /api/borrower/applications/{}/offers by borrower {}&quot;, applicationId, borrowerId);</span>
+<span class="fc" id="L32">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="fc" id="L33">        log.info(&quot;GET /api/borrower/applications/{}/offers by borrower {}&quot;, applicationId, borrowerId);</span>
         
-<span class="nc" id="L35">        OfferComparisonTableResponse response = offerComparisonTableService.getOffersTable(</span>
+<span class="fc" id="L35">        OfferComparisonTableResponse response = offerComparisonTableService.getOffersTable(</span>
                 applicationId, 
                 borrowerId, 
                 request
         );
         
-<span class="nc" id="L41">        return ResponseEntity.ok(response);</span>
+<span class="fc" id="L41">        return ResponseEntity.ok(response);</span>
     }
     
     @GetMapping(&quot;/{applicationId}/offers-table&quot;)
@@ -65,16 +65,16 @@ public class BorrowerOfferController {
             @PathVariable UUID applicationId,
             @Valid @RequestBody SelectOfferRequest request) {
         
-<span class="nc" id="L68">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
-<span class="nc" id="L69">        log.info(&quot;POST /api/borrower/applications/{}/select-offer by borrower {}&quot;, applicationId, borrowerId);</span>
+<span class="fc" id="L68">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="fc" id="L69">        log.info(&quot;POST /api/borrower/applications/{}/select-offer by borrower {}&quot;, applicationId, borrowerId);</span>
         
-<span class="nc" id="L71">        SelectOfferResponse response = offerSelectionService.selectOffer(</span>
+<span class="fc" id="L71">        SelectOfferResponse response = offerSelectionService.selectOffer(</span>
                 applicationId,
                 borrowerId,
-<span class="nc" id="L74">                request.getOfferId()</span>
+<span class="fc" id="L74">                request.getOfferId()</span>
         );
         
-<span class="nc" id="L77">        return ResponseEntity.ok(response);</span>
+<span class="fc" id="L77">        return ResponseEntity.ok(response);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

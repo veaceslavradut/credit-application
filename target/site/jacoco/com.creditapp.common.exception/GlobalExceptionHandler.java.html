@@ -339,12 +339,12 @@ import java.util.Map;
 
     @ExceptionHandler(com.creditapp.borrower.exception.ApplicationNotFoundException.class)
     public ResponseEntity&lt;?&gt; handleApplicationNotFound(com.creditapp.borrower.exception.ApplicationNotFoundException ex, WebRequest request) {
-<span class="fc" id="L342">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L343">        response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
-<span class="fc" id="L344">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="fc" id="L345">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="fc" id="L346">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="fc" id="L347">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
+<span class="nc" id="L342">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L343">        response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
+<span class="nc" id="L344">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L345">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L346">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L347">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
     }
 
     @ExceptionHandler(OfferCalculationException.class)
@@ -363,39 +363,52 @@ import java.util.Map;
 
     @ExceptionHandler(OfferExpiredException.class)
     public ResponseEntity&lt;?&gt; handleOfferExpired(OfferExpiredException ex, WebRequest request) {
-<span class="nc" id="L366">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L367">        response.put(&quot;error&quot;, &quot;Offer Expired&quot;);</span>
-<span class="nc" id="L368">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="nc" id="L369">        response.put(&quot;expiresAt&quot;, ex.getExpiresAt());</span>
-<span class="nc" id="L370">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L371">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L372">        return ResponseEntity.status(HttpStatus.GONE).body(response);</span>
+<span class="fc" id="L366">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L367">        response.put(&quot;error&quot;, &quot;Offer Expired&quot;);</span>
+<span class="fc" id="L368">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="fc" id="L369">        response.put(&quot;expiresAt&quot;, ex.getExpiresAt());</span>
+<span class="fc" id="L370">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="fc" id="L371">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="fc" id="L372">        return ResponseEntity.status(HttpStatus.GONE).body(response);</span>
     }
 
     @ExceptionHandler(InvalidOfferException.class)
     public ResponseEntity&lt;?&gt; handleInvalidOffer(InvalidOfferException ex, WebRequest request) {
-<span class="nc" id="L377">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L378">        response.put(&quot;error&quot;, &quot;Invalid Offer&quot;);</span>
-<span class="nc" id="L379">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="nc" id="L380">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L381">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L382">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
+<span class="fc" id="L377">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L378">        response.put(&quot;error&quot;, &quot;Invalid Offer&quot;);</span>
+<span class="fc" id="L379">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="fc" id="L380">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="fc" id="L381">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+        
+        // Check message to determine appropriate status code
+<span class="fc" id="L384">        String message = ex.getMessage();</span>
+<span class="pc bpc" id="L385" title="1 of 2 branches missed.">        if (message != null) {</span>
+<span class="fc bfc" id="L386" title="All 2 branches covered.">            if (message.contains(&quot;Application not found&quot;)) {</span>
+<span class="fc" id="L387">                response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
+<span class="fc" id="L388">                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
+<span class="fc bfc" id="L389" title="All 2 branches covered.">            } else if (message.contains(&quot;Unauthorized access&quot;)) {</span>
+<span class="fc" id="L390">                response.put(&quot;error&quot;, &quot;Forbidden&quot;);</span>
+<span class="fc" id="L391">                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);</span>
+            }
+        }
+        
+<span class="fc" id="L395">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity&lt;?&gt; handleGlobalException(Exception ex, WebRequest request) {
         // Rethrow AccessDeniedException so Spring Security can handle it properly
-<span class="nc bnc" id="L388" title="All 2 branches missed.">        if (ex instanceof AccessDeniedException) {</span>
-<span class="nc" id="L389">            throw (AccessDeniedException) ex;</span>
+<span class="nc bnc" id="L401" title="All 2 branches missed.">        if (ex instanceof AccessDeniedException) {</span>
+<span class="nc" id="L402">            throw (AccessDeniedException) ex;</span>
         }
         
-<span class="nc" id="L392">        logger.error(&quot;Unexpected error&quot;, ex);</span>
-<span class="nc" id="L393">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L394">        response.put(&quot;error&quot;, &quot;Internal Server Error&quot;);</span>
-<span class="nc" id="L395">        response.put(&quot;message&quot;, &quot;An unexpected error occurred&quot;);</span>
-<span class="nc" id="L396">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L397">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L398">        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);</span>
+<span class="nc" id="L405">        logger.error(&quot;Unexpected error&quot;, ex);</span>
+<span class="nc" id="L406">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L407">        response.put(&quot;error&quot;, &quot;Internal Server Error&quot;);</span>
+<span class="nc" id="L408">        response.put(&quot;message&quot;, &quot;An unexpected error occurred&quot;);</span>
+<span class="nc" id="L409">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L410">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L411">        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -379,6 +379,19 @@ public class GlobalExceptionHandler {
         response.put("message", ex.getMessage());
         response.put("timestamp", LocalDateTime.now().toString());
         response.put("path", request.getDescription(false).replace("uri=", ""));
+        
+        // Check message to determine appropriate status code
+        String message = ex.getMessage();
+        if (message != null) {
+            if (message.contains("Application not found")) {
+                response.put("error", "Not Found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            } else if (message.contains("Unauthorized access")) {
+                response.put("error", "Forbidden");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+            }
+        }
+        
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 

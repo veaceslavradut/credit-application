@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.creditapp.integration.auth.BankRegistrationIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 24.14 s -- in com.creditapp.integration.auth.BankRegistrationIntegrationTest
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 31.15 s -- in com.creditapp.integration.auth.BankRegistrationIntegrationTest

@@ -56,17 +56,17 @@ public class BorrowerApplicationController {
     @PreAuthorize(&quot;hasAuthority('BORROWER')&quot;)
     @RateLimited(action = &quot;CREATE_APPLICATION&quot;, limitPerMinute = 1)
     public ResponseEntity&lt;ApplicationDTO&gt; createApplication(@Valid @RequestBody CreateApplicationRequest request) {
-<span class="nc" id="L59">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="fc" id="L59">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
         
-<span class="nc" id="L61">        log.info(&quot;Creating application for borrower: {}, loanType: {}, loanAmount: {}&quot;, </span>
-<span class="nc" id="L62">                borrowerId, request.getLoanType(), request.getLoanAmount());</span>
+<span class="fc" id="L61">        log.info(&quot;Creating application for borrower: {}, loanType: {}, loanAmount: {}&quot;, </span>
+<span class="fc" id="L62">                borrowerId, request.getLoanType(), request.getLoanAmount());</span>
         
-<span class="nc" id="L64">        ApplicationDTO application = applicationService.createApplication(borrowerId, request);</span>
+<span class="fc" id="L64">        ApplicationDTO application = applicationService.createApplication(borrowerId, request);</span>
         
-<span class="nc" id="L66">        log.info(&quot;Application created successfully: {} for borrower: {}&quot;, </span>
-<span class="nc" id="L67">                application.getId(), borrowerId);</span>
+<span class="fc" id="L66">        log.info(&quot;Application created successfully: {} for borrower: {}&quot;, </span>
+<span class="fc" id="L67">                application.getId(), borrowerId);</span>
         
-<span class="nc" id="L69">        return ResponseEntity.status(HttpStatus.CREATED).body(application);</span>
+<span class="fc" id="L69">        return ResponseEntity.status(HttpStatus.CREATED).body(application);</span>
     }
 
     /**
@@ -77,10 +77,10 @@ public class BorrowerApplicationController {
     public ResponseEntity&lt;Page&lt;ApplicationDTO&gt;&gt; listApplications(
             @RequestParam(defaultValue = &quot;0&quot;) int page,
             @RequestParam(defaultValue = &quot;10&quot;) int size) {
-<span class="nc" id="L80">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
-<span class="nc" id="L81">        Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);</span>
-<span class="nc" id="L82">        Page&lt;ApplicationDTO&gt; applications = applicationService.listApplicationsByBorrower(borrowerId, pageable);</span>
-<span class="nc" id="L83">        return ResponseEntity.ok(applications);</span>
+<span class="fc" id="L80">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="fc" id="L81">        Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);</span>
+<span class="fc" id="L82">        Page&lt;ApplicationDTO&gt; applications = applicationService.listApplicationsByBorrower(borrowerId, pageable);</span>
+<span class="fc" id="L83">        return ResponseEntity.ok(applications);</span>
     }
 
     /**

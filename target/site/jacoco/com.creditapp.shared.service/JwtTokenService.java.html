@@ -35,7 +35,7 @@ public class JwtTokenService {
 <span class="fc" id="L35">                .subject(user.getId().toString())</span>
 <span class="fc" id="L36">                .claim(&quot;email&quot;, user.getEmail())</span>
 <span class="fc" id="L37">                .claim(&quot;role&quot;, user.getRole().name())</span>
-<span class="pc bpc" id="L38" title="1 of 2 branches missed.">                .claim(&quot;orgId&quot;, user.getOrganizationId() != null ? user.getOrganizationId().toString() : null)</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">                .claim(&quot;orgId&quot;, user.getOrganizationId() != null ? user.getOrganizationId().toString() : null)</span>
 <span class="fc" id="L39">                .issuedAt(now)</span>
 <span class="fc" id="L40">                .expiration(expiryDate)</span>
 <span class="fc" id="L41">                .signWith(jwtProperties.getSigningKey())</span>
@@ -43,25 +43,25 @@ public class JwtTokenService {
     }
 
     public String generateRefreshToken(User user) {
-<span class="nc bnc" id="L46" title="All 2 branches missed.">        if (!isConfigured()) return null;</span>
-<span class="nc" id="L47">        Date now = new Date();</span>
-<span class="nc" id="L48">        long expirationMillis = jwtProperties.getRefreshExpirationDays() * 24 * 60 * 60 * 1000;</span>
-<span class="nc" id="L49">        Date expiryDate = new Date(now.getTime() + expirationMillis);</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        if (!isConfigured()) return null;</span>
+<span class="fc" id="L47">        Date now = new Date();</span>
+<span class="fc" id="L48">        long expirationMillis = jwtProperties.getRefreshExpirationDays() * 24 * 60 * 60 * 1000;</span>
+<span class="fc" id="L49">        Date expiryDate = new Date(now.getTime() + expirationMillis);</span>
 
-<span class="nc" id="L51">        return Jwts.builder()</span>
-<span class="nc" id="L52">                .subject(user.getId().toString())</span>
-<span class="nc" id="L53">                .issuedAt(now)</span>
-<span class="nc" id="L54">                .expiration(expiryDate)</span>
-<span class="nc" id="L55">                .signWith(jwtProperties.getSigningKey())</span>
-<span class="nc" id="L56">                .compact();</span>
+<span class="fc" id="L51">        return Jwts.builder()</span>
+<span class="fc" id="L52">                .subject(user.getId().toString())</span>
+<span class="fc" id="L53">                .issuedAt(now)</span>
+<span class="fc" id="L54">                .expiration(expiryDate)</span>
+<span class="fc" id="L55">                .signWith(jwtProperties.getSigningKey())</span>
+<span class="fc" id="L56">                .compact();</span>
     }
 
     public boolean validateToken(String token) {
         try {
 <span class="fc" id="L61">            Jwts.parser().verifyWith(jwtProperties.getSigningKey()).build().parseSignedClaims(token);</span>
 <span class="fc" id="L62">            return true;</span>
-<span class="nc" id="L63">        } catch (ExpiredJwtException | MalformedJwtException | SignatureException e) {</span>
-<span class="nc" id="L64">            return false;</span>
+<span class="fc" id="L63">        } catch (ExpiredJwtException | MalformedJwtException | SignatureException e) {</span>
+<span class="fc" id="L64">            return false;</span>
         }
     }
 
@@ -86,8 +86,8 @@ public class JwtTokenService {
     }
 
     public Long extractExpiration(String token) {
-<span class="nc" id="L89">        Claims claims = extractAllClaims(token);</span>
-<span class="nc" id="L90">        return claims.getExpiration().getTime();</span>
+<span class="fc" id="L89">        Claims claims = extractAllClaims(token);</span>
+<span class="fc" id="L90">        return claims.getExpiration().getTime();</span>
     }
 
     private Claims extractAllClaims(String token) {
