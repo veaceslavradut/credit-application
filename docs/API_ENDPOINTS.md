@@ -633,6 +633,314 @@ curl -X DELETE https://api.creditapp.com/api/borrower/applications/550e8400-e29b
 
 ---
 
+## Offer Document Management API
+
+### POST /api/offers/{offerId}/documents
+**Description:** Upload a document for a loan offer (bank officer only). Documents are stored in AWS S3 with pre-signed URLs.
+
+**Authentication:** Required (BANK_OFFICER role)
+
+**Request Method:** POST
+
+**Request Headers:**
+- Content-Type: multipart/form-data
+- Authorization: Bearer {jwt_token}
+
+**Path Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| offerId | UUID | Yes | Unique identifier of the offer |
+
+**Query Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| bankId | UUID | Yes | Bank ID of the officer (ownership verification) |
+| officerId | UUID | Yes | Officer user ID uploading the document |
+
+**Request Body (multipart/form-data):**
+
+| Field | Type | Required | Validation | Description |
+|-------|------|----------|-----------|-------------|
+| file | File (binary) | Yes | Max 10 MB, PDF/Office types | The document file to upload |
+| documentType | String (enum) | Yes | TERMS_CONDITIONS, FEE_SCHEDULE, DISCLOSURE, TRUTH_IN_LENDING, CUSTOM | Classification of document |
+| description | String | No | Max 500 chars | Additional context about the document |
+
+**Supported MIME Types:**
+- application/pdf
+- application/msword
+- application/vnd.openxmlformats-officedocument.wordprocessingml.document
+- application/vnd.ms-excel
+- application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+
+**Response (201 Created):**
+```json
+{
+  "documentId": "990e8400-e29b-41d4-a716-446655440004",
+  "offerId": "550e8400-e29b-41d4-a716-446655440000",
+  "documentType": "TERMS_CONDITIONS",
+  "fileName": "terms_and_conditions.pdf",
+  "fileSize": 3145728,
+  "uploadedAt": "2026-01-18T14:30:00Z",
+  "uploadedByOfficerId": "770e8400-e29b-41d4-a716-446655440005",
+  "uploadedByOfficerName": "John Smith",
+  "description": "Standard loan terms document",
+  "virusScanStatus": "PENDING",
+  "downloadUrl": "https://s3.amazonaws.com/loan-offers-documents/offers/550e8400.../terms_..."
+}
+```
+
+**Response Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| documentId | UUID | Unique identifier for the document |
+| offerId | UUID | Associated offer ID |
+| documentType | String | Document type (enum) |
+| fileName | String | Original file name |
+| fileSize | Long | File size in bytes |
+| uploadedAt | ISO-8601 DateTime | Upload timestamp |
+| uploadedByOfficerId | UUID | Officer who uploaded |
+| uploadedByOfficerName | String | Officer name (for display) |
+| description | String | Optional document description |
+| virusScanStatus | String | PENDING, CLEAN, or INFECTED (default: PENDING) |
+| downloadUrl | String | Pre-signed S3 URL (24-hour expiration) |
+
+**Error Responses:**
+
+**400 Bad Request** - Invalid file or format
+```json
+{
+  "error": "Invalid File",
+  "message": "File type 'exe' is not supported. Supported: PDF, DOC, DOCX, XLS, XLSX",
+  "timestamp": "2026-01-18T14:30:00Z"
+}
+```
+
+**403 Forbidden** - Authorization failure
+```json
+{
+  "error": "Forbidden",
+  "message": "Bank does not own this offer or user is not a bank officer",
+  "timestamp": "2026-01-18T14:30:00Z"
+}
+```
+
+**404 Not Found** - Offer not found
+```json
+{
+  "error": "Not Found",
+  "message": "Offer not found",
+  "timestamp": "2026-01-18T14:30:00Z"
+}
+```
+
+**413 Payload Too Large** - File size exceeded
+```json
+{
+  "error": "File Too Large",
+  "message": "File size (15 MB) exceeds maximum allowed size (10 MB)",
+  "timestamp": "2026-01-18T14:30:00Z"
+}
+```
+
+**Constraints:**
+- Maximum file size: 10 MB
+- File types: PDF, DOC, DOCX, XLS, XLSX only
+- Bank officer must belong to bank that owns the offer
+- Virus scan happens asynchronously (virusScanStatus will update)
+
+**cURL Example:**
+```bash
+curl -X POST "https://api.creditapp.com/api/offers/550e8400-e29b-41d4-a716-446655440000/documents?bankId=880e8400&officerId=770e8400" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -F "file=@terms.pdf" \
+  -F "documentType=TERMS_CONDITIONS" \
+  -F "description=Standard loan terms"
+```
+
+---
+
+### GET /api/offers/{offerId}/documents
+**Description:** List all documents for an offer. Accessible by borrower (offer owner) or bank officers.
+
+**Authentication:** Required (BORROWER or BANK_OFFICER role)
+
+**Request Method:** GET
+
+**Request Headers:**
+- Authorization: Bearer {jwt_token}
+
+**Path Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| offerId | UUID | Yes | Unique identifier of the offer |
+
+**Query Parameters:**
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| sort | String | No | uploadedAt,desc | Sort field and direction (uploadedAt,desc or uploadedAt,asc) |
+| limit | Integer | No | 100 | Maximum documents to return |
+
+**Response (200 OK):**
+```json
+{
+  "offerId": "550e8400-e29b-41d4-a716-446655440000",
+  "totalCount": 3,
+  "retrievedAt": "2026-01-18T14:30:00Z",
+  "documents": [
+    {
+      "documentId": "990e8400-e29b-41d4-a716-446655440004",
+      "offerId": "550e8400-e29b-41d4-a716-446655440000",
+      "documentType": "TERMS_CONDITIONS",
+      "fileName": "terms_and_conditions.pdf",
+      "fileSize": 3145728,
+      "uploadedAt": "2026-01-18T14:30:00Z",
+      "uploadedByOfficerId": "770e8400-e29b-41d4-a716-446655440005",
+      "uploadedByOfficerName": "John Smith",
+      "description": "Standard loan terms",
+      "virusScanStatus": "CLEAN",
+      "downloadUrl": "https://s3.amazonaws.com/loan-offers-documents/offers/..."
+    },
+    {
+      "documentId": "aa1e8400-e29b-41d4-a716-446655440006",
+      "offerId": "550e8400-e29b-41d4-a716-446655440000",
+      "documentType": "FEE_SCHEDULE",
+      "fileName": "fee_schedule.xlsx",
+      "fileSize": 1048576,
+      "uploadedAt": "2026-01-18T13:00:00Z",
+      "uploadedByOfficerId": "770e8400-e29b-41d4-a716-446655440005",
+      "uploadedByOfficerName": "John Smith",
+      "description": "All applicable fees breakdown",
+      "virusScanStatus": "CLEAN",
+      "downloadUrl": "https://s3.amazonaws.com/loan-offers-documents/offers/..."
+    }
+  ]
+}
+```
+
+**Response Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| offerId | UUID | The offer ID |
+| totalCount | Integer | Total number of documents for offer |
+| retrievedAt | ISO-8601 DateTime | When the list was retrieved |
+| documents | Array | List of document objects (see structure above) |
+
+**Error Responses:**
+
+**403 Forbidden** - Access denied
+```json
+{
+  "error": "Forbidden",
+  "message": "You do not have permission to view documents for this offer",
+  "timestamp": "2026-01-18T14:30:00Z"
+}
+```
+
+**404 Not Found** - Offer not found
+```json
+{
+  "error": "Not Found",
+  "message": "Offer not found",
+  "timestamp": "2026-01-18T14:30:00Z"
+}
+```
+
+**Notes:**
+- Borrowers see documents for their offers
+- Bank officers see all documents for offers their bank created
+- Results sorted by uploadedAt descending (newest first)
+- Pre-signed URLs regenerated if expiring within 24 hours
+- Includes all documents regardless of virus scan status
+
+**cURL Example:**
+```bash
+curl -X GET "https://api.creditapp.com/api/offers/550e8400-e29b-41d4-a716-446655440000/documents?sort=uploadedAt,desc" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."
+```
+
+---
+
+### GET /api/offers/{offerId}/documents/{documentId}/download
+**Description:** Download an offer document. Returns pre-signed S3 URL or file content. Blocks download if virus scan detected infection.
+
+**Authentication:** Required (BORROWER or BANK_OFFICER role)
+
+**Request Method:** GET
+
+**Request Headers:**
+- Authorization: Bearer {jwt_token}
+
+**Path Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| offerId | UUID | Yes | Unique identifier of the offer |
+| documentId | UUID | Yes | Unique identifier of the document |
+
+**Response (200 OK) - Pre-signed URL:**
+```json
+{
+  "downloadUrl": "https://s3.amazonaws.com/loan-offers-documents/offers/550e8400.../terms_and_conditions.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...",
+  "expiresAt": "2026-01-19T14:30:00Z",
+  "fileName": "terms_and_conditions.pdf",
+  "fileSize": 3145728,
+  "contentType": "application/pdf"
+}
+```
+
+**Response (202 Accepted) - Virus scan pending:**
+```json
+{
+  "status": "PENDING_SCAN",
+  "message": "File is undergoing virus scanning. Please retry in a few moments.",
+  "scanStartedAt": "2026-01-18T14:30:00Z",
+  "estimatedCompletionAt": "2026-01-18T14:35:00Z"
+}
+```
+
+**Error Responses:**
+
+**403 Forbidden** - Access denied or infected file
+```json
+{
+  "error": "Forbidden",
+  "message": "File marked as infected and cannot be downloaded",
+  "timestamp": "2026-01-18T14:30:00Z"
+}
+```
+
+**404 Not Found** - Document or offer not found
+```json
+{
+  "error": "Not Found",
+  "message": "Document not found",
+  "timestamp": "2026-01-18T14:30:00Z"
+}
+```
+
+**Constraints:**
+- Borrowers can download documents only for their offers
+- Bank officers can download documents for offers their bank created
+- If virusScanStatus is INFECTED, returns 403 Forbidden
+- If virusScanStatus is PENDING, returns 202 Accepted
+- Pre-signed URL valid for 24 hours
+- Logs DOCUMENT_DOWNLOADED audit event
+
+**cURL Example:**
+```bash
+curl -X GET "https://api.creditapp.com/api/offers/550e8400-e29b-41d4-a716-446655440000/documents/990e8400-e29b-41d4-a716-446655440004/download" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -o terms_and_conditions.pdf
+```
+
+---
+
 ### GET /api/borrower/applications/{applicationId}/status
 **Description:** Get current application status and full history timeline of status transitions.
 
