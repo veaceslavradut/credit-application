@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.creditapp.integration.notification.NotificationServiceIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 6, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.402 s <<< FAILURE! -- in com.creditapp.integration.notification.NotificationServiceIntegrationTest
-com.creditapp.integration.notification.NotificationServiceIntegrationTest.testCreateNotification_Success_CreatesNotificationRecord -- Time elapsed: 0.022 s <<< FAILURE!
+Tests run: 6, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.528 s <<< FAILURE! -- in com.creditapp.integration.notification.NotificationServiceIntegrationTest
+com.creditapp.integration.notification.NotificationServiceIntegrationTest.testCreateNotification_Success_CreatesNotificationRecord -- Time elapsed: 0.062 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: 
 
 expected: PENDING

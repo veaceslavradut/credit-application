@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.creditapp.integration.borrower.OfferRetrievalIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 7, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 8.496 s <<< FAILURE! -- in com.creditapp.integration.borrower.OfferRetrievalIntegrationTest
-com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testGetOffersSuccessful -- Time elapsed: 0.626 s <<< FAILURE!
+Tests run: 7, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 9.039 s <<< FAILURE! -- in com.creditapp.integration.borrower.OfferRetrievalIntegrationTest
+com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testGetOffersSuccessful -- Time elapsed: 0.603 s <<< FAILURE!
 java.lang.AssertionError: No value at JSON path "$.totalOffersCount"
 	at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:302)
 	at org.springframework.test.util.JsonPathExpectationsHelper.assertValue(JsonPathExpectationsHelper.java:73)
@@ -14,7 +14,7 @@ java.lang.AssertionError: No value at JSON path "$.totalOffersCount"
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 Caused by: com.jayway.jsonpath.PathNotFoundException: No results for path: $['totalOffersCount']
 
-com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testEmptyOffersReturnsEmptyArray -- Time elapsed: 0.394 s <<< FAILURE!
+com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testEmptyOffersReturnsEmptyArray -- Time elapsed: 0.340 s <<< FAILURE!
 java.lang.AssertionError: No value at JSON path "$.totalOffersCount"
 	at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:302)
 	at org.springframework.test.util.JsonPathExpectationsHelper.assertValue(JsonPathExpectationsHelper.java:73)
@@ -26,7 +26,7 @@ java.lang.AssertionError: No value at JSON path "$.totalOffersCount"
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 Caused by: com.jayway.jsonpath.PathNotFoundException: No results for path: $['totalOffersCount']
 
-com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testDraftApplicationNotAllowed -- Time elapsed: 0.337 s <<< FAILURE!
+com.creditapp.integration.borrower.OfferRetrievalIntegrationTest.testDraftApplicationNotAllowed -- Time elapsed: 0.518 s <<< FAILURE!
 java.lang.AssertionError: Status expected:<400> but was:<200>
 	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
 	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)

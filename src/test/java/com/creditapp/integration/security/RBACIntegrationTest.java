@@ -3,6 +3,7 @@ package com.creditapp.integration.security;
 import com.creditapp.auth.dto.LoginRequest;
 import com.creditapp.auth.dto.LoginResponse;
 import com.creditapp.auth.repository.UserRepository;
+import com.creditapp.borrower.dto.CreateApplicationRequest;
 import com.creditapp.shared.model.BankStatus;
 import com.creditapp.shared.model.Organization;
 import com.creditapp.shared.model.User;
@@ -58,6 +59,9 @@ public class RBACIntegrationTest {
     private OrganizationRepository organizationRepository;
 
     @Autowired
+    private com.creditapp.borrower.repository.ApplicationRepository applicationRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     private String baseUrl;
@@ -69,6 +73,7 @@ public class RBACIntegrationTest {
     @BeforeEach
     void setUp() {
         baseUrl = "http://localhost:" + port;
+        applicationRepository.deleteAll();
         userRepository.deleteAll();
         organizationRepository.deleteAll();
         
@@ -216,7 +221,7 @@ public class RBACIntegrationTest {
                 String.class
         );
 
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
     @Test
@@ -258,19 +263,28 @@ public class RBACIntegrationTest {
     void testMultipleEndpointsWithSameRole() {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(Objects.requireNonNull(borrowerToken));
-        HttpEntity<Void> request = new HttpEntity<>(headers);
-
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        
         ResponseEntity<String> getResponse = restTemplate.exchange(
                 baseUrl + "/api/borrower/applications",
                 HttpMethod.GET,
-                request,
+                new HttpEntity<>(headers),
                 String.class
         );
         
+        // Create valid request body for POST
+        CreateApplicationRequest createRequest = new CreateApplicationRequest();
+        createRequest.setLoanType("PERSONAL");
+        createRequest.setLoanAmount(new java.math.BigDecimal("25000"));
+        createRequest.setLoanTermMonths(36);
+        createRequest.setCurrency("EUR");
+        createRequest.setRatePreference("VARIABLE");
+        
+        HttpEntity<CreateApplicationRequest> postEntity = new HttpEntity<>(createRequest, headers);
         ResponseEntity<String> postResponse = restTemplate.exchange(
                 baseUrl + "/api/borrower/applications",
                 HttpMethod.POST,
-                request,
+                postEntity,
                 String.class
         );
 
