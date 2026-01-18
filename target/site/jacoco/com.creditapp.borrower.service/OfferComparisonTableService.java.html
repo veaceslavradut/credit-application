@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OfferComparisonTableService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.borrower.service</a> &gt; <span class="el_source">OfferComparisonTableService.java</span></div><h1>OfferComparisonTableService.java</h1><pre class="source lang-java linenums">package com.creditapp.borrower.service;
+
+import com.creditapp.bank.model.Offer;
+import com.creditapp.bank.model.OfferStatus;
+import com.creditapp.bank.repository.OfferRepository;
+import com.creditapp.borrower.dto.OfferComparisonTableRequest;
+import com.creditapp.borrower.dto.OfferComparisonTableResponse;
+import com.creditapp.borrower.dto.OfferComparisonTableRow;
+import com.creditapp.borrower.exception.ApplicationNotFoundException;
+import com.creditapp.borrower.model.Application;
+import com.creditapp.borrower.model.ApplicationStatus;
+import com.creditapp.borrower.repository.ApplicationRepository;
+import com.creditapp.shared.model.Organization;
+import com.creditapp.shared.repository.OrganizationRepository;
+import com.creditapp.shared.util.PaginationUtils;
+import com.creditapp.shared.util.SortBuilder;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+<span class="fc" id="L32">@Slf4j</span>
+public class OfferComparisonTableService {
+    
+    private final OfferRepository offerRepository;
+    private final ApplicationRepository applicationRepository;
+    private final OrganizationRepository organizationRepository;
+    
+    public OfferComparisonTableResponse getOffersTable(
+            UUID applicationId, 
+            UUID borrowerId, 
+            OfferComparisonTableRequest request) {
+        
+<span class="fc" id="L44">        log.info(&quot;Getting offers table for applicationId={}, borrowerId={}&quot;, applicationId, borrowerId);</span>
+        
+        // Verify borrower owns the application
+<span class="fc" id="L47">        Application application = applicationRepository.findById(applicationId)</span>
+<span class="fc" id="L48">                .orElseThrow(() -&gt; new ApplicationNotFoundException(&quot;Application not found: &quot; + applicationId));</span>
+        
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
+<span class="fc" id="L51">            log.warn(&quot;Access denied: borrower {} attempted to access application {} owned by {}&quot;, </span>
+<span class="fc" id="L52">                    borrowerId, applicationId, application.getBorrowerId());</span>
+<span class="fc" id="L53">            throw new AccessDeniedException(&quot;You do not have permission to access this application&quot;);</span>
+        }
+        
+        // Build sort
+<span class="fc" id="L57">        var sort = SortBuilder.buildSort(request.getSortBy(), request.getSortOrder());</span>
+        
+        // Build pageable
+<span class="fc" id="L60">        Pageable pageable = PaginationUtils.validateAndGetPageable(request.getLimit(), request.getOffset(), sort);</span>
+        
+        // Fetch offers with pagination
+<span class="fc" id="L63">        Page&lt;Offer&gt; offersPage = offerRepository.findByApplicationId(applicationId, pageable);</span>
+        
+        // Apply filters
+<span class="fc" id="L66">        List&lt;Offer&gt; filteredOffers = applyFilters(offersPage.getContent(), request);</span>
+        
+        // Get bank details (batch fetch to avoid N+1)
+<span class="fc" id="L69">        Set&lt;UUID&gt; bankIds = filteredOffers.stream()</span>
+<span class="fc" id="L70">                .map(Offer::getBankId)</span>
+<span class="fc" id="L71">                .collect(Collectors.toSet());</span>
+<span class="fc" id="L72">        Map&lt;UUID, Organization&gt; bankMap = organizationRepository.findAllById(bankIds)</span>
+<span class="fc" id="L73">                .stream()</span>
+<span class="fc" id="L74">                .collect(Collectors.toMap(Organization::getId, org -&gt; org));</span>
+        
+        // Build response rows
+<span class="fc" id="L77">        List&lt;OfferComparisonTableRow&gt; rows = filteredOffers.stream()</span>
+<span class="fc" id="L78">                .map(offer -&gt; buildRow(offer, bankMap.get(offer.getBankId()), application, request.getComparisonMode()))</span>
+<span class="fc" id="L79">                .collect(Collectors.toList());</span>
+        
+        // Build response
+<span class="fc" id="L82">        OfferComparisonTableResponse response = new OfferComparisonTableResponse();</span>
+<span class="fc" id="L83">        response.setOffers(rows);</span>
+<span class="fc" id="L84">        response.setTotalCount((int) offersPage.getTotalElements());</span>
+<span class="fc" id="L85">        response.setLimit(request.getLimit());</span>
+<span class="fc" id="L86">        response.setOffset(request.getOffset());</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        response.setHasMore(offersPage.getTotalElements() &gt; (request.getOffset() + rows.size()));</span>
+<span class="fc" id="L88">        response.setSortBy(request.getSortBy());</span>
+<span class="fc" id="L89">        response.setSortOrder(request.getSortOrder());</span>
+<span class="fc" id="L90">        response.setAppliedFilters(buildAppliedFilters(request));</span>
+<span class="fc" id="L91">        response.setRetrievedAt(LocalDateTime.now());</span>
+        
+<span class="fc" id="L93">        log.info(&quot;Retrieved {} offers for application {}&quot;, rows.size(), applicationId);</span>
+<span class="fc" id="L94">        return response;</span>
+    }
+    
+    private List&lt;Offer&gt; applyFilters(List&lt;Offer&gt; offers, OfferComparisonTableRequest request) {
+<span class="fc" id="L98">        return offers.stream()</span>
+<span class="fc" id="L99">                .filter(offer -&gt; applyAprFilter(offer, request.getAprMin(), request.getAprMax()))</span>
+<span class="fc" id="L100">                .filter(offer -&gt; applyMonthlyPaymentFilter(offer, request.getMonthlyPaymentMin(), request.getMonthlyPaymentMax()))</span>
+<span class="fc" id="L101">                .collect(Collectors.toList());</span>
+    }
+    
+    private boolean applyAprFilter(Offer offer, BigDecimal min, BigDecimal max) {
+<span class="pc bpc" id="L105" title="3 of 4 branches missed.">        if (min != null &amp;&amp; offer.getApr().compareTo(min) &lt; 0) {</span>
+<span class="nc" id="L106">            return false;</span>
+        }
+<span class="fc bfc" id="L108" title="All 4 branches covered.">        if (max != null &amp;&amp; offer.getApr().compareTo(max) &gt; 0) {</span>
+<span class="fc" id="L109">            return false;</span>
+        }
+<span class="fc" id="L111">        return true;</span>
+    }
+    
+    private boolean applyMonthlyPaymentFilter(Offer offer, BigDecimal min, BigDecimal max) {
+<span class="pc bpc" id="L115" title="3 of 4 branches missed.">        if (min != null &amp;&amp; offer.getMonthlyPayment().compareTo(min) &lt; 0) {</span>
+<span class="nc" id="L116">            return false;</span>
+        }
+<span class="pc bpc" id="L118" title="3 of 4 branches missed.">        if (max != null &amp;&amp; offer.getMonthlyPayment().compareTo(max) &gt; 0) {</span>
+<span class="nc" id="L119">            return false;</span>
+        }
+<span class="fc" id="L121">        return true;</span>
+    }
+    
+    private OfferComparisonTableRow buildRow(Offer offer, Organization bank, Application application, String comparisonMode) {
+<span class="fc" id="L125">        OfferComparisonTableRow row = new OfferComparisonTableRow();</span>
+<span class="fc" id="L126">        row.setOfferId(offer.getId());</span>
+<span class="fc" id="L127">        row.setBankId(offer.getBankId());</span>
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">        row.setBankName(bank != null ? bank.getName() : &quot;Unknown Bank&quot;);</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">        row.setBankLogoUrl(bank != null ? bank.getLogoUrl() : null);</span>
+<span class="fc" id="L130">        row.setApr(offer.getApr());</span>
+<span class="fc" id="L131">        row.setMonthlyPayment(offer.getMonthlyPayment());</span>
+<span class="fc" id="L132">        row.setTotalCost(offer.getTotalCost());</span>
+<span class="fc" id="L133">        row.setOfferStatus(offer.getOfferStatus().name());</span>
+<span class="fc" id="L134">        row.setSelectButtonState(determineSelectButtonState(offer, application));</span>
+<span class="fc" id="L135">        row.setExpirationCountdown(calculateExpirationCountdown(offer.getExpiresAt()));</span>
+<span class="fc" id="L136">        row.setExpiresAt(offer.getExpiresAt());</span>
+        
+        // Include additional fields for full mode
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">        if (&quot;full&quot;.equalsIgnoreCase(comparisonMode)) {</span>
+<span class="fc" id="L140">            row.setOriginationFee(offer.getOriginationFee());</span>
+<span class="fc" id="L141">            row.setInsuranceCost(offer.getInsuranceCost());</span>
+<span class="fc" id="L142">            row.setTermMonths(application.getLoanTermMonths());</span>
+<span class="fc" id="L143">            row.setProcessingTimeDays(offer.getProcessingTimeDays());</span>
+<span class="fc" id="L144">            row.setValidityPeriodDays(offer.getValidityPeriodDays());</span>
+        }
+        
+<span class="fc" id="L147">        return row;</span>
+    }
+    
+    // Package-private for testing
+    String calculateExpirationCountdown(LocalDateTime expiresAt) {
+<span class="fc" id="L152">        LocalDateTime now = LocalDateTime.now();</span>
+<span class="fc" id="L153">        Duration duration = Duration.between(now, expiresAt);</span>
+        
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        if (duration.isNegative()) {</span>
+<span class="nc" id="L156">            return &quot;Expired&quot;;</span>
+        }
+        
+<span class="fc" id="L159">        long totalMinutes = duration.toMinutes();</span>
+        
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">        if (totalMinutes &lt; 1) {</span>
+<span class="nc" id="L162">            return &quot;Less than 1 minute&quot;;</span>
+        }
+        
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">        if (totalMinutes &lt; 60) {</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">            return totalMinutes + &quot; minute&quot; + (totalMinutes == 1 ? &quot;&quot; : &quot;s&quot;);</span>
+        }
+        
+<span class="fc" id="L169">        long hours = duration.toHours();</span>
+<span class="pc bpc" id="L170" title="1 of 2 branches missed.">        if (hours &lt; 24) {</span>
+<span class="nc" id="L171">            long minutes = totalMinutes % 60;</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">            return hours + &quot; hour&quot; + (hours == 1 ? &quot;&quot; : &quot;s&quot;) + </span>
+<span class="nc bnc" id="L173" title="All 4 branches missed.">                   (minutes &gt; 0 ? &quot; &quot; + minutes + &quot; minute&quot; + (minutes == 1 ? &quot;&quot; : &quot;s&quot;) : &quot;&quot;);</span>
+        }
+        
+<span class="fc" id="L176">        long days = duration.toDays();</span>
+<span class="fc" id="L177">        long remainingHours = hours % 24;</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">        return days + &quot; day&quot; + (days == 1 ? &quot;&quot; : &quot;s&quot;) + </span>
+<span class="pc bpc" id="L179" title="1 of 4 branches missed.">               (remainingHours &gt; 0 ? &quot; &quot; + remainingHours + &quot; hour&quot; + (remainingHours == 1 ? &quot;&quot; : &quot;s&quot;) : &quot;&quot;);</span>
+    }
+    
+    // Package-private for testing
+    String determineSelectButtonState(Offer offer, Application application) {
+        // Check if offer is expired
+<span class="pc bpc" id="L185" title="1 of 2 branches missed.">        if (offer.getOfferStatus() == OfferStatus.EXPIRED) {</span>
+<span class="nc" id="L186">            return &quot;disabled-expired&quot;;</span>
+        }
+        
+        // Check if offer is already accepted
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">        if (offer.getOfferStatus() == OfferStatus.ACCEPTED) {</span>
+<span class="nc" id="L191">            return &quot;disabled-selected&quot;;</span>
+        }
+        
+        // Check if application is not in the right status
+<span class="pc bpc" id="L195" title="1 of 2 branches missed.">        if (application.getStatus() != ApplicationStatus.SUBMITTED &amp;&amp; </span>
+<span class="nc bnc" id="L196" title="All 2 branches missed.">            application.getStatus() != ApplicationStatus.UNDER_REVIEW &amp;&amp;</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">            application.getStatus() != ApplicationStatus.OFFERS_AVAILABLE) {</span>
+<span class="nc" id="L198">            return &quot;disabled-not-ready&quot;;</span>
+        }
+        
+        // Offer can be selected
+<span class="fc" id="L202">        return &quot;enabled&quot;;</span>
+    }
+    
+    private Map&lt;String, Object&gt; buildAppliedFilters(OfferComparisonTableRequest request) {
+<span class="fc" id="L206">        Map&lt;String, Object&gt; filters = new HashMap&lt;&gt;();</span>
+        
+<span class="pc bpc" id="L208" title="1 of 2 branches missed.">        if (request.getAprMin() != null) {</span>
+<span class="nc" id="L209">            filters.put(&quot;aprMin&quot;, request.getAprMin());</span>
+        }
+<span class="fc bfc" id="L211" title="All 2 branches covered.">        if (request.getAprMax() != null) {</span>
+<span class="fc" id="L212">            filters.put(&quot;aprMax&quot;, request.getAprMax());</span>
+        }
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">        if (request.getMonthlyPaymentMin() != null) {</span>
+<span class="nc" id="L215">            filters.put(&quot;monthlyPaymentMin&quot;, request.getMonthlyPaymentMin());</span>
+        }
+<span class="pc bpc" id="L217" title="1 of 2 branches missed.">        if (request.getMonthlyPaymentMax() != null) {</span>
+<span class="nc" id="L218">            filters.put(&quot;monthlyPaymentMax&quot;, request.getMonthlyPaymentMax());</span>
+        }
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">        if (!&quot;all&quot;.equalsIgnoreCase(request.getBankCategory())) {</span>
+<span class="nc" id="L221">            filters.put(&quot;bankCategory&quot;, request.getBankCategory());</span>
+        }
+        
+<span class="fc" id="L224">        return filters;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -53,7 +55,25 @@ class OfferHistoryServiceTest {
         bank.setId(bankId);
         bank.setName("Test Bank");
         
-        List<Offer> offers = Arrays.asList(new Offer(), new Offer());
+        Offer offer1 = new Offer();
+        offer1.setId(UUID.randomUUID());
+        offer1.setApplicationId(applicationId);
+        offer1.setBankId(bankId);
+        offer1.setOfferStatus(com.creditapp.bank.model.OfferStatus.SUBMITTED);
+        offer1.setMonthlyPayment(new BigDecimal("500.00"));
+        offer1.setTotalCost(new BigDecimal("18000.00"));
+        offer1.setApr(new BigDecimal("5.5"));
+        
+        Offer offer2 = new Offer();
+        offer2.setId(UUID.randomUUID());
+        offer2.setApplicationId(applicationId);
+        offer2.setBankId(bankId);
+        offer2.setOfferStatus(com.creditapp.bank.model.OfferStatus.CALCULATED);
+        offer2.setMonthlyPayment(new BigDecimal("480.00"));
+        offer2.setTotalCost(new BigDecimal("17280.00"));
+        offer2.setApr(new BigDecimal("5.0"));
+        
+        List<Offer> offers = Arrays.asList(offer1, offer2);
         Page<Offer> offerPage = new PageImpl<>(offers);
         
         when(offerRepository.findOffersByBorrowerId(eq(borrowerId), any(Pageable.class))).thenReturn(offerPage);

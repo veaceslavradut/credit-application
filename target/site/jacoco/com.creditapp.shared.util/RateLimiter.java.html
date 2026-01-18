@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RateLimiter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.util</a> &gt; <span class="el_source">RateLimiter.java</span></div><h1>RateLimiter.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.util;
+
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Component;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * Redis-based rate limiter for distributed rate limiting across multiple instances.
+ * Implements token bucket algorithm with configurable limits per minute.
+ */
+@Component
+public class RateLimiter {
+
+    private final StringRedisTemplate redisTemplate;
+
+<span class="fc" id="L16">    public RateLimiter(StringRedisTemplate redisTemplate) {</span>
+<span class="fc" id="L17">        this.redisTemplate = redisTemplate;</span>
+<span class="fc" id="L18">    }</span>
+
+    /**
+     * Check if action is allowed for the given key.
+     * Uses Redis to track and enforce rate limits.
+     *
+     * @param key The rate limit key (e.g., borrower_id:action)
+     * @param limitPerMinute Maximum number of requests allowed per minute
+     * @return true if action is allowed, false if rate limit exceeded
+     */
+    public boolean isAllowed(String key, int limitPerMinute) {
+<span class="nc" id="L29">        String redisKey = &quot;rate_limit:&quot; + key;</span>
+        
+        try {
+            // Get current count
+<span class="nc" id="L33">            String countStr = redisTemplate.opsForValue().get(redisKey);</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">            int count = countStr == null ? 0 : Integer.parseInt(countStr);</span>
+            
+            // If count &lt; limit, increment and allow
+<span class="nc bnc" id="L37" title="All 2 branches missed.">            if (count &lt; limitPerMinute) {</span>
+<span class="nc" id="L38">                redisTemplate.opsForValue().increment(redisKey);</span>
+                
+                // Set expiration on first increment (1 minute)
+<span class="nc bnc" id="L41" title="All 2 branches missed.">                if (count == 0) {</span>
+<span class="nc" id="L42">                    redisTemplate.expire(redisKey, 1, TimeUnit.MINUTES);</span>
+                }
+                
+<span class="nc" id="L45">                return true;</span>
+            }
+            
+            // Limit exceeded
+<span class="nc" id="L49">            return false;</span>
+            
+<span class="nc" id="L51">        } catch (Exception e) {</span>
+            // If Redis is down, allow request (fail open)
+<span class="nc" id="L53">            return true;</span>
+        }
+    }
+
+    /**
+     * Get remaining calls for the given key.
+     *
+     * @param key The rate limit key
+     * @param limitPerMinute Maximum number of requests allowed per minute
+     * @return Number of remaining calls, or -1 if key doesn't exist
+     */
+    public int getRemainingCalls(String key, int limitPerMinute) {
+<span class="nc" id="L65">        String redisKey = &quot;rate_limit:&quot; + key;</span>
+        
+        try {
+<span class="nc" id="L68">            String countStr = redisTemplate.opsForValue().get(redisKey);</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">            int count = countStr == null ? 0 : Integer.parseInt(countStr);</span>
+<span class="nc" id="L70">            return Math.max(0, limitPerMinute - count);</span>
+<span class="nc" id="L71">        } catch (Exception e) {</span>
+<span class="nc" id="L72">            return limitPerMinute;</span>
+        }
+    }
+
+    /**
+     * Get remaining time until rate limit resets (in seconds).
+     *
+     * @param key The rate limit key
+     * @return Remaining time in seconds, or -1 if key doesn't exist
+     */
+    public long getResetTimeSeconds(String key) {
+<span class="nc" id="L83">        String redisKey = &quot;rate_limit:&quot; + key;</span>
+        
+        try {
+<span class="nc" id="L86">            Long ttl = redisTemplate.getExpire(redisKey, TimeUnit.SECONDS);</span>
+<span class="nc bnc" id="L87" title="All 4 branches missed.">            return ttl == null || ttl &lt; 0 ? 60 : ttl;</span>
+<span class="nc" id="L88">        } catch (Exception e) {</span>
+<span class="nc" id="L89">            return 60;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

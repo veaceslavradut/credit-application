@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApplicationService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.borrower.service</a> &gt; <span class="el_source">ApplicationService.java</span></div><h1>ApplicationService.java</h1><pre class="source lang-java linenums">package com.creditapp.borrower.service;
+
+import com.creditapp.borrower.dto.ApplicationDTO;
+import com.creditapp.borrower.dto.ApplicationHistoryDTO;
+import com.creditapp.borrower.dto.CreateApplicationRequest;
+import com.creditapp.borrower.dto.SubmitApplicationResponse;
+import com.creditapp.borrower.dto.UpdateApplicationRequest;
+import com.creditapp.borrower.dto.UpdateApplicationResponse;
+import com.creditapp.borrower.exception.ApplicationAlreadySubmittedException;
+import com.creditapp.borrower.exception.ApplicationCreationException;
+import com.creditapp.borrower.exception.ApplicationNotFoundException;
+import com.creditapp.borrower.exception.ApplicationNotEditableException;
+import com.creditapp.borrower.exception.ApplicationStaleException;
+import com.creditapp.borrower.exception.InvalidApplicationException;
+import com.creditapp.borrower.exception.SubmissionValidationException;
+import com.creditapp.borrower.model.Application;
+import com.creditapp.borrower.model.ApplicationStatus;
+import com.creditapp.borrower.repository.ApplicationHistoryRepository;
+import com.creditapp.borrower.repository.ApplicationRepository;
+import com.creditapp.shared.audit.BusinessAudit;
+import com.creditapp.shared.model.AuditAction;
+import com.creditapp.shared.service.AuditService;
+import com.creditapp.shared.service.NotificationService;
+import com.creditapp.auth.repository.UserRepository;
+import com.creditapp.bank.service.OfferCalculationService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+
+/**
+ * Service for application operations.
+ */
+@Service
+@RequiredArgsConstructor
+<span class="fc" id="L44">@Slf4j</span>
+public class ApplicationService {
+
+    private final ApplicationRepository applicationRepository;
+    private final ApplicationHistoryRepository applicationHistoryRepository;
+    private final AuditService auditService;
+    private final NotificationService notificationService;
+    private final UserRepository userRepository;
+    private final OfferCalculationService offerCalculationService;
+
+    /**
+     * Create a new application in DRAFT status.
+     */
+    @BusinessAudit(action = AuditAction.APPLICATION_CREATED, entityType = &quot;Application&quot;)
+    public ApplicationDTO createApplication(UUID borrowerId, CreateApplicationRequest request) {
+        // Validate loan amount (100 - 1,000,000)
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (request.getLoanAmount() == null) {</span>
+<span class="fc" id="L61">            throw new InvalidApplicationException(&quot;Loan amount is required&quot;);</span>
+        }
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (request.getLoanAmount().compareTo(BigDecimal.valueOf(100)) &lt; 0) {</span>
+<span class="fc" id="L64">            throw new InvalidApplicationException(&quot;Loan amount must be at least 100&quot;);</span>
+        }
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        if (request.getLoanAmount().compareTo(BigDecimal.valueOf(1000000)) &gt; 0) {</span>
+<span class="fc" id="L67">            throw new InvalidApplicationException(&quot;Loan amount cannot exceed 1,000,000&quot;);</span>
+        }
+
+        // Validate loan term (6 - 360 months)
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (request.getLoanTermMonths() == null) {</span>
+<span class="fc" id="L72">            throw new InvalidApplicationException(&quot;Loan term is required&quot;);</span>
+        }
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (request.getLoanTermMonths() &lt; 6) {</span>
+<span class="fc" id="L75">            throw new InvalidApplicationException(&quot;Loan term must be at least 6 months&quot;);</span>
+        }
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (request.getLoanTermMonths() &gt; 360) {</span>
+<span class="fc" id="L78">            throw new InvalidApplicationException(&quot;Loan term cannot exceed 360 months&quot;);</span>
+        }
+
+        try {
+            // Create application
+<span class="fc" id="L83">            Application application = Application.builder()</span>
+<span class="fc" id="L84">                    .borrowerId(borrowerId)</span>
+<span class="fc" id="L85">                    .loanType(request.getLoanType())</span>
+<span class="fc" id="L86">                    .loanAmount(request.getLoanAmount())</span>
+<span class="fc" id="L87">                    .loanTermMonths(request.getLoanTermMonths())</span>
+<span class="fc" id="L88">                    .currency(request.getCurrency())</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">                    .ratePreference(request.getRatePreference() != null ? request.getRatePreference() : &quot;VARIABLE&quot;)</span>
+<span class="fc" id="L90">                    .status(ApplicationStatus.DRAFT)</span>
+<span class="fc" id="L91">                    .build();</span>
+
+<span class="fc" id="L93">            application = applicationRepository.save(application);</span>
+            // Flush and reload to ensure @CreationTimestamp is populated by database
+<span class="fc" id="L95">            applicationRepository.flush();</span>
+            // Use Java Optional API to handle the reload safely
+<span class="fc" id="L97">            UUID appId = application.getId();</span>
+<span class="fc" id="L98">            application = applicationRepository.findById(appId)</span>
+<span class="pc" id="L99">                    .orElseThrow(() -&gt; new ApplicationCreationException(&quot;Failed to retrieve saved application&quot;));</span>
+
+            // Audit event logged via @BusinessAudit annotation
+<span class="fc" id="L102">            log.info(&quot;Application created: {} for borrower: {}&quot;, application.getId(), borrowerId);</span>
+<span class="fc" id="L103">            return mapToDTO(application);</span>
+            
+<span class="nc" id="L105">        } catch (Exception e) {</span>
+<span class="nc" id="L106">            log.error(&quot;Failed to create application for borrower: {}&quot;, borrowerId, e);</span>
+<span class="nc" id="L107">            throw new ApplicationCreationException(&quot;Failed to create application&quot;, e);</span>
+        }
+    }
+
+    /**
+     * Get an application by ID for a specific borrower.
+     */
+    public ApplicationDTO getApplication(UUID applicationId, UUID borrowerId) {
+<span class="fc" id="L115">        Application application = applicationRepository.findById(applicationId)</span>
+<span class="fc" id="L116">                .orElseThrow(() -&gt; new ApplicationNotFoundException(</span>
+<span class="fc" id="L117">                        &quot;Application not found: &quot; + applicationId));</span>
+
+        // Verify borrower owns the application
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
+<span class="fc" id="L121">            throw new ApplicationNotFoundException(</span>
+<span class="fc" id="L122">                    &quot;Access denied to application: &quot; + applicationId);</span>
+        }
+
+<span class="fc" id="L125">        return mapToDTO(application);</span>
+    }
+
+    /**
+     * Get application status history.
+     */
+    public List&lt;ApplicationHistoryDTO&gt; getApplicationHistory(UUID applicationId, UUID borrowerId) {
+        // Verify borrower owns the application
+<span class="nc" id="L133">        Application application = applicationRepository.findById(applicationId)</span>
+<span class="nc" id="L134">                .orElseThrow(() -&gt; new ApplicationNotFoundException(</span>
+<span class="nc" id="L135">                        &quot;Application not found: &quot; + applicationId));</span>
+
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
+<span class="nc" id="L138">            throw new ApplicationNotFoundException(</span>
+<span class="nc" id="L139">                    &quot;Access denied to application: &quot; + applicationId);</span>
+        }
+
+<span class="nc" id="L142">        return applicationHistoryRepository</span>
+<span class="nc" id="L143">                .findByApplicationIdOrderByChangedAtDesc(applicationId)</span>
+<span class="nc" id="L144">                .stream()</span>
+<span class="nc" id="L145">                .map(this::mapHistoryToDTO)</span>
+<span class="nc" id="L146">                .collect(Collectors.toList());</span>
+    }
+
+    /**
+     * List applications for a borrower with pagination.
+     */
+    public Page&lt;ApplicationDTO&gt; listApplicationsByBorrower(UUID borrowerId, Pageable pageable) {
+<span class="fc" id="L153">        return applicationRepository.findByBorrowerId(borrowerId, pageable)</span>
+<span class="fc" id="L154">                .map(this::mapToDTO);</span>
+    }
+
+    /**
+     * Submit an application for underwriting review (transition DRAFT -&gt; SUBMITTED).
+     */
+    @BusinessAudit(action = AuditAction.APPLICATION_SUBMITTED, entityType = &quot;Application&quot;)
+    public SubmitApplicationResponse submitApplication(UUID applicationId, UUID borrowerId) {
+        // Verify borrower owns the application
+<span class="fc" id="L163">        Application application = applicationRepository.findById(applicationId)</span>
+<span class="fc" id="L164">                .orElseThrow(() -&gt; new ApplicationNotFoundException(</span>
+<span class="fc" id="L165">                        &quot;Application not found: &quot; + applicationId));</span>
+
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
+<span class="fc" id="L168">            throw new ApplicationNotFoundException(</span>
+<span class="fc" id="L169">                    &quot;Access denied to application: &quot; + applicationId);</span>
+        }
+
+        // Verify application is in DRAFT status
+<span class="fc bfc" id="L173" title="All 2 branches covered.">        if (application.getStatus() != ApplicationStatus.DRAFT) {</span>
+<span class="fc" id="L174">            throw new ApplicationAlreadySubmittedException(</span>
+<span class="fc" id="L175">                    &quot;Application is already in &quot; + application.getStatus() + &quot; status. Only DRAFT applications can be submitted.&quot;);</span>
+        }
+
+        // Validate required fields
+<span class="fc" id="L179">        List&lt;String&gt; missingFields = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L180" title="1 of 4 branches missed.">        if (application.getLoanType() == null || application.getLoanType().isEmpty()) {</span>
+<span class="fc" id="L181">            missingFields.add(&quot;loanType&quot;);</span>
+        }
+<span class="fc bfc" id="L183" title="All 2 branches covered.">        if (application.getLoanAmount() == null) {</span>
+<span class="fc" id="L184">            missingFields.add(&quot;loanAmount&quot;);</span>
+        }
+<span class="fc bfc" id="L186" title="All 2 branches covered.">        if (application.getLoanTermMonths() == null) {</span>
+<span class="fc" id="L187">            missingFields.add(&quot;loanTermMonths&quot;);</span>
+        }
+<span class="pc bpc" id="L189" title="1 of 4 branches missed.">        if (application.getCurrency() == null || application.getCurrency().isEmpty()) {</span>
+<span class="fc" id="L190">            missingFields.add(&quot;currency&quot;);</span>
+        }
+
+<span class="fc bfc" id="L193" title="All 2 branches covered.">        if (!missingFields.isEmpty()) {</span>
+<span class="fc" id="L194">            throw new SubmissionValidationException(</span>
+<span class="fc" id="L195">                    &quot;Required fields missing: &quot; + String.join(&quot;, &quot;, missingFields),</span>
+<span class="fc" id="L196">                    missingFields);</span>
+        }
+
+        // Update status to SUBMITTED
+<span class="fc" id="L200">        application.setStatus(ApplicationStatus.SUBMITTED);</span>
+        
+        try {
+<span class="fc" id="L203">            application = applicationRepository.save(application);</span>
+
+<span class="fc" id="L205">            log.info(&quot;Application submitted: {} by borrower: {}&quot;, applicationId, borrowerId);</span>
+
+            // Queue email notification for borrower (APPLICATION_SUBMITTED)
+            try {
+<span class="fc" id="L209">                final Application appFinal = application;</span>
+<span class="fc" id="L210">                java.util.Optional&lt;com.creditapp.shared.model.User&gt; borrowerOpt = userRepository.findById(borrowerId);</span>
+<span class="fc" id="L211">                borrowerOpt.ifPresent(borrower -&gt; {</span>
+<span class="fc" id="L212">                    String subject = &quot;Application Submitted&quot;;</span>
+<span class="fc" id="L213">                    String message = String.format(</span>
+<span class="fc" id="L214">                        &quot;Dear %s, your loan application for %s %s has been submitted successfully. Application ID: %s&quot;,</span>
+<span class="pc bpc" id="L215" title="1 of 2 branches missed.">                        borrower.getFirstName() != null ? borrower.getFirstName() : &quot;&quot;,</span>
+<span class="pc bpc" id="L216" title="1 of 2 branches missed.">                        appFinal.getLoanAmount() != null ? appFinal.getLoanAmount().toPlainString() : &quot;&quot;,</span>
+<span class="pc bpc" id="L217" title="1 of 2 branches missed.">                        appFinal.getCurrency() != null ? appFinal.getCurrency() : &quot;&quot;,</span>
+<span class="pc bpc" id="L218" title="1 of 2 branches missed.">                        appFinal.getId() != null ? appFinal.getId().toString() : &quot;&quot;</span>
+                    );
+<span class="fc" id="L220">                    notificationService.createNotification(</span>
+<span class="fc" id="L221">                        borrowerId,</span>
+<span class="fc" id="L222">                        appFinal.getId(),</span>
+<span class="fc" id="L223">                        com.creditapp.shared.model.NotificationType.APPLICATION_SUBMITTED,</span>
+<span class="fc" id="L224">                        subject,</span>
+<span class="fc" id="L225">                        message</span>
+                    );
+<span class="fc" id="L227">                });</span>
+<span class="fc" id="L228">            } catch (Exception notifyEx) {</span>
+<span class="fc" id="L229">                log.warn(&quot;Failed to create APPLICATION_SUBMITTED notification for application {}: {}&quot;,</span>
+<span class="fc" id="L230">                        application.getId(), notifyEx.getMessage());</span>
+            }
+
+            // Trigger async offer calculation for all active banks
+            try {
+<span class="fc" id="L235">                log.info(&quot;Triggering async offer calculation for application: {}&quot;, application.getId());</span>
+<span class="nc" id="L236">                offerCalculationService.calculateOffers(application.getId());</span>
+<span class="pc" id="L237">            } catch (Exception calcEx) {</span>
+<span class="fc" id="L238">                log.error(&quot;Failed to trigger offer calculation for application {}: {}&quot;,</span>
+<span class="fc" id="L239">                        application.getId(), calcEx.getMessage(), calcEx);</span>
+                // Don't fail submission if calculation trigger fails - calculation can be retried
+            }
+
+<span class="fc" id="L243">            return SubmitApplicationResponse.builder()</span>
+<span class="fc" id="L244">                    .id(application.getId())</span>
+<span class="fc" id="L245">                    .status(application.getStatus().toString())</span>
+<span class="fc" id="L246">                    .submittedAt(application.getSubmittedAt())</span>
+<span class="fc" id="L247">                    .message(&quot;Application submitted successfully. Banks will review and contact you with offers.&quot;)</span>
+<span class="fc" id="L248">                    .application(mapToDTO(application))</span>
+<span class="fc" id="L249">                    .build();</span>
+                    
+<span class="nc" id="L251">        } catch (Exception e) {</span>
+<span class="nc" id="L252">            log.error(&quot;Failed to submit application: {}&quot;, applicationId, e);</span>
+<span class="nc" id="L253">            throw new ApplicationCreationException(&quot;Failed to submit application&quot;, e);</span>
+        }
+    }
+
+    /**
+     * Update an existing DRAFT application.
+     */
+    @BusinessAudit(action = AuditAction.APPLICATION_UPDATED, entityType = &quot;Application&quot;)
+    public UpdateApplicationResponse updateApplication(UUID applicationId, UUID borrowerId, UpdateApplicationRequest request) {
+        // Verify borrower owns the application
+<span class="fc" id="L263">        Application application = applicationRepository.findById(applicationId)</span>
+<span class="fc" id="L264">                .orElseThrow(() -&gt; new ApplicationNotFoundException(</span>
+<span class="fc" id="L265">                        &quot;Application not found: &quot; + applicationId));</span>
+
+<span class="fc bfc" id="L267" title="All 2 branches covered.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
+<span class="fc" id="L268">            throw new ApplicationNotFoundException(</span>
+<span class="fc" id="L269">                    &quot;Access denied to application: &quot; + applicationId);</span>
+        }
+
+        // Verify application is in DRAFT status
+<span class="fc bfc" id="L273" title="All 2 branches covered.">        if (application.getStatus() != ApplicationStatus.DRAFT) {</span>
+<span class="fc" id="L274">            throw new ApplicationNotEditableException(</span>
+<span class="fc" id="L275">                    &quot;Cannot edit application in &quot; + application.getStatus() + &quot; status. Only DRAFT applications can be edited.&quot;);</span>
+        }
+
+        // Track old values for audit
+<span class="fc" id="L279">        List&lt;String&gt; editedFields = new ArrayList&lt;&gt;();</span>
+        
+        // Validate and update loan amount if provided
+<span class="fc bfc" id="L282" title="All 2 branches covered.">        if (request.getLoanAmount() != null) {</span>
+<span class="fc bfc" id="L283" title="All 2 branches covered.">            if (request.getLoanAmount().compareTo(BigDecimal.valueOf(100)) &lt; 0) {</span>
+<span class="fc" id="L284">                throw new InvalidApplicationException(&quot;Loan amount must be at least 100&quot;);</span>
+            }
+<span class="fc bfc" id="L286" title="All 2 branches covered.">            if (request.getLoanAmount().compareTo(BigDecimal.valueOf(1000000)) &gt; 0) {</span>
+<span class="fc" id="L287">                throw new InvalidApplicationException(&quot;Loan amount cannot exceed 1,000,000&quot;);</span>
+            }
+<span class="fc bfc" id="L289" title="All 2 branches covered.">            if (!request.getLoanAmount().equals(application.getLoanAmount())) {</span>
+<span class="fc" id="L290">                application.setLoanAmount(request.getLoanAmount());</span>
+<span class="fc" id="L291">                editedFields.add(&quot;loanAmount&quot;);</span>
+            }
+        }
+
+        // Validate and update loan term if provided
+<span class="fc bfc" id="L296" title="All 2 branches covered.">        if (request.getLoanTermMonths() != null) {</span>
+<span class="fc bfc" id="L297" title="All 2 branches covered.">            if (request.getLoanTermMonths() &lt; 6) {</span>
+<span class="fc" id="L298">                throw new InvalidApplicationException(&quot;Loan term must be at least 6 months&quot;);</span>
+            }
+<span class="fc bfc" id="L300" title="All 2 branches covered.">            if (request.getLoanTermMonths() &gt; 360) {</span>
+<span class="fc" id="L301">                throw new InvalidApplicationException(&quot;Loan term cannot exceed 360 months&quot;);</span>
+            }
+<span class="fc bfc" id="L303" title="All 2 branches covered.">            if (!request.getLoanTermMonths().equals(application.getLoanTermMonths())) {</span>
+<span class="fc" id="L304">                application.setLoanTermMonths(request.getLoanTermMonths());</span>
+<span class="fc" id="L305">                editedFields.add(&quot;loanTermMonths&quot;);</span>
+            }
+        }
+
+        // Update other fields if provided
+<span class="fc bfc" id="L310" title="All 4 branches covered.">        if (request.getLoanType() != null &amp;&amp; !request.getLoanType().equals(application.getLoanType())) {</span>
+<span class="fc" id="L311">            application.setLoanType(request.getLoanType());</span>
+<span class="fc" id="L312">            editedFields.add(&quot;loanType&quot;);</span>
+        }
+
+<span class="fc bfc" id="L315" title="All 4 branches covered.">        if (request.getCurrency() != null &amp;&amp; !request.getCurrency().equals(application.getCurrency())) {</span>
+<span class="fc" id="L316">            application.setCurrency(request.getCurrency());</span>
+<span class="fc" id="L317">            editedFields.add(&quot;currency&quot;);</span>
+        }
+
+<span class="fc bfc" id="L320" title="All 4 branches covered.">        if (request.getRatePreference() != null &amp;&amp; !request.getRatePreference().equals(application.getRatePreference())) {</span>
+<span class="fc" id="L321">            application.setRatePreference(request.getRatePreference());</span>
+<span class="fc" id="L322">            editedFields.add(&quot;ratePreference&quot;);</span>
+        }
+
+        // Update application details if provided
+<span class="fc bfc" id="L326" title="All 2 branches covered.">        if (request.getApplicationDetails() != null) {</span>
+<span class="pc bpc" id="L327" title="1 of 2 branches missed.">            if (application.getDetails() == null) {</span>
+<span class="fc" id="L328">                application.setDetails(com.creditapp.borrower.model.ApplicationDetails.builder()</span>
+<span class="fc" id="L329">                        .applicationId(application.getId())</span>
+<span class="fc" id="L330">                        .build());</span>
+            }
+            
+<span class="pc bpc" id="L333" title="1 of 2 branches missed.">            if (request.getApplicationDetails().getAnnualIncome() != null) {</span>
+<span class="fc" id="L334">                application.getDetails().setAnnualIncome(request.getApplicationDetails().getAnnualIncome());</span>
+<span class="fc" id="L335">                editedFields.add(&quot;annualIncome&quot;);</span>
+            }
+<span class="pc bpc" id="L337" title="1 of 2 branches missed.">            if (request.getApplicationDetails().getEmploymentStatus() != null) {</span>
+<span class="fc" id="L338">                application.getDetails().setEmploymentStatus(request.getApplicationDetails().getEmploymentStatus());</span>
+<span class="fc" id="L339">                editedFields.add(&quot;employmentStatus&quot;);</span>
+            }
+<span class="pc bpc" id="L341" title="1 of 2 branches missed.">            if (request.getApplicationDetails().getDownPaymentAmount() != null) {</span>
+<span class="fc" id="L342">                application.getDetails().setDownPaymentAmount(request.getApplicationDetails().getDownPaymentAmount());</span>
+<span class="fc" id="L343">                editedFields.add(&quot;downPaymentAmount&quot;);</span>
+            }
+        }
+
+        try {
+            // Save application (JPA will increment version)
+<span class="fc" id="L349">            application = applicationRepository.save(application);</span>
+            
+<span class="fc" id="L351">            log.info(&quot;Application updated: {} by borrower: {}, fields changed: {}&quot;, </span>
+<span class="fc" id="L352">                    applicationId, borrowerId, editedFields);</span>
+
+<span class="fc" id="L354">            return UpdateApplicationResponse.builder()</span>
+<span class="fc" id="L355">                    .id(application.getId())</span>
+<span class="fc" id="L356">                    .loanType(application.getLoanType())</span>
+<span class="fc" id="L357">                    .loanAmount(application.getLoanAmount())</span>
+<span class="fc" id="L358">                    .loanTermMonths(application.getLoanTermMonths())</span>
+<span class="fc" id="L359">                    .currency(application.getCurrency())</span>
+<span class="fc" id="L360">                    .ratePreference(application.getRatePreference())</span>
+<span class="fc" id="L361">                    .status(application.getStatus().toString())</span>
+<span class="fc" id="L362">                    .version(application.getVersion())</span>
+<span class="fc" id="L363">                    .updatedAt(application.getUpdatedAt())</span>
+<span class="fc" id="L364">                    .editedFields(editedFields)</span>
+<span class="fc" id="L365">                    .build();</span>
+                    
+<span class="fc" id="L367">        } catch (ObjectOptimisticLockingFailureException e) {</span>
+            // Application was modified by another request
+<span class="fc" id="L369">            Application current = applicationRepository.findById(applicationId)</span>
+<span class="pc" id="L370">                    .orElseThrow(() -&gt; new ApplicationNotFoundException(&quot;Application not found: &quot; + applicationId));</span>
+<span class="fc" id="L371">            throw new ApplicationStaleException(</span>
+<span class="fc" id="L372">                    &quot;Application was modified by another request. Please refresh and try again.&quot;, </span>
+<span class="fc" id="L373">                    current.getVersion());</span>
+<span class="nc" id="L374">        } catch (Exception e) {</span>
+<span class="nc" id="L375">            log.error(&quot;Failed to update application: {}&quot;, applicationId, e);</span>
+<span class="nc" id="L376">            throw new ApplicationCreationException(&quot;Failed to update application&quot;, e);</span>
+        }
+    }
+
+    private ApplicationDTO mapToDTO(Application application) {
+<span class="fc" id="L381">        return ApplicationDTO.builder()</span>
+<span class="fc" id="L382">                .id(application.getId())</span>
+<span class="fc" id="L383">                .loanType(application.getLoanType())</span>
+<span class="fc" id="L384">                .loanAmount(application.getLoanAmount())</span>
+<span class="fc" id="L385">                .loanTermMonths(application.getLoanTermMonths())</span>
+<span class="fc" id="L386">                .currency(application.getCurrency())</span>
+<span class="fc" id="L387">                .ratePreference(application.getRatePreference())</span>
+<span class="fc" id="L388">                .status(application.getStatus())</span>
+<span class="fc" id="L389">                .createdAt(application.getCreatedAt())</span>
+<span class="fc" id="L390">                .submittedAt(application.getSubmittedAt())</span>
+<span class="fc" id="L391">                .updatedAt(application.getUpdatedAt())</span>
+<span class="fc" id="L392">                .build();</span>
+    }
+
+    private ApplicationHistoryDTO mapHistoryToDTO(com.creditapp.borrower.model.ApplicationHistory history) {
+<span class="nc" id="L396">        return ApplicationHistoryDTO.builder()</span>
+<span class="nc" id="L397">                .oldStatus(history.getOldStatus())</span>
+<span class="nc" id="L398">                .newStatus(history.getNewStatus())</span>
+<span class="nc" id="L399">                .changedAt(history.getChangedAt())</span>
+<span class="nc" id="L400">                .changedByUserId(history.getChangedByUserId())</span>
+<span class="nc" id="L401">                .changeReason(history.getChangeReason())</span>
+<span class="nc" id="L402">                .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
