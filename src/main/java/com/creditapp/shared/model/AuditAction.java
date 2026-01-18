@@ -14,6 +14,7 @@ public enum AuditAction {
     APPLICATION_STATUS_CHANGED("Application status changed"),
     APPLICATION_WITHDRAWN("Application withdrawn"),
     DOCUMENT_UPLOADED("Document uploaded"),
+    DOCUMENT_DOWNLOADED("Document downloaded"),
     DOCUMENT_DELETED("Document deleted"),
     OFFER_CREATED("Offer created"),
     OFFER_SUBMITTED("Offer submitted by bank officer"),
