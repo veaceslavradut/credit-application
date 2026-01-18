@@ -54,4 +54,32 @@ public interface ApplicationRepository extends JpaRepository<Application, UUID> 
            "WHERE a.borrowerId = :borrowerId " +
            "ORDER BY a.createdAt DESC")
     Page<Application> findByBorrowerIdWithRelations(@Param("borrowerId") UUID borrowerId, Pageable pageable);
+    
+    /**
+     * Find applications by borrower ID with optimized ordering for history retrieval.
+     * Indexed on (borrowerId, submittedAt DESC) for efficient sorting.
+     * 
+     * @param borrowerId the borrower ID
+     * @param pageable pagination info
+     * @return page of applications sorted by submission date descending
+     */
+    @Query("SELECT a FROM Application a WHERE a.borrowerId = :borrowerId ORDER BY a.submittedAt DESC")
+    Page<Application> findByBorrowerIdOrderBySubmittedAtDesc(
+        @Param("borrowerId") UUID borrowerId,
+        Pageable pageable
+    );
+    
+    /**
+     * Count applications for a specific borrower by status.
+     * Optimized for quick aggregation.
+     * 
+     * @param borrowerId the borrower ID
+     * @param status the application status
+     * @return count of applications matching criteria
+     */
+    @Query("SELECT COUNT(a) FROM Application a WHERE a.borrowerId = :borrowerId AND a.status = :status")
+    Long countByBorrowerIdAndStatus(
+        @Param("borrowerId") UUID borrowerId,
+        @Param("status") ApplicationStatus status
+    );
 }

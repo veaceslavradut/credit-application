@@ -10,6 +10,7 @@ import com.creditapp.borrower.repository.ApplicationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -166,5 +167,27 @@ public class ApplicationHistoryService {
         } else {
             return "all_expired";
         }
+    }
+
+    /**
+     * Invalidate application history cache for a borrower.
+     * Called when application status changes or new application created.
+     * 
+     * @param borrowerId Borrower ID whose cache should be cleared
+     */
+    @CacheEvict(value = "borrowerApplicationHistory", key = "#borrowerId")
+    public void invalidateApplicationHistoryCache(UUID borrowerId) {
+        log.debug("Invalidated application history cache for borrower: {}", borrowerId);
+    }
+
+    /**
+     * Invalidate offer history cache for a borrower.
+     * Called when new offers are created or modified.
+     * 
+     * @param borrowerId Borrower ID whose cache should be cleared
+     */
+    @CacheEvict(value = "borrowerOfferHistory", key = "#borrowerId")
+    public void invalidateOfferHistoryCache(UUID borrowerId) {
+        log.debug("Invalidated offer history cache for borrower: {}", borrowerId);
     }
 }

@@ -11,6 +11,7 @@ import com.creditapp.shared.repository.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -129,5 +130,17 @@ public class OfferHistoryService {
             .borrowerSelectedAt(offer.getBorrowerSelectedAt())
             .finalAcceptedAt(offer.getOfferSubmittedAt())
             .build();
+    }
+
+    /**
+     * Invalidate offer history cache for a borrower.
+     * Called when new offers are created, modified, or when offer status changes.
+     * Task 7: Caching Invalidation Strategy
+     * 
+     * @param borrowerId Borrower ID whose cache should be cleared
+     */
+    @CacheEvict(value = "borrowerOfferHistory", key = "#borrowerId")
+    public void invalidateOfferHistoryCache(UUID borrowerId) {
+        log.debug("Invalidated offer history cache for borrower: {}", borrowerId);
     }
 }

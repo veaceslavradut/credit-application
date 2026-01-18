@@ -45,6 +45,7 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
     /**
      * Retrieve all offers for a specific borrower with pagination and sorting.
      * Joins Offer with Application to filter by borrowerId.
+     * Optimized with explicit database indices on (borrowerId, createdAt DESC).
      * 
      * @param borrowerId Borrower UUID
      * @param pageable Pagination and sorting information
@@ -55,4 +56,38 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
         @Param("borrowerId") UUID borrowerId,
         Pageable pageable
     );
+    
+    /**
+     * Find offers by application ID with explicit ordering for offer history.
+     * Optimized for large result sets with proper indexing.
+     * 
+     * @param applicationId Application UUID
+     * @param pageable Pagination information
+     * @return Page of offers sorted by creation time descending
+     */
+    @Query("SELECT o FROM Offer o WHERE o.applicationId = :applicationId ORDER BY o.createdAt DESC")
+    Page<Offer> findOffersByApplicationIdOrderByCreatedAtDesc(
+        @Param("applicationId") UUID applicationId,
+        Pageable pageable
+    );
+    
+    /**
+     * Count offers for a specific application.
+     * Optimized for quick aggregation queries.
+     * 
+     * @param applicationId Application UUID
+     * @return Number of offers for the application
+     */
+    @Query("SELECT COUNT(o) FROM Offer o WHERE o.applicationId = :applicationId")
+    Long countOffersByApplicationId(@Param("applicationId") UUID applicationId);
+    
+    /**
+     * Find the minimum APR (best offer) for an application.
+     * Optimized for quick aggregation queries.
+     * 
+     * @param applicationId Application UUID
+     * @return Minimum APR value, or null if no offers exist
+     */
+    @Query("SELECT MIN(o.apr) FROM Offer o WHERE o.applicationId = :applicationId")
+    Optional<java.math.BigDecimal> findMinAprByApplicationId(@Param("applicationId") UUID applicationId);
 }

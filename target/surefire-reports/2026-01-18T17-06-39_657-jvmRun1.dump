@@ -1,5 +1,5 @@
-# Created at 2026-01-18T17:02:04.699
-Thread dump for process (167068@MDMOB40671) after 30 seconds shutdown timeout:
+# Created at 2026-01-18T17:08:32.237
+Thread dump for process (170224@MDMOB40671) after 30 seconds shutdown timeout:
 "main" 
    java.lang.Thread.State: WAITING
         at java.base@17.0.7/java.lang.Object.wait(Native Method)
@@ -265,10 +265,10 @@ Thread dump for process (167068@MDMOB40671) after 30 seconds shutdown timeout:
    java.lang.Thread.State: TIMED_WAITING
         at java.base@17.0.7/java.lang.Object.wait(Native Method)
         at app//org.testcontainers.utility.RyukResourceReaper.lambda$null$1(RyukResourceReaper.java:115)
-        at app//org.testcontainers.utility.RyukResourceReaper$$Lambda$3204/0x0000000801e39730.run(Unknown Source)
+        at app//org.testcontainers.utility.RyukResourceReaper$$Lambda$3204/0x0000000801e27b30.run(Unknown Source)
         at app//org.rnorth.ducttape.ratelimits.RateLimiter.doWhenReady(RateLimiter.java:27)
         at app//org.testcontainers.utility.RyukResourceReaper.lambda$maybeStart$2(RyukResourceReaper.java:101)
-        at app//org.testcontainers.utility.RyukResourceReaper$$Lambda$3203/0x0000000801e39510.run(Unknown Source)
+        at app//org.testcontainers.utility.RyukResourceReaper$$Lambda$3203/0x0000000801e27910.run(Unknown Source)
         at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
 
 "PostgreSQL-JDBC-Cleaner" 
@@ -354,7 +354,7 @@ Thread dump for process (167068@MDMOB40671) after 30 seconds shutdown timeout:
         at app//org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1145)
         at app//org.springframework.context.support.AbstractApplicationContext.close(AbstractApplicationContext.java:1091)
         at app//org.springframework.boot.SpringApplicationShutdownHook.closeAndWait(SpringApplicationShutdownHook.java:145)
-        at app//org.springframework.boot.SpringApplicationShutdownHook$$Lambda$3371/0x0000000801f39dc8.accept(Unknown Source)
+        at app//org.springframework.boot.SpringApplicationShutdownHook$$Lambda$3371/0x0000000801f6b1e8.accept(Unknown Source)
         at java.base@17.0.7/java.lang.Iterable.forEach(Iterable.java:75)
         at app//org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:114)
         at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
