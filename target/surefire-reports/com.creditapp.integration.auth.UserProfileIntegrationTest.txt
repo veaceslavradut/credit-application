@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.creditapp.integration.auth.UserProfileIntegrationTest
--------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.637 s -- in com.creditapp.integration.auth.UserProfileIntegrationTest

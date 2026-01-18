@@ -4,6 +4,7 @@ com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$6.class
 com\creditapp\shared\service\AuditServiceTest.class
 com\creditapp\unit\bank\OfferServiceUnitTest.class
 com\creditapp\SpringContextIntegrationTest.class
+com\creditapp\unit\bank\BankApplicationQueueControllerTest.class
 com\creditapp\unit\security\JwtTokenServiceUnitTest.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest.class
 com\creditapp\integration\borrower\HelpContentIntegrationTest.class
@@ -44,6 +45,7 @@ com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$7.class
 com\creditapp\borrower\service\ApplicationServiceTest.class
 com\creditapp\integration\borrower\ApplicationHistoryIntegrationTest.class
 com\creditapp\integration\bank\BankRateCardIntegrationTest.class
+com\creditapp\unit\bank\ApplicationStatusUpdateServiceTest.class
 com\creditapp\unit\borrower\BorrowerNotificationUnitTest.class
 com\creditapp\integration\bank\OfferDataModelIntegrationTest.class
 com\creditapp\shared\controller\HealthControllerTest.class
