@@ -337,6 +337,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
+    @ExceptionHandler(com.creditapp.borrower.exception.ApplicationNotFoundException.class)
+    public ResponseEntity<?> handleApplicationNotFound(com.creditapp.borrower.exception.ApplicationNotFoundException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Not Found");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
     @ExceptionHandler(OfferCalculationException.class)
     public ResponseEntity<?> handleOfferCalculationException(OfferCalculationException ex, WebRequest request) {
         logger.error("Offer calculation error", ex);

@@ -11,6 +11,7 @@ import com.creditapp.shared.model.User;
 import com.creditapp.shared.model.UserRole;
 import com.creditapp.shared.service.JwtTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,6 +65,9 @@ public class ApplicationStatusTrackingIntegrationTest {
     
     @Autowired
     private JwtTokenService jwtTokenService;
+
+    @Autowired
+    private EntityManager entityManager;
 
     private User borrower;
     private Application testApplication;
@@ -273,8 +277,13 @@ public class ApplicationStatusTrackingIntegrationTest {
 
         for (int i = 0; i < statuses.length; i++) {
             // Given: application with specific status
+            // Refresh entity from database to avoid stale version issues
+            entityManager.flush();
+            entityManager.clear();
+            testApplication = applicationRepository.findById(testApplication.getId()).orElseThrow();
             testApplication.setStatus(statuses[i]);
-            applicationRepository.save(testApplication);
+            testApplication = applicationRepository.save(testApplication);
+            entityManager.flush();
 
             // When: retrieve status
             MvcResult result = mockMvc.perform(

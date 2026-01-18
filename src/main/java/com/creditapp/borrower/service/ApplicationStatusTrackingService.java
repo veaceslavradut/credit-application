@@ -95,7 +95,7 @@ public class ApplicationStatusTrackingService {
 
     /**
      * Calculate progression percentage based on workflow state machine.
-     * DRAFT=0%, SUBMITTED=20%, UNDER_REVIEW=40%, OFFERS_AVAILABLE=60%, ACCEPTED=80%, COMPLETED=100%
+     * DRAFT=17%, SUBMITTED=33%, UNDER_REVIEW=50%, OFFERS_AVAILABLE=67%, ACCEPTED=83%, COMPLETED=100%
      *
      * @param status the current application status
      * @return progression percentage (0-100)
@@ -106,7 +106,7 @@ public class ApplicationStatusTrackingService {
             // Status not in main workflow (e.g., REJECTED, WITHDRAWN, EXPIRED)
             return 50; // Default to 50% for terminal states
         }
-        return (int) ((index + 1) / (double) WORKFLOW_PROGRESSION.size() * 100);
+        return (int) Math.round((index + 1) / (double) WORKFLOW_PROGRESSION.size() * 100);
     }
 
     /**
