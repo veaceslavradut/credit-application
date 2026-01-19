@@ -19,6 +19,7 @@ com\creditapp\borrower\controller\BorrowerHistoryController.class
 com\creditapp\shared\validator\APRValidator$ValidationResult.class
 com\creditapp\borrower\service\OfferSelectionService.class
 com\creditapp\borrower\dto\ApplicationHistoryDTO.class
+com\creditapp\shared\repository\SignatureLogRepository.class
 com\creditapp\bank\controller\OfferDocumentController$DownloadResponse.class
 com\creditapp\borrower\dto\HelpSectionDTO.class
 com\creditapp\shared\model\DeletionRequest$DeletionRequestBuilder.class
@@ -71,6 +72,7 @@ com\creditapp\borrower\dto\SavingsAnalysisDTO.class
 com\creditapp\borrower\exception\ApplicationLockedException.class
 com\creditapp\auth\service\LoginService.class
 com\creditapp\shared\util\LoginRateLimiter.class
+com\creditapp\shared\model\SignatureStatus.class
 com\creditapp\shared\service\RequestContextService$RequestContext.class
 com\creditapp\bank\dto\BankOfferSubmissionRequest.class
 com\creditapp\borrower\dto\OfferComparisonTableRequest.class
@@ -216,6 +218,7 @@ com\creditapp\bank\service\OfferDocumentRetrievalService.class
 com\creditapp\borrower\dto\DocumentDTO$DocumentDTOBuilder.class
 com\creditapp\shared\service\NotificationService.class
 com\creditapp\bank\dto\WithdrawOfferResponse$WithdrawOfferResponseBuilder.class
+com\creditapp\shared\model\SignatureLog$SignatureLogBuilder.class
 com\creditapp\shared\service\PasswordChangeEmailService.class
 com\creditapp\borrower\exception\ApplicationNotEditableException.class
 com\creditapp\bank\repository\BankRateCardRepository.class
@@ -252,6 +255,7 @@ com\creditapp\bank\dto\DeclineApplicationResponse.class
 com\creditapp\bank\dto\OfferSubmissionResponse$OfferSubmissionResponseBuilder.class
 com\creditapp\shared\repository\AuditLogRepository.class
 com\creditapp\borrower\dto\ConsentRequestDTO$ConsentRequestDTOBuilder.class
+com\creditapp\shared\repository\DocumentRepository.class
 com\creditapp\bank\dto\ApplicationStatusUpdateResponse$ApplicationStatusUpdateResponseBuilder.class
 com\creditapp\shared\model\ApplicationQueueMetrics.class
 com\creditapp\bank\service\BankDashboardService.class
@@ -287,6 +291,7 @@ com\creditapp\borrower\service\ScenarioCalculatorService.class
 com\creditapp\bank\service\OfferCalculationService.class
 com\creditapp\shared\config\Resilience4jConfig.class
 com\creditapp\borrower\repository\ApplicationHistoryRepository.class
+com\creditapp\shared\model\SignatureLog.class
 com\creditapp\bank\dto\MarketVisualizationDTO$ProcessingTimeComparisonItem.class
 com\creditapp\shared\validator\APRValidator.class
 com\creditapp\bank\dto\BankRateCardResponse.class
@@ -365,6 +370,7 @@ com\creditapp\borrower\service\ApplicationHistoryService.class
 com\creditapp\shared\exception\LoginRateLimitExceededException.class
 com\creditapp\auth\dto\UserProfileResponse.class
 com\creditapp\shared\security\RequiresComplianceOfficer.class
+com\creditapp\shared\model\Document$DocumentBuilder.class
 com\creditapp\shared\model\GDPRConsent.class
 com\creditapp\shared\model\Organization$OrganizationBuilder.class
 com\creditapp\bank\controller\BankOfferWithdrawalController.class
@@ -408,6 +414,7 @@ com\creditapp\shared\util\EmailRateLimiter.class
 com\creditapp\bank\model\OfferDocument.class
 com\creditapp\shared\service\PasswordValidationService$ValidationResult.class
 com\creditapp\bank\dto\BankAddressDTO.class
+com\creditapp\shared\model\Document.class
 com\creditapp\auth\controller\UserProfileController.class
 com\creditapp\auth\dto\RegistrationRequest.class
 com\creditapp\bank\service\BankTeamService.class

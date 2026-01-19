@@ -1,19 +1,20 @@
 package com.creditapp.shared.model;
 
-/**
- * Enum for types of legal documents that need versioning and tracking
- */
+import lombok.Getter;
+
+@Getter
 public enum DocumentType {
+    LOAN_AGREEMENT("Loan Agreement"),
+    OFFER_LETTER("Offer Letter"),
+    TERMS_CONDITIONS("Terms and Conditions"),
+    TERMS_OF_SERVICE("Terms of Service"),
     PRIVACY_POLICY("Privacy Policy"),
-    TERMS_OF_SERVICE("Terms of Service");
+    CONSENT_FORM("Consent Form"),
+    OTHER("Other");
 
     private final String displayName;
 
     DocumentType(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }
