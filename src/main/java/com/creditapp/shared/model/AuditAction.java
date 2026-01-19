@@ -31,7 +31,10 @@ public enum AuditAction {
     RATE_CARD_UPDATED("Rate card updated"),
     CONSENT_GRANTED("Consent granted"),
     CONSENT_WITHDRAWN("Consent withdrawn"),
-    LEGAL_DOCUMENT_UPDATED("Legal document updated");
+    LEGAL_DOCUMENT_UPDATED("Legal document updated"),
+    DATA_EXPORT_REQUESTED("Data export requested"),
+    DATA_EXPORT_COMPLETED("Data export completed"),
+    DATA_EXPORT_DOWNLOADED("Data export downloaded");
 
     private final String description;
 
