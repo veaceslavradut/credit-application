@@ -113,4 +113,14 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
      */
     @Query("SELECT o FROM Offer o WHERE o.bankId = :bankId AND o.createdAt >= :createdAfter")
     List<Offer> findByBankIdAndCreatedAtAfter(@Param("bankId") UUID bankId, @Param("createdAfter") LocalDateTime createdAfter);
+    
+    /**
+     * Find offers by bank submitted between two dates for analytics.
+     * 
+     * @param bankId Bank UUID
+     * @param startDate start date time
+     * @param endDate end date time
+     * @return list of offers
+     */
+    List<Offer> findByBankIdAndOfferSubmittedAtBetween(UUID bankId, LocalDateTime startDate, LocalDateTime endDate);
 }

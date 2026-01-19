@@ -84,25 +84,25 @@ public class Offer {
     public Offer(UUID id, UUID applicationId, UUID bankId, OfferStatus offerStatus,
                  BigDecimal apr, BigDecimal monthlyPayment, BigDecimal totalCost,
                  BigDecimal originationFee, BigDecimal insuranceCost, Integer processingTimeDays,
-<span class="fc" id="L87">                 Integer validityPeriodDays, String requiredDocuments, LocalDateTime expiresAt) {</span>
-<span class="fc" id="L88">        this.id = id;</span>
-<span class="fc" id="L89">        this.applicationId = applicationId;</span>
-<span class="fc" id="L90">        this.bankId = bankId;</span>
-<span class="fc" id="L91">        this.offerStatus = offerStatus;</span>
-<span class="fc" id="L92">        this.apr = apr;</span>
-<span class="fc" id="L93">        this.monthlyPayment = monthlyPayment;</span>
-<span class="fc" id="L94">        this.totalCost = totalCost;</span>
-<span class="fc" id="L95">        this.originationFee = originationFee;</span>
-<span class="fc" id="L96">        this.insuranceCost = insuranceCost;</span>
-<span class="fc" id="L97">        this.processingTimeDays = processingTimeDays;</span>
-<span class="fc" id="L98">        this.validityPeriodDays = validityPeriodDays;</span>
-<span class="fc" id="L99">        this.requiredDocuments = requiredDocuments;</span>
-<span class="fc" id="L100">        this.expiresAt = expiresAt;</span>
-<span class="fc" id="L101">    }</span>
+<span class="nc" id="L87">                 Integer validityPeriodDays, String requiredDocuments, LocalDateTime expiresAt) {</span>
+<span class="nc" id="L88">        this.id = id;</span>
+<span class="nc" id="L89">        this.applicationId = applicationId;</span>
+<span class="nc" id="L90">        this.bankId = bankId;</span>
+<span class="nc" id="L91">        this.offerStatus = offerStatus;</span>
+<span class="nc" id="L92">        this.apr = apr;</span>
+<span class="nc" id="L93">        this.monthlyPayment = monthlyPayment;</span>
+<span class="nc" id="L94">        this.totalCost = totalCost;</span>
+<span class="nc" id="L95">        this.originationFee = originationFee;</span>
+<span class="nc" id="L96">        this.insuranceCost = insuranceCost;</span>
+<span class="nc" id="L97">        this.processingTimeDays = processingTimeDays;</span>
+<span class="nc" id="L98">        this.validityPeriodDays = validityPeriodDays;</span>
+<span class="nc" id="L99">        this.requiredDocuments = requiredDocuments;</span>
+<span class="nc" id="L100">        this.expiresAt = expiresAt;</span>
+<span class="nc" id="L101">    }</span>
 
     // Getters and Setters
     public UUID getId() {
-<span class="fc" id="L105">        return id;</span>
+<span class="nc" id="L105">        return id;</span>
     }
 
     public void setId(UUID id) {
@@ -118,7 +118,7 @@ public class Offer {
 <span class="fc" id="L118">    }</span>
 
     public UUID getBankId() {
-<span class="fc" id="L121">        return bankId;</span>
+<span class="nc" id="L121">        return bankId;</span>
     }
 
     public void setBankId(UUID bankId) {
@@ -126,7 +126,7 @@ public class Offer {
 <span class="fc" id="L126">    }</span>
 
     public OfferStatus getOfferStatus() {
-<span class="fc" id="L129">        return offerStatus;</span>
+<span class="nc" id="L129">        return offerStatus;</span>
     }
 
     public void setOfferStatus(OfferStatus offerStatus) {
@@ -142,7 +142,7 @@ public class Offer {
 <span class="fc" id="L142">    }</span>
 
     public BigDecimal getMonthlyPayment() {
-<span class="fc" id="L145">        return monthlyPayment;</span>
+<span class="nc" id="L145">        return monthlyPayment;</span>
     }
 
     public void setMonthlyPayment(BigDecimal monthlyPayment) {
@@ -150,7 +150,7 @@ public class Offer {
 <span class="fc" id="L150">    }</span>
 
     public BigDecimal getTotalCost() {
-<span class="fc" id="L153">        return totalCost;</span>
+<span class="nc" id="L153">        return totalCost;</span>
     }
 
     public void setTotalCost(BigDecimal totalCost) {
@@ -158,7 +158,7 @@ public class Offer {
 <span class="fc" id="L158">    }</span>
 
     public BigDecimal getOriginationFee() {
-<span class="fc" id="L161">        return originationFee;</span>
+<span class="nc" id="L161">        return originationFee;</span>
     }
 
     public void setOriginationFee(BigDecimal originationFee) {
@@ -166,15 +166,15 @@ public class Offer {
 <span class="fc" id="L166">    }</span>
 
     public BigDecimal getInsuranceCost() {
-<span class="fc" id="L169">        return insuranceCost;</span>
+<span class="nc" id="L169">        return insuranceCost;</span>
     }
 
     public void setInsuranceCost(BigDecimal insuranceCost) {
-<span class="fc" id="L173">        this.insuranceCost = insuranceCost;</span>
-<span class="fc" id="L174">    }</span>
+<span class="nc" id="L173">        this.insuranceCost = insuranceCost;</span>
+<span class="nc" id="L174">    }</span>
 
     public Integer getProcessingTimeDays() {
-<span class="fc" id="L177">        return processingTimeDays;</span>
+<span class="nc" id="L177">        return processingTimeDays;</span>
     }
 
     public void setProcessingTimeDays(Integer processingTimeDays) {
@@ -182,7 +182,7 @@ public class Offer {
 <span class="fc" id="L182">    }</span>
 
     public Integer getValidityPeriodDays() {
-<span class="fc" id="L185">        return validityPeriodDays;</span>
+<span class="nc" id="L185">        return validityPeriodDays;</span>
     }
 
     public void setValidityPeriodDays(Integer validityPeriodDays) {
@@ -190,19 +190,19 @@ public class Offer {
 <span class="fc" id="L190">    }</span>
 
     public String getRequiredDocuments() {
-<span class="fc" id="L193">        return requiredDocuments;</span>
+<span class="nc" id="L193">        return requiredDocuments;</span>
     }
 
     public void setRequiredDocuments(String requiredDocuments) {
-<span class="fc" id="L197">        this.requiredDocuments = requiredDocuments;</span>
-<span class="fc" id="L198">    }</span>
+<span class="nc" id="L197">        this.requiredDocuments = requiredDocuments;</span>
+<span class="nc" id="L198">    }</span>
 
     public LocalDateTime getCreatedAt() {
-<span class="fc" id="L201">        return createdAt;</span>
+<span class="nc" id="L201">        return createdAt;</span>
     }
 
     public LocalDateTime getExpiresAt() {
-<span class="fc" id="L205">        return expiresAt;</span>
+<span class="nc" id="L205">        return expiresAt;</span>
     }
 
     public void setExpiresAt(LocalDateTime expiresAt) {
@@ -259,7 +259,7 @@ public class Offer {
      */
     @Transient
     public boolean isExpired() {
-<span class="fc" id="L262">        return LocalDateTime.now().isAfter(this.expiresAt);</span>
+<span class="nc" id="L262">        return LocalDateTime.now().isAfter(this.expiresAt);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

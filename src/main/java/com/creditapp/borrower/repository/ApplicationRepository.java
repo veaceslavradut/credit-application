@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -82,4 +83,13 @@ public interface ApplicationRepository extends JpaRepository<Application, UUID> 
         @Param("borrowerId") UUID borrowerId,
         @Param("status") ApplicationStatus status
     );
+    
+    /**
+     * Find applications created between two dates for analytics.
+     * 
+     * @param startDate start date time
+     * @param endDate end date time
+     * @return list of applications
+     */
+    List<Application> findByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
 }

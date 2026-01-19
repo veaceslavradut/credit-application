@@ -1,9 +1,11 @@
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\OfferRetrievalServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\BankOfferHistoryServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\auth\model\UserEntityTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\BankAnalyticsServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\OfferHistoryServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\OfferDocumentUploadServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\security\JwtTokenServiceUnitTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\bank\BankAnalyticsIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\config\TestSecurityConfig.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\service\AuditServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\OfferComparisonTableServiceTest.java

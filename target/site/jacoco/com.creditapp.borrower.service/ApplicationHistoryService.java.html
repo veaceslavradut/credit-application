@@ -45,68 +45,68 @@ public class ApplicationHistoryService {
     @Transactional(readOnly = true)
     @Cacheable(value = &quot;borrowerApplicationHistory&quot;, key = &quot;#borrowerId&quot;)
     public ApplicationHistoryResponse getApplicationHistory(UUID borrowerId, ApplicationHistoryRequest request) {
-<span class="fc" id="L48">        long startTime = System.currentTimeMillis();</span>
-<span class="fc" id="L49">        log.debug(&quot;[HISTORY] Retrieving application history for borrower: {} with filters: status={}, dateRange=[{} to {}], loanAmount=[{} to {}]&quot;, </span>
-<span class="fc" id="L50">            borrowerId, request.getStatus(), request.getDateRangeStart(), request.getDateRangeEnd(), </span>
-<span class="fc" id="L51">            request.getLoanAmountMin(), request.getLoanAmountMax());</span>
+<span class="nc" id="L48">        long startTime = System.currentTimeMillis();</span>
+<span class="nc" id="L49">        log.debug(&quot;[HISTORY] Retrieving application history for borrower: {} with filters: status={}, dateRange=[{} to {}], loanAmount=[{} to {}]&quot;, </span>
+<span class="nc" id="L50">            borrowerId, request.getStatus(), request.getDateRangeStart(), request.getDateRangeEnd(), </span>
+<span class="nc" id="L51">            request.getLoanAmountMin(), request.getLoanAmountMax());</span>
 
         // Defaults
-<span class="pc bpc" id="L54" title="1 of 2 branches missed.">        Integer limit = request.getLimit() != null ? request.getLimit() : 20;</span>
-<span class="pc bpc" id="L55" title="2 of 4 branches missed.">        if (limit &lt;= 0 || limit &gt; 100) {</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        Integer limit = request.getLimit() != null ? request.getLimit() : 20;</span>
+<span class="nc bnc" id="L55" title="All 4 branches missed.">        if (limit &lt;= 0 || limit &gt; 100) {</span>
 <span class="nc" id="L56">            limit = 20;</span>
         }
-<span class="pc bpc" id="L58" title="1 of 2 branches missed.">        Integer offset = request.getOffset() != null ? request.getOffset() : 0;</span>
-<span class="pc bpc" id="L59" title="1 of 2 branches missed.">        if (offset &lt; 0) {</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        Integer offset = request.getOffset() != null ? request.getOffset() : 0;</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if (offset &lt; 0) {</span>
 <span class="nc" id="L60">            offset = 0;</span>
         }
-<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        String sortBy = request.getSortBy() != null ? request.getSortBy() : &quot;submittedAt&quot;;</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        String sortBy = request.getSortBy() != null ? request.getSortBy() : &quot;submittedAt&quot;;</span>
 
-<span class="fc" id="L64">        Sort sort = Sort.by(Sort.Direction.DESC, sortBy);</span>
-<span class="fc" id="L65">        Pageable pageable = PageRequest.of(offset / limit, limit, sort);</span>
+<span class="nc" id="L64">        Sort sort = Sort.by(Sort.Direction.DESC, sortBy);</span>
+<span class="nc" id="L65">        Pageable pageable = PageRequest.of(offset / limit, limit, sort);</span>
 
         // Query applications
-<span class="fc" id="L68">        Page&lt;Application&gt; applications = applicationRepository.findByBorrowerId(borrowerId, pageable);</span>
+<span class="nc" id="L68">        Page&lt;Application&gt; applications = applicationRepository.findByBorrowerId(borrowerId, pageable);</span>
         
-<span class="fc" id="L70">        long totalCount = applications.getTotalElements();</span>
+<span class="nc" id="L70">        long totalCount = applications.getTotalElements();</span>
         
         // Warn if large history detected
-<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        if (totalCount &gt; 1000) {</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (totalCount &gt; 1000) {</span>
 <span class="nc" id="L74">            log.warn(&quot;[HISTORY] Large application history detected for borrower {}: {} total applications&quot;, borrowerId, totalCount);</span>
         }
         
-<span class="fc" id="L77">        List&lt;ApplicationHistoryRecord&gt; records = applications.getContent().stream()</span>
-<span class="fc" id="L78">            .filter(app -&gt; applyStatusFilter(app, request.getStatus()))</span>
-<span class="fc" id="L79">            .filter(app -&gt; applyDateRangeFilter(app, request.getDateRangeStart(), request.getDateRangeEnd()))</span>
-<span class="fc" id="L80">            .filter(app -&gt; applyLoanAmountFilter(app, request.getLoanAmountMin(), request.getLoanAmountMax()))</span>
-<span class="fc" id="L81">            .map(this::mapToRecord)</span>
-<span class="fc" id="L82">            .collect(Collectors.toList());</span>
+<span class="nc" id="L77">        List&lt;ApplicationHistoryRecord&gt; records = applications.getContent().stream()</span>
+<span class="nc" id="L78">            .filter(app -&gt; applyStatusFilter(app, request.getStatus()))</span>
+<span class="nc" id="L79">            .filter(app -&gt; applyDateRangeFilter(app, request.getDateRangeStart(), request.getDateRangeEnd()))</span>
+<span class="nc" id="L80">            .filter(app -&gt; applyLoanAmountFilter(app, request.getLoanAmountMin(), request.getLoanAmountMax()))</span>
+<span class="nc" id="L81">            .map(this::mapToRecord)</span>
+<span class="nc" id="L82">            .collect(Collectors.toList());</span>
 
-<span class="pc bpc" id="L84" title="1 of 2 branches missed.">        boolean hasMore = (offset + limit) &lt; totalCount;</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        boolean hasMore = (offset + limit) &lt; totalCount;</span>
 
-<span class="fc" id="L86">        long queryTimeMs = System.currentTimeMillis() - startTime;</span>
-<span class="fc" id="L87">        log.info(&quot;[HISTORY] Retrieved {} applications for borrower {} in {}ms, total: {}, hasMore: {}&quot;, </span>
-<span class="fc" id="L88">            records.size(), borrowerId, queryTimeMs, totalCount, hasMore);</span>
+<span class="nc" id="L86">        long queryTimeMs = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L87">        log.info(&quot;[HISTORY] Retrieved {} applications for borrower {} in {}ms, total: {}, hasMore: {}&quot;, </span>
+<span class="nc" id="L88">            records.size(), borrowerId, queryTimeMs, totalCount, hasMore);</span>
 
-<span class="fc" id="L90">        return ApplicationHistoryResponse.builder()</span>
-<span class="fc" id="L91">            .applications(records)</span>
-<span class="fc" id="L92">            .totalCount((int) totalCount)</span>
-<span class="fc" id="L93">            .limit(limit)</span>
-<span class="fc" id="L94">            .offset(offset)</span>
-<span class="fc" id="L95">            .hasMore(hasMore)</span>
-<span class="fc" id="L96">            .retrievedAt(LocalDateTime.now())</span>
-<span class="fc" id="L97">            .build();</span>
+<span class="nc" id="L90">        return ApplicationHistoryResponse.builder()</span>
+<span class="nc" id="L91">            .applications(records)</span>
+<span class="nc" id="L92">            .totalCount((int) totalCount)</span>
+<span class="nc" id="L93">            .limit(limit)</span>
+<span class="nc" id="L94">            .offset(offset)</span>
+<span class="nc" id="L95">            .hasMore(hasMore)</span>
+<span class="nc" id="L96">            .retrievedAt(LocalDateTime.now())</span>
+<span class="nc" id="L97">            .build();</span>
     }
 
     private boolean applyStatusFilter(Application app, String statusFilter) {
-<span class="pc bpc" id="L101" title="1 of 4 branches missed.">        if (statusFilter == null || statusFilter.isEmpty()) {</span>
-<span class="fc" id="L102">            return true;</span>
+<span class="nc bnc" id="L101" title="All 4 branches missed.">        if (statusFilter == null || statusFilter.isEmpty()) {</span>
+<span class="nc" id="L102">            return true;</span>
         }
-<span class="fc" id="L104">        return app.getStatus().toString().equalsIgnoreCase(statusFilter);</span>
+<span class="nc" id="L104">        return app.getStatus().toString().equalsIgnoreCase(statusFilter);</span>
     }
 
     private boolean applyDateRangeFilter(Application app, LocalDateTime start, LocalDateTime end) {
-<span class="pc bpc" id="L108" title="2 of 4 branches missed.">        if (start == null &amp;&amp; end == null) {</span>
-<span class="fc" id="L109">            return true;</span>
+<span class="nc bnc" id="L108" title="All 4 branches missed.">        if (start == null &amp;&amp; end == null) {</span>
+<span class="nc" id="L109">            return true;</span>
         }
 <span class="nc" id="L111">        LocalDateTime appDate = app.getCreatedAt();</span>
 <span class="nc bnc" id="L112" title="All 4 branches missed.">        if (start != null &amp;&amp; appDate.isBefore(start)) {</span>
@@ -119,8 +119,8 @@ public class ApplicationHistoryService {
     }
 
     private boolean applyLoanAmountFilter(Application app, BigDecimal minAmount, BigDecimal maxAmount) {
-<span class="pc bpc" id="L122" title="2 of 4 branches missed.">        if (minAmount == null &amp;&amp; maxAmount == null) {</span>
-<span class="fc" id="L123">            return true;</span>
+<span class="nc bnc" id="L122" title="All 4 branches missed.">        if (minAmount == null &amp;&amp; maxAmount == null) {</span>
+<span class="nc" id="L123">            return true;</span>
         }
 <span class="nc" id="L125">        BigDecimal amount = app.getLoanAmount();</span>
 <span class="nc bnc" id="L126" title="All 4 branches missed.">        if (minAmount != null &amp;&amp; amount.compareTo(minAmount) &lt; 0) {</span>
@@ -133,37 +133,37 @@ public class ApplicationHistoryService {
     }
 
     private ApplicationHistoryRecord mapToRecord(Application app) {
-<span class="fc" id="L136">        List&lt;Offer&gt; offers = offerRepository.findByApplicationId(app.getId());</span>
+<span class="nc" id="L136">        List&lt;Offer&gt; offers = offerRepository.findByApplicationId(app.getId());</span>
         
-<span class="fc" id="L138">        int offerCount = offers.size();</span>
-<span class="fc" id="L139">        BigDecimal bestAPR = offers.stream()</span>
-<span class="fc" id="L140">            .map(Offer::getApr)</span>
-<span class="fc" id="L141">            .min(BigDecimal::compareTo)</span>
-<span class="fc" id="L142">            .orElse(null);</span>
+<span class="nc" id="L138">        int offerCount = offers.size();</span>
+<span class="nc" id="L139">        BigDecimal bestAPR = offers.stream()</span>
+<span class="nc" id="L140">            .map(Offer::getApr)</span>
+<span class="nc" id="L141">            .min(BigDecimal::compareTo)</span>
+<span class="nc" id="L142">            .orElse(null);</span>
         
-<span class="fc" id="L144">        String expirationStatus = determineExpirationStatus(offers);</span>
+<span class="nc" id="L144">        String expirationStatus = determineExpirationStatus(offers);</span>
         
-<span class="fc" id="L146">        return ApplicationHistoryRecord.builder()</span>
-<span class="fc" id="L147">            .applicationId(app.getId())</span>
-<span class="fc" id="L148">            .referenceNumber(app.getId().toString())  // Use application ID as reference since no explicit reference number</span>
-<span class="fc" id="L149">            .status(app.getStatus().toString())</span>
-<span class="fc" id="L150">            .loanAmount(app.getLoanAmount())</span>
-<span class="fc" id="L151">            .termMonths(app.getLoanTermMonths())</span>
-<span class="fc" id="L152">            .loanPurpose(app.getLoanType())</span>
-<span class="fc" id="L153">            .createdAt(app.getCreatedAt())</span>
-<span class="fc" id="L154">            .submittedAt(app.getSubmittedAt())</span>
-<span class="fc" id="L155">            .closedAt(app.getWithdrawnAt())  // Use withdrawn_at as closed_at indicator</span>
-<span class="fc" id="L156">            .offerCount(offerCount)</span>
-<span class="fc" id="L157">            .bestAPR(bestAPR)</span>
-<span class="fc" id="L158">            .selectedOfferId(null) // TODO: fetch from application if offer selection tracked</span>
-<span class="fc" id="L159">            .finalAcceptedOfferId(null) // TODO: fetch from application if acceptance tracked</span>
-<span class="fc" id="L160">            .expirationStatus(expirationStatus)</span>
-<span class="fc" id="L161">            .build();</span>
+<span class="nc" id="L146">        return ApplicationHistoryRecord.builder()</span>
+<span class="nc" id="L147">            .applicationId(app.getId())</span>
+<span class="nc" id="L148">            .referenceNumber(app.getId().toString())  // Use application ID as reference since no explicit reference number</span>
+<span class="nc" id="L149">            .status(app.getStatus().toString())</span>
+<span class="nc" id="L150">            .loanAmount(app.getLoanAmount())</span>
+<span class="nc" id="L151">            .termMonths(app.getLoanTermMonths())</span>
+<span class="nc" id="L152">            .loanPurpose(app.getLoanType())</span>
+<span class="nc" id="L153">            .createdAt(app.getCreatedAt())</span>
+<span class="nc" id="L154">            .submittedAt(app.getSubmittedAt())</span>
+<span class="nc" id="L155">            .closedAt(app.getWithdrawnAt())  // Use withdrawn_at as closed_at indicator</span>
+<span class="nc" id="L156">            .offerCount(offerCount)</span>
+<span class="nc" id="L157">            .bestAPR(bestAPR)</span>
+<span class="nc" id="L158">            .selectedOfferId(null) // TODO: fetch from application if offer selection tracked</span>
+<span class="nc" id="L159">            .finalAcceptedOfferId(null) // TODO: fetch from application if acceptance tracked</span>
+<span class="nc" id="L160">            .expirationStatus(expirationStatus)</span>
+<span class="nc" id="L161">            .build();</span>
     }
 
     private String determineExpirationStatus(List&lt;Offer&gt; offers) {
-<span class="pc bpc" id="L165" title="1 of 2 branches missed.">        if (offers.isEmpty()) {</span>
-<span class="fc" id="L166">            return &quot;no_offers&quot;;</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        if (offers.isEmpty()) {</span>
+<span class="nc" id="L166">            return &quot;no_offers&quot;;</span>
         }
         
 <span class="nc" id="L169">        LocalDateTime now = LocalDateTime.now();</span>

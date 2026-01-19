@@ -12,35 +12,35 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-<span class="pc bnc" id="L15" title="All 110 branches missed.">@Data</span>
-<span class="pc" id="L16">@Builder</span>
-<span class="fc" id="L17">@NoArgsConstructor</span>
-<span class="fc" id="L18">@AllArgsConstructor</span>
+<span class="nc bnc" id="L15" title="All 110 branches missed.">@Data</span>
+<span class="nc" id="L16">@Builder</span>
+<span class="nc" id="L17">@NoArgsConstructor</span>
+<span class="nc" id="L18">@AllArgsConstructor</span>
 @Entity
 @Table(name = &quot;help_articles&quot;, uniqueConstraints = {
     @UniqueConstraint(columnNames = {&quot;topic&quot;, &quot;language&quot;})
 })
 public class HelpArticle {
     @Id
-<span class="fc" id="L25">    private UUID id;</span>
+<span class="nc" id="L25">    private UUID id;</span>
 
     @Column(nullable = false, length = 100)
-<span class="fc" id="L28">    private String topic;</span>
+<span class="nc" id="L28">    private String topic;</span>
 
     @Column(nullable = false)
-<span class="fc" id="L31">    private Integer version;</span>
+<span class="nc" id="L31">    private Integer version;</span>
 
     @Column(nullable = false, length = 255)
-<span class="fc" id="L34">    private String title;</span>
+<span class="nc" id="L34">    private String title;</span>
 
     @Column(nullable = false, columnDefinition = &quot;TEXT&quot;)
-<span class="fc" id="L37">    private String description;</span>
+<span class="nc" id="L37">    private String description;</span>
 
     @Column(columnDefinition = &quot;TEXT&quot;)
-<span class="fc" id="L40">    private String content;</span>
+<span class="nc" id="L40">    private String content;</span>
 
     @Column(nullable = false, length = 10)
-<span class="fc" id="L43">    private String language;</span>
+<span class="nc" id="L43">    private String language;</span>
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -50,10 +50,10 @@ public class HelpArticle {
 <span class="nc" id="L50">    private UUID createdBy;</span>
 
     @OneToMany(mappedBy = &quot;article&quot;, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-<span class="fc" id="L53">    private List&lt;HelpSection&gt; sections;</span>
+<span class="nc" id="L53">    private List&lt;HelpSection&gt; sections;</span>
 
     @OneToMany(mappedBy = &quot;article&quot;, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-<span class="fc" id="L56">    private List&lt;HelpFAQ&gt; faqs;</span>
+<span class="nc" id="L56">    private List&lt;HelpFAQ&gt; faqs;</span>
 
     @CreationTimestamp
     @Column(nullable = false)
@@ -61,6 +61,6 @@ public class HelpArticle {
 
     @UpdateTimestamp
     @Column(nullable = false)
-<span class="fc" id="L64">    private LocalDateTime updatedAt;</span>
+<span class="nc" id="L64">    private LocalDateTime updatedAt;</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

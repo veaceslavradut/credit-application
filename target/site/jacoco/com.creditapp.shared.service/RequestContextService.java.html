@@ -16,9 +16,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
      * Get the IP address from the current HTTP request
      */
     public String getClientIpAddress() {
-<span class="fc" id="L19">        HttpServletRequest request = getCurrentRequest();</span>
-<span class="pc bpc" id="L20" title="1 of 2 branches missed.">        if (request == null) {</span>
-<span class="fc" id="L21">            return &quot;SYSTEM&quot;;</span>
+<span class="nc" id="L19">        HttpServletRequest request = getCurrentRequest();</span>
+<span class="nc bnc" id="L20" title="All 2 branches missed.">        if (request == null) {</span>
+<span class="nc" id="L21">            return &quot;SYSTEM&quot;;</span>
         }
 
         // Check for X-Forwarded-For header (proxy/load balancer)
@@ -43,9 +43,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
      * Get the user agent from the current HTTP request
      */
     public String getUserAgent() {
-<span class="fc" id="L46">        HttpServletRequest request = getCurrentRequest();</span>
-<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        if (request == null) {</span>
-<span class="fc" id="L48">            return &quot;SYSTEM&quot;;</span>
+<span class="nc" id="L46">        HttpServletRequest request = getCurrentRequest();</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (request == null) {</span>
+<span class="nc" id="L48">            return &quot;SYSTEM&quot;;</span>
         }
 
 <span class="nc" id="L51">        String userAgent = request.getHeader(&quot;User-Agent&quot;);</span>
@@ -56,7 +56,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
      * Get request context information
      */
     public RequestContext getRequestContext() {
-<span class="fc" id="L59">        return new RequestContext(getClientIpAddress(), getUserAgent());</span>
+<span class="nc" id="L59">        return new RequestContext(getClientIpAddress(), getUserAgent());</span>
     }
 
     /**
@@ -64,8 +64,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
      */
     private HttpServletRequest getCurrentRequest() {
         try {
-<span class="fc" id="L67">            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();</span>
-<span class="pc bpc" id="L68" title="1 of 2 branches missed.">            return attributes != null ? attributes.getRequest() : null;</span>
+<span class="nc" id="L67">            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">            return attributes != null ? attributes.getRequest() : null;</span>
 <span class="nc" id="L69">        } catch (Exception e) {</span>
 <span class="nc" id="L70">            return null;</span>
         }
@@ -76,13 +76,13 @@ import org.springframework.web.context.request.ServletRequestAttributes;
      */
 <span class="nc bnc" id="L77" title="All 22 branches missed.">    @Data</span>
     public static class RequestContext {
-<span class="fc" id="L79">        private final String ipAddress;</span>
-<span class="fc" id="L80">        private final String userAgent;</span>
+<span class="nc" id="L79">        private final String ipAddress;</span>
+<span class="nc" id="L80">        private final String userAgent;</span>
 
-<span class="fc" id="L82">        public RequestContext(String ipAddress, String userAgent) {</span>
-<span class="fc" id="L83">            this.ipAddress = ipAddress;</span>
-<span class="fc" id="L84">            this.userAgent = userAgent;</span>
-<span class="fc" id="L85">        }</span>
+<span class="nc" id="L82">        public RequestContext(String ipAddress, String userAgent) {</span>
+<span class="nc" id="L83">            this.ipAddress = ipAddress;</span>
+<span class="nc" id="L84">            this.userAgent = userAgent;</span>
+<span class="nc" id="L85">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

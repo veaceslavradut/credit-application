@@ -134,12 +134,12 @@ public class S3DocumentStorageService {
         public final String etag;
         public final String versionId;
         
-<span class="fc" id="L137">        public S3ObjectMetadata(String bucketName, String key, String etag, String versionId) {</span>
-<span class="fc" id="L138">            this.bucketName = bucketName;</span>
-<span class="fc" id="L139">            this.key = key;</span>
-<span class="fc" id="L140">            this.etag = etag;</span>
-<span class="fc" id="L141">            this.versionId = versionId;</span>
-<span class="fc" id="L142">        }</span>
+<span class="nc" id="L137">        public S3ObjectMetadata(String bucketName, String key, String etag, String versionId) {</span>
+<span class="nc" id="L138">            this.bucketName = bucketName;</span>
+<span class="nc" id="L139">            this.key = key;</span>
+<span class="nc" id="L140">            this.etag = etag;</span>
+<span class="nc" id="L141">            this.versionId = versionId;</span>
+<span class="nc" id="L142">        }</span>
         
         public static S3ObjectMetadataBuilder builder() {
 <span class="nc" id="L145">            return new S3ObjectMetadataBuilder();</span>

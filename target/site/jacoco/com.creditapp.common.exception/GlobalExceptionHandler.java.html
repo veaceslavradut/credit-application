@@ -62,12 +62,12 @@ import java.util.Map;
 
     @ExceptionHandler(DuplicateBankRegistrationException.class)
     public ResponseEntity&lt;?&gt; handleDuplicateBankRegistration(DuplicateBankRegistrationException ex, WebRequest request) {
-<span class="fc" id="L65">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L66">        response.put(&quot;error&quot;, &quot;Conflict&quot;);</span>
-<span class="fc" id="L67">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="fc" id="L68">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="fc" id="L69">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="fc" id="L70">        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);</span>
+<span class="nc" id="L65">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L66">        response.put(&quot;error&quot;, &quot;Conflict&quot;);</span>
+<span class="nc" id="L67">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L68">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L69">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L70">        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);</span>
     }
 
     @ExceptionHandler(PasswordValidationException.class)
@@ -113,12 +113,12 @@ import java.util.Map;
 
     @ExceptionHandler(InvalidPasswordException.class)
     public ResponseEntity&lt;?&gt; handleInvalidPassword(InvalidPasswordException ex, WebRequest request) {
-<span class="fc" id="L116">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L117">        response.put(&quot;error&quot;, &quot;Unauthorized&quot;);</span>
-<span class="fc" id="L118">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="fc" id="L119">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="fc" id="L120">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="fc" id="L121">        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);</span>
+<span class="nc" id="L116">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L117">        response.put(&quot;error&quot;, &quot;Unauthorized&quot;);</span>
+<span class="nc" id="L118">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L119">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L120">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L121">        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);</span>
     }
 
     @ExceptionHandler(NotFoundException.class)
@@ -133,37 +133,37 @@ import java.util.Map;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity&lt;?&gt; handleValidationException(MethodArgumentNotValidException ex, WebRequest request) {
-<span class="fc" id="L136">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L137">        Map&lt;String, String&gt; fieldErrors = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L138">        String firstErrorMessage = &quot;Validation failed&quot;;</span>
+<span class="nc" id="L136">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L137">        Map&lt;String, String&gt; fieldErrors = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L138">        String firstErrorMessage = &quot;Validation failed&quot;;</span>
         
-<span class="fc" id="L140">        var errors = ex.getBindingResult().getAllErrors();</span>
-<span class="pc bpc" id="L141" title="1 of 2 branches missed.">        if (!errors.isEmpty()) {</span>
-<span class="fc" id="L142">            FieldError firstFieldError = (FieldError) errors.get(0);</span>
-<span class="fc" id="L143">            firstErrorMessage = firstFieldError.getDefaultMessage();</span>
+<span class="nc" id="L140">        var errors = ex.getBindingResult().getAllErrors();</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        if (!errors.isEmpty()) {</span>
+<span class="nc" id="L142">            FieldError firstFieldError = (FieldError) errors.get(0);</span>
+<span class="nc" id="L143">            firstErrorMessage = firstFieldError.getDefaultMessage();</span>
         }
         
-<span class="fc" id="L146">        ex.getBindingResult().getAllErrors().forEach(error -&gt; {</span>
-<span class="fc" id="L147">            String fieldName = ((FieldError) error).getField();</span>
-<span class="fc" id="L148">            String errorMessage = error.getDefaultMessage();</span>
-<span class="fc" id="L149">            fieldErrors.put(fieldName, errorMessage);</span>
-<span class="fc" id="L150">        });</span>
-<span class="fc" id="L151">        response.put(&quot;error&quot;, &quot;Bad Request&quot;);</span>
-<span class="fc" id="L152">        response.put(&quot;message&quot;, firstErrorMessage);</span>
-<span class="fc" id="L153">        response.put(&quot;fieldErrors&quot;, fieldErrors);</span>
-<span class="fc" id="L154">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="fc" id="L155">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="fc" id="L156">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
+<span class="nc" id="L146">        ex.getBindingResult().getAllErrors().forEach(error -&gt; {</span>
+<span class="nc" id="L147">            String fieldName = ((FieldError) error).getField();</span>
+<span class="nc" id="L148">            String errorMessage = error.getDefaultMessage();</span>
+<span class="nc" id="L149">            fieldErrors.put(fieldName, errorMessage);</span>
+<span class="nc" id="L150">        });</span>
+<span class="nc" id="L151">        response.put(&quot;error&quot;, &quot;Bad Request&quot;);</span>
+<span class="nc" id="L152">        response.put(&quot;message&quot;, firstErrorMessage);</span>
+<span class="nc" id="L153">        response.put(&quot;fieldErrors&quot;, fieldErrors);</span>
+<span class="nc" id="L154">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L155">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L156">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity&lt;?&gt; handleIllegalArgument(IllegalArgumentException ex, WebRequest request) {
-<span class="fc" id="L161">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L162">        response.put(&quot;error&quot;, &quot;Bad Request&quot;);</span>
-<span class="fc" id="L163">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="fc" id="L164">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="fc" id="L165">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="fc" id="L166">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
+<span class="nc" id="L161">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L162">        response.put(&quot;error&quot;, &quot;Bad Request&quot;);</span>
+<span class="nc" id="L163">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L164">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L165">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L166">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
     }
 
     @ExceptionHandler(InvalidApplicationException.class)
@@ -262,12 +262,12 @@ import java.util.Map;
     }
     @ExceptionHandler(RateCardNotFoundException.class)
     public ResponseEntity&lt;?&gt; handleRateCardNotFound(RateCardNotFoundException ex, WebRequest request) {
-<span class="fc" id="L265">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L266">        response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
-<span class="fc" id="L267">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="fc" id="L268">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="fc" id="L269">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="fc" id="L270">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
+<span class="nc" id="L265">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L266">        response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
+<span class="nc" id="L267">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L268">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L269">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L270">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
     }
 
     @ExceptionHandler(InvalidRateCardException.class)
@@ -332,22 +332,22 @@ import java.util.Map;
 
     @ExceptionHandler(NotificationNotFoundException.class)
     public ResponseEntity&lt;?&gt; handleNotificationNotFound(NotificationNotFoundException ex, WebRequest request) {
-<span class="fc" id="L335">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L336">        response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
-<span class="fc" id="L337">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="fc" id="L338">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="fc" id="L339">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="fc" id="L340">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
+<span class="nc" id="L335">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L336">        response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
+<span class="nc" id="L337">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L338">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L339">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L340">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
     }
 
     @ExceptionHandler(com.creditapp.borrower.exception.ApplicationNotFoundException.class)
     public ResponseEntity&lt;?&gt; handleApplicationNotFound(com.creditapp.borrower.exception.ApplicationNotFoundException ex, WebRequest request) {
-<span class="fc" id="L345">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L346">        response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
-<span class="fc" id="L347">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="fc" id="L348">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="fc" id="L349">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="fc" id="L350">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
+<span class="nc" id="L345">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L346">        response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
+<span class="nc" id="L347">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L348">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L349">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L350">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
     }
 
     @ExceptionHandler(OfferCalculationException.class)
@@ -366,36 +366,36 @@ import java.util.Map;
 
     @ExceptionHandler(OfferExpiredException.class)
     public ResponseEntity&lt;?&gt; handleOfferExpired(OfferExpiredException ex, WebRequest request) {
-<span class="fc" id="L369">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L370">        response.put(&quot;error&quot;, &quot;Offer Expired&quot;);</span>
-<span class="fc" id="L371">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="fc" id="L372">        response.put(&quot;expiresAt&quot;, ex.getExpiresAt());</span>
-<span class="fc" id="L373">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="fc" id="L374">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="fc" id="L375">        return ResponseEntity.status(HttpStatus.GONE).body(response);</span>
+<span class="nc" id="L369">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L370">        response.put(&quot;error&quot;, &quot;Offer Expired&quot;);</span>
+<span class="nc" id="L371">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L372">        response.put(&quot;expiresAt&quot;, ex.getExpiresAt());</span>
+<span class="nc" id="L373">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L374">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L375">        return ResponseEntity.status(HttpStatus.GONE).body(response);</span>
     }
 
     @ExceptionHandler(InvalidOfferException.class)
     public ResponseEntity&lt;?&gt; handleInvalidOffer(InvalidOfferException ex, WebRequest request) {
-<span class="fc" id="L380">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L381">        response.put(&quot;error&quot;, &quot;Invalid Offer&quot;);</span>
-<span class="fc" id="L382">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="fc" id="L383">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="fc" id="L384">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L380">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L381">        response.put(&quot;error&quot;, &quot;Invalid Offer&quot;);</span>
+<span class="nc" id="L382">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L383">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L384">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
         
         // Check message to determine appropriate status code
-<span class="fc" id="L387">        String message = ex.getMessage();</span>
-<span class="pc bpc" id="L388" title="1 of 2 branches missed.">        if (message != null) {</span>
-<span class="fc bfc" id="L389" title="All 2 branches covered.">            if (message.contains(&quot;Application not found&quot;)) {</span>
-<span class="fc" id="L390">                response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
-<span class="fc" id="L391">                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
-<span class="fc bfc" id="L392" title="All 2 branches covered.">            } else if (message.contains(&quot;Unauthorized access&quot;)) {</span>
-<span class="fc" id="L393">                response.put(&quot;error&quot;, &quot;Forbidden&quot;);</span>
-<span class="fc" id="L394">                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);</span>
+<span class="nc" id="L387">        String message = ex.getMessage();</span>
+<span class="nc bnc" id="L388" title="All 2 branches missed.">        if (message != null) {</span>
+<span class="nc bnc" id="L389" title="All 2 branches missed.">            if (message.contains(&quot;Application not found&quot;)) {</span>
+<span class="nc" id="L390">                response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
+<span class="nc" id="L391">                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
+<span class="nc bnc" id="L392" title="All 2 branches missed.">            } else if (message.contains(&quot;Unauthorized access&quot;)) {</span>
+<span class="nc" id="L393">                response.put(&quot;error&quot;, &quot;Forbidden&quot;);</span>
+<span class="nc" id="L394">                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);</span>
             }
         }
         
-<span class="fc" id="L398">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
+<span class="nc" id="L398">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
@@ -410,28 +410,28 @@ import java.util.Map;
 
     @ExceptionHandler(InsufficientMarketDataException.class)
     public ResponseEntity&lt;?&gt; handleInsufficientMarketData(InsufficientMarketDataException ex, WebRequest request) {
-<span class="fc" id="L413">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L414">        response.put(&quot;error&quot;, &quot;Precondition Failed&quot;);</span>
-<span class="fc" id="L415">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="fc" id="L416">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="fc" id="L417">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="fc" id="L418">        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(response);</span>
+<span class="nc" id="L413">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L414">        response.put(&quot;error&quot;, &quot;Precondition Failed&quot;);</span>
+<span class="nc" id="L415">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L416">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L417">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L418">        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(response);</span>
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity&lt;?&gt; handleGlobalException(Exception ex, WebRequest request) {
         // Rethrow AccessDeniedException so Spring Security can handle it properly
 <span class="pc bpc" id="L424" title="1 of 2 branches missed.">        if (ex instanceof AccessDeniedException) {</span>
-<span class="fc" id="L425">            throw (AccessDeniedException) ex;</span>
+<span class="nc" id="L425">            throw (AccessDeniedException) ex;</span>
         }
         
-<span class="nc" id="L428">        logger.error(&quot;Unexpected error&quot;, ex);</span>
-<span class="nc" id="L429">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L430">        response.put(&quot;error&quot;, &quot;Internal Server Error&quot;);</span>
-<span class="nc" id="L431">        response.put(&quot;message&quot;, &quot;An unexpected error occurred&quot;);</span>
-<span class="nc" id="L432">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L433">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L434">        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);</span>
+<span class="fc" id="L428">        logger.error(&quot;Unexpected error&quot;, ex);</span>
+<span class="fc" id="L429">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L430">        response.put(&quot;error&quot;, &quot;Internal Server Error&quot;);</span>
+<span class="fc" id="L431">        response.put(&quot;message&quot;, &quot;An unexpected error occurred&quot;);</span>
+<span class="fc" id="L432">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="fc" id="L433">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="fc" id="L434">        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

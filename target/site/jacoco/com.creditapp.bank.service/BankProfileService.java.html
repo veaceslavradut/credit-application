@@ -33,100 +33,100 @@ public class BankProfileService {
      */
     @Transactional(readOnly = true)
     public BankProfileDTO getBankProfile(UUID bankId) {
-<span class="fc" id="L36">        log.debug(&quot;Retrieving bank profile for bankId: {}&quot;, bankId);</span>
-<span class="fc" id="L37">        Organization organization = organizationRepository.findById(bankId)</span>
-<span class="fc" id="L38">            .orElseThrow(() -&gt; new RuntimeException(&quot;Bank profile not found: &quot; + bankId));</span>
-<span class="fc" id="L39">        return mapToDTO(organization);</span>
+<span class="nc" id="L36">        log.debug(&quot;Retrieving bank profile for bankId: {}&quot;, bankId);</span>
+<span class="nc" id="L37">        Organization organization = organizationRepository.findById(bankId)</span>
+<span class="nc" id="L38">            .orElseThrow(() -&gt; new RuntimeException(&quot;Bank profile not found: &quot; + bankId));</span>
+<span class="nc" id="L39">        return mapToDTO(organization);</span>
     }
 
     /**
      * Update bank profile information.
      */
     public BankProfileDTO updateBankProfile(UUID bankId, UpdateBankProfileRequest request) {
-<span class="fc" id="L46">        log.debug(&quot;Updating bank profile for bankId: {}&quot;, bankId);</span>
-<span class="fc" id="L47">        Organization organization = organizationRepository.findById(bankId)</span>
-<span class="pc" id="L48">            .orElseThrow(() -&gt; new RuntimeException(&quot;Bank profile not found: &quot; + bankId));</span>
+<span class="nc" id="L46">        log.debug(&quot;Updating bank profile for bankId: {}&quot;, bankId);</span>
+<span class="nc" id="L47">        Organization organization = organizationRepository.findById(bankId)</span>
+<span class="nc" id="L48">            .orElseThrow(() -&gt; new RuntimeException(&quot;Bank profile not found: &quot; + bankId));</span>
 
         // Track changes for audit
-<span class="fc" id="L51">        StringBuilder changes = new StringBuilder();</span>
+<span class="nc" id="L51">        StringBuilder changes = new StringBuilder();</span>
 
-<span class="pc bpc" id="L53" title="1 of 4 branches missed.">        if (request.getName() != null &amp;&amp; !request.getName().equals(organization.getName())) {</span>
-<span class="fc" id="L54">            changes.append(&quot;name: &quot;).append(organization.getName()).append(&quot; -&gt; &quot;).append(request.getName()).append(&quot;; &quot;);</span>
-<span class="fc" id="L55">            organization.setName(request.getName());</span>
+<span class="nc bnc" id="L53" title="All 4 branches missed.">        if (request.getName() != null &amp;&amp; !request.getName().equals(organization.getName())) {</span>
+<span class="nc" id="L54">            changes.append(&quot;name: &quot;).append(organization.getName()).append(&quot; -&gt; &quot;).append(request.getName()).append(&quot;; &quot;);</span>
+<span class="nc" id="L55">            organization.setName(request.getName());</span>
         }
 
-<span class="pc bpc" id="L58" title="1 of 4 branches missed.">        if (request.getContactEmail() != null &amp;&amp; !request.getContactEmail().equals(organization.getContactEmail())) {</span>
-<span class="fc" id="L59">            changes.append(&quot;contactEmail: &quot;).append(organization.getContactEmail()).append(&quot; -&gt; &quot;).append(request.getContactEmail()).append(&quot;; &quot;);</span>
-<span class="fc" id="L60">            organization.setContactEmail(request.getContactEmail());</span>
+<span class="nc bnc" id="L58" title="All 4 branches missed.">        if (request.getContactEmail() != null &amp;&amp; !request.getContactEmail().equals(organization.getContactEmail())) {</span>
+<span class="nc" id="L59">            changes.append(&quot;contactEmail: &quot;).append(organization.getContactEmail()).append(&quot; -&gt; &quot;).append(request.getContactEmail()).append(&quot;; &quot;);</span>
+<span class="nc" id="L60">            organization.setContactEmail(request.getContactEmail());</span>
         }
 
-<span class="pc bpc" id="L63" title="1 of 4 branches missed.">        if (request.getPhone() != null &amp;&amp; !request.getPhone().equals(organization.getPhone())) {</span>
-<span class="fc" id="L64">            changes.append(&quot;phone: &quot;).append(organization.getPhone()).append(&quot; -&gt; &quot;).append(request.getPhone()).append(&quot;; &quot;);</span>
-<span class="fc" id="L65">            organization.setPhone(request.getPhone());</span>
+<span class="nc bnc" id="L63" title="All 4 branches missed.">        if (request.getPhone() != null &amp;&amp; !request.getPhone().equals(organization.getPhone())) {</span>
+<span class="nc" id="L64">            changes.append(&quot;phone: &quot;).append(organization.getPhone()).append(&quot; -&gt; &quot;).append(request.getPhone()).append(&quot;; &quot;);</span>
+<span class="nc" id="L65">            organization.setPhone(request.getPhone());</span>
         }
 
-<span class="pc bpc" id="L68" title="1 of 4 branches missed.">        if (request.getWebsite() != null &amp;&amp; !request.getWebsite().equals(organization.getWebsite())) {</span>
-<span class="fc" id="L69">            changes.append(&quot;website: &quot;).append(organization.getWebsite()).append(&quot; -&gt; &quot;).append(request.getWebsite()).append(&quot;; &quot;);</span>
-<span class="fc" id="L70">            organization.setWebsite(request.getWebsite());</span>
+<span class="nc bnc" id="L68" title="All 4 branches missed.">        if (request.getWebsite() != null &amp;&amp; !request.getWebsite().equals(organization.getWebsite())) {</span>
+<span class="nc" id="L69">            changes.append(&quot;website: &quot;).append(organization.getWebsite()).append(&quot; -&gt; &quot;).append(request.getWebsite()).append(&quot;; &quot;);</span>
+<span class="nc" id="L70">            organization.setWebsite(request.getWebsite());</span>
         }
 
-<span class="pc bpc" id="L73" title="3 of 4 branches missed.">        if (request.getLogoUrl() != null &amp;&amp; !request.getLogoUrl().equals(organization.getLogoUrl())) {</span>
+<span class="nc bnc" id="L73" title="All 4 branches missed.">        if (request.getLogoUrl() != null &amp;&amp; !request.getLogoUrl().equals(organization.getLogoUrl())) {</span>
 <span class="nc" id="L74">            changes.append(&quot;logoUrl updated; &quot;);</span>
 <span class="nc" id="L75">            organization.setLogoUrl(request.getLogoUrl());</span>
         }
 
-<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (request.getAddress() != null) {</span>
-<span class="pc bpc" id="L79" title="2 of 4 branches missed.">            if (request.getAddress().getStreet() != null &amp;&amp; !request.getAddress().getStreet().equals(organization.getAddressStreet())) {</span>
-<span class="fc" id="L80">                changes.append(&quot;addressStreet updated; &quot;);</span>
-<span class="fc" id="L81">                organization.setAddressStreet(request.getAddress().getStreet());</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (request.getAddress() != null) {</span>
+<span class="nc bnc" id="L79" title="All 4 branches missed.">            if (request.getAddress().getStreet() != null &amp;&amp; !request.getAddress().getStreet().equals(organization.getAddressStreet())) {</span>
+<span class="nc" id="L80">                changes.append(&quot;addressStreet updated; &quot;);</span>
+<span class="nc" id="L81">                organization.setAddressStreet(request.getAddress().getStreet());</span>
             }
-<span class="pc bpc" id="L83" title="2 of 4 branches missed.">            if (request.getAddress().getCity() != null &amp;&amp; !request.getAddress().getCity().equals(organization.getAddressCity())) {</span>
-<span class="fc" id="L84">                changes.append(&quot;addressCity updated; &quot;);</span>
-<span class="fc" id="L85">                organization.setAddressCity(request.getAddress().getCity());</span>
+<span class="nc bnc" id="L83" title="All 4 branches missed.">            if (request.getAddress().getCity() != null &amp;&amp; !request.getAddress().getCity().equals(organization.getAddressCity())) {</span>
+<span class="nc" id="L84">                changes.append(&quot;addressCity updated; &quot;);</span>
+<span class="nc" id="L85">                organization.setAddressCity(request.getAddress().getCity());</span>
             }
-<span class="pc bpc" id="L87" title="2 of 4 branches missed.">            if (request.getAddress().getState() != null &amp;&amp; !request.getAddress().getState().equals(organization.getAddressState())) {</span>
+<span class="nc bnc" id="L87" title="All 4 branches missed.">            if (request.getAddress().getState() != null &amp;&amp; !request.getAddress().getState().equals(organization.getAddressState())) {</span>
 <span class="nc" id="L88">                changes.append(&quot;addressState updated; &quot;);</span>
 <span class="nc" id="L89">                organization.setAddressState(request.getAddress().getState());</span>
             }
-<span class="pc bpc" id="L91" title="2 of 4 branches missed.">            if (request.getAddress().getZip() != null &amp;&amp; !request.getAddress().getZip().equals(organization.getAddressZip())) {</span>
-<span class="fc" id="L92">                changes.append(&quot;addressZip updated; &quot;);</span>
-<span class="fc" id="L93">                organization.setAddressZip(request.getAddress().getZip());</span>
+<span class="nc bnc" id="L91" title="All 4 branches missed.">            if (request.getAddress().getZip() != null &amp;&amp; !request.getAddress().getZip().equals(organization.getAddressZip())) {</span>
+<span class="nc" id="L92">                changes.append(&quot;addressZip updated; &quot;);</span>
+<span class="nc" id="L93">                organization.setAddressZip(request.getAddress().getZip());</span>
             }
         }
 
-<span class="fc bfc" id="L97" title="All 2 branches covered.">        if (changes.length() &gt; 0) {</span>
-<span class="fc" id="L98">            Organization saved = organizationRepository.save(organization);</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        if (changes.length() &gt; 0) {</span>
+<span class="nc" id="L98">            Organization saved = organizationRepository.save(organization);</span>
             // TODO: Use proper AuditAction enum once defined for bank profile updates
             // auditService.logAction(&quot;ORGANIZATION&quot;, bankId, AuditAction.BANK_PROFILE_UPDATED);
-<span class="fc" id="L101">            log.info(&quot;Bank profile updated for bankId: {} with changes: {}&quot;, bankId, changes);</span>
-<span class="fc" id="L102">            return mapToDTO(saved);</span>
+<span class="nc" id="L101">            log.info(&quot;Bank profile updated for bankId: {} with changes: {}&quot;, bankId, changes);</span>
+<span class="nc" id="L102">            return mapToDTO(saved);</span>
         }
 
-<span class="fc" id="L105">        return mapToDTO(organization);</span>
+<span class="nc" id="L105">        return mapToDTO(organization);</span>
     }
 
     /**
      * Map Organization entity to BankProfileDTO.
      */
     private BankProfileDTO mapToDTO(Organization organization) {
-<span class="fc" id="L112">        BankAddressDTO address = BankAddressDTO.builder()</span>
-<span class="fc" id="L113">            .street(organization.getAddressStreet())</span>
-<span class="fc" id="L114">            .city(organization.getAddressCity())</span>
-<span class="fc" id="L115">            .state(organization.getAddressState())</span>
-<span class="fc" id="L116">            .zip(organization.getAddressZip())</span>
-<span class="fc" id="L117">            .build();</span>
+<span class="nc" id="L112">        BankAddressDTO address = BankAddressDTO.builder()</span>
+<span class="nc" id="L113">            .street(organization.getAddressStreet())</span>
+<span class="nc" id="L114">            .city(organization.getAddressCity())</span>
+<span class="nc" id="L115">            .state(organization.getAddressState())</span>
+<span class="nc" id="L116">            .zip(organization.getAddressZip())</span>
+<span class="nc" id="L117">            .build();</span>
 
-<span class="fc" id="L119">        return BankProfileDTO.builder()</span>
-<span class="fc" id="L120">            .bankId(organization.getId())</span>
-<span class="fc" id="L121">            .name(organization.getName())</span>
-<span class="fc" id="L122">            .registrationNumber(organization.getRegistrationNumber())</span>
-<span class="fc" id="L123">            .contactEmail(organization.getContactEmail())</span>
-<span class="fc" id="L124">            .phone(organization.getPhone())</span>
-<span class="fc" id="L125">            .address(address)</span>
-<span class="fc" id="L126">            .website(organization.getWebsite())</span>
-<span class="fc" id="L127">            .logoUrl(organization.getLogoUrl())</span>
-<span class="fc" id="L128">            .rateCardsUrl(&quot;/api/bank/rate-cards&quot;)</span>
-<span class="fc" id="L129">            .build();</span>
+<span class="nc" id="L119">        return BankProfileDTO.builder()</span>
+<span class="nc" id="L120">            .bankId(organization.getId())</span>
+<span class="nc" id="L121">            .name(organization.getName())</span>
+<span class="nc" id="L122">            .registrationNumber(organization.getRegistrationNumber())</span>
+<span class="nc" id="L123">            .contactEmail(organization.getContactEmail())</span>
+<span class="nc" id="L124">            .phone(organization.getPhone())</span>
+<span class="nc" id="L125">            .address(address)</span>
+<span class="nc" id="L126">            .website(organization.getWebsite())</span>
+<span class="nc" id="L127">            .logoUrl(organization.getLogoUrl())</span>
+<span class="nc" id="L128">            .rateCardsUrl(&quot;/api/bank/rate-cards&quot;)</span>
+<span class="nc" id="L129">            .build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
