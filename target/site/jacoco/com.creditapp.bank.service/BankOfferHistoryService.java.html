@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankOfferHistoryService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.bank.service</a> &gt; <span class="el_source">BankOfferHistoryService.java</span></div><h1>BankOfferHistoryService.java</h1><pre class="source lang-java linenums">package com.creditapp.bank.service;
+
+import com.creditapp.bank.dto.OfferHistoryFilter;
+import com.creditapp.bank.dto.OfferHistoryItem;
+import com.creditapp.bank.dto.OfferHistoryResponse;
+import com.creditapp.bank.model.Offer;
+import com.creditapp.bank.model.OfferStatus;
+import com.creditapp.bank.repository.OfferRepository;
+import com.creditapp.borrower.model.Application;
+import com.creditapp.borrower.model.ApplicationStatus;
+import com.creditapp.borrower.repository.ApplicationRepository;
+import com.creditapp.shared.model.User;
+import com.creditapp.auth.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
+
+/**
+ * Service for retrieving bank offer history with filtering, sorting, and pagination
+ */
+@Service
+<span class="fc" id="L30">@RequiredArgsConstructor</span>
+<span class="fc" id="L31">@Slf4j</span>
+public class BankOfferHistoryService {
+
+    private final OfferRepository offerRepository;
+    private final ApplicationRepository applicationRepository;
+    private final UserRepository userRepository;
+
+    /**
+     * Get paginated offer history for a bank with filtering and sorting.
+     * Target response time: &lt;200ms
+     */
+    @Transactional(readOnly = true)
+    public OfferHistoryResponse getOfferHistory(
+            UUID bankId,
+            OfferHistoryFilter filter,
+            int page,
+            int pageSize) {
+        
+<span class="fc" id="L49">        long startTime = System.currentTimeMillis();</span>
+        
+        try {
+            // Fetch all offers for this bank (use Pageable with large size to get all)
+<span class="fc" id="L53">            Pageable largePage = PageRequest.of(0, 10000);</span>
+<span class="fc" id="L54">            List&lt;Offer&gt; offers = offerRepository.findByBankId(bankId, largePage)</span>
+<span class="fc" id="L55">                    .stream()</span>
+<span class="fc" id="L56">                    .toList();</span>
+            
+            // Apply filters
+<span class="fc" id="L59">            List&lt;Offer&gt; filtered = applyFilters(offers, filter);</span>
+            
+            // Sort
+<span class="fc" id="L62">            List&lt;Offer&gt; sorted = sortOffers(filtered, filter.getSortBy());</span>
+            
+            // Convert to DTOs
+<span class="fc" id="L65">            List&lt;OfferHistoryItem&gt; items = sorted.stream()</span>
+<span class="fc" id="L66">                    .map(this::convertToHistoryItem)</span>
+<span class="fc" id="L67">                    .collect(Collectors.toList());</span>
+            
+            // Apply pagination
+<span class="fc" id="L70">            int totalCount = items.size();</span>
+<span class="fc" id="L71">            int startIdx = page * pageSize;</span>
+<span class="fc" id="L72">            int endIdx = Math.min(startIdx + pageSize, totalCount);</span>
+            
+<span class="pc bpc" id="L74" title="2 of 4 branches missed.">            List&lt;OfferHistoryItem&gt; pageItems = items.isEmpty() || startIdx &gt;= totalCount ? </span>
+<span class="pc" id="L75">                    new ArrayList&lt;&gt;() : items.subList(startIdx, endIdx);</span>
+            
+<span class="fc" id="L77">            long responseTime = System.currentTimeMillis() - startTime;</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">            if (responseTime &gt; 200) {</span>
+<span class="fc" id="L79">                log.warn(&quot;Slow offer history query: {}ms for bankId={}&quot;, responseTime, bankId);</span>
+            }
+            
+<span class="fc" id="L82">            return new OfferHistoryResponse(pageItems, (long) totalCount, page, pageSize);</span>
+            
+<span class="nc" id="L84">        } catch (Exception e) {</span>
+<span class="nc" id="L85">            log.error(&quot;Error retrieving offer history for bankId={}&quot;, bankId, e);</span>
+<span class="nc" id="L86">            throw new RuntimeException(&quot;Failed to retrieve offer history&quot;, e);</span>
+        }
+    }
+    
+    /**
+     * Determine the current status of an offer.
+     */
+    private String determineOfferStatus(Offer offer) {
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (offer == null) {</span>
+<span class="nc" id="L95">            return &quot;SUBMITTED&quot;;</span>
+        }
+        
+<span class="fc" id="L98">        OfferStatus offerStatus = offer.getOfferStatus();</span>
+        
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if (offerStatus == OfferStatus.WITHDRAWN) {</span>
+<span class="fc" id="L101">            return &quot;WITHDRAWN&quot;;</span>
+        }
+        
+<span class="pc bpc" id="L104" title="1 of 4 branches missed.">        if (offerStatus == OfferStatus.EXPIRED || offerStatus == OfferStatus.EXPIRED_WITH_SELECTION) {</span>
+<span class="fc" id="L105">            return &quot;EXPIRED&quot;;</span>
+        }
+        
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (offerStatus == OfferStatus.ACCEPTED) {</span>
+<span class="fc" id="L109">            return &quot;ACCEPTED&quot;;</span>
+        }
+        
+<span class="fc" id="L112">        return &quot;SUBMITTED&quot;;</span>
+    }
+    
+    /**
+     * Determine the borrower's interaction status with the offer.
+     */
+    private String determineBorrowerStatus(Offer offer) {
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">        if (offer == null) {</span>
+<span class="nc" id="L120">            return &quot;NOT_VIEWED&quot;;</span>
+        }
+        
+        // If borrower has selected this offer, return ACCEPTED_OTHER
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if (offer.getBorrowerSelectedAt() != null) {</span>
+<span class="fc" id="L125">            return &quot;ACCEPTED_OTHER&quot;;</span>
+        }
+        
+        // Try to get the associated application
+        try {
+<span class="fc" id="L130">            UUID applicationId = offer.getApplicationId();</span>
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">            if (applicationId != null) {</span>
+<span class="fc" id="L132">                Optional&lt;Application&gt; appOpt = applicationRepository.findById(applicationId);</span>
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">                if (appOpt.isPresent()) {</span>
+<span class="fc" id="L134">                    Application app = appOpt.get();</span>
+<span class="fc" id="L135">                    ApplicationStatus appStatus = app.getStatus();</span>
+                    
+                    // If application status indicates borrower has viewed offers
+<span class="pc bpc" id="L138" title="2 of 6 branches missed.">                    if (appStatus == ApplicationStatus.OFFERS_AVAILABLE || </span>
+                        appStatus == ApplicationStatus.ACCEPTED ||
+                        appStatus == ApplicationStatus.UNDER_REVIEW) {
+<span class="fc" id="L141">                        return &quot;VIEWED&quot;;</span>
+                    }
+                }
+            }
+<span class="nc" id="L145">        } catch (Exception e) {</span>
+<span class="nc" id="L146">            log.debug(&quot;Could not determine borrower status for offerId={}&quot;, offer.getId(), e);</span>
+<span class="fc" id="L147">        }</span>
+        
+<span class="fc" id="L149">        return &quot;NOT_VIEWED&quot;;</span>
+    }
+    
+    /**
+     * Apply all active filters to the offer list.
+     */
+    private List&lt;Offer&gt; applyFilters(List&lt;Offer&gt; offers, OfferHistoryFilter filter) {
+<span class="fc" id="L156">        return offers.stream()</span>
+<span class="fc" id="L157">                .filter(offer -&gt; passesStatusFilter(offer, filter.getStatuses()))</span>
+<span class="fc" id="L158">                .filter(offer -&gt; passesDateFilter(offer, filter.getDateFrom(), filter.getDateTo()))</span>
+<span class="fc" id="L159">                .filter(offer -&gt; passesAprFilter(offer, filter.getAprFrom(), filter.getAprTo()))</span>
+<span class="fc" id="L160">                .filter(offer -&gt; passesPaymentFilter(offer, filter.getPaymentFrom(), filter.getPaymentTo()))</span>
+<span class="fc" id="L161">                .collect(Collectors.toList());</span>
+    }
+    
+    /**
+     * Check if offer passes status filter.
+     */
+    private boolean passesStatusFilter(Offer offer, List&lt;String&gt; statuses) {
+<span class="pc bpc" id="L168" title="1 of 4 branches missed.">        if (statuses == null || statuses.isEmpty()) {</span>
+<span class="fc" id="L169">            return true;</span>
+        }
+        
+<span class="fc" id="L172">        String offerStatus = determineOfferStatus(offer);</span>
+<span class="fc" id="L173">        return statuses.contains(offerStatus);</span>
+    }
+    
+    /**
+     * Check if offer passes date range filter.
+     */
+    private boolean passesDateFilter(Offer offer, LocalDate dateFrom, LocalDate dateTo) {
+<span class="pc bpc" id="L180" title="2 of 4 branches missed.">        if (offer == null || offer.getOfferSubmittedAt() == null) {</span>
+<span class="nc" id="L181">            return true;</span>
+        }
+        
+<span class="fc" id="L184">        LocalDate offerDate = offer.getOfferSubmittedAt().toLocalDate();</span>
+        
+<span class="pc bpc" id="L186" title="3 of 4 branches missed.">        if (dateFrom != null &amp;&amp; offerDate.isBefore(dateFrom)) {</span>
+<span class="nc" id="L187">            return false;</span>
+        }
+        
+<span class="pc bpc" id="L190" title="3 of 4 branches missed.">        if (dateTo != null &amp;&amp; offerDate.isAfter(dateTo)) {</span>
+<span class="nc" id="L191">            return false;</span>
+        }
+        
+<span class="fc" id="L194">        return true;</span>
+    }
+    
+    /**
+     * Check if offer passes APR range filter.
+     */
+    private boolean passesAprFilter(Offer offer, BigDecimal aprFrom, BigDecimal aprTo) {
+<span class="pc bpc" id="L201" title="2 of 4 branches missed.">        if (offer == null || offer.getApr() == null) {</span>
+<span class="nc" id="L202">            return true;</span>
+        }
+        
+<span class="fc" id="L205">        BigDecimal apr = offer.getApr();</span>
+        
+<span class="pc bpc" id="L207" title="1 of 4 branches missed.">        if (aprFrom != null &amp;&amp; apr.compareTo(aprFrom) &lt; 0) {</span>
+<span class="nc" id="L208">            return false;</span>
+        }
+        
+<span class="fc bfc" id="L211" title="All 4 branches covered.">        if (aprTo != null &amp;&amp; apr.compareTo(aprTo) &gt; 0) {</span>
+<span class="fc" id="L212">            return false;</span>
+        }
+        
+<span class="fc" id="L215">        return true;</span>
+    }
+    
+    /**
+     * Check if offer passes monthly payment range filter.
+     */
+    private boolean passesPaymentFilter(Offer offer, BigDecimal paymentFrom, BigDecimal paymentTo) {
+<span class="pc bpc" id="L222" title="2 of 4 branches missed.">        if (offer == null || offer.getMonthlyPayment() == null) {</span>
+<span class="nc" id="L223">            return true;</span>
+        }
+        
+<span class="fc" id="L226">        BigDecimal payment = offer.getMonthlyPayment();</span>
+        
+<span class="pc bpc" id="L228" title="3 of 4 branches missed.">        if (paymentFrom != null &amp;&amp; payment.compareTo(paymentFrom) &lt; 0) {</span>
+<span class="nc" id="L229">            return false;</span>
+        }
+        
+<span class="pc bpc" id="L232" title="3 of 4 branches missed.">        if (paymentTo != null &amp;&amp; payment.compareTo(paymentTo) &gt; 0) {</span>
+<span class="nc" id="L233">            return false;</span>
+        }
+        
+<span class="fc" id="L236">        return true;</span>
+    }
+    
+    /**
+     * Sort offers based on sort criteria.
+     * Format: &quot;fieldName_DIRECTION&quot; (e.g., &quot;offerSubmittedAt_DESC&quot;, &quot;apr_ASC&quot;)
+     */
+    private List&lt;Offer&gt; sortOffers(List&lt;Offer&gt; offers, String sortBy) {
+<span class="pc bpc" id="L244" title="1 of 4 branches missed.">        if (sortBy == null || sortBy.isEmpty()) {</span>
+<span class="fc" id="L245">            sortBy = &quot;offerSubmittedAt_DESC&quot;;</span>
+        }
+        
+<span class="fc" id="L248">        final String finalSortBy = sortBy;</span>
+        
+<span class="fc" id="L250">        return offers.stream()</span>
+<span class="fc" id="L251">                .sorted((o1, o2) -&gt; compareOffers(o1, o2, finalSortBy))</span>
+<span class="fc" id="L252">                .collect(Collectors.toList());</span>
+    }
+    
+    /**
+     * Compare two offers for sorting.
+     */
+    private int compareOffers(Offer o1, Offer o2, String sortCriteria) {
+<span class="fc" id="L259">        String[] parts = sortCriteria.split(&quot;_&quot;);</span>
+<span class="fc" id="L260">        String field = parts[0];</span>
+<span class="pc bpc" id="L261" title="1 of 4 branches missed.">        boolean ascending = parts.length &gt; 1 &amp;&amp; &quot;ASC&quot;.equals(parts[1]);</span>
+
+        int result;
+
+<span class="fc bfc" id="L265" title="All 2 branches covered.">        if (&quot;offerSubmittedAt&quot;.equals(field)) {</span>
+            // Use offerSubmittedAt, falling back to createdAt; nulls last
+<span class="pc bpc" id="L267" title="1 of 2 branches missed.">            java.time.LocalDateTime a1 = o1.getOfferSubmittedAt() != null ? o1.getOfferSubmittedAt() : o1.getCreatedAt();</span>
+<span class="pc bpc" id="L268" title="1 of 2 branches missed.">            java.time.LocalDateTime a2 = o2.getOfferSubmittedAt() != null ? o2.getOfferSubmittedAt() : o2.getCreatedAt();</span>
+<span class="pc bpc" id="L269" title="3 of 4 branches missed.">            if (a1 == null &amp;&amp; a2 == null) {</span>
+<span class="nc" id="L270">                result = 0;</span>
+<span class="pc bpc" id="L271" title="1 of 2 branches missed.">            } else if (a1 == null) {</span>
+<span class="nc" id="L272">                result = 1; // nulls last</span>
+<span class="pc bpc" id="L273" title="1 of 2 branches missed.">            } else if (a2 == null) {</span>
+<span class="nc" id="L274">                result = -1;</span>
+            } else {
+<span class="fc" id="L276">                result = a1.compareTo(a2);</span>
+            }
+<span class="pc bpc" id="L278" title="1 of 2 branches missed.">        } else if (&quot;apr&quot;.equals(field)) {</span>
+<span class="fc" id="L279">            java.math.BigDecimal b1 = o1.getApr();</span>
+<span class="fc" id="L280">            java.math.BigDecimal b2 = o2.getApr();</span>
+<span class="pc bpc" id="L281" title="3 of 4 branches missed.">            if (b1 == null &amp;&amp; b2 == null) {</span>
+<span class="nc" id="L282">                result = 0;</span>
+<span class="pc bpc" id="L283" title="1 of 2 branches missed.">            } else if (b1 == null) {</span>
+<span class="nc" id="L284">                result = 1; // nulls last</span>
+<span class="pc bpc" id="L285" title="1 of 2 branches missed.">            } else if (b2 == null) {</span>
+<span class="nc" id="L286">                result = -1;</span>
+            } else {
+<span class="fc" id="L288">                result = b1.compareTo(b2);</span>
+            }
+<span class="pc bnc" id="L290" title="All 2 branches missed.">        } else if (&quot;monthlyPayment&quot;.equals(field)) {</span>
+<span class="nc" id="L291">            java.math.BigDecimal p1 = o1.getMonthlyPayment();</span>
+<span class="nc" id="L292">            java.math.BigDecimal p2 = o2.getMonthlyPayment();</span>
+<span class="nc bnc" id="L293" title="All 4 branches missed.">            if (p1 == null &amp;&amp; p2 == null) {</span>
+<span class="nc" id="L294">                result = 0;</span>
+<span class="nc bnc" id="L295" title="All 2 branches missed.">            } else if (p1 == null) {</span>
+<span class="nc" id="L296">                result = 1; // nulls last</span>
+<span class="nc bnc" id="L297" title="All 2 branches missed.">            } else if (p2 == null) {</span>
+<span class="nc" id="L298">                result = -1;</span>
+            } else {
+<span class="nc" id="L300">                result = p1.compareTo(p2);</span>
+            }
+<span class="nc" id="L302">        } else {</span>
+            // Default to submission date (fallback to createdAt), descending
+<span class="nc bnc" id="L304" title="All 2 branches missed.">            java.time.LocalDateTime d1 = o1.getOfferSubmittedAt() != null ? o1.getOfferSubmittedAt() : o1.getCreatedAt();</span>
+<span class="nc bnc" id="L305" title="All 2 branches missed.">            java.time.LocalDateTime d2 = o2.getOfferSubmittedAt() != null ? o2.getOfferSubmittedAt() : o2.getCreatedAt();</span>
+<span class="nc bnc" id="L306" title="All 4 branches missed.">            if (d1 == null &amp;&amp; d2 == null) {</span>
+<span class="nc" id="L307">                result = 0;</span>
+<span class="nc bnc" id="L308" title="All 2 branches missed.">            } else if (d1 == null) {</span>
+<span class="nc" id="L309">                result = 1;</span>
+<span class="nc bnc" id="L310" title="All 2 branches missed.">            } else if (d2 == null) {</span>
+<span class="nc" id="L311">                result = -1;</span>
+            } else {
+<span class="nc" id="L313">                result = d2.compareTo(d1); // default DESC</span>
+            }
+<span class="nc" id="L315">            return result;</span>
+        }
+
+<span class="fc bfc" id="L318" title="All 2 branches covered.">        return ascending ? result : -result;</span>
+    }
+    
+    /**
+     * Convert Offer entity to OfferHistoryItem DTO.
+     */
+    private OfferHistoryItem convertToHistoryItem(Offer offer) {
+        try {
+<span class="fc" id="L326">            String borrowerName = &quot;Unknown&quot;;</span>
+            
+<span class="pc bpc" id="L328" title="1 of 2 branches missed.">            if (offer.getApplicationId() != null) {</span>
+                try {
+<span class="fc" id="L330">                    Optional&lt;Application&gt; appOpt = applicationRepository.findById(offer.getApplicationId());</span>
+<span class="pc bpc" id="L331" title="1 of 2 branches missed.">                    if (appOpt.isPresent()) {</span>
+<span class="fc" id="L332">                        Application app = appOpt.get();</span>
+<span class="pc bpc" id="L333" title="1 of 2 branches missed.">                        if (app.getBorrowerId() != null) {</span>
+<span class="fc" id="L334">                            Optional&lt;User&gt; userOpt = userRepository.findById(app.getBorrowerId());</span>
+<span class="pc bpc" id="L335" title="1 of 2 branches missed.">                            if (userOpt.isPresent()) {</span>
+<span class="fc" id="L336">                                User user = userOpt.get();</span>
+<span class="pc bpc" id="L337" title="1 of 2 branches missed.">                                borrowerName = (user.getFirstName() != null ? user.getFirstName() : &quot;&quot;) +</span>
+                                             &quot; &quot; +
+<span class="pc bpc" id="L339" title="1 of 2 branches missed.">                                             (user.getLastName() != null ? user.getLastName() : &quot;&quot;);</span>
+<span class="fc" id="L340">                                borrowerName = borrowerName.trim();</span>
+<span class="pc bpc" id="L341" title="1 of 2 branches missed.">                                if (borrowerName.isEmpty()) {</span>
+<span class="nc" id="L342">                                    borrowerName = &quot;Unknown&quot;;</span>
+                                }
+                            }
+                        }
+                    }
+<span class="nc" id="L347">                } catch (Exception e) {</span>
+<span class="nc" id="L348">                    log.debug(&quot;Could not retrieve borrower name for applicationId={}&quot;, offer.getApplicationId(), e);</span>
+<span class="fc" id="L349">                }</span>
+            }
+            
+<span class="fc" id="L352">            return new OfferHistoryItem(</span>
+<span class="fc" id="L353">                    offer.getId(),</span>
+                    borrowerName,
+<span class="fc" id="L355">                    offer.getApr(),</span>
+<span class="fc" id="L356">                    offer.getMonthlyPayment(),</span>
+<span class="fc" id="L357">                    offer.getProcessingTimeDays(),</span>
+<span class="fc" id="L358">                    offer.getOfferSubmittedAt(),</span>
+<span class="fc" id="L359">                    determineOfferStatus(offer),</span>
+<span class="fc" id="L360">                    determineBorrowerStatus(offer)</span>
+            );
+<span class="nc" id="L362">        } catch (Exception e) {</span>
+<span class="nc" id="L363">            log.error(&quot;Error converting offer {} to history item&quot;, offer.getId(), e);</span>
+<span class="nc" id="L364">            throw new RuntimeException(&quot;Failed to convert offer to history item&quot;, e);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

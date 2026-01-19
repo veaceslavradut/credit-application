@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -38,6 +39,7 @@ public class BankOfferHistoryService {
      * Get paginated offer history for a bank with filtering and sorting.
      * Target response time: <200ms
      */
+    @Transactional(readOnly = true)
     public OfferHistoryResponse getOfferHistory(
             UUID bankId,
             OfferHistoryFilter filter,
@@ -254,30 +256,66 @@ public class BankOfferHistoryService {
      * Compare two offers for sorting.
      */
     private int compareOffers(Offer o1, Offer o2, String sortCriteria) {
-        try {
-            String[] parts = sortCriteria.split("_");
-            String field = parts[0];
-            boolean ascending = parts.length > 1 && "ASC".equals(parts[1]);
-            
-            int result = 0;
-            
-            if ("offerSubmittedAt".equals(field)) {
-                result = o1.getOfferSubmittedAt().compareTo(o2.getOfferSubmittedAt());
-            } else if ("apr".equals(field)) {
-                result = o1.getApr().compareTo(o2.getApr());
-            } else if ("monthlyPayment".equals(field)) {
-                result = o1.getMonthlyPayment().compareTo(o2.getMonthlyPayment());
+        String[] parts = sortCriteria.split("_");
+        String field = parts[0];
+        boolean ascending = parts.length > 1 && "ASC".equals(parts[1]);
+
+        int result;
+
+        if ("offerSubmittedAt".equals(field)) {
+            // Use offerSubmittedAt, falling back to createdAt; nulls last
+            java.time.LocalDateTime a1 = o1.getOfferSubmittedAt() != null ? o1.getOfferSubmittedAt() : o1.getCreatedAt();
+            java.time.LocalDateTime a2 = o2.getOfferSubmittedAt() != null ? o2.getOfferSubmittedAt() : o2.getCreatedAt();
+            if (a1 == null && a2 == null) {
+                result = 0;
+            } else if (a1 == null) {
+                result = 1; // nulls last
+            } else if (a2 == null) {
+                result = -1;
             } else {
-                // Default to offer submission date descending
-                result = o2.getOfferSubmittedAt().compareTo(o1.getOfferSubmittedAt());
-                return result;
+                result = a1.compareTo(a2);
             }
-            
-            return ascending ? result : -result;
-        } catch (Exception e) {
-            // Fall back to default sort
-            return o2.getOfferSubmittedAt().compareTo(o1.getOfferSubmittedAt());
+        } else if ("apr".equals(field)) {
+            java.math.BigDecimal b1 = o1.getApr();
+            java.math.BigDecimal b2 = o2.getApr();
+            if (b1 == null && b2 == null) {
+                result = 0;
+            } else if (b1 == null) {
+                result = 1; // nulls last
+            } else if (b2 == null) {
+                result = -1;
+            } else {
+                result = b1.compareTo(b2);
+            }
+        } else if ("monthlyPayment".equals(field)) {
+            java.math.BigDecimal p1 = o1.getMonthlyPayment();
+            java.math.BigDecimal p2 = o2.getMonthlyPayment();
+            if (p1 == null && p2 == null) {
+                result = 0;
+            } else if (p1 == null) {
+                result = 1; // nulls last
+            } else if (p2 == null) {
+                result = -1;
+            } else {
+                result = p1.compareTo(p2);
+            }
+        } else {
+            // Default to submission date (fallback to createdAt), descending
+            java.time.LocalDateTime d1 = o1.getOfferSubmittedAt() != null ? o1.getOfferSubmittedAt() : o1.getCreatedAt();
+            java.time.LocalDateTime d2 = o2.getOfferSubmittedAt() != null ? o2.getOfferSubmittedAt() : o2.getCreatedAt();
+            if (d1 == null && d2 == null) {
+                result = 0;
+            } else if (d1 == null) {
+                result = 1;
+            } else if (d2 == null) {
+                result = -1;
+            } else {
+                result = d2.compareTo(d1); // default DESC
+            }
+            return result;
         }
+
+        return ascending ? result : -result;
     }
     
     /**

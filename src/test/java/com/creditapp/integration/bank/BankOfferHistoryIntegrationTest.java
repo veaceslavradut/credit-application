@@ -68,6 +68,7 @@ public class BankOfferHistoryIntegrationTest {
             borrower = userRepository.save(borrower);
             Application app = new Application();
             app.setBorrowerId(borrower.getId());
+            app.setLoanType("PERSONAL");
             app.setLoanAmount(new BigDecimal("50000"));
             app.setLoanTermMonths(60);
             app.setCurrency("EUR");
@@ -86,6 +87,10 @@ public class BankOfferHistoryIntegrationTest {
             offer.setBankId(bankId);
             offer.setApr(new BigDecimal("5.5"));
             offer.setMonthlyPayment(new BigDecimal("1000"));
+            offer.setTotalCost(new BigDecimal("60000"));
+            offer.setOriginationFee(new BigDecimal("500"));
+            offer.setValidityPeriodDays(30);
+            offer.setExpiresAt(LocalDateTime.now().plusDays(30));
             offer.setProcessingTimeDays(5);
             offer.setOfferStatus(OfferStatus.SUBMITTED);
             offer.setOfferSubmittedAt(LocalDateTime.now().minusDays(i));
@@ -106,6 +111,10 @@ public class BankOfferHistoryIntegrationTest {
             offer.setBankId(bankId);
             offer.setApr(new BigDecimal("10.0").subtract(new BigDecimal(i)));
             offer.setMonthlyPayment(new BigDecimal("1000"));
+            offer.setTotalCost(new BigDecimal("60000"));
+            offer.setOriginationFee(new BigDecimal("500"));
+            offer.setValidityPeriodDays(30);
+            offer.setExpiresAt(LocalDateTime.now().plusDays(30));
             offer.setProcessingTimeDays(5);
             offer.setOfferStatus(OfferStatus.SUBMITTED);
             offer.setOfferSubmittedAt(LocalDateTime.now());
@@ -129,6 +138,10 @@ public class BankOfferHistoryIntegrationTest {
             offer.setBankId(bankId);
             offer.setApr(new BigDecimal("5.5"));
             offer.setMonthlyPayment(new BigDecimal("1000"));
+            offer.setTotalCost(new BigDecimal("60000"));
+            offer.setOriginationFee(new BigDecimal("500"));
+            offer.setValidityPeriodDays(30);
+            offer.setExpiresAt(LocalDateTime.now().plusDays(30));
             offer.setProcessingTimeDays(5);
             offer.setOfferStatus(OfferStatus.SUBMITTED);
             offer.setOfferSubmittedAt(LocalDateTime.now());

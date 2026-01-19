@@ -14,12 +14,14 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\borrower
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\OfferEntityTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ApplicationCreationIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\OfferSelectionIntegrationTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\BankProfileServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\security\AuthorizationUnitTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\auth\BankRegistrationIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\ApplicationUpdateServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\OfferDocumentControllerTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\ApplicationWithdrawalUnitTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\shared\model\OrganizationEntityTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\bank\BankSettingsIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\borrower\service\ApplicationServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\ApplicationHistoryServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\bank\OfferDocumentIntegrationTest.java
@@ -50,6 +52,7 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\c
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\HelpContentIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\bank\BankRateCardIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\notification\NotificationServiceIntegrationTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\BankTeamServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\shared\HelpContentServiceUnitTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\ListApplicationsServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\OfferDocumentDownloadServiceTest.java

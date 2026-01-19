@@ -3,12 +3,20 @@ package com.creditapp.shared.model;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "organizations")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Organization {
 
     @Id

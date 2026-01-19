@@ -157,17 +157,29 @@ public class NotificationService {
 <span class="fc" id="L157">                .build();</span>
     }
 
+    /**
+     * Send team member invitation email.
+     * TODO: Integrate with SendGrid once email infrastructure is ready.
+     */
+    @Async
+    public void sendTeamInviteEmail(String email, String name, String inviteToken) {
+<span class="fc" id="L166">        log.info(&quot;Sending team invitation email to: {}&quot;, email);</span>
+        // TODO: Implement actual email sending with SendGrid
+        // For now, this is a placeholder that logs the invitation
+<span class="fc" id="L169">        log.info(&quot;Team invitation token for {}: {}&quot;, email, inviteToken);</span>
+<span class="fc" id="L170">    }</span>
+
     private NotificationDTO toDTO(BorrowerNotification notification) {
-<span class="fc" id="L161">        return NotificationDTO.builder()</span>
-<span class="fc" id="L162">                .id(notification.getId())</span>
-<span class="fc" id="L163">                .notificationType(notification.getNotificationType())</span>
-<span class="fc" id="L164">                .subject(notification.getSubject())</span>
-<span class="fc" id="L165">                .message(notification.getMessage())</span>
-<span class="fc" id="L166">                .sentAt(notification.getSentAt())</span>
-<span class="fc" id="L167">                .readAt(notification.getReadAt())</span>
-<span class="fc bfc" id="L168" title="All 2 branches covered.">                .read(notification.getReadAt() != null)</span>
-<span class="fc" id="L169">                .applicationId(notification.getApplicationId())</span>
-<span class="fc" id="L170">                .build();</span>
+<span class="fc" id="L173">        return NotificationDTO.builder()</span>
+<span class="fc" id="L174">                .id(notification.getId())</span>
+<span class="fc" id="L175">                .notificationType(notification.getNotificationType())</span>
+<span class="fc" id="L176">                .subject(notification.getSubject())</span>
+<span class="fc" id="L177">                .message(notification.getMessage())</span>
+<span class="fc" id="L178">                .sentAt(notification.getSentAt())</span>
+<span class="fc" id="L179">                .readAt(notification.getReadAt())</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">                .read(notification.getReadAt() != null)</span>
+<span class="fc" id="L181">                .applicationId(notification.getApplicationId())</span>
+<span class="fc" id="L182">                .build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
