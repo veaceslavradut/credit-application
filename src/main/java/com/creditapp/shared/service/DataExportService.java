@@ -6,6 +6,8 @@ import com.creditapp.shared.model.DataExport;
 import com.creditapp.shared.model.ExportFormat;
 import com.creditapp.shared.model.ExportStatus;
 import com.creditapp.shared.repository.DataExportRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -23,9 +25,11 @@ import java.util.UUID;
 public class DataExportService {
     private static final int TOKEN_BYTES = 32;
     private static final long EXPIRY_HOURS = 24;
+    private static final long TIMEOUT_SECONDS = 300;
     
     private final DataExportRepository dataExportRepository;
     private final AuditService auditService;
+    private final ObjectMapper objectMapper;
     
     @Transactional
     public DataExportResponse initiateExport(UUID borrowerId, ExportFormat format, String ipAddress) {
@@ -49,6 +53,9 @@ public class DataExportService {
         auditService.logAction("DataExport", saved.getId(), AuditAction.DATA_EXPORT_REQUESTED);
         
         log.info("Data export created: {}", saved.getId());
+        
+        // Queue async job for export generation
+        generateExportFileAsync(saved.getId());
         
         return DataExportResponse.builder()
             .exportId(saved.getId())
@@ -112,9 +119,83 @@ public class DataExportService {
             .build();
     }
     
-    @Async
+    @Async("dataExportExecutor")
+    @Transactional
     public void generateExportFileAsync(UUID exportId) {
-        log.info("Starting async export file generation");
+        long startTime = System.currentTimeMillis();
+        log.info("Starting async export file generation for export: {}", exportId);
+        
+        try {
+            Optional<DataExport> exportOpt = dataExportRepository.findById(exportId);
+            if (exportOpt.isEmpty()) {
+                log.error("Export not found: {}", exportId);
+                return;
+            }
+            
+            DataExport export = exportOpt.get();
+            UUID borrowerId = export.getBorrowerId();
+            
+            // Check timeout
+            long elapsedSeconds = (System.currentTimeMillis() - startTime) / 1000;
+            if (elapsedSeconds > TIMEOUT_SECONDS) {
+                log.error("Export generation timeout for export: {}", exportId);
+                export.setStatus(ExportStatus.FAILED);
+                dataExportRepository.save(export);
+                auditService.logAction("DataExport", exportId, AuditAction.DATA_EXPORT_COMPLETED);
+                return;
+            }
+            
+            // Generate export data
+            ObjectNode exportData = generateExportData(borrowerId, export.getFormat());
+            
+            // Mark as completed (in real scenario, would upload to S3)
+            export.setStatus(ExportStatus.COMPLETED);
+            export.setCompletedAt(LocalDateTime.now());
+            export.setDownloadTokenExpiresAt(LocalDateTime.now().plusHours(EXPIRY_HOURS));
+            export.setFileUrl("s3://bucket/exports/" + exportId + ".json");
+            
+            dataExportRepository.save(export);
+            
+            auditService.logAction("DataExport", exportId, AuditAction.DATA_EXPORT_COMPLETED);
+            
+            log.info("Export generation completed for export: {} (took {} seconds)", exportId, 
+                (System.currentTimeMillis() - startTime) / 1000);
+            
+        } catch (Exception e) {
+            log.error("Error generating export: {}", exportId, e);
+            handleExportFailure(exportId);
+        }
+    }
+    
+    private ObjectNode generateExportData(UUID borrowerId, ExportFormat format) {
+        ObjectNode root = objectMapper.createObjectNode();
+        
+        root.put("borrowerId", borrowerId.toString());
+        root.put("exportedAt", LocalDateTime.now().toString());
+        root.putArray("profile");
+        root.putArray("applications");
+        root.putArray("offers");
+        root.putArray("consents");
+        root.putArray("auditLog");
+        
+        log.debug("Generated export data for borrower: {}", borrowerId);
+        return root;
+    }
+    
+    private void handleExportFailure(UUID exportId) {
+        try {
+            Optional<DataExport> exportOpt = dataExportRepository.findById(exportId);
+            if (exportOpt.isPresent()) {
+                DataExport export = exportOpt.get();
+                export.setStatus(ExportStatus.FAILED);
+                export.setCompletedAt(LocalDateTime.now());
+                dataExportRepository.save(export);
+                
+                log.error("Export marked as FAILED: {}", exportId);
+            }
+        } catch (Exception e) {
+            log.error("Error handling export failure: {}", exportId, e);
+        }
     }
     
     private String generateToken() {
