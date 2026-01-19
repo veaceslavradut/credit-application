@@ -17,6 +17,12 @@ public class TestCacheConfig {
     @Primary
     public CacheManager cacheManager() {
         // Use simple in-memory cache for tests (no Redis)
-        return new ConcurrentMapCacheManager("bankMarketAnalysis", "marketAverage", "rateCards");
+        return new ConcurrentMapCacheManager(
+            "bankMarketAnalysis", 
+            "marketAverage", 
+            "rateCards",
+            "scenarioCalculations",
+            "helpArticles"
+        );
     }
 }
