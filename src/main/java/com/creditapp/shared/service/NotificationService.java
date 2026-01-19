@@ -157,6 +157,18 @@ public class NotificationService {
                 .build();
     }
 
+    /**
+     * Send team member invitation email.
+     * TODO: Integrate with SendGrid once email infrastructure is ready.
+     */
+    @Async
+    public void sendTeamInviteEmail(String email, String name, String inviteToken) {
+        log.info("Sending team invitation email to: {}", email);
+        // TODO: Implement actual email sending with SendGrid
+        // For now, this is a placeholder that logs the invitation
+        log.info("Team invitation token for {}: {}", email, inviteToken);
+    }
+
     private NotificationDTO toDTO(BorrowerNotification notification) {
         return NotificationDTO.builder()
                 .id(notification.getId())

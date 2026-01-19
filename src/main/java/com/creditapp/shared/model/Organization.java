@@ -49,6 +49,27 @@ public class Organization {
     @Column(name = "logo_url")
     private String logoUrl;
 
+    @Column(name = "contact_email")
+    private String contactEmail;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "address_street")
+    private String addressStreet;
+
+    @Column(name = "address_city")
+    private String addressCity;
+
+    @Column(name = "address_state")
+    private String addressState;
+
+    @Column(name = "address_zip")
+    private String addressZip;
+
+    @Column(name = "website")
+    private String website;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -85,6 +106,20 @@ public class Organization {
     public void setDeletedAt(LocalDateTime deletedAt) { this.deletedAt = deletedAt; }
     public String getLogoUrl() { return logoUrl; }
     public void setLogoUrl(String logoUrl) { this.logoUrl = logoUrl; }
+    public String getContactEmail() { return contactEmail; }
+    public void setContactEmail(String contactEmail) { this.contactEmail = contactEmail; }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public String getAddressStreet() { return addressStreet; }
+    public void setAddressStreet(String addressStreet) { this.addressStreet = addressStreet; }
+    public String getAddressCity() { return addressCity; }
+    public void setAddressCity(String addressCity) { this.addressCity = addressCity; }
+    public String getAddressState() { return addressState; }
+    public void setAddressState(String addressState) { this.addressState = addressState; }
+    public String getAddressZip() { return addressZip; }
+    public void setAddressZip(String addressZip) { this.addressZip = addressZip; }
+    public String getWebsite() { return website; }
+    public void setWebsite(String website) { this.website = website; }
 
     @Override
     public boolean equals(Object o) {
