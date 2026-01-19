@@ -298,6 +298,7 @@ com\creditapp\auth\exception\InvalidCredentialsException.class
 com\creditapp\borrower\dto\ApplicationDTO$ApplicationDTOBuilder.class
 com\creditapp\shared\model\ExportStatus.class
 com\creditapp\bank\service\OfferDocumentDownloadService.class
+com\creditapp\shared\service\DataExportEmailService.class
 com\creditapp\shared\model\HelpArticleStatus.class
 com\creditapp\bank\dto\UpdateBankProfileRequest$UpdateBankProfileRequestBuilder.class
 com\creditapp\auth\exception\PasswordValidationException.class

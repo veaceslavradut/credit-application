@@ -306,6 +306,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\exception\InsufficientMarketDataException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\repository\ApplicationRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\controller\AuthController.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\DataExportEmailService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\service\BankApplicationDeclineService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\OfferDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\HelpArticleRepository.java

@@ -6,6 +6,7 @@ import com.creditapp.shared.model.DataExport;
 import com.creditapp.shared.model.ExportFormat;
 import com.creditapp.shared.model.ExportStatus;
 import com.creditapp.shared.repository.DataExportRepository;
+import com.creditapp.auth.repository.UserRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -32,6 +33,8 @@ public class DataExportService {
     private final AuditService auditService;
     private final ObjectMapper objectMapper;
     private final ExportFileGenerator exportFileGenerator;
+    private final DataExportEmailService dataExportEmailService;
+    private final UserRepository userRepository;
     
     @Transactional
     public DataExportResponse initiateExport(UUID borrowerId, ExportFormat format, String ipAddress) {
@@ -162,6 +165,9 @@ public class DataExportService {
             
             dataExportRepository.save(export);
             
+            // Send email notification with download link
+            sendExportReadyEmail(export);
+            
             auditService.logAction("DataExport", exportId, AuditAction.DATA_EXPORT_COMPLETED);
             
             log.info("Export generation completed for export: {} (took {} seconds)", exportId, 
@@ -194,5 +200,21 @@ public class DataExportService {
         byte[] tokenBytes = new byte[TOKEN_BYTES];
         random.nextBytes(tokenBytes);
         return Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);
+    }
+    
+    private void sendExportReadyEmail(DataExport export) {
+        try {
+            Optional<com.creditapp.shared.model.User> userOpt = userRepository.findById(export.getBorrowerId());
+            if (userOpt.isPresent()) {
+                String borrowerEmail = userOpt.get().getEmail();
+                dataExportEmailService.sendDataExportReadyEmail(export, borrowerEmail);
+                log.info("Email notification sent for export: {}", export.getId());
+            } else {
+                log.warn("User not found for export: {}", export.getId());
+            }
+        } catch (Exception e) {
+            log.error("Error sending export ready email for export: {}", export.getId(), e);
+            // Don't throw - allow export to complete even if email fails
+        }
     }
 }
