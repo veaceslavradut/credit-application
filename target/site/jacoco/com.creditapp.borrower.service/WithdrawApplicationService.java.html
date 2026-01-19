@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WithdrawApplicationService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.borrower.service</a> &gt; <span class="el_source">WithdrawApplicationService.java</span></div><h1>WithdrawApplicationService.java</h1><pre class="source lang-java linenums">package com.creditapp.borrower.service;
+
+import com.creditapp.borrower.dto.WithdrawApplicationRequest;
+import com.creditapp.borrower.dto.WithdrawApplicationResponse;
+import com.creditapp.borrower.exception.ApplicationNotWithdrawableException;
+import com.creditapp.borrower.exception.ApplicationNotFoundException;
+import com.creditapp.borrower.model.Application;
+import com.creditapp.borrower.model.ApplicationStatus;
+import com.creditapp.borrower.repository.ApplicationRepository;
+import com.creditapp.shared.model.AuditAction;
+import com.creditapp.shared.service.AuditService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+/**
+ * Service for handling application withdrawal operations.
+ */
+@Service
+<span class="fc" id="L23">@RequiredArgsConstructor</span>
+public class WithdrawApplicationService {
+
+    private final ApplicationRepository applicationRepository;
+    private final ApplicationStatusTransitionService statusTransitionService;
+    private final AuditService auditService;
+
+    /**
+     * Withdraw an application.
+     *
+     * @param applicationId The ID of the application to withdraw
+     * @param borrowerId The ID of the borrower (for access control)
+     * @param request The withdrawal request with optional reason
+     * @return The withdrawn application response
+     * @throws ApplicationNotFoundException if application not found
+     * @throws ApplicationNotWithdrawableException if application is in terminal state
+     */
+    @Transactional
+    public WithdrawApplicationResponse withdrawApplication(
+            UUID applicationId,
+            UUID borrowerId,
+            WithdrawApplicationRequest request) {
+
+        // Fetch application
+<span class="nc" id="L47">        Application application = applicationRepository.findById(applicationId)</span>
+<span class="nc" id="L48">                .orElseThrow(() -&gt; new ApplicationNotFoundException(&quot;Application not found with ID: &quot; + applicationId));</span>
+
+        // Verify borrower owns the application
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
+<span class="nc" id="L52">            throw new ApplicationNotFoundException(&quot;Application not found with ID: &quot; + applicationId);</span>
+        }
+
+        // Check if application is in withdrawable state
+<span class="nc" id="L56">        ApplicationStatus currentStatus = application.getStatus();</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (!isWithdrawable(currentStatus)) {</span>
+<span class="nc" id="L58">            throw new ApplicationNotWithdrawableException(</span>
+                    &quot;Cannot withdraw application in status: &quot; + currentStatus,
+<span class="nc" id="L60">                    currentStatus.toString());</span>
+        }
+
+        // Record status transition
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        String withdrawalReason = request.getWithdrawalReason() != null </span>
+<span class="nc" id="L65">                ? request.getWithdrawalReason() </span>
+<span class="nc" id="L66">                : &quot;User withdrew application&quot;;</span>
+<span class="nc" id="L67">        statusTransitionService.recordStatusTransition(</span>
+                applicationId,
+                currentStatus,
+                ApplicationStatus.WITHDRAWN,
+                borrowerId,
+                withdrawalReason);
+
+        // Update application
+<span class="nc" id="L75">        application.setStatus(ApplicationStatus.WITHDRAWN);</span>
+<span class="nc" id="L76">        application.setWithdrawnAt(LocalDateTime.now());</span>
+<span class="nc" id="L77">        application.setWithdrawalReason(request.getWithdrawalReason());</span>
+<span class="nc" id="L78">        application.setUpdatedAt(LocalDateTime.now());</span>
+
+<span class="nc" id="L80">        applicationRepository.save(application);</span>
+
+        // Log audit event
+<span class="nc" id="L83">        auditService.logAction(&quot;Application&quot;, applicationId, AuditAction.APPLICATION_WITHDRAWN, borrowerId, &quot;BORROWER&quot;);</span>
+
+        // Return response
+<span class="nc" id="L86">        return WithdrawApplicationResponse.builder()</span>
+<span class="nc" id="L87">                .id(application.getId())</span>
+<span class="nc" id="L88">                .status(ApplicationStatus.WITHDRAWN.toString())</span>
+<span class="nc" id="L89">                .withdrawnAt(application.getWithdrawnAt())</span>
+<span class="nc" id="L90">                .withdrawalReason(application.getWithdrawalReason())</span>
+<span class="nc" id="L91">                .message(&quot;Your application has been withdrawn successfully.&quot;)</span>
+<span class="nc" id="L92">                .build();</span>
+    }
+
+    /**
+     * Check if application can be withdrawn from its current status.
+     *
+     * @param status The current application status
+     * @return true if withdrawable, false otherwise
+     */
+    private boolean isWithdrawable(ApplicationStatus status) {
+        // Withdrawable states: DRAFT, SUBMITTED, UNDER_REVIEW, OFFERS_AVAILABLE
+        // Terminal states: ACCEPTED, REJECTED, EXPIRED, COMPLETED, WITHDRAWN
+<span class="nc bnc" id="L104" title="All 8 branches missed.">        return status == ApplicationStatus.DRAFT</span>
+                || status == ApplicationStatus.SUBMITTED
+                || status == ApplicationStatus.UNDER_REVIEW
+                || status == ApplicationStatus.OFFERS_AVAILABLE;
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

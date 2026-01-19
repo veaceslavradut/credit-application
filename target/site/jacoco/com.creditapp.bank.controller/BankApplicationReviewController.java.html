@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankApplicationReviewController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.bank.controller</a> &gt; <span class="el_source">BankApplicationReviewController.java</span></div><h1>BankApplicationReviewController.java</h1><pre class="source lang-java linenums">package com.creditapp.bank.controller;
+
+import com.creditapp.bank.dto.ApplicationDetailsResponse;
+import com.creditapp.bank.service.BankApplicationDetailsService;
+import com.creditapp.shared.security.AuthorizationService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+/**
+ * Controller for Story 4.3: Application Review Panel
+ * Provides bank admins with complete application details for review before making offer
+ */
+@RestController
+<span class="fc" id="L21">@RequiredArgsConstructor</span>
+@RequestMapping(&quot;/api/bank/applications&quot;)
+<span class="fc" id="L23">@Slf4j</span>
+public class BankApplicationReviewController {
+
+    private final BankApplicationDetailsService applicationDetailsService;
+    private final AuthorizationService authorizationService;
+
+    /**
+     * Get full application details for review panel
+     * Includes borrower info, loan details, employment, consents, and current offer
+     * 
+     * @param applicationId the application ID to retrieve
+     * @return complete application details with borrower and loan information
+     */
+    @GetMapping(&quot;/{applicationId}/details&quot;)
+    @PreAuthorize(&quot;hasAuthority('BANK_ADMIN')&quot;)
+    public ResponseEntity&lt;ApplicationDetailsResponse&gt; getApplicationDetails(
+            @PathVariable UUID applicationId
+    ) {
+        // Extract bankId from authenticated user
+<span class="nc" id="L42">        UUID bankId = authorizationService.getBankIdFromContext();</span>
+
+<span class="nc" id="L44">        log.info(&quot;Bank {} retrieving application details for app {}&quot;, bankId, applicationId);</span>
+
+        // Fetch full application details
+<span class="nc" id="L47">        ApplicationDetailsResponse details = applicationDetailsService.getApplicationDetails(bankId, applicationId);</span>
+
+<span class="nc" id="L49">        log.info(&quot;Successfully retrieved application details for app {} from bank {}&quot;, applicationId, bankId);</span>
+
+<span class="nc" id="L51">        return ResponseEntity.ok(details);</span>
+    }
+
+    /**
+     * Update internal notes for an application (bank staff only)
+     * 
+     * @param applicationId the application ID to update notes for
+     * @param payload request body with notes content
+     * @return success response with updated details
+     */
+    @PutMapping(&quot;/{applicationId}/notes&quot;)
+    @PreAuthorize(&quot;hasAuthority('BANK_ADMIN')&quot;)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; updateInternalNotes(
+            @PathVariable UUID applicationId,
+            @RequestBody Map&lt;String, String&gt; payload
+    ) {
+        // Extract bankId and userId from authenticated user
+<span class="nc" id="L68">        UUID bankId = authorizationService.getBankIdFromContext();</span>
+<span class="nc" id="L69">        UUID userId = authorizationService.getCurrentUserId();</span>
+
+<span class="nc" id="L71">        String notes = payload.getOrDefault(&quot;notes&quot;, &quot;&quot;);</span>
+
+<span class="nc" id="L73">        log.info(&quot;Bank {} updating internal notes for application {} by user {}&quot;, bankId, applicationId, userId);</span>
+
+        // Update notes
+<span class="nc" id="L76">        applicationDetailsService.updateInternalNotes(bankId, applicationId, notes, userId);</span>
+
+        // Return success response
+<span class="nc" id="L79">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L80">        response.put(&quot;applicationId&quot;, applicationId);</span>
+<span class="nc" id="L81">        response.put(&quot;notes&quot;, notes);</span>
+<span class="nc" id="L82">        response.put(&quot;message&quot;, &quot;Internal notes updated successfully&quot;);</span>
+
+<span class="nc" id="L84">        return ResponseEntity.ok(response);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Consent.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.borrower.model</a> &gt; <span class="el_source">Consent.java</span></div><h1>Consent.java</h1><pre class="source lang-java linenums">package com.creditapp.borrower.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+/**
+ * Entity representing a borrower''s consent to specific terms.
+ * Tracks whether consent has been signed/accepted and when.
+ */
+@Entity
+@Table(name = &quot;consents&quot;, indexes = {
+        @Index(name = &quot;idx_consents_application_id&quot;, columnList = &quot;application_id&quot;),
+        @Index(name = &quot;idx_consents_borrower_id&quot;, columnList = &quot;borrower_id&quot;),
+        @Index(name = &quot;idx_consents_created_at&quot;, columnList = &quot;created_at&quot;)
+})
+<span class="nc bnc" id="L23" title="All 86 branches missed.">@Data</span>
+<span class="fc" id="L24">@NoArgsConstructor</span>
+<span class="nc" id="L25">@AllArgsConstructor</span>
+<span class="nc" id="L26">@Builder</span>
+public class Consent {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+<span class="nc" id="L31">    private Long id;</span>
+
+    @Column(name = &quot;application_id&quot;, nullable = false)
+<span class="nc" id="L34">    private UUID applicationId;</span>
+
+    @Column(name = &quot;borrower_id&quot;, nullable = false)
+<span class="nc" id="L37">    private UUID borrowerId;</span>
+
+    @Column(name = &quot;consent_type&quot;, nullable = false)
+<span class="nc" id="L40">    private Integer consentNumber;</span>
+
+    @Column(name = &quot;consent_text&quot;, columnDefinition = &quot;TEXT&quot;, nullable = false)
+<span class="nc" id="L43">    private String consentText;</span>
+
+    @Column(name = &quot;is_signed&quot;, nullable = false)
+<span class="nc" id="L46">    private Boolean isSigned;</span>
+
+    @Column(name = &quot;borrower_signature&quot;, length = 2000)
+<span class="nc" id="L49">    private String borrowerSignature;</span>
+
+    @CreationTimestamp
+    @Column(name = &quot;signed_at&quot;)
+<span class="nc" id="L53">    private LocalDateTime signedAt;</span>
+
+    @Column(name = &quot;ip_address&quot;)
+<span class="nc" id="L56">    private String ipAddress;</span>
+
+    @Column(name = &quot;user_agent&quot;)
+<span class="nc" id="L59">    private String userAgent;</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

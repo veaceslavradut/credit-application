@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CreateApplicationRequest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.borrower.dto</a> &gt; <span class="el_source">CreateApplicationRequest.java</span></div><h1>CreateApplicationRequest.java</h1><pre class="source lang-java linenums">package com.creditapp.borrower.dto;
+
+import jakarta.validation.constraints.*;
+import lombok.*;
+
+import java.math.BigDecimal;
+
+/**
+ * Request DTO for creating a new application.
+ */
+<span class="pc bnc" id="L11" title="All 46 branches missed.">@Data</span>
+<span class="fc" id="L12">@NoArgsConstructor</span>
+<span class="fc" id="L13">@AllArgsConstructor</span>
+<span class="pc" id="L14">@Builder</span>
+public class CreateApplicationRequest {
+
+    @NotBlank(message = &quot;Loan type is required&quot;)
+<span class="fc" id="L18">    private String loanType;</span>
+
+    @NotNull(message = &quot;Loan amount is required&quot;)
+    @DecimalMin(value = &quot;100&quot;, message = &quot;Loan amount must be at least 100&quot;)
+    @DecimalMax(value = &quot;1000000&quot;, message = &quot;Loan amount cannot exceed 1,000,000&quot;)
+<span class="fc" id="L23">    private BigDecimal loanAmount;</span>
+
+    @NotNull(message = &quot;Loan term is required&quot;)
+    @Min(value = 6, message = &quot;Loan term must be at least 6 months&quot;)
+    @Max(value = 360, message = &quot;Loan term cannot exceed 360 months&quot;)
+<span class="fc" id="L28">    private Integer loanTermMonths;</span>
+
+    @NotBlank(message = &quot;Currency is required&quot;)
+<span class="fc" id="L31">    private String currency;</span>
+
+<span class="fc" id="L33">    private String ratePreference;</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

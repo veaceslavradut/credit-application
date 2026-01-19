@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TeamMemberInvite.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.model</a> &gt; <span class="el_source">TeamMemberInvite.java</span></div><h1>TeamMemberInvite.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+/**
+ * Entity representing a team member invitation.
+ */
+@Entity
+@Table(name = &quot;team_member_invites&quot;, indexes = {
+    @Index(name = &quot;idx_team_invites_bank_id&quot;, columnList = &quot;bank_id&quot;),
+    @Index(name = &quot;idx_team_invites_email&quot;, columnList = &quot;email&quot;),
+    @Index(name = &quot;idx_team_invites_token&quot;, columnList = &quot;invite_token&quot;, unique = true),
+    @Index(name = &quot;idx_team_invites_status&quot;, columnList = &quot;status&quot;)
+})
+<span class="pc bnc" id="L22" title="All 94 branches missed.">@Data</span>
+<span class="pc bpc" id="L23" title="2 of 6 branches missed.">@Builder</span>
+<span class="fc" id="L24">@NoArgsConstructor</span>
+<span class="fc" id="L25">@AllArgsConstructor</span>
+public class TeamMemberInvite {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+<span class="fc" id="L29">    private UUID id;</span>
+
+    @Column(nullable = false)
+<span class="fc" id="L32">    private UUID bankId;</span>
+
+    @Column(nullable = false)
+<span class="fc" id="L35">    private String email;</span>
+
+    @Column(nullable = false)
+<span class="fc" id="L38">    private String name;</span>
+
+    @Column(nullable = false, unique = true)
+<span class="nc" id="L41">    private String inviteToken;</span>
+
+    @Column(nullable = false)
+    @Builder.Default
+<span class="fc" id="L45">    private String status = &quot;PENDING&quot;;</span>
+
+    @Column(nullable = false)
+    @Builder.Default
+<span class="fc" id="L49">    private LocalDateTime sentAt = LocalDateTime.now();</span>
+
+    @Column(nullable = false)
+<span class="fc" id="L52">    private LocalDateTime expiresAt;</span>
+
+<span class="nc" id="L54">    private LocalDateTime acceptedAt;</span>
+
+    @Column(nullable = false)
+    @Builder.Default
+<span class="pc" id="L58">    private LocalDateTime createdAt = LocalDateTime.now();</span>
+
+<span class="nc" id="L60">    private LocalDateTime updatedAt;</span>
+
+    @PreUpdate
+    protected void onUpdate() {
+<span class="nc" id="L64">        updatedAt = LocalDateTime.now();</span>
+<span class="nc" id="L65">    }</span>
+
+    public boolean isExpired() {
+<span class="fc" id="L68">        return LocalDateTime.now().isAfter(expiresAt);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

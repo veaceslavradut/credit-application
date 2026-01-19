@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankTeamController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.bank.controller</a> &gt; <span class="el_source">BankTeamController.java</span></div><h1>BankTeamController.java</h1><pre class="source lang-java linenums">package com.creditapp.bank.controller;
+
+import com.creditapp.bank.dto.InviteTeamMemberRequest;
+import com.creditapp.bank.dto.InviteTeamMemberResponse;
+import com.creditapp.bank.dto.TeamMemberDTO;
+import com.creditapp.bank.service.BankTeamService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * REST controller for bank team member management.
+ */
+@RestController
+@RequestMapping(&quot;/api/bank/team&quot;)
+<span class="fc" id="L23">@Slf4j</span>
+@PreAuthorize(&quot;hasRole('''BANK_ADMIN''')&quot;)
+public class BankTeamController {
+    private final BankTeamService bankTeamService;
+
+<span class="fc" id="L28">    public BankTeamController(BankTeamService bankTeamService) {</span>
+<span class="fc" id="L29">        this.bankTeamService = bankTeamService;</span>
+<span class="fc" id="L30">    }</span>
+
+    /**
+     * GET /api/bank/team - Get all active team members.
+     * Response time: &lt;200ms
+     */
+    @GetMapping
+    public ResponseEntity&lt;List&lt;TeamMemberDTO&gt;&gt; getTeamMembers(Authentication authentication) {
+<span class="nc" id="L38">        long startTime = System.currentTimeMillis();</span>
+<span class="nc" id="L39">        log.debug(&quot;Getting team members for user: {}&quot;, authentication.getName());</span>
+
+<span class="nc" id="L41">        UUID bankId = extractBankId(authentication);</span>
+<span class="nc" id="L42">        List&lt;TeamMemberDTO&gt; members = bankTeamService.getTeamMembers(bankId);</span>
+
+<span class="nc" id="L44">        long duration = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L45">        log.debug(&quot;Retrieved {} team members in {}ms&quot;, members.size(), duration);</span>
+<span class="nc" id="L46">        return ResponseEntity.ok(members);</span>
+    }
+
+    /**
+     * POST /api/bank/team/invite - Send team member invitation.
+     * Response time: &lt;200ms
+     */
+    @PostMapping(&quot;/invite&quot;)
+    public ResponseEntity&lt;InviteTeamMemberResponse&gt; inviteTeamMember(
+            @Valid @RequestBody InviteTeamMemberRequest request,
+            Authentication authentication) {
+<span class="nc" id="L57">        long startTime = System.currentTimeMillis();</span>
+<span class="nc" id="L58">        log.debug(&quot;Inviting team member: {} for user: {}&quot;, request.getEmail(), authentication.getName());</span>
+
+<span class="nc" id="L60">        UUID bankId = extractBankId(authentication);</span>
+<span class="nc" id="L61">        InviteTeamMemberResponse response = bankTeamService.inviteTeamMember(bankId, request);</span>
+
+<span class="nc" id="L63">        long duration = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L64">        log.debug(&quot;Sent team member invitation in {}ms&quot;, duration);</span>
+<span class="nc" id="L65">        return ResponseEntity.status(HttpStatus.CREATED).body(response);</span>
+    }
+
+    /**
+     * POST /api/bank/team/invite/{token}/accept - Accept team member invitation.
+     * Response time: &lt;200ms
+     * Note: This endpoint does NOT require BANK_ADMIN role as it's for new team members accepting invites.
+     */
+    @PostMapping(&quot;/invite/{token}/accept&quot;)
+    @PreAuthorize(&quot;permitAll()&quot;)
+    public ResponseEntity&lt;TeamMemberDTO&gt; acceptInvite(@PathVariable String token) {
+<span class="nc" id="L76">        long startTime = System.currentTimeMillis();</span>
+<span class="nc" id="L77">        log.debug(&quot;Processing invitation acceptance for token: {}&quot;, token);</span>
+
+<span class="nc" id="L79">        TeamMemberDTO member = bankTeamService.acceptInvite(token);</span>
+
+<span class="nc" id="L81">        long duration = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L82">        log.debug(&quot;Processed team member invitation in {}ms&quot;, duration);</span>
+<span class="nc" id="L83">        return ResponseEntity.ok(member);</span>
+    }
+
+    /**
+     * Extract bank ID from authentication context.
+     */
+    private UUID extractBankId(Authentication authentication) {
+        // Implementation depends on how bank ID is stored in authentication
+        // This is a placeholder; adjust based on your security implementation
+<span class="nc" id="L92">        Object principal = authentication.getPrincipal();</span>
+        // For now, assume it can be extracted from a custom principal or claims
+<span class="nc" id="L94">        throw new RuntimeException(&quot;Bank ID extraction not yet implemented - requires custom security context&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

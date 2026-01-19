@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApplicationHistory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.borrower.model</a> &gt; <span class="el_source">ApplicationHistory.java</span></div><h1>ApplicationHistory.java</h1><pre class="source lang-java linenums">package com.creditapp.borrower.model;
+
+import com.creditapp.shared.model.User;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+/**
+ * ApplicationHistory entity for tracking application status transitions.
+ * Immutable audit trail of all status changes.
+ */
+@Entity
+@Table(name = &quot;application_history&quot;, indexes = {
+        @Index(name = &quot;idx_application_history_application_id&quot;, columnList = &quot;application_id&quot;),
+        @Index(name = &quot;idx_application_history_application_changed&quot;, columnList = &quot;application_id, changed_at DESC&quot;),
+        @Index(name = &quot;idx_application_history_changed_at&quot;, columnList = &quot;changed_at DESC&quot;)
+})
+<span class="nc" id="L21">@Data</span>
+<span class="fc" id="L22">@NoArgsConstructor</span>
+<span class="fc" id="L23">@AllArgsConstructor</span>
+<span class="pc" id="L24">@Builder</span>
+public class ApplicationHistory {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+<span class="nc" id="L29">    private Long id;</span>
+
+    @Column(name = &quot;application_id&quot;, nullable = false)
+<span class="nc" id="L32">    private UUID applicationId;</span>
+
+    @Column(name = &quot;old_status&quot;, nullable = false)
+    @Enumerated(EnumType.STRING)
+<span class="fc" id="L36">    private ApplicationStatus oldStatus;</span>
+
+    @Column(name = &quot;new_status&quot;, nullable = false)
+    @Enumerated(EnumType.STRING)
+<span class="fc" id="L40">    private ApplicationStatus newStatus;</span>
+
+    @CreationTimestamp
+    @Column(name = &quot;changed_at&quot;, nullable = false, updatable = false)
+<span class="fc" id="L44">    private LocalDateTime changedAt;</span>
+
+    @Column(name = &quot;changed_by_user_id&quot;)
+<span class="fc" id="L47">    private UUID changedByUserId;</span>
+
+    @Column(name = &quot;change_reason&quot;)
+<span class="fc" id="L50">    private String changeReason;</span>
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;application_id&quot;, insertable = false, updatable = false)
+<span class="nc" id="L54">    private Application application;</span>
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;changed_by_user_id&quot;, insertable = false, updatable = false)
+<span class="nc" id="L58">    private User changedByUser;</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (this == o) return true;</span>
+<span class="nc bnc" id="L63" title="All 4 branches missed.">        if (o == null || getClass() != o.getClass()) return false;</span>
+<span class="nc" id="L64">        ApplicationHistory that = (ApplicationHistory) o;</span>
+<span class="nc bnc" id="L65" title="All 4 branches missed.">        return id != null &amp;&amp; id.equals(that.id);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        return id != null ? id.hashCode() : 0;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

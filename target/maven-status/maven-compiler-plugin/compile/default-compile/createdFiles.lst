@@ -380,7 +380,6 @@ com\creditapp\bank\dto\ApplicationDetailsResponse.class
 com\creditapp\borrower\controller\BorrowerApplicationController.class
 com\creditapp\shared\service\EmailService.class
 com\creditapp\bank\dto\OfferDocumentUploadRequest$OfferDocumentUploadRequestBuilder.class
-com\creditapp\compliance\controller\ComplianceController.class
 com\creditapp\shared\job\DataDeletionJob.class
 com\creditapp\bank\service\BankAnalyticsService$1.class
 com\creditapp\borrower\dto\ConsentResponseDTO.class

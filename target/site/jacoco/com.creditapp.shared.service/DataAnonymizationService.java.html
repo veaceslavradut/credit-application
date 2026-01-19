@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataAnonymizationService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.service</a> &gt; <span class="el_source">DataAnonymizationService.java</span></div><h1>DataAnonymizationService.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.service;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+@Service
+<span class="fc" id="L11">@Slf4j</span>
+<span class="fc" id="L12">public class DataAnonymizationService {</span>
+    
+    private static final int HASH_LENGTH = 8;
+    private static final String ANONYMIZED_EMAIL_DOMAIN = &quot;@deleted.local&quot;;
+    private static final String ANONYMIZED_NAME_PREFIX = &quot;Deleted User &quot;;
+    
+    public String hashForAnonymity(String input) {
+<span class="fc bfc" id="L19" title="All 4 branches covered.">        if (input == null || input.isEmpty()) {</span>
+<span class="fc" id="L20">            return generateRandomHash();</span>
+        }
+        
+        try {
+<span class="fc" id="L24">            MessageDigest digest = MessageDigest.getInstance(&quot;SHA-256&quot;);</span>
+<span class="fc" id="L25">            byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L26">            return bytesToHex(hash).substring(0, HASH_LENGTH);</span>
+<span class="nc" id="L27">        } catch (NoSuchAlgorithmException e) {</span>
+<span class="nc" id="L28">            log.error(&quot;Failed to hash input for anonymization&quot;, e);</span>
+<span class="nc" id="L29">            return generateRandomHash();</span>
+        }
+    }
+    
+    public String anonymizeName(String originalName) {
+<span class="fc" id="L34">        String hash = hashForAnonymity(originalName);</span>
+<span class="fc" id="L35">        return ANONYMIZED_NAME_PREFIX + hash;</span>
+    }
+    
+    public String anonymizeEmail(String originalEmail) {
+<span class="fc" id="L39">        String hash = hashForAnonymity(originalEmail);</span>
+<span class="fc" id="L40">        return hash + ANONYMIZED_EMAIL_DOMAIN;</span>
+    }
+    
+    private String generateRandomHash() {
+<span class="fc" id="L44">        return Long.toHexString(System.nanoTime()).substring(0, HASH_LENGTH);</span>
+    }
+    
+    private String bytesToHex(byte[] bytes) {
+<span class="fc" id="L48">        StringBuilder sb = new StringBuilder();</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        for (byte b : bytes) {</span>
+<span class="fc" id="L50">            sb.append(String.format(&quot;%02x&quot;, b));</span>
+        }
+<span class="fc" id="L52">        return sb.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

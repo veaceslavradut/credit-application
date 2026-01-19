@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Resilience4jConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.config</a> &gt; <span class="el_source">Resilience4jConfig.java</span></div><h1>Resilience4jConfig.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.config;
+
+import io.github.resilience4j.ratelimiter.RateLimiter;
+import io.github.resilience4j.ratelimiter.RateLimiterConfig;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.time.Duration;
+
+@Configuration
+<span class="fc" id="L11">public class Resilience4jConfig {</span>
+
+    /**
+     * Rate limiter for scenario calculator endpoint.
+     * Configuration: 100 requests per minute
+     */
+    @Bean(name = &quot;scenarioCalculatorRateLimiter&quot;)
+    public RateLimiter scenarioCalculatorRateLimiter() {
+<span class="fc" id="L19">        RateLimiterConfig config = RateLimiterConfig.custom()</span>
+<span class="fc" id="L20">                .limitRefreshPeriod(Duration.ofMinutes(1))</span>
+<span class="fc" id="L21">                .limitForPeriod(100)</span>
+<span class="fc" id="L22">                .timeoutDuration(Duration.ofMillis(25))</span>
+<span class="fc" id="L23">                .build();</span>
+
+<span class="fc" id="L25">        return RateLimiter.of(&quot;scenarioCalculator&quot;, config);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

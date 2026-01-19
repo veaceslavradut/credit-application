@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankOfferSubmissionController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.bank.controller</a> &gt; <span class="el_source">BankOfferSubmissionController.java</span></div><h1>BankOfferSubmissionController.java</h1><pre class="source lang-java linenums">package com.creditapp.bank.controller;
+
+import com.creditapp.bank.dto.OfferSubmissionRequest;
+import com.creditapp.bank.dto.OfferSubmissionResponse;
+import com.creditapp.bank.service.BankOfferSubmissionService;
+import com.creditapp.shared.security.AuthorizationService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
+
+/**
+ * Controller for Story 4.4: Offer Submission Form
+ * Handles bank submission of preliminary offers with optional field overrides
+ */
+@RestController
+<span class="fc" id="L24">@RequiredArgsConstructor</span>
+@RequestMapping(&quot;/api/bank/offers&quot;)
+<span class="fc" id="L26">@Slf4j</span>
+public class BankOfferSubmissionController {
+
+    private final BankOfferSubmissionService offerSubmissionService;
+    private final AuthorizationService authorizationService;
+
+    /**
+     * Submit preliminary offer for an application
+     * Supports accepting system-calculated offer AS-IS or with field overrides
+     * Implements idempotency: same (bankId, applicationId) returns existing offer
+     *
+     * @param request submission request with optional overrides
+     * @return OfferSubmissionResponse with 201 CREATED (new) or 200 OK (idempotent)
+     */
+    @PostMapping
+    @PreAuthorize(&quot;hasAuthority('BANK_ADMIN')&quot;)
+    public ResponseEntity&lt;OfferSubmissionResponse&gt; submitOffer(
+            @RequestBody OfferSubmissionRequest request
+    ) {
+        // Extract bankId from authenticated user
+<span class="nc" id="L46">        UUID bankId = authorizationService.getBankIdFromContext();</span>
+
+<span class="nc" id="L48">        log.info(&quot;Bank {} submitting offer for application {}&quot;, bankId, request.getApplicationId());</span>
+
+        try {
+            // Submit offer
+<span class="nc" id="L52">            OfferSubmissionResponse response = offerSubmissionService.submitOffer(</span>
+                    bankId,
+<span class="nc" id="L54">                    request.getApplicationId(),</span>
+                    request
+            );
+
+            // Return appropriate HTTP status
+<span class="nc bnc" id="L59" title="All 2 branches missed.">            HttpStatus status = response.getHttpStatus() == 201 ? HttpStatus.CREATED : HttpStatus.OK;</span>
+<span class="nc" id="L60">            log.info(&quot;Offer submitted successfully for app {}: {}&quot;, request.getApplicationId(), status);</span>
+
+<span class="nc" id="L62">            return ResponseEntity.status(status).body(response);</span>
+
+<span class="nc" id="L64">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L65">            log.warn(&quot;Validation error in offer submission: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L66">            return ResponseEntity.badRequest().build();</span>
+<span class="nc" id="L67">        } catch (Exception e) {</span>
+<span class="nc" id="L68">            log.error(&quot;Error submitting offer for app {}: {}&quot;, request.getApplicationId(), e.getMessage());</span>
+<span class="nc" id="L69">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
