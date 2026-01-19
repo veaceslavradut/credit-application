@@ -10,6 +10,7 @@ com\creditapp\shared\config\RedisConfig.class
 com\creditapp\shared\service\S3DocumentStorageService.class
 com\creditapp\shared\service\RateCardLookupService.class
 com\creditapp\bank\dto\BorrowerDetailsDTO$BorrowerDetailsDTOBuilder.class
+com\creditapp\bank\dto\OfferSubmissionRequest$OfferSubmissionRequestBuilder.class
 com\creditapp\borrower\dto\OfferComparisonTableResponse.class
 com\creditapp\bank\dto\BankOfferSubmissionResponse.class
 com\creditapp\shared\service\PasswordValidationService.class
@@ -80,6 +81,7 @@ com\creditapp\shared\repository\HelpArticleRepository.class
 com\creditapp\auth\dto\RefreshTokenRequest.class
 com\creditapp\borrower\dto\ApplicationDetailsDTO$ApplicationDetailsDTOBuilder.class
 com\creditapp\shared\messaging\NotificationEventPublisher.class
+com\creditapp\bank\model\ApplicationBankNotes$ApplicationBankNotesBuilder.class
 com\creditapp\bank\repository\OfferDocumentRepository.class
 com\creditapp\borrower\dto\ApplicationHistoryRecord.class
 com\creditapp\bank\dto\OfferDocumentUploadRequest.class
@@ -93,6 +95,7 @@ com\creditapp\borrower\service\WithdrawApplicationService.class
 com\creditapp\bank\dto\BankOfferSubmissionRequest$BankOfferSubmissionRequestBuilder.class
 com\creditapp\bank\exception\InsufficientMarketDataException.class
 com\creditapp\borrower\dto\OfferComparisonDTO.class
+com\creditapp\borrower\model\Consent.class
 com\creditapp\borrower\dto\SubmitApplicationResponse.class
 com\creditapp\bank\controller\BankApplicationReviewController.class
 com\creditapp\bank\service\OfferService.class
@@ -186,6 +189,7 @@ com\creditapp\bank\exception\OfferCalculationException.class
 com\creditapp\borrower\dto\LoanPreferenceDTO.class
 com\creditapp\auth\service\ProfileService.class
 com\creditapp\bank\dto\ConsentDetailsDTO$ConsentDetailsDTOBuilder.class
+com\creditapp\bank\dto\OfferSubmissionResponse$OfferSubmissionResponseBuilder.class
 com\creditapp\shared\repository\AuditLogRepository.class
 com\creditapp\bank\dto\ApplicationStatusUpdateResponse$ApplicationStatusUpdateResponseBuilder.class
 com\creditapp\shared\model\ApplicationQueueMetrics.class
@@ -196,6 +200,7 @@ com\creditapp\shared\service\MockEmailService.class
 com\creditapp\shared\security\AuthorizationService.class
 com\creditapp\borrower\dto\DocumentDTO.class
 com\creditapp\shared\model\HelpSection$HelpSectionBuilder.class
+com\creditapp\borrower\repository\ConsentRepository.class
 com\creditapp\bank\controller\BankAdminController.class
 com\creditapp\borrower\model\ApplicationDocument.class
 com\creditapp\bank\dto\BankRateCardDTO.class
@@ -209,6 +214,7 @@ com\creditapp\shared\dto\EmailMetricsDTO.class
 com\creditapp\borrower\exception\InvalidApplicationException.class
 com\creditapp\borrower\dto\CalculateScenarioResponse.class
 com\creditapp\borrower\service\ApplicationService.class
+com\creditapp\bank\model\ApplicationBankNotes.class
 com\creditapp\shared\model\BankStatus.class
 com\creditapp\borrower\dto\ApplicationHistoryRequest.class
 com\creditapp\borrower\service\ScenarioCalculatorService.class
@@ -283,6 +289,7 @@ com\creditapp\bank\dto\OfferDocumentUploadRequest$OfferDocumentUploadRequestBuil
 com\creditapp\compliance\controller\ComplianceController.class
 com\creditapp\shared\util\CalculationUtils.class
 com\creditapp\borrower\controller\HelpContentController.class
+com\creditapp\bank\dto\OfferSubmissionResponse.class
 com\creditapp\shared\model\DeliveryStatus.class
 com\creditapp\borrower\dto\CalculateScenarioRequest.class
 com\creditapp\shared\model\HelpFAQ.class
@@ -304,12 +311,14 @@ com\creditapp\auth\dto\RegistrationRequest.class
 com\creditapp\auth\service\PasswordValidator.class
 com\creditapp\borrower\service\OfferHistoryService.class
 com\creditapp\shared\listener\EmailNotificationListener.class
+com\creditapp\bank\repository\ApplicationBankNotesRepository.class
 com\creditapp\shared\dto\EmailMetricsDTO$EmailMetricsDTOBuilder.class
 com\creditapp\shared\security\RequiresBorrowerRole.class
 com\creditapp\bank\websocket\ApplicationQueueWebSocketInterceptor.class
 com\creditapp\shared\model\EmailTemplate.class
 com\creditapp\shared\config\S3Configuration.class
 com\creditapp\borrower\dto\UpdateApplicationRequest$UpdateApplicationRequestBuilder.class
+com\creditapp\borrower\model\Consent$ConsentBuilder.class
 com\creditapp\bank\controller\BankOfferSubmissionController.class
 com\creditapp\shared\model\User.class
 com\creditapp\bank\exception\InvalidRateCardException.class
@@ -354,4 +363,5 @@ com\creditapp\bank\service\OfferExpirationService.class
 com\creditapp\bank\dto\BankDashboardResponse.class
 com\creditapp\borrower\dto\WithdrawApplicationRequest$WithdrawApplicationRequestBuilder.class
 com\creditapp\borrower\model\ApplicationHistory.class
+com\creditapp\bank\dto\OfferSubmissionRequest.class
 com\creditapp\bank\dto\BankOfferSubmissionResponse$BankOfferSubmissionResponseBuilder.class

@@ -7,11 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -19,9 +18,9 @@ import java.util.UUID;
  * Provides bank admins with complete application details for review before making offer
  */
 @RestController
-<span class="fc" id="L22">@RequiredArgsConstructor</span>
+<span class="fc" id="L21">@RequiredArgsConstructor</span>
 @RequestMapping(&quot;/api/bank/applications&quot;)
-<span class="fc" id="L24">@Slf4j</span>
+<span class="fc" id="L23">@Slf4j</span>
 public class BankApplicationReviewController {
 
     private final BankApplicationDetailsService applicationDetailsService;
@@ -40,16 +39,49 @@ public class BankApplicationReviewController {
             @PathVariable UUID applicationId
     ) {
         // Extract bankId from authenticated user
-<span class="fc" id="L43">        UUID bankId = authorizationService.getBankIdFromContext();</span>
+<span class="nc" id="L42">        UUID bankId = authorizationService.getBankIdFromContext();</span>
 
-<span class="fc" id="L45">        log.info(&quot;Bank {} retrieving application details for app {}&quot;, bankId, applicationId);</span>
+<span class="nc" id="L44">        log.info(&quot;Bank {} retrieving application details for app {}&quot;, bankId, applicationId);</span>
 
         // Fetch full application details
-<span class="fc" id="L48">        ApplicationDetailsResponse details = applicationDetailsService.getApplicationDetails(bankId, applicationId);</span>
+<span class="nc" id="L47">        ApplicationDetailsResponse details = applicationDetailsService.getApplicationDetails(bankId, applicationId);</span>
 
-<span class="fc" id="L50">        log.info(&quot;Successfully retrieved application details for app {} from bank {}&quot;, applicationId, bankId);</span>
+<span class="nc" id="L49">        log.info(&quot;Successfully retrieved application details for app {} from bank {}&quot;, applicationId, bankId);</span>
 
-<span class="fc" id="L52">        return ResponseEntity.ok(details);</span>
+<span class="nc" id="L51">        return ResponseEntity.ok(details);</span>
+    }
+
+    /**
+     * Update internal notes for an application (bank staff only)
+     * 
+     * @param applicationId the application ID to update notes for
+     * @param payload request body with notes content
+     * @return success response with updated details
+     */
+    @PutMapping(&quot;/{applicationId}/notes&quot;)
+    @PreAuthorize(&quot;hasAuthority('BANK_ADMIN')&quot;)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; updateInternalNotes(
+            @PathVariable UUID applicationId,
+            @RequestBody Map&lt;String, String&gt; payload
+    ) {
+        // Extract bankId and userId from authenticated user
+<span class="nc" id="L68">        UUID bankId = authorizationService.getBankIdFromContext();</span>
+<span class="nc" id="L69">        UUID userId = authorizationService.getCurrentUserId();</span>
+
+<span class="nc" id="L71">        String notes = payload.getOrDefault(&quot;notes&quot;, &quot;&quot;);</span>
+
+<span class="nc" id="L73">        log.info(&quot;Bank {} updating internal notes for application {} by user {}&quot;, bankId, applicationId, userId);</span>
+
+        // Update notes
+<span class="nc" id="L76">        applicationDetailsService.updateInternalNotes(bankId, applicationId, notes, userId);</span>
+
+        // Return success response
+<span class="nc" id="L79">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L80">        response.put(&quot;applicationId&quot;, applicationId);</span>
+<span class="nc" id="L81">        response.put(&quot;notes&quot;, notes);</span>
+<span class="nc" id="L82">        response.put(&quot;message&quot;, &quot;Internal notes updated successfully&quot;);</span>
+
+<span class="nc" id="L84">        return ResponseEntity.ok(response);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

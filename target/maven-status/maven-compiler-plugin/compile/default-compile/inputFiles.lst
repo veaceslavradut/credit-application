@@ -51,6 +51,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\AuditService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\ApplicationStaleException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\EmailTemplateRepository.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\Consent.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\LoanRequestDetailsDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\listener\EntityAuditListener.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\HelpContentService.java
@@ -213,6 +214,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\RegistrationResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\ApplicationHistoryResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\SubmissionValidationException.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\repository\ApplicationBankNotesRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\StatusTransitionDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\WithdrawApplicationService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\WithdrawApplicationResponse.java
@@ -233,6 +235,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\OfferInsightsDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\ApplicationHistoryRecord.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\NotificationDTO.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\repository\ConsentRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\Application.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\OfferComparisonTableRow.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\util\EmailRateLimiter.java
@@ -273,10 +276,13 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\repository\BankRateCardRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\Currency.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\Organization.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\model\ApplicationBankNotes.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\service\OfferDocumentUploadService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\FileSizeExceededException.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\OfferSubmissionResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\ActivationTokenService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\exception\DuplicateBankRegistrationException.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\OfferSubmissionRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\websocket\ApplicationQueueWebSocketInterceptor.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\OfferComparisonResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\ApplicationHistory.java

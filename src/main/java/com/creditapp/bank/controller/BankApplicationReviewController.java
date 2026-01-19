@@ -7,11 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -50,5 +49,38 @@ public class BankApplicationReviewController {
         log.info("Successfully retrieved application details for app {} from bank {}", applicationId, bankId);
 
         return ResponseEntity.ok(details);
+    }
+
+    /**
+     * Update internal notes for an application (bank staff only)
+     * 
+     * @param applicationId the application ID to update notes for
+     * @param payload request body with notes content
+     * @return success response with updated details
+     */
+    @PutMapping("/{applicationId}/notes")
+    @PreAuthorize("hasAuthority('BANK_ADMIN')")
+    public ResponseEntity<Map<String, Object>> updateInternalNotes(
+            @PathVariable UUID applicationId,
+            @RequestBody Map<String, String> payload
+    ) {
+        // Extract bankId and userId from authenticated user
+        UUID bankId = authorizationService.getBankIdFromContext();
+        UUID userId = authorizationService.getCurrentUserId();
+
+        String notes = payload.getOrDefault("notes", "");
+
+        log.info("Bank {} updating internal notes for application {} by user {}", bankId, applicationId, userId);
+
+        // Update notes
+        applicationDetailsService.updateInternalNotes(bankId, applicationId, notes, userId);
+
+        // Return success response
+        Map<String, Object> response = new HashMap<>();
+        response.put("applicationId", applicationId);
+        response.put("notes", notes);
+        response.put("message", "Internal notes updated successfully");
+
+        return ResponseEntity.ok(response);
     }
 }

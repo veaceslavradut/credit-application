@@ -2,36 +2,50 @@
 
 import com.creditapp.bank.dto.*;
 import com.creditapp.bank.model.Offer;
+import com.creditapp.bank.model.ApplicationBankNotes;
 import com.creditapp.bank.repository.OfferRepository;
+import com.creditapp.bank.repository.ApplicationBankNotesRepository;
 import com.creditapp.borrower.model.Application;
 import com.creditapp.borrower.model.ApplicationDetails;
+import com.creditapp.borrower.model.Consent;
 import com.creditapp.borrower.repository.ApplicationRepository;
+import com.creditapp.borrower.repository.ConsentRepository;
 import com.creditapp.shared.model.User;
+import com.creditapp.shared.model.AuditAction;
+import com.creditapp.shared.service.AuditService;
 import com.creditapp.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * Service for retrieving complete application details for bank review panel
  */
 @Service
-<span class="fc" id="L24">@RequiredArgsConstructor</span>
-<span class="fc" id="L25">@Slf4j</span>
+<span class="fc" id="L34">@RequiredArgsConstructor</span>
+<span class="fc" id="L35">@Slf4j</span>
 public class BankApplicationDetailsService {
 
     private final ApplicationRepository applicationRepository;
     private final UserRepository userRepository;
     private final OfferRepository offerRepository;
+    private final ApplicationBankNotesRepository notesRepository;
+    private final ConsentRepository consentRepository;
+    private final AuditService auditService;
 
     /**
      * Get full application details for bank review panel
      * Includes borrower info, loan details, employment, consents, and offer
+     * Marks application as VIEWED with audit logging
      *
      * @param bankId bank admin's organization id
      * @param applicationId the application to retrieve
@@ -39,116 +53,262 @@ public class BankApplicationDetailsService {
      */
     @Cacheable(value = &quot;applicationDetails&quot;, key = &quot;#bankId + '-' + #applicationId&quot;, unless = &quot;#result == null&quot;)
     public ApplicationDetailsResponse getApplicationDetails(UUID bankId, UUID applicationId) {
-<span class="fc" id="L42">        long startTime = System.currentTimeMillis();</span>
+<span class="nc" id="L56">        long startTime = System.currentTimeMillis();</span>
         
         // Fetch application
-<span class="fc" id="L45">        Application application = applicationRepository.findById(applicationId)</span>
-<span class="fc" id="L46">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Application not found&quot;));</span>
+<span class="nc" id="L59">        Application application = applicationRepository.findById(applicationId)</span>
+<span class="nc" id="L60">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Application not found&quot;));</span>
 
         // Verify bank has an offer for this application
-<span class="fc" id="L49">        Offer bankOffer = offerRepository.findByApplicationIdAndBankId(applicationId, bankId)</span>
-<span class="pc" id="L50">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Bank has no offer for this application&quot;));</span>
+<span class="nc" id="L63">        Offer bankOffer = offerRepository.findByApplicationIdAndBankId(applicationId, bankId)</span>
+<span class="nc" id="L64">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Bank has no offer for this application&quot;));</span>
+
+        // Mark application as VIEWED if not already declined
+<span class="nc" id="L67">        markApplicationAsViewed(bankId, application);</span>
 
         // Fetch borrower
-<span class="fc" id="L53">        User borrower = userRepository.findById(application.getBorrowerId())</span>
-<span class="pc" id="L54">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Borrower not found&quot;));</span>
+<span class="nc" id="L70">        User borrower = userRepository.findById(application.getBorrowerId())</span>
+<span class="nc" id="L71">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Borrower not found&quot;));</span>
 
         // Build borrower details
-<span class="fc" id="L57">        BorrowerDetailsDTO borrowerDetails = BorrowerDetailsDTO.builder()</span>
-<span class="fc" id="L58">                .firstName(borrower.getFirstName())</span>
-<span class="fc" id="L59">                .lastName(borrower.getLastName())</span>
-<span class="fc" id="L60">                .email(borrower.getEmail())</span>
-<span class="fc" id="L61">                .phone(borrower.getPhoneNumber())</span>
-<span class="fc" id="L62">                .address(&quot;&quot;)</span>
-<span class="fc" id="L63">                .build();</span>
+<span class="nc" id="L74">        BorrowerDetailsDTO borrowerDetails = BorrowerDetailsDTO.builder()</span>
+<span class="nc" id="L75">                .firstName(borrower.getFirstName())</span>
+<span class="nc" id="L76">                .lastName(borrower.getLastName())</span>
+<span class="nc" id="L77">                .email(borrower.getEmail())</span>
+<span class="nc" id="L78">                .phone(borrower.getPhoneNumber())</span>
+<span class="nc" id="L79">                .address(&quot;&quot;)</span>
+<span class="nc" id="L80">                .build();</span>
 
         // Build loan request details
-<span class="fc" id="L66">        LoanRequestDetailsDTO loanRequest = LoanRequestDetailsDTO.builder()</span>
-<span class="fc" id="L67">                .loanType(application.getLoanType())</span>
-<span class="fc" id="L68">                .amount(application.getLoanAmount())</span>
-<span class="fc" id="L69">                .termMonths(application.getLoanTermMonths())</span>
-<span class="fc" id="L70">                .purpose(&quot;&quot;)</span>
-<span class="fc" id="L71">                .incomeDocumentationStatus(&quot;PENDING&quot;)</span>
-<span class="fc" id="L72">                .build();</span>
+<span class="nc" id="L83">        LoanRequestDetailsDTO loanRequest = LoanRequestDetailsDTO.builder()</span>
+<span class="nc" id="L84">                .loanType(application.getLoanType())</span>
+<span class="nc" id="L85">                .amount(application.getLoanAmount())</span>
+<span class="nc" id="L86">                .termMonths(application.getLoanTermMonths())</span>
+<span class="nc" id="L87">                .purpose(&quot;&quot;)</span>
+<span class="nc" id="L88">                .incomeDocumentationStatus(&quot;PENDING&quot;)</span>
+<span class="nc" id="L89">                .build();</span>
 
         // Build employment details from ApplicationDetails
-<span class="fc" id="L75">        ApplicationDetails appDetails = application.getDetails();</span>
-<span class="fc" id="L76">        EmploymentDetailsDTO employment = EmploymentDetailsDTO.builder()</span>
-<span class="fc" id="L77">                .employer(&quot;&quot;)</span>
-<span class="fc" id="L78">                .position(&quot;&quot;)</span>
-<span class="pc bpc" id="L79" title="1 of 2 branches missed.">                .annualIncome(appDetails != null ? appDetails.getAnnualIncome() : null)</span>
-<span class="fc" id="L80">                .yearsEmployed(0)</span>
-<span class="fc" id="L81">                .build();</span>
+<span class="nc" id="L92">        ApplicationDetails appDetails = application.getDetails();</span>
+<span class="nc" id="L93">        EmploymentDetailsDTO employment = EmploymentDetailsDTO.builder()</span>
+<span class="nc" id="L94">                .employer(&quot;&quot;)</span>
+<span class="nc" id="L95">                .position(&quot;&quot;)</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">                .annualIncome(appDetails != null ? appDetails.getAnnualIncome() : null)</span>
+<span class="nc" id="L97">                .yearsEmployed(0)</span>
+<span class="nc" id="L98">                .build();</span>
 
-        // Build consent details (3 standard consents)
-<span class="fc" id="L84">        List&lt;ConsentDetailsDTO&gt; consents = buildConsents();</span>
+        // Build consent details (3 standard consents) from database
+<span class="nc" id="L101">        List&lt;ConsentDetailsDTO&gt; consents = buildConsents(applicationId);</span>
 
         // Build offer DTO from bank's offer
-<span class="fc" id="L87">        OfferDTO offerDto = buildOfferDTO(bankOffer);</span>
+<span class="nc" id="L104">        OfferDTO offerDto = buildOfferDTO(bankOffer);</span>
+
+        // Fetch internal notes (bank staff only)
+<span class="nc" id="L107">        String internalNotes = notesRepository.findByApplicationIdAndBankId(applicationId, bankId)</span>
+<span class="nc" id="L108">                .map(ApplicationBankNotes::getNotes)</span>
+<span class="nc" id="L109">                .orElse(&quot;&quot;);</span>
 
         // Build response
-<span class="fc" id="L90">        ApplicationDetailsResponse response = ApplicationDetailsResponse.builder()</span>
-<span class="fc" id="L91">                .applicationId(applicationId)</span>
-<span class="fc" id="L92">                .borrower(borrowerDetails)</span>
-<span class="fc" id="L93">                .loanRequest(loanRequest)</span>
-<span class="fc" id="L94">                .employment(employment)</span>
-<span class="fc" id="L95">                .consents(consents)</span>
-<span class="fc" id="L96">                .offer(offerDto)</span>
-<span class="fc" id="L97">                .internalNotes(&quot;&quot;)</span>
-<span class="fc" id="L98">                .build();</span>
+<span class="nc" id="L112">        ApplicationDetailsResponse response = ApplicationDetailsResponse.builder()</span>
+<span class="nc" id="L113">                .applicationId(applicationId)</span>
+<span class="nc" id="L114">                .borrower(borrowerDetails)</span>
+<span class="nc" id="L115">                .loanRequest(loanRequest)</span>
+<span class="nc" id="L116">                .employment(employment)</span>
+<span class="nc" id="L117">                .consents(consents)</span>
+<span class="nc" id="L118">                .offer(offerDto)</span>
+<span class="nc" id="L119">                .internalNotes(internalNotes)</span>
+<span class="nc" id="L120">                .build();</span>
 
-<span class="fc" id="L100">        long elapsed = System.currentTimeMillis() - startTime;</span>
-<span class="fc" id="L101">        log.debug(&quot;Retrieved application details for app {} from bank {} in {}ms&quot;, applicationId, bankId, elapsed);</span>
+<span class="nc" id="L122">        long elapsed = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L123">        log.debug(&quot;Retrieved application details for app {} from bank {} in {}ms&quot;, applicationId, bankId, elapsed);</span>
 
-<span class="pc bpc" id="L103" title="1 of 2 branches missed.">        if (elapsed &gt; 200) {</span>
-<span class="nc" id="L104">            log.warn(&quot;Application details retrieval exceeded 200ms SLA: {}ms&quot;, elapsed);</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">        if (elapsed &gt; 200) {</span>
+<span class="nc" id="L126">            log.warn(&quot;Application details retrieval exceeded 200ms SLA: {}ms&quot;, elapsed);</span>
         }
 
-<span class="fc" id="L107">        return response;</span>
+<span class="nc" id="L129">        return response;</span>
     }
 
-    private List&lt;ConsentDetailsDTO&gt; buildConsents() {
-<span class="fc" id="L111">        List&lt;ConsentDetailsDTO&gt; consents = new ArrayList&lt;&gt;();</span>
+    private List&lt;ConsentDetailsDTO&gt; buildConsents(UUID applicationId) {
+<span class="nc" id="L133">        List&lt;ConsentDetailsDTO&gt; consents = new ArrayList&lt;&gt;();</span>
         
-        // Consent 1: Credit Check
-<span class="fc" id="L114">        consents.add(ConsentDetailsDTO.builder()</span>
-<span class="fc" id="L115">                .consentNumber(1)</span>
-<span class="fc" id="L116">                .consentText(&quot;I authorize the bank to check my credit report and history&quot;)</span>
-<span class="fc" id="L117">                .signed(false)</span>
-<span class="fc" id="L118">                .build());</span>
-
-        // Consent 2: Third-party Share
-<span class="fc" id="L121">        consents.add(ConsentDetailsDTO.builder()</span>
-<span class="fc" id="L122">                .consentNumber(2)</span>
-<span class="fc" id="L123">                .consentText(&quot;I authorize the bank to share my information with third-party service providers&quot;)</span>
-<span class="fc" id="L124">                .signed(false)</span>
-<span class="fc" id="L125">                .build());</span>
-
-        // Consent 3: Loan Service Terms
-<span class="fc" id="L128">        consents.add(ConsentDetailsDTO.builder()</span>
-<span class="fc" id="L129">                .consentNumber(3)</span>
-<span class="fc" id="L130">                .consentText(&quot;I agree to the loan service terms and conditions&quot;)</span>
-<span class="fc" id="L131">                .signed(false)</span>
-<span class="fc" id="L132">                .build());</span>
-
-<span class="fc" id="L134">        return consents;</span>
+        // Fetch consents from database for this application
+<span class="nc" id="L136">        List&lt;Consent&gt; databaseConsents = consentRepository.findByApplicationId(applicationId);</span>
+        
+        // Define standard consent templates
+<span class="nc" id="L139">        String[] consentTexts = {</span>
+                &quot;I authorize the bank to check my credit report and history&quot;,
+                &quot;I authorize the bank to share my information with third-party service providers&quot;,
+                &quot;I agree to the loan service terms and conditions&quot;
+        };
+        
+        // Build DTOs for each of the 3 standard consents
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        for (int i = 1; i &lt;= 3; i++) {</span>
+<span class="nc" id="L147">            final int consentNum = i;</span>
+            
+            // Find consent in database, or use defaults
+<span class="nc" id="L150">            Consent dbConsent = databaseConsents.stream()</span>
+<span class="nc" id="L151">                    .filter(c -&gt; c.getConsentNumber().equals(consentNum))</span>
+<span class="nc" id="L152">                    .findFirst()</span>
+<span class="nc" id="L153">                    .orElse(null);</span>
+            
+<span class="nc" id="L155">            ConsentDetailsDTO dto = ConsentDetailsDTO.builder()</span>
+<span class="nc" id="L156">                    .consentNumber(consentNum)</span>
+<span class="nc bnc" id="L157" title="All 4 branches missed.">                    .consentText(dbConsent != null ? dbConsent.getConsentText() : consentTexts[i - 1])</span>
+<span class="nc bnc" id="L158" title="All 4 branches missed.">                    .signed(dbConsent != null &amp;&amp; dbConsent.getIsSigned() != null &amp;&amp; dbConsent.getIsSigned())</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">                    .borrowerSignature(dbConsent != null ? dbConsent.getBorrowerSignature() : &quot;&quot;)</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">                    .signedAt(dbConsent != null ? dbConsent.getSignedAt() : null)</span>
+<span class="nc" id="L161">                    .build();</span>
+            
+<span class="nc" id="L163">            consents.add(dto);</span>
+        }
+        
+<span class="nc" id="L166">        return consents;</span>
     }
 
     private OfferDTO buildOfferDTO(Offer offer) {
-<span class="fc" id="L138">        OfferDTO offerDto = new OfferDTO();</span>
-<span class="fc" id="L139">        offerDto.id = offer.getId();</span>
-<span class="fc" id="L140">        offerDto.applicationId = offer.getApplicationId();</span>
-<span class="fc" id="L141">        offerDto.bankId = offer.getBankId();</span>
-<span class="fc" id="L142">        offerDto.apr = offer.getApr();</span>
-<span class="fc" id="L143">        offerDto.monthlyPayment = offer.getMonthlyPayment();</span>
-<span class="fc" id="L144">        offerDto.totalCost = offer.getTotalCost();</span>
-<span class="fc" id="L145">        offerDto.originationFee = offer.getOriginationFee();</span>
-<span class="fc" id="L146">        offerDto.processingTimeDays = offer.getProcessingTimeDays();</span>
-<span class="fc" id="L147">        offerDto.validityPeriodDays = offer.getValidityPeriodDays();</span>
-<span class="fc" id="L148">        offerDto.offerStatus = offer.getOfferStatus();</span>
-<span class="fc" id="L149">        offerDto.expiresAt = offer.getExpiresAt();</span>
-<span class="fc" id="L150">        offerDto.createdAt = offer.getCreatedAt();</span>
-<span class="fc" id="L151">        return offerDto;</span>
+<span class="nc" id="L170">        OfferDTO offerDto = new OfferDTO();</span>
+<span class="nc" id="L171">        offerDto.id = offer.getId();</span>
+<span class="nc" id="L172">        offerDto.applicationId = offer.getApplicationId();</span>
+<span class="nc" id="L173">        offerDto.bankId = offer.getBankId();</span>
+<span class="nc" id="L174">        offerDto.apr = offer.getApr();</span>
+<span class="nc" id="L175">        offerDto.monthlyPayment = offer.getMonthlyPayment();</span>
+<span class="nc" id="L176">        offerDto.totalCost = offer.getTotalCost();</span>
+<span class="nc" id="L177">        offerDto.originationFee = offer.getOriginationFee();</span>
+<span class="nc" id="L178">        offerDto.processingTimeDays = offer.getProcessingTimeDays();</span>
+<span class="nc" id="L179">        offerDto.validityPeriodDays = offer.getValidityPeriodDays();</span>
+<span class="nc" id="L180">        offerDto.offerStatus = offer.getOfferStatus();</span>
+<span class="nc" id="L181">        offerDto.expiresAt = offer.getExpiresAt();</span>
+<span class="nc" id="L182">        offerDto.createdAt = offer.getCreatedAt();</span>
+<span class="nc" id="L183">        return offerDto;</span>
+    }
+
+    /**
+     * Mark application as VIEWED by bank with audit logging
+     * Only logs once per application per bank
+     */
+    @CacheEvict(value = &quot;applicationDetails&quot;, key = &quot;#bankId + '-' + #application.id&quot;)
+    private void markApplicationAsViewed(UUID bankId, Application application) {
+        try {
+            // Log audit event: APPLICATION_VIEWED
+<span class="nc" id="L194">            Map&lt;String, Object&gt; auditDetails = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L195">            auditDetails.put(&quot;bankId&quot;, bankId);</span>
+<span class="nc" id="L196">            auditDetails.put(&quot;applicationId&quot;, application.getId());</span>
+<span class="nc" id="L197">            auditDetails.put(&quot;borrowerId&quot;, application.getBorrowerId());</span>
+<span class="nc" id="L198">            auditDetails.put(&quot;viewedAt&quot;, LocalDateTime.now());</span>
+            
+<span class="nc" id="L200">            auditService.logAction(</span>
+                    &quot;Application&quot;,
+<span class="nc" id="L202">                    application.getId(),</span>
+                    AuditAction.APPLICATION_VIEWED,
+                    bankId,
+                    &quot;BANK_ADMIN&quot;
+            );
+            
+<span class="nc" id="L208">            log.info(&quot;Application {} marked as VIEWED by bank {}&quot;, application.getId(), bankId);</span>
+<span class="nc" id="L209">        } catch (Exception e) {</span>
+<span class="nc" id="L210">            log.warn(&quot;Failed to log APPLICATION_VIEWED audit for app {}: {}&quot;, application.getId(), e.getMessage());</span>
+            // Non-blocking: don't fail the operation if audit logging fails
+<span class="nc" id="L212">        }</span>
+<span class="nc" id="L213">    }</span>
+
+    /**
+     * Save or update internal notes for an application at the bank level
+     * Logs audit event: APPLICATION_NOTES_UPDATED
+     *
+     * @param bankId bank's organization id
+     * @param applicationId the application to update notes for
+     * @param notes new notes content
+     * @param userId user making the update
+     */
+    @CacheEvict(value = &quot;applicationDetails&quot;, key = &quot;#bankId + '-' + #applicationId&quot;)
+    public void updateInternalNotes(UUID bankId, UUID applicationId, String notes, UUID userId) {
+        try {
+<span class="nc" id="L227">            ApplicationBankNotes applicationNotes = notesRepository</span>
+<span class="nc" id="L228">                    .findByApplicationIdAndBankId(applicationId, bankId)</span>
+<span class="nc" id="L229">                    .orElse(ApplicationBankNotes.builder()</span>
+<span class="nc" id="L230">                            .applicationId(applicationId)</span>
+<span class="nc" id="L231">                            .bankId(bankId)</span>
+<span class="nc" id="L232">                            .createdBy(userId)</span>
+<span class="nc" id="L233">                            .build());</span>
+
+<span class="nc" id="L235">            String oldNotes = applicationNotes.getNotes();</span>
+<span class="nc" id="L236">            applicationNotes.setNotes(notes);</span>
+<span class="nc" id="L237">            applicationNotes.setUpdatedBy(userId);</span>
+<span class="nc" id="L238">            notesRepository.save(applicationNotes);</span>
+
+            // Log audit event
+<span class="nc" id="L241">            Map&lt;String, Object&gt; oldValues = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L242">            oldValues.put(&quot;notes&quot;, oldNotes);</span>
+
+<span class="nc" id="L244">            Map&lt;String, Object&gt; newValues = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L245">            newValues.put(&quot;notes&quot;, notes);</span>
+
+<span class="nc" id="L247">            auditService.logActionWithValues(</span>
+                    &quot;Application&quot;,
+                    applicationId,
+                    AuditAction.APPLICATION_UPDATED,
+                    oldValues,
+                    newValues
+            );
+
+<span class="nc" id="L255">            log.info(&quot;Internal notes updated for application {} by bank {}&quot;, applicationId, bankId);</span>
+<span class="nc" id="L256">        } catch (Exception e) {</span>
+<span class="nc" id="L257">            log.error(&quot;Failed to update internal notes for application {}: {}&quot;, applicationId, e.getMessage());</span>
+<span class="nc" id="L258">            throw new RuntimeException(&quot;Failed to update internal notes&quot;, e);</span>
+<span class="nc" id="L259">        }</span>
+<span class="nc" id="L260">    }</span>
+
+    /**
+     * Mark a specific consent as signed/accepted
+     * Creates or updates the consent in the database
+     *
+     * @param applicationId the application
+     * @param borrowerId the borrower
+     * @param consentNumber which consent (1-3)
+     * @param signature digital signature or acceptance indicator
+     * @param ipAddress request origin IP
+     * @param userAgent request user agent
+     */
+    @CacheEvict(value = &quot;applicationDetails&quot;, allEntries = true)
+    public void signConsent(UUID applicationId, UUID borrowerId, Integer consentNumber,
+                           String signature, String ipAddress, String userAgent) {
+        try {
+            // Find existing consent or create new
+<span class="nc" id="L278">            Consent consent = consentRepository</span>
+<span class="nc" id="L279">                    .findByApplicationIdAndConsentNumber(applicationId, consentNumber)</span>
+<span class="nc" id="L280">                    .orElse(Consent.builder()</span>
+<span class="nc" id="L281">                            .applicationId(applicationId)</span>
+<span class="nc" id="L282">                            .borrowerId(borrowerId)</span>
+<span class="nc" id="L283">                            .consentNumber(consentNumber)</span>
+<span class="nc" id="L284">                            .consentText(getConsentText(consentNumber))</span>
+<span class="nc" id="L285">                            .build());</span>
+
+            // Mark as signed
+<span class="nc" id="L288">            consent.setIsSigned(true);</span>
+<span class="nc" id="L289">            consent.setBorrowerSignature(signature);</span>
+<span class="nc" id="L290">            consent.setIpAddress(ipAddress);</span>
+<span class="nc" id="L291">            consent.setUserAgent(userAgent);</span>
+
+<span class="nc" id="L293">            consentRepository.save(consent);</span>
+
+<span class="nc" id="L295">            log.info(&quot;Consent {} marked as signed for application {}&quot;, consentNumber, applicationId);</span>
+<span class="nc" id="L296">        } catch (Exception e) {</span>
+<span class="nc" id="L297">            log.error(&quot;Failed to sign consent {} for app {}: {}&quot;, consentNumber, applicationId, e.getMessage());</span>
+<span class="nc" id="L298">            throw new RuntimeException(&quot;Failed to sign consent&quot;, e);</span>
+<span class="nc" id="L299">        }</span>
+<span class="nc" id="L300">    }</span>
+
+    /**
+     * Get standard consent text by number
+     */
+    private String getConsentText(Integer consentNumber) {
+<span class="nc bnc" id="L306" title="All 4 branches missed.">        return switch (consentNumber) {</span>
+<span class="nc" id="L307">            case 1 -&gt; &quot;I authorize the bank to check my credit report and history&quot;;</span>
+<span class="nc" id="L308">            case 2 -&gt; &quot;I authorize the bank to share my information with third-party service providers&quot;;</span>
+<span class="nc" id="L309">            case 3 -&gt; &quot;I agree to the loan service terms and conditions&quot;;</span>
+<span class="nc" id="L310">            default -&gt; &quot;Unknown consent&quot;;</span>
+        };
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
