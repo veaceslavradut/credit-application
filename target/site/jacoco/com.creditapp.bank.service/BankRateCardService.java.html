@@ -28,10 +28,10 @@ public class BankRateCardService {
     private final BankRateCardRepository bankRateCardRepository;
     private final AuditService auditService;
     
-<span class="fc" id="L31">    public BankRateCardService(BankRateCardRepository bankRateCardRepository, AuditService auditService) {</span>
-<span class="fc" id="L32">        this.bankRateCardRepository = bankRateCardRepository;</span>
-<span class="fc" id="L33">        this.auditService = auditService;</span>
-<span class="fc" id="L34">    }</span>
+<span class="nc" id="L31">    public BankRateCardService(BankRateCardRepository bankRateCardRepository, AuditService auditService) {</span>
+<span class="nc" id="L32">        this.bankRateCardRepository = bankRateCardRepository;</span>
+<span class="nc" id="L33">        this.auditService = auditService;</span>
+<span class="nc" id="L34">    }</span>
     
     /**
      * Creates a new rate card. If an active card exists for the same loan type and currency,
@@ -42,14 +42,14 @@ public class BankRateCardService {
         @CacheEvict(value = &quot;marketAverage&quot;, key = &quot;#request.loanType.name() + ':' + #request.currency.name()&quot;, allEntries = false)
     })
     public BankRateCardResponse createRateCard(UUID bankId, BankRateCardRequest request) {
-<span class="fc" id="L45">        validateRateCardRequest(request);</span>
+<span class="nc" id="L45">        validateRateCardRequest(request);</span>
         
         // Check for duplicate: existing active rate card for same loan type and currency
-<span class="fc" id="L48">        Optional&lt;BankRateCard&gt; existingCard = bankRateCardRepository</span>
-<span class="fc" id="L49">            .findByBankIdAndLoanTypeAndCurrencyAndValidToIsNull(</span>
-<span class="fc" id="L50">                bankId, request.getLoanType(), request.getCurrency());</span>
+<span class="nc" id="L48">        Optional&lt;BankRateCard&gt; existingCard = bankRateCardRepository</span>
+<span class="nc" id="L49">            .findByBankIdAndLoanTypeAndCurrencyAndValidToIsNull(</span>
+<span class="nc" id="L50">                bankId, request.getLoanType(), request.getCurrency());</span>
         
-<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if (existingCard.isPresent()) {</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if (existingCard.isPresent()) {</span>
             // Mark existing active card as inactive
 <span class="nc" id="L54">            BankRateCard oldCard = existingCard.get();</span>
 <span class="nc" id="L55">            oldCard.setValidTo(LocalDateTime.now());</span>
@@ -57,24 +57,24 @@ public class BankRateCardService {
         }
         
         // Create new rate card
-<span class="fc" id="L60">        BankRateCard newCard = new BankRateCard();</span>
-<span class="fc" id="L61">        newCard.setId(UUID.randomUUID());</span>
-<span class="fc" id="L62">        newCard.setBankId(bankId);</span>
-<span class="fc" id="L63">        newCard.setLoanType(request.getLoanType());</span>
-<span class="fc" id="L64">        newCard.setCurrency(request.getCurrency());</span>
-<span class="fc" id="L65">        newCard.setMinLoanAmount(request.getMinLoanAmount());</span>
-<span class="fc" id="L66">        newCard.setMaxLoanAmount(request.getMaxLoanAmount());</span>
-<span class="fc" id="L67">        newCard.setBaseApr(request.getBaseApr());</span>
-<span class="fc" id="L68">        newCard.setAprAdjustmentRange(request.getAprAdjustmentRange());</span>
-<span class="fc" id="L69">        newCard.setOriginationFeePercent(request.getOriginationFeePercent());</span>
-<span class="fc" id="L70">        newCard.setInsurancePercent(request.getInsurancePercent());</span>
-<span class="fc" id="L71">        newCard.setValidFrom(LocalDateTime.now());</span>
-<span class="fc" id="L72">        newCard.setValidTo(null); // Active</span>
+<span class="nc" id="L60">        BankRateCard newCard = new BankRateCard();</span>
+<span class="nc" id="L61">        newCard.setId(UUID.randomUUID());</span>
+<span class="nc" id="L62">        newCard.setBankId(bankId);</span>
+<span class="nc" id="L63">        newCard.setLoanType(request.getLoanType());</span>
+<span class="nc" id="L64">        newCard.setCurrency(request.getCurrency());</span>
+<span class="nc" id="L65">        newCard.setMinLoanAmount(request.getMinLoanAmount());</span>
+<span class="nc" id="L66">        newCard.setMaxLoanAmount(request.getMaxLoanAmount());</span>
+<span class="nc" id="L67">        newCard.setBaseApr(request.getBaseApr());</span>
+<span class="nc" id="L68">        newCard.setAprAdjustmentRange(request.getAprAdjustmentRange());</span>
+<span class="nc" id="L69">        newCard.setOriginationFeePercent(request.getOriginationFeePercent());</span>
+<span class="nc" id="L70">        newCard.setInsurancePercent(request.getInsurancePercent());</span>
+<span class="nc" id="L71">        newCard.setValidFrom(LocalDateTime.now());</span>
+<span class="nc" id="L72">        newCard.setValidTo(null); // Active</span>
         
-<span class="fc" id="L74">        BankRateCard savedCard = bankRateCardRepository.save(newCard);</span>
-<span class="fc" id="L75">        auditService.logAction(&quot;RateCard&quot;, savedCard.getId(), AuditAction.RATE_CARD_CREATED);</span>
+<span class="nc" id="L74">        BankRateCard savedCard = bankRateCardRepository.save(newCard);</span>
+<span class="nc" id="L75">        auditService.logAction(&quot;RateCard&quot;, savedCard.getId(), AuditAction.RATE_CARD_CREATED);</span>
         
-<span class="fc" id="L77">        return mapToResponse(savedCard);</span>
+<span class="nc" id="L77">        return mapToResponse(savedCard);</span>
     }
     
     /**
@@ -86,42 +86,42 @@ public class BankRateCardService {
         @CacheEvict(value = &quot;marketAverage&quot;, key = &quot;#request.loanType.name() + ':' + #request.currency.name()&quot;, allEntries = false)
     })
     public BankRateCardResponse updateRateCard(UUID bankId, UUID rateCardId, BankRateCardRequest request) {
-<span class="fc" id="L89">        validateRateCardRequest(request);</span>
+<span class="nc" id="L89">        validateRateCardRequest(request);</span>
         
         // Find the existing card
-<span class="fc" id="L92">        BankRateCard existingCard = bankRateCardRepository.findById(rateCardId)</span>
-<span class="fc" id="L93">            .orElseThrow(() -&gt; new RateCardNotFoundException(</span>
-<span class="fc" id="L94">                String.format(&quot;Rate card with ID %s not found&quot;, rateCardId)));</span>
+<span class="nc" id="L92">        BankRateCard existingCard = bankRateCardRepository.findById(rateCardId)</span>
+<span class="nc" id="L93">            .orElseThrow(() -&gt; new RateCardNotFoundException(</span>
+<span class="nc" id="L94">                String.format(&quot;Rate card with ID %s not found&quot;, rateCardId)));</span>
         
         // Verify bank ownership
-<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        if (!existingCard.getBankId().equals(bankId)) {</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        if (!existingCard.getBankId().equals(bankId)) {</span>
 <span class="nc" id="L98">            throw new InvalidRateCardException(</span>
-                &quot;Rate card does not belong to the requesting bank&quot;);
+<span class="nc" id="L99">                &quot;Rate card does not belong to the requesting bank&quot;);</span>
         }
         
         // Mark old card as inactive
-<span class="fc" id="L103">        existingCard.setValidTo(LocalDateTime.now());</span>
-<span class="fc" id="L104">        bankRateCardRepository.save(existingCard);</span>
+<span class="nc" id="L103">        existingCard.setValidTo(LocalDateTime.now());</span>
+<span class="nc" id="L104">        bankRateCardRepository.save(existingCard);</span>
         
         // Create new version
-<span class="fc" id="L107">        BankRateCard newCard = new BankRateCard();</span>
-<span class="fc" id="L108">        newCard.setId(UUID.randomUUID());</span>
-<span class="fc" id="L109">        newCard.setBankId(bankId);</span>
-<span class="fc" id="L110">        newCard.setLoanType(request.getLoanType());</span>
-<span class="fc" id="L111">        newCard.setCurrency(request.getCurrency());</span>
-<span class="fc" id="L112">        newCard.setMinLoanAmount(request.getMinLoanAmount());</span>
-<span class="fc" id="L113">        newCard.setMaxLoanAmount(request.getMaxLoanAmount());</span>
-<span class="fc" id="L114">        newCard.setBaseApr(request.getBaseApr());</span>
-<span class="fc" id="L115">        newCard.setAprAdjustmentRange(request.getAprAdjustmentRange());</span>
-<span class="fc" id="L116">        newCard.setOriginationFeePercent(request.getOriginationFeePercent());</span>
-<span class="fc" id="L117">        newCard.setInsurancePercent(request.getInsurancePercent());</span>
-<span class="fc" id="L118">        newCard.setValidFrom(LocalDateTime.now());</span>
-<span class="fc" id="L119">        newCard.setValidTo(null); // Active</span>
+<span class="nc" id="L107">        BankRateCard newCard = new BankRateCard();</span>
+<span class="nc" id="L108">        newCard.setId(UUID.randomUUID());</span>
+<span class="nc" id="L109">        newCard.setBankId(bankId);</span>
+<span class="nc" id="L110">        newCard.setLoanType(request.getLoanType());</span>
+<span class="nc" id="L111">        newCard.setCurrency(request.getCurrency());</span>
+<span class="nc" id="L112">        newCard.setMinLoanAmount(request.getMinLoanAmount());</span>
+<span class="nc" id="L113">        newCard.setMaxLoanAmount(request.getMaxLoanAmount());</span>
+<span class="nc" id="L114">        newCard.setBaseApr(request.getBaseApr());</span>
+<span class="nc" id="L115">        newCard.setAprAdjustmentRange(request.getAprAdjustmentRange());</span>
+<span class="nc" id="L116">        newCard.setOriginationFeePercent(request.getOriginationFeePercent());</span>
+<span class="nc" id="L117">        newCard.setInsurancePercent(request.getInsurancePercent());</span>
+<span class="nc" id="L118">        newCard.setValidFrom(LocalDateTime.now());</span>
+<span class="nc" id="L119">        newCard.setValidTo(null); // Active</span>
         
-<span class="fc" id="L121">        BankRateCard savedCard = bankRateCardRepository.save(newCard);</span>
-<span class="fc" id="L122">        auditService.logAction(&quot;RateCard&quot;, savedCard.getId(), AuditAction.RATE_CARD_UPDATED);</span>
+<span class="nc" id="L121">        BankRateCard savedCard = bankRateCardRepository.save(newCard);</span>
+<span class="nc" id="L122">        auditService.logAction(&quot;RateCard&quot;, savedCard.getId(), AuditAction.RATE_CARD_UPDATED);</span>
         
-<span class="fc" id="L124">        return mapToResponse(savedCard);</span>
+<span class="nc" id="L124">        return mapToResponse(savedCard);</span>
     }
     
     /**
@@ -143,7 +143,7 @@ public class BankRateCardService {
 <span class="nc" id="L143">            .findByBankIdAndLoanTypeAndCurrencyAndValidToIsNull(bankId, loanType, currency)</span>
 <span class="nc" id="L144">            .orElseThrow(() -&gt; new RateCardNotFoundException(</span>
 <span class="nc" id="L145">                String.format(&quot;No active rate card found for loan type %s and currency %s&quot;, </span>
-                    loanType, currency)));
+<span class="nc" id="L146">                    loanType, currency)));</span>
         
 <span class="nc" id="L148">        return mapToResponse(card);</span>
     }
@@ -152,66 +152,66 @@ public class BankRateCardService {
      * Validates all rate card request fields.
      */
     private void validateRateCardRequest(BankRateCardRequest request) {
-<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        if (request == null) {</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">        if (request == null) {</span>
 <span class="nc" id="L156">            throw new InvalidRateCardException(&quot;Rate card request cannot be null&quot;);</span>
         }
         
-<span class="pc bpc" id="L159" title="1 of 2 branches missed.">        if (request.getLoanType() == null) {</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">        if (request.getLoanType() == null) {</span>
 <span class="nc" id="L160">            throw new InvalidRateCardException(&quot;Loan type is required&quot;);</span>
         }
         
-<span class="pc bpc" id="L163" title="1 of 2 branches missed.">        if (request.getCurrency() == null) {</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        if (request.getCurrency() == null) {</span>
 <span class="nc" id="L164">            throw new InvalidRateCardException(&quot;Currency is required&quot;);</span>
         }
         
-<span class="pc bpc" id="L167" title="2 of 4 branches missed.">        if (request.getMinLoanAmount() == null || request.getMinLoanAmount().signum() &lt;= 0) {</span>
+<span class="nc bnc" id="L167" title="All 4 branches missed.">        if (request.getMinLoanAmount() == null || request.getMinLoanAmount().signum() &lt;= 0) {</span>
 <span class="nc" id="L168">            throw new InvalidRateCardException(&quot;Minimum loan amount must be greater than zero&quot;);</span>
         }
         
-<span class="pc bpc" id="L171" title="2 of 4 branches missed.">        if (request.getMaxLoanAmount() == null || request.getMaxLoanAmount().signum() &lt;= 0) {</span>
+<span class="nc bnc" id="L171" title="All 4 branches missed.">        if (request.getMaxLoanAmount() == null || request.getMaxLoanAmount().signum() &lt;= 0) {</span>
 <span class="nc" id="L172">            throw new InvalidRateCardException(&quot;Maximum loan amount must be greater than zero&quot;);</span>
         }
         
-<span class="pc bpc" id="L175" title="1 of 2 branches missed.">        if (request.getMinLoanAmount().compareTo(request.getMaxLoanAmount()) &gt; 0) {</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">        if (request.getMinLoanAmount().compareTo(request.getMaxLoanAmount()) &gt; 0) {</span>
 <span class="nc" id="L176">            throw new InvalidRateCardException(</span>
-                &quot;Minimum loan amount cannot exceed maximum loan amount&quot;);
+<span class="nc" id="L177">                &quot;Minimum loan amount cannot exceed maximum loan amount&quot;);</span>
         }
         
-<span class="pc bpc" id="L180" title="2 of 4 branches missed.">        if (request.getBaseApr() == null || request.getBaseApr().signum() &lt; 0) {</span>
+<span class="nc bnc" id="L180" title="All 4 branches missed.">        if (request.getBaseApr() == null || request.getBaseApr().signum() &lt; 0) {</span>
 <span class="nc" id="L181">            throw new InvalidRateCardException(&quot;Base APR cannot be negative&quot;);</span>
         }
         
-<span class="pc bpc" id="L184" title="2 of 4 branches missed.">        if (request.getAprAdjustmentRange() == null || request.getAprAdjustmentRange().signum() &lt; 0) {</span>
+<span class="nc bnc" id="L184" title="All 4 branches missed.">        if (request.getAprAdjustmentRange() == null || request.getAprAdjustmentRange().signum() &lt; 0) {</span>
 <span class="nc" id="L185">            throw new InvalidRateCardException(&quot;APR adjustment range cannot be negative&quot;);</span>
         }
         
-<span class="pc bpc" id="L188" title="1 of 2 branches missed.">        if (request.getOriginationFeePercent() == null || </span>
-<span class="pc bpc" id="L189" title="1 of 2 branches missed.">            request.getOriginationFeePercent().signum() &lt; 0) {</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">        if (request.getOriginationFeePercent() == null || </span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">            request.getOriginationFeePercent().signum() &lt; 0) {</span>
 <span class="nc" id="L190">            throw new InvalidRateCardException(&quot;Origination fee percentage cannot be negative&quot;);</span>
         }
         
-<span class="pc bpc" id="L193" title="2 of 4 branches missed.">        if (request.getInsurancePercent() == null || request.getInsurancePercent().signum() &lt; 0) {</span>
+<span class="nc bnc" id="L193" title="All 4 branches missed.">        if (request.getInsurancePercent() == null || request.getInsurancePercent().signum() &lt; 0) {</span>
 <span class="nc" id="L194">            throw new InvalidRateCardException(&quot;Insurance percentage cannot be negative&quot;);</span>
         }
-<span class="fc" id="L196">    }</span>
+<span class="nc" id="L196">    }</span>
     
     /**
      * Converts BankRateCard entity to BankRateCardResponse DTO.
      */
     private BankRateCardResponse mapToResponse(BankRateCard card) {
-<span class="fc" id="L202">        return new BankRateCardResponse(</span>
-<span class="fc" id="L203">            card.getId(),</span>
-<span class="fc" id="L204">            card.getLoanType(),</span>
-<span class="fc" id="L205">            card.getCurrency(),</span>
-<span class="fc" id="L206">            card.getMinLoanAmount(),</span>
-<span class="fc" id="L207">            card.getMaxLoanAmount(),</span>
-<span class="fc" id="L208">            card.getBaseApr(),</span>
-<span class="fc" id="L209">            card.getAprAdjustmentRange(),</span>
-<span class="fc" id="L210">            card.getOriginationFeePercent(),</span>
-<span class="fc" id="L211">            card.getInsurancePercent(),</span>
-<span class="fc" id="L212">            card.getProcessingTimeDays(),</span>
-<span class="fc" id="L213">            card.getValidFrom(),</span>
-<span class="fc" id="L214">            card.getValidTo()</span>
+<span class="nc" id="L202">        return new BankRateCardResponse(</span>
+<span class="nc" id="L203">            card.getId(),</span>
+<span class="nc" id="L204">            card.getLoanType(),</span>
+<span class="nc" id="L205">            card.getCurrency(),</span>
+<span class="nc" id="L206">            card.getMinLoanAmount(),</span>
+<span class="nc" id="L207">            card.getMaxLoanAmount(),</span>
+<span class="nc" id="L208">            card.getBaseApr(),</span>
+<span class="nc" id="L209">            card.getAprAdjustmentRange(),</span>
+<span class="nc" id="L210">            card.getOriginationFeePercent(),</span>
+<span class="nc" id="L211">            card.getInsurancePercent(),</span>
+<span class="nc" id="L212">            card.getProcessingTimeDays(),</span>
+<span class="nc" id="L213">            card.getValidFrom(),</span>
+<span class="nc" id="L214">            card.getValidTo()</span>
         );
     }
 }

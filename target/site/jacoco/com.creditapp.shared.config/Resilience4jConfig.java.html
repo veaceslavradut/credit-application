@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import java.time.Duration;
 
 @Configuration
-<span class="fc" id="L11">public class Resilience4jConfig {</span>
+<span class="nc" id="L11">public class Resilience4jConfig {</span>
 
     /**
      * Rate limiter for scenario calculator endpoint.
@@ -16,13 +16,13 @@ import java.time.Duration;
      */
     @Bean(name = &quot;scenarioCalculatorRateLimiter&quot;)
     public RateLimiter scenarioCalculatorRateLimiter() {
-<span class="fc" id="L19">        RateLimiterConfig config = RateLimiterConfig.custom()</span>
-<span class="fc" id="L20">                .limitRefreshPeriod(Duration.ofMinutes(1))</span>
-<span class="fc" id="L21">                .limitForPeriod(100)</span>
-<span class="fc" id="L22">                .timeoutDuration(Duration.ofMillis(25))</span>
-<span class="fc" id="L23">                .build();</span>
+<span class="nc" id="L19">        RateLimiterConfig config = RateLimiterConfig.custom()</span>
+<span class="nc" id="L20">                .limitRefreshPeriod(Duration.ofMinutes(1))</span>
+<span class="nc" id="L21">                .limitForPeriod(100)</span>
+<span class="nc" id="L22">                .timeoutDuration(Duration.ofMillis(25))</span>
+<span class="nc" id="L23">                .build();</span>
 
-<span class="fc" id="L25">        return RateLimiter.of(&quot;scenarioCalculator&quot;, config);</span>
+<span class="nc" id="L25">        return RateLimiter.of(&quot;scenarioCalculator&quot;, config);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

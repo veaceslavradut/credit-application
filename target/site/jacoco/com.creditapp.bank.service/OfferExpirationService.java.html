@@ -20,22 +20,22 @@ import java.util.UUID;
 @Service
 public class OfferExpirationService {
     
-<span class="fc" id="L23">    private static final Logger logger = LoggerFactory.getLogger(OfferExpirationService.class);</span>
+<span class="nc" id="L23">    private static final Logger logger = LoggerFactory.getLogger(OfferExpirationService.class);</span>
     
     private final OfferRepository offerRepository;
     private final ApplicationRepository applicationRepository;
     private final AuditService auditService;
     private final MeterRegistry meterRegistry;
     
-    public OfferExpirationService(OfferRepository offerRepository,
+<span class="nc" id="L30">    public OfferExpirationService(OfferRepository offerRepository,</span>
                                   ApplicationRepository applicationRepository,
                                   AuditService auditService,
-<span class="fc" id="L33">                                  MeterRegistry meterRegistry) {</span>
-<span class="fc" id="L34">        this.offerRepository = offerRepository;</span>
-<span class="fc" id="L35">        this.applicationRepository = applicationRepository;</span>
-<span class="fc" id="L36">        this.auditService = auditService;</span>
-<span class="fc" id="L37">        this.meterRegistry = meterRegistry;</span>
-<span class="fc" id="L38">    }</span>
+                                  MeterRegistry meterRegistry) {
+<span class="nc" id="L34">        this.offerRepository = offerRepository;</span>
+<span class="nc" id="L35">        this.applicationRepository = applicationRepository;</span>
+<span class="nc" id="L36">        this.auditService = auditService;</span>
+<span class="nc" id="L37">        this.meterRegistry = meterRegistry;</span>
+<span class="nc" id="L38">    }</span>
     
     @Transactional
     public int expireOffers() {
@@ -54,8 +54,8 @@ public class OfferExpirationService {
                 }
 <span class="nc" id="L55">            } catch (Exception e) {</span>
 <span class="nc" id="L56">                logger.error(&quot;Failed to expire offer {}: {}&quot;, offer.getId(), e.getMessage(), e);</span>
-<span class="nc" id="L57">            }</span>
-<span class="nc" id="L58">        }</span>
+            }
+        }
         
         // Metrics
 <span class="nc" id="L61">        long duration = System.currentTimeMillis() - startTime;</span>
@@ -89,7 +89,7 @@ public class OfferExpirationService {
 <span class="nc bnc" id="L89" title="All 2 branches missed.">            if (originalStatus == OfferStatus.ACCEPTED) {</span>
 <span class="nc" id="L90">                revertApplicationStatus(offer.getApplicationId());</span>
             }
-        } else {
+<span class="nc" id="L92">        } else {</span>
 <span class="nc" id="L93">            offer.setOfferStatus(OfferStatus.EXPIRED);</span>
 <span class="nc" id="L94">            logger.info(&quot;Expiring offer {} from status {}&quot;, offer.getId(), originalStatus);</span>
         }
@@ -103,23 +103,23 @@ public class OfferExpirationService {
         
 <span class="nc bnc" id="L104" title="All 4 branches missed.">        if (application != null &amp;&amp; application.getStatus() == ApplicationStatus.ACCEPTED) {</span>
 <span class="nc" id="L105">            logger.info(&quot;Reverting application {} status from ACCEPTED to SUBMITTED due to offer expiration&quot;,</span>
-                    applicationId);
+<span class="nc" id="L106">                    applicationId);</span>
             
 <span class="nc" id="L108">            application.setStatus(ApplicationStatus.SUBMITTED);</span>
 <span class="nc" id="L109">            applicationRepository.save(application);</span>
             
 <span class="nc" id="L111">            auditService.logAction(</span>
-                    &quot;Application&quot;,
-                    applicationId,
-                    com.creditapp.shared.model.AuditAction.APPLICATION_STATUS_CHANGED
+<span class="nc" id="L112">                    &quot;Application&quot;,</span>
+<span class="nc" id="L113">                    applicationId,</span>
+<span class="nc" id="L114">                    com.creditapp.shared.model.AuditAction.APPLICATION_STATUS_CHANGED</span>
             );
         }
 <span class="nc" id="L117">    }</span>
     
     private boolean canExpire(OfferStatus status) {
-<span class="nc bnc" id="L120" title="All 6 branches missed.">        return status == OfferStatus.CALCULATED || </span>
-               status == OfferStatus.ACCEPTED || 
-               status == OfferStatus.SUBMITTED;
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        return status == OfferStatus.CALCULATED || </span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">               status == OfferStatus.ACCEPTED || </span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">               status == OfferStatus.SUBMITTED;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

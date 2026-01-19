@@ -16,18 +16,18 @@ public class BankMarketAnalysisController {
     private final BankMarketAnalysisService analysisService;
     private final AuthorizationService authorizationService;
 
-    public BankMarketAnalysisController(BankMarketAnalysisService analysisService,
-<span class="fc" id="L20">                                        AuthorizationService authorizationService) {</span>
-<span class="fc" id="L21">        this.analysisService = analysisService;</span>
-<span class="fc" id="L22">        this.authorizationService = authorizationService;</span>
-<span class="fc" id="L23">    }</span>
+<span class="nc" id="L19">    public BankMarketAnalysisController(BankMarketAnalysisService analysisService,</span>
+                                        AuthorizationService authorizationService) {
+<span class="nc" id="L21">        this.analysisService = analysisService;</span>
+<span class="nc" id="L22">        this.authorizationService = authorizationService;</span>
+<span class="nc" id="L23">    }</span>
 
     @GetMapping(&quot;/market-analysis&quot;)
     @PreAuthorize(&quot;hasAuthority('BANK_ADMIN')&quot;)
     public ResponseEntity&lt;MarketAnalysisDTO&gt; getMarketAnalysis() {
-<span class="fc" id="L28">        UUID bankId = authorizationService.getBankIdFromContext();</span>
-<span class="fc" id="L29">        MarketAnalysisDTO analysis = analysisService.analyzeMarket(bankId);</span>
-<span class="fc" id="L30">        return ResponseEntity.ok(analysis);</span>
+<span class="nc" id="L28">        UUID bankId = authorizationService.getBankIdFromContext();</span>
+<span class="nc" id="L29">        MarketAnalysisDTO analysis = analysisService.analyzeMarket(bankId);</span>
+<span class="nc" id="L30">        return ResponseEntity.ok(analysis);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -21,9 +21,9 @@ import java.util.UUID;
  * Handles bank submission of preliminary offers with optional field overrides
  */
 @RestController
-<span class="fc" id="L24">@RequiredArgsConstructor</span>
+@RequiredArgsConstructor
 @RequestMapping(&quot;/api/bank/offers&quot;)
-<span class="fc" id="L26">@Slf4j</span>
+<span class="nc" id="L26">@Slf4j</span>
 public class BankOfferSubmissionController {
 
     private final BankOfferSubmissionService offerSubmissionService;
@@ -50,9 +50,9 @@ public class BankOfferSubmissionController {
         try {
             // Submit offer
 <span class="nc" id="L52">            OfferSubmissionResponse response = offerSubmissionService.submitOffer(</span>
-                    bankId,
+<span class="nc" id="L53">                    bankId,</span>
 <span class="nc" id="L54">                    request.getApplicationId(),</span>
-                    request
+<span class="nc" id="L55">                    request</span>
             );
 
             // Return appropriate HTTP status

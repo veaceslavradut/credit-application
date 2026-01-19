@@ -27,169 +27,169 @@ public class OfferInsightsService {
     private final ApplicationRepository applicationRepository;
     private final OrganizationRepository organizationRepository;
 
-    public OfferInsightsService(OfferRepository offerRepository, 
+<span class="nc" id="L30">    public OfferInsightsService(OfferRepository offerRepository, </span>
                                ApplicationRepository applicationRepository,
-<span class="fc" id="L32">                               OrganizationRepository organizationRepository) {</span>
-<span class="fc" id="L33">        this.offerRepository = offerRepository;</span>
-<span class="fc" id="L34">        this.applicationRepository = applicationRepository;</span>
-<span class="fc" id="L35">        this.organizationRepository = organizationRepository;</span>
-<span class="fc" id="L36">    }</span>
+                               OrganizationRepository organizationRepository) {
+<span class="nc" id="L33">        this.offerRepository = offerRepository;</span>
+<span class="nc" id="L34">        this.applicationRepository = applicationRepository;</span>
+<span class="nc" id="L35">        this.organizationRepository = organizationRepository;</span>
+<span class="nc" id="L36">    }</span>
 
     public OfferInsightsDTO calculateInsights(UUID applicationId, UUID borrowerId) {
         // Verify borrower owns the application
-<span class="fc" id="L40">        var application = applicationRepository.findById(applicationId)</span>
-<span class="fc" id="L41">                .orElseThrow(() -&gt; new ApplicationNotFoundException(&quot;Application not found&quot;));</span>
+<span class="nc" id="L40">        var application = applicationRepository.findById(applicationId)</span>
+<span class="nc" id="L41">                .orElseThrow(() -&gt; new ApplicationNotFoundException(&quot;Application not found&quot;));</span>
         
-<span class="fc bfc" id="L43" title="All 2 branches covered.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
-<span class="fc" id="L44">            throw new IllegalArgumentException(&quot;Cannot access another borrower's application&quot;);</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
+<span class="nc" id="L44">            throw new IllegalArgumentException(&quot;Cannot access another borrower's application&quot;);</span>
         }
 
         // Fetch all offers for the application
-<span class="fc" id="L48">        List&lt;Offer&gt; offers = offerRepository.findByApplicationId(applicationId);</span>
+<span class="nc" id="L48">        List&lt;Offer&gt; offers = offerRepository.findByApplicationId(applicationId);</span>
 
         // Need at least 2 offers for meaningful insights
-<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (offers.size() &lt; 2) {</span>
-<span class="fc" id="L52">            return null; // Controller will return 204 No Content</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        if (offers.size() &lt; 2) {</span>
+<span class="nc" id="L52">            return null; // Controller will return 204 No Content</span>
         }
 
         // Get bank names for offers
-<span class="fc" id="L56">        Map&lt;UUID, String&gt; bankNames = getBankNames(offers);</span>
+<span class="nc" id="L56">        Map&lt;UUID, String&gt; bankNames = getBankNames(offers);</span>
 
         // Find best offers
-<span class="fc" id="L59">        Offer bestAprOffer = offers.stream()</span>
-<span class="fc" id="L60">                .min(Comparator.comparing(Offer::getApr))</span>
-<span class="fc" id="L61">                .orElseThrow();</span>
+<span class="nc" id="L59">        Offer bestAprOffer = offers.stream()</span>
+<span class="nc" id="L60">                .min(Comparator.comparing(Offer::getApr))</span>
+<span class="nc" id="L61">                .orElseThrow();</span>
         
-<span class="fc" id="L63">        Offer lowestMonthlyPaymentOffer = offers.stream()</span>
-<span class="fc" id="L64">                .min(Comparator.comparing(Offer::getMonthlyPayment))</span>
-<span class="fc" id="L65">                .orElseThrow();</span>
+<span class="nc" id="L63">        Offer lowestMonthlyPaymentOffer = offers.stream()</span>
+<span class="nc" id="L64">                .min(Comparator.comparing(Offer::getMonthlyPayment))</span>
+<span class="nc" id="L65">                .orElseThrow();</span>
         
-<span class="fc" id="L67">        Offer lowestTotalCostOffer = offers.stream()</span>
-<span class="fc" id="L68">                .min(Comparator.comparing(Offer::getTotalCost))</span>
-<span class="fc" id="L69">                .orElseThrow();</span>
+<span class="nc" id="L67">        Offer lowestTotalCostOffer = offers.stream()</span>
+<span class="nc" id="L68">                .min(Comparator.comparing(Offer::getTotalCost))</span>
+<span class="nc" id="L69">                .orElseThrow();</span>
 
         // Calculate average APR
-<span class="fc" id="L72">        BigDecimal averageApr = offers.stream()</span>
-<span class="fc" id="L73">                .map(Offer::getApr)</span>
-<span class="fc" id="L74">                .reduce(BigDecimal.ZERO, BigDecimal::add)</span>
-<span class="fc" id="L75">                .divide(BigDecimal.valueOf(offers.size()), 2, RoundingMode.HALF_UP);</span>
+<span class="nc" id="L72">        BigDecimal averageApr = offers.stream()</span>
+<span class="nc" id="L73">                .map(Offer::getApr)</span>
+<span class="nc" id="L74">                .reduce(BigDecimal.ZERO, BigDecimal::add)</span>
+<span class="nc" id="L75">                .divide(BigDecimal.valueOf(offers.size()), 2, RoundingMode.HALF_UP);</span>
 
         // Calculate APR spread
-<span class="fc" id="L78">        BigDecimal maxApr = offers.stream()</span>
-<span class="fc" id="L79">                .map(Offer::getApr)</span>
-<span class="fc" id="L80">                .max(BigDecimal::compareTo)</span>
-<span class="fc" id="L81">                .orElse(BigDecimal.ZERO);</span>
-<span class="fc" id="L82">        BigDecimal minApr = offers.stream()</span>
-<span class="fc" id="L83">                .map(Offer::getApr)</span>
-<span class="fc" id="L84">                .min(BigDecimal::compareTo)</span>
-<span class="fc" id="L85">                .orElse(BigDecimal.ZERO);</span>
-<span class="fc" id="L86">        BigDecimal aprSpread = maxApr.subtract(minApr);</span>
+<span class="nc" id="L78">        BigDecimal maxApr = offers.stream()</span>
+<span class="nc" id="L79">                .map(Offer::getApr)</span>
+<span class="nc" id="L80">                .max(BigDecimal::compareTo)</span>
+<span class="nc" id="L81">                .orElse(BigDecimal.ZERO);</span>
+<span class="nc" id="L82">        BigDecimal minApr = offers.stream()</span>
+<span class="nc" id="L83">                .map(Offer::getApr)</span>
+<span class="nc" id="L84">                .min(BigDecimal::compareTo)</span>
+<span class="nc" id="L85">                .orElse(BigDecimal.ZERO);</span>
+<span class="nc" id="L86">        BigDecimal aprSpread = maxApr.subtract(minApr);</span>
 
         // Calculate recommended offer (highest weighted score)
-<span class="fc" id="L89">        UUID recommendedOfferId = calculateRecommendedOffer(offers);</span>
+<span class="nc" id="L89">        UUID recommendedOfferId = calculateRecommendedOffer(offers);</span>
 
         // Calculate savings analysis
-<span class="fc" id="L92">        SavingsAnalysisDTO savingsAnalysis = calculateSavings(offers, bankNames);</span>
+<span class="nc" id="L92">        SavingsAnalysisDTO savingsAnalysis = calculateSavings(offers, bankNames);</span>
 
         // Convert to DTOs
-<span class="fc" id="L95">        OfferSummaryDTO bestAprDTO = toSummaryDTO(bestAprOffer, bankNames.get(bestAprOffer.getBankId()));</span>
-<span class="fc" id="L96">        OfferSummaryDTO lowestMonthlyPaymentDTO = toSummaryDTO(lowestMonthlyPaymentOffer, </span>
-<span class="fc" id="L97">                                                                bankNames.get(lowestMonthlyPaymentOffer.getBankId()));</span>
-<span class="fc" id="L98">        OfferSummaryDTO lowestTotalCostDTO = toSummaryDTO(lowestTotalCostOffer, </span>
-<span class="fc" id="L99">                                                            bankNames.get(lowestTotalCostOffer.getBankId()));</span>
+<span class="nc" id="L95">        OfferSummaryDTO bestAprDTO = toSummaryDTO(bestAprOffer, bankNames.get(bestAprOffer.getBankId()));</span>
+<span class="nc" id="L96">        OfferSummaryDTO lowestMonthlyPaymentDTO = toSummaryDTO(lowestMonthlyPaymentOffer, </span>
+<span class="nc" id="L97">                                                                bankNames.get(lowestMonthlyPaymentOffer.getBankId()));</span>
+<span class="nc" id="L98">        OfferSummaryDTO lowestTotalCostDTO = toSummaryDTO(lowestTotalCostOffer, </span>
+<span class="nc" id="L99">                                                            bankNames.get(lowestTotalCostOffer.getBankId()));</span>
 
-<span class="fc" id="L101">        return new OfferInsightsDTO(</span>
-                bestAprDTO,
-                lowestMonthlyPaymentDTO,
-                lowestTotalCostDTO,
-                averageApr,
-                aprSpread,
-                recommendedOfferId,
-                savingsAnalysis
+<span class="nc" id="L101">        return new OfferInsightsDTO(</span>
+<span class="nc" id="L102">                bestAprDTO,</span>
+<span class="nc" id="L103">                lowestMonthlyPaymentDTO,</span>
+<span class="nc" id="L104">                lowestTotalCostDTO,</span>
+<span class="nc" id="L105">                averageApr,</span>
+<span class="nc" id="L106">                aprSpread,</span>
+<span class="nc" id="L107">                recommendedOfferId,</span>
+<span class="nc" id="L108">                savingsAnalysis</span>
         );
     }
 
     public UUID calculateRecommendedOffer(List&lt;Offer&gt; offers) {
         // Weighted scoring: APR (40%), monthly payment (30%), total cost (20%), processing time (10%)
-<span class="fc" id="L114">        return offers.stream()</span>
-<span class="fc" id="L115">                .max(Comparator.comparing(offer -&gt; calculateScore(offer, offers)))</span>
-<span class="fc" id="L116">                .map(Offer::getId)</span>
-<span class="fc" id="L117">                .orElseThrow();</span>
+<span class="nc" id="L114">        return offers.stream()</span>
+<span class="nc" id="L115">                .max(Comparator.comparing(offer -&gt; calculateScore(offer, offers)))</span>
+<span class="nc" id="L116">                .map(Offer::getId)</span>
+<span class="nc" id="L117">                .orElseThrow();</span>
     }
 
     private BigDecimal calculateScore(Offer offer, List&lt;Offer&gt; allOffers) {
         // Lower is better, so use 1/value for scoring
         // Normalize by finding min/max for each metric across all offers
         
-<span class="fc" id="L124">        BigDecimal aprScore = BigDecimal.ONE.divide(offer.getApr(), 6, RoundingMode.HALF_UP)</span>
-<span class="fc" id="L125">                .multiply(new BigDecimal(&quot;0.4&quot;));</span>
+<span class="nc" id="L124">        BigDecimal aprScore = BigDecimal.ONE.divide(offer.getApr(), 6, RoundingMode.HALF_UP)</span>
+<span class="nc" id="L125">                .multiply(new BigDecimal(&quot;0.4&quot;));</span>
         
-<span class="fc" id="L127">        BigDecimal monthlyPaymentScore = BigDecimal.ONE.divide(offer.getMonthlyPayment(), 6, RoundingMode.HALF_UP)</span>
-<span class="fc" id="L128">                .multiply(new BigDecimal(&quot;0.3&quot;));</span>
+<span class="nc" id="L127">        BigDecimal monthlyPaymentScore = BigDecimal.ONE.divide(offer.getMonthlyPayment(), 6, RoundingMode.HALF_UP)</span>
+<span class="nc" id="L128">                .multiply(new BigDecimal(&quot;0.3&quot;));</span>
         
-<span class="fc" id="L130">        BigDecimal totalCostScore = BigDecimal.ONE.divide(offer.getTotalCost(), 6, RoundingMode.HALF_UP)</span>
-<span class="fc" id="L131">                .multiply(new BigDecimal(&quot;0.2&quot;));</span>
+<span class="nc" id="L130">        BigDecimal totalCostScore = BigDecimal.ONE.divide(offer.getTotalCost(), 6, RoundingMode.HALF_UP)</span>
+<span class="nc" id="L131">                .multiply(new BigDecimal(&quot;0.2&quot;));</span>
         
-<span class="fc" id="L133">        BigDecimal processingTimeScore = BigDecimal.ONE.divide(</span>
-<span class="fc" id="L134">                        BigDecimal.valueOf(offer.getProcessingTimeDays()), 6, RoundingMode.HALF_UP)</span>
-<span class="fc" id="L135">                .multiply(new BigDecimal(&quot;0.1&quot;));</span>
+<span class="nc" id="L133">        BigDecimal processingTimeScore = BigDecimal.ONE.divide(</span>
+<span class="nc" id="L134">                        BigDecimal.valueOf(offer.getProcessingTimeDays()), 6, RoundingMode.HALF_UP)</span>
+<span class="nc" id="L135">                .multiply(new BigDecimal(&quot;0.1&quot;));</span>
 
-<span class="fc" id="L137">        return aprScore.add(monthlyPaymentScore).add(totalCostScore).add(processingTimeScore);</span>
+<span class="nc" id="L137">        return aprScore.add(monthlyPaymentScore).add(totalCostScore).add(processingTimeScore);</span>
     }
 
     public SavingsAnalysisDTO calculateSavings(List&lt;Offer&gt; offers, Map&lt;UUID, String&gt; bankNames) {
-<span class="fc" id="L141">        Offer bestOffer = offers.stream()</span>
-<span class="fc" id="L142">                .min(Comparator.comparing(Offer::getTotalCost))</span>
-<span class="fc" id="L143">                .orElseThrow();</span>
+<span class="nc" id="L141">        Offer bestOffer = offers.stream()</span>
+<span class="nc" id="L142">                .min(Comparator.comparing(Offer::getTotalCost))</span>
+<span class="nc" id="L143">                .orElseThrow();</span>
         
-<span class="fc" id="L145">        Offer worstOffer = offers.stream()</span>
-<span class="fc" id="L146">                .max(Comparator.comparing(Offer::getTotalCost))</span>
-<span class="fc" id="L147">                .orElseThrow();</span>
+<span class="nc" id="L145">        Offer worstOffer = offers.stream()</span>
+<span class="nc" id="L146">                .max(Comparator.comparing(Offer::getTotalCost))</span>
+<span class="nc" id="L147">                .orElseThrow();</span>
 
-<span class="fc" id="L149">        BigDecimal savingsVsWorst = worstOffer.getTotalCost().subtract(bestOffer.getTotalCost());</span>
+<span class="nc" id="L149">        BigDecimal savingsVsWorst = worstOffer.getTotalCost().subtract(bestOffer.getTotalCost());</span>
 
-<span class="fc" id="L151">        BigDecimal averageTotalCost = offers.stream()</span>
-<span class="fc" id="L152">                .map(Offer::getTotalCost)</span>
-<span class="fc" id="L153">                .reduce(BigDecimal.ZERO, BigDecimal::add)</span>
-<span class="fc" id="L154">                .divide(BigDecimal.valueOf(offers.size()), 2, RoundingMode.HALF_UP);</span>
+<span class="nc" id="L151">        BigDecimal averageTotalCost = offers.stream()</span>
+<span class="nc" id="L152">                .map(Offer::getTotalCost)</span>
+<span class="nc" id="L153">                .reduce(BigDecimal.ZERO, BigDecimal::add)</span>
+<span class="nc" id="L154">                .divide(BigDecimal.valueOf(offers.size()), 2, RoundingMode.HALF_UP);</span>
 
-<span class="fc" id="L156">        BigDecimal savingsVsAverage = averageTotalCost.subtract(bestOffer.getTotalCost());</span>
+<span class="nc" id="L156">        BigDecimal savingsVsAverage = averageTotalCost.subtract(bestOffer.getTotalCost());</span>
 
-<span class="fc" id="L158">        String bestBankName = bankNames.getOrDefault(bestOffer.getBankId(), &quot;Best Offer&quot;);</span>
-<span class="fc" id="L159">        String worstBankName = bankNames.getOrDefault(worstOffer.getBankId(), &quot;Highest Cost Offer&quot;);</span>
+<span class="nc" id="L158">        String bestBankName = bankNames.getOrDefault(bestOffer.getBankId(), &quot;Best Offer&quot;);</span>
+<span class="nc" id="L159">        String worstBankName = bankNames.getOrDefault(worstOffer.getBankId(), &quot;Highest Cost Offer&quot;);</span>
 
-<span class="fc" id="L161">        String savingsMessage = String.format(</span>
-                &quot;You could save $%,.2f by choosing %s over %s&quot;,
-                savingsVsWorst,
-                bestBankName,
-                worstBankName
+<span class="nc" id="L161">        String savingsMessage = String.format(</span>
+<span class="nc" id="L162">                &quot;You could save $%,.2f by choosing %s over %s&quot;,</span>
+<span class="nc" id="L163">                savingsVsWorst,</span>
+<span class="nc" id="L164">                bestBankName,</span>
+<span class="nc" id="L165">                worstBankName</span>
         );
 
-<span class="fc" id="L168">        return new SavingsAnalysisDTO(</span>
-<span class="fc" id="L169">                bestOffer.getId(),</span>
-                savingsVsWorst,
-                savingsVsAverage,
-                savingsMessage
+<span class="nc" id="L168">        return new SavingsAnalysisDTO(</span>
+<span class="nc" id="L169">                bestOffer.getId(),</span>
+<span class="nc" id="L170">                savingsVsWorst,</span>
+<span class="nc" id="L171">                savingsVsAverage,</span>
+<span class="nc" id="L172">                savingsMessage</span>
         );
     }
 
     private Map&lt;UUID, String&gt; getBankNames(List&lt;Offer&gt; offers) {
-<span class="fc" id="L177">        List&lt;UUID&gt; bankIds = offers.stream()</span>
-<span class="fc" id="L178">                .map(Offer::getBankId)</span>
-<span class="fc" id="L179">                .distinct()</span>
-<span class="fc" id="L180">                .toList();</span>
+<span class="nc" id="L177">        List&lt;UUID&gt; bankIds = offers.stream()</span>
+<span class="nc" id="L178">                .map(Offer::getBankId)</span>
+<span class="nc" id="L179">                .distinct()</span>
+<span class="nc" id="L180">                .toList();</span>
 
-<span class="fc" id="L182">        return organizationRepository.findAllById(bankIds).stream()</span>
-<span class="fc" id="L183">                .collect(Collectors.toMap(Organization::getId, Organization::getName));</span>
+<span class="nc" id="L182">        return organizationRepository.findAllById(bankIds).stream()</span>
+<span class="nc" id="L183">                .collect(Collectors.toMap(Organization::getId, Organization::getName));</span>
     }
 
     private OfferSummaryDTO toSummaryDTO(Offer offer, String bankName) {
-<span class="fc" id="L187">        return new OfferSummaryDTO(</span>
-<span class="fc" id="L188">                offer.getId(),</span>
-<span class="pc bpc" id="L189" title="1 of 2 branches missed.">                bankName != null ? bankName : &quot;Unknown Bank&quot;,</span>
-<span class="fc" id="L190">                offer.getApr(),</span>
-<span class="fc" id="L191">                offer.getMonthlyPayment(),</span>
-<span class="fc" id="L192">                offer.getTotalCost()</span>
+<span class="nc" id="L187">        return new OfferSummaryDTO(</span>
+<span class="nc" id="L188">                offer.getId(),</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">                bankName != null ? bankName : &quot;Unknown Bank&quot;,</span>
+<span class="nc" id="L190">                offer.getApr(),</span>
+<span class="nc" id="L191">                offer.getMonthlyPayment(),</span>
+<span class="nc" id="L192">                offer.getTotalCost()</span>
         );
     }
 }

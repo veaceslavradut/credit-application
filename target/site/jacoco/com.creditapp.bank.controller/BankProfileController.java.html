@@ -18,14 +18,14 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping(&quot;/api/bank/profile&quot;)
-<span class="fc" id="L21">@Slf4j</span>
+<span class="nc" id="L21">@Slf4j</span>
 @PreAuthorize(&quot;hasRole('''BANK_ADMIN''')&quot;)
 public class BankProfileController {
     private final BankProfileService bankProfileService;
 
-<span class="fc" id="L26">    public BankProfileController(BankProfileService bankProfileService) {</span>
-<span class="fc" id="L27">        this.bankProfileService = bankProfileService;</span>
-<span class="fc" id="L28">    }</span>
+<span class="nc" id="L26">    public BankProfileController(BankProfileService bankProfileService) {</span>
+<span class="nc" id="L27">        this.bankProfileService = bankProfileService;</span>
+<span class="nc" id="L28">    }</span>
 
     /**
      * GET /api/bank/profile - Retrieve current bank profile.

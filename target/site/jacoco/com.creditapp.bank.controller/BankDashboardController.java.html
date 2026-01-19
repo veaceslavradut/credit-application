@@ -16,8 +16,8 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(&quot;/api/bank/dashboard&quot;)
-<span class="fc" id="L19">@RequiredArgsConstructor</span>
-<span class="fc" id="L20">@Slf4j</span>
+@RequiredArgsConstructor
+<span class="nc" id="L20">@Slf4j</span>
 public class BankDashboardController {
 
     private final BankDashboardService dashboardService;
@@ -40,9 +40,9 @@ public class BankDashboardController {
 <span class="nc" id="L40">        BankDashboardMetrics metrics = dashboardService.getDashboardMetrics(bankId, timePeriod);</span>
         
 <span class="nc" id="L42">        List&lt;QuickLink&gt; quickLinks = List.of(</span>
-            new QuickLink(&quot;View Application Queue&quot;, &quot;/api/bank/applications/queue&quot;, &quot;inbox&quot;),
-            new QuickLink(&quot;View Rate Cards&quot;, &quot;/api/bank/rate-cards&quot;, &quot;credit_card&quot;),
-            new QuickLink(&quot;Submit Offer&quot;, &quot;/api/bank/offers/submit&quot;, &quot;send&quot;)
+<span class="nc" id="L43">            new QuickLink(&quot;View Application Queue&quot;, &quot;/api/bank/applications/queue&quot;, &quot;inbox&quot;),</span>
+<span class="nc" id="L44">            new QuickLink(&quot;View Rate Cards&quot;, &quot;/api/bank/rate-cards&quot;, &quot;credit_card&quot;),</span>
+<span class="nc" id="L45">            new QuickLink(&quot;Submit Offer&quot;, &quot;/api/bank/offers/submit&quot;, &quot;send&quot;)</span>
         );
 
 <span class="nc" id="L48">        BankDashboardResponse response = new BankDashboardResponse(metrics, quickLinks, timePeriod);</span>

@@ -68,13 +68,13 @@ public class BankRateCard {
     private LocalDateTime updatedAt;
 
     // Constructors
-<span class="fc" id="L71">    public BankRateCard() {}</span>
+<span class="nc" id="L71">    public BankRateCard() {}</span>
 
-    public BankRateCard(UUID id, UUID bankId, LoanType loanType, Currency currency,
+<span class="nc" id="L73">    public BankRateCard(UUID id, UUID bankId, LoanType loanType, Currency currency,</span>
                        BigDecimal minLoanAmount, BigDecimal maxLoanAmount, BigDecimal baseApr,
                        BigDecimal aprAdjustmentRange, BigDecimal originationFeePercent,
                        BigDecimal insurancePercent, Integer processingTimeDays,
-<span class="nc" id="L77">                       LocalDateTime validFrom, LocalDateTime validTo) {</span>
+                       LocalDateTime validFrom, LocalDateTime validTo) {
 <span class="nc" id="L78">        this.id = id;</span>
 <span class="nc" id="L79">        this.bankId = bankId;</span>
 <span class="nc" id="L80">        this.loanType = loanType;</span>
@@ -92,108 +92,108 @@ public class BankRateCard {
 
     // Getters and Setters
     public UUID getId() {
-<span class="fc" id="L95">        return id;</span>
+<span class="nc" id="L95">        return id;</span>
     }
 
     public void setId(UUID id) {
-<span class="fc" id="L99">        this.id = id;</span>
-<span class="fc" id="L100">    }</span>
+<span class="nc" id="L99">        this.id = id;</span>
+<span class="nc" id="L100">    }</span>
 
     public UUID getBankId() {
-<span class="fc" id="L103">        return bankId;</span>
+<span class="nc" id="L103">        return bankId;</span>
     }
 
     public void setBankId(UUID bankId) {
-<span class="fc" id="L107">        this.bankId = bankId;</span>
-<span class="fc" id="L108">    }</span>
+<span class="nc" id="L107">        this.bankId = bankId;</span>
+<span class="nc" id="L108">    }</span>
 
     public LoanType getLoanType() {
-<span class="fc" id="L111">        return loanType;</span>
+<span class="nc" id="L111">        return loanType;</span>
     }
 
     public void setLoanType(LoanType loanType) {
-<span class="fc" id="L115">        this.loanType = loanType;</span>
-<span class="fc" id="L116">    }</span>
+<span class="nc" id="L115">        this.loanType = loanType;</span>
+<span class="nc" id="L116">    }</span>
 
     public Currency getCurrency() {
-<span class="fc" id="L119">        return currency;</span>
+<span class="nc" id="L119">        return currency;</span>
     }
 
     public void setCurrency(Currency currency) {
-<span class="fc" id="L123">        this.currency = currency;</span>
-<span class="fc" id="L124">    }</span>
+<span class="nc" id="L123">        this.currency = currency;</span>
+<span class="nc" id="L124">    }</span>
 
     public BigDecimal getMinLoanAmount() {
-<span class="fc" id="L127">        return minLoanAmount;</span>
+<span class="nc" id="L127">        return minLoanAmount;</span>
     }
 
     public void setMinLoanAmount(BigDecimal minLoanAmount) {
-<span class="fc" id="L131">        this.minLoanAmount = minLoanAmount;</span>
-<span class="fc" id="L132">    }</span>
+<span class="nc" id="L131">        this.minLoanAmount = minLoanAmount;</span>
+<span class="nc" id="L132">    }</span>
 
     public BigDecimal getMaxLoanAmount() {
-<span class="fc" id="L135">        return maxLoanAmount;</span>
+<span class="nc" id="L135">        return maxLoanAmount;</span>
     }
 
     public void setMaxLoanAmount(BigDecimal maxLoanAmount) {
-<span class="fc" id="L139">        this.maxLoanAmount = maxLoanAmount;</span>
-<span class="fc" id="L140">    }</span>
+<span class="nc" id="L139">        this.maxLoanAmount = maxLoanAmount;</span>
+<span class="nc" id="L140">    }</span>
 
     public BigDecimal getBaseApr() {
-<span class="fc" id="L143">        return baseApr;</span>
+<span class="nc" id="L143">        return baseApr;</span>
     }
 
     public void setBaseApr(BigDecimal baseApr) {
-<span class="fc" id="L147">        this.baseApr = baseApr;</span>
-<span class="fc" id="L148">    }</span>
+<span class="nc" id="L147">        this.baseApr = baseApr;</span>
+<span class="nc" id="L148">    }</span>
 
     public BigDecimal getAprAdjustmentRange() {
-<span class="fc" id="L151">        return aprAdjustmentRange;</span>
+<span class="nc" id="L151">        return aprAdjustmentRange;</span>
     }
 
     public void setAprAdjustmentRange(BigDecimal aprAdjustmentRange) {
-<span class="fc" id="L155">        this.aprAdjustmentRange = aprAdjustmentRange;</span>
-<span class="fc" id="L156">    }</span>
+<span class="nc" id="L155">        this.aprAdjustmentRange = aprAdjustmentRange;</span>
+<span class="nc" id="L156">    }</span>
 
     public BigDecimal getOriginationFeePercent() {
-<span class="fc" id="L159">        return originationFeePercent;</span>
+<span class="nc" id="L159">        return originationFeePercent;</span>
     }
 
     public void setOriginationFeePercent(BigDecimal originationFeePercent) {
-<span class="fc" id="L163">        this.originationFeePercent = originationFeePercent;</span>
-<span class="fc" id="L164">    }</span>
+<span class="nc" id="L163">        this.originationFeePercent = originationFeePercent;</span>
+<span class="nc" id="L164">    }</span>
 
     public BigDecimal getInsurancePercent() {
-<span class="fc" id="L167">        return insurancePercent;</span>
+<span class="nc" id="L167">        return insurancePercent;</span>
     }
 
     public void setInsurancePercent(BigDecimal insurancePercent) {
-<span class="fc" id="L171">        this.insurancePercent = insurancePercent;</span>
-<span class="fc" id="L172">    }</span>
+<span class="nc" id="L171">        this.insurancePercent = insurancePercent;</span>
+<span class="nc" id="L172">    }</span>
 
     public Integer getProcessingTimeDays() {
-<span class="fc" id="L175">        return processingTimeDays;</span>
+<span class="nc" id="L175">        return processingTimeDays;</span>
     }
 
     public void setProcessingTimeDays(Integer processingTimeDays) {
-<span class="fc" id="L179">        this.processingTimeDays = processingTimeDays;</span>
-<span class="fc" id="L180">    }</span>
+<span class="nc" id="L179">        this.processingTimeDays = processingTimeDays;</span>
+<span class="nc" id="L180">    }</span>
 
     public LocalDateTime getValidFrom() {
-<span class="fc" id="L183">        return validFrom;</span>
+<span class="nc" id="L183">        return validFrom;</span>
     }
 
     public void setValidFrom(LocalDateTime validFrom) {
-<span class="fc" id="L187">        this.validFrom = validFrom;</span>
-<span class="fc" id="L188">    }</span>
+<span class="nc" id="L187">        this.validFrom = validFrom;</span>
+<span class="nc" id="L188">    }</span>
 
     public LocalDateTime getValidTo() {
-<span class="fc" id="L191">        return validTo;</span>
+<span class="nc" id="L191">        return validTo;</span>
     }
 
     public void setValidTo(LocalDateTime validTo) {
-<span class="fc" id="L195">        this.validTo = validTo;</span>
-<span class="fc" id="L196">    }</span>
+<span class="nc" id="L195">        this.validTo = validTo;</span>
+<span class="nc" id="L196">    }</span>
 
     public LocalDateTime getCreatedAt() {
 <span class="nc" id="L199">        return createdAt;</span>
@@ -209,7 +209,7 @@ public class BankRateCard {
      */
     @Transient
     public boolean isActive() {
-<span class="pc bpc" id="L212" title="1 of 2 branches missed.">        return this.validTo == null;</span>
+<span class="nc bnc" id="L212" title="All 2 branches missed.">        return this.validTo == null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

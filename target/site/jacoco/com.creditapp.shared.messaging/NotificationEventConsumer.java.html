@@ -17,8 +17,8 @@ import java.util.List;
  * NOTE: Disabled for Story 2.9 - will be fully implemented in Story 1.9
  */
 @Component
-<span class="fc" id="L20">@RequiredArgsConstructor</span>
-<span class="fc" id="L21">@Slf4j</span>
+@RequiredArgsConstructor
+<span class="nc" id="L21">@Slf4j</span>
 public class NotificationEventConsumer {
     
     private final NotificationService notificationService;
@@ -27,7 +27,7 @@ public class NotificationEventConsumer {
     @Value(&quot;${notification.retry.backoff-minutes:1,5,15}&quot;)
     private String backoffMinutesConfig;
     
-    private static final int MAX_RETRIES = 3;
+<span class="nc" id="L30">    private static final int MAX_RETRIES = 3;</span>
     
     /**
      * Temporarily disabled - requires full email service from Story 1.9

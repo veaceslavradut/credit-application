@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
  * Async processing ensures non-blocking notification delivery
  */
 @Component
-<span class="fc" id="L16">@RequiredArgsConstructor</span>
-<span class="fc" id="L17">@Slf4j</span>
+@RequiredArgsConstructor
+<span class="nc" id="L17">@Slf4j</span>
 public class NotificationEventPublisher {
     
     private final RabbitTemplate rabbitTemplate;
@@ -27,9 +27,9 @@ public class NotificationEventPublisher {
     public void publishNotificationEvent(NotificationEvent event) {
         try {
 <span class="nc" id="L29">            rabbitTemplate.convertAndSend(</span>
-                RabbitMQConfig.NOTIFICATION_EXCHANGE,
-                &quot;notification.event&quot;,
-                event
+<span class="nc" id="L30">                RabbitMQConfig.NOTIFICATION_EXCHANGE,</span>
+<span class="nc" id="L31">                &quot;notification.event&quot;,</span>
+<span class="nc" id="L32">                event</span>
             );
             
 <span class="nc" id="L35">            log.info(&quot;Published notification event: {} for recipient: {}&quot;, </span>
@@ -37,7 +37,7 @@ public class NotificationEventPublisher {
             
 <span class="nc" id="L38">        } catch (Exception e) {</span>
 <span class="nc" id="L39">            log.error(&quot;Failed to publish notification event: {}&quot;, e.getMessage(), e);</span>
-<span class="nc" id="L40">        }</span>
+        }
 <span class="nc" id="L41">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

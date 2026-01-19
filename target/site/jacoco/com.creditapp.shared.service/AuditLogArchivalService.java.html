@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 
-<span class="fc" id="L12">@Slf4j</span>
+<span class="nc" id="L12">@Slf4j</span>
 @Service
 @Transactional
 public class AuditLogArchivalService {
@@ -19,11 +19,11 @@ public class AuditLogArchivalService {
     @Value(&quot;${audit.retention.years:3}&quot;)
     private int retentionYears;
 
-    public AuditLogArchivalService(EntityManager entityManager,
-<span class="fc" id="L23">                                   AuditLogRepository auditLogRepository) {</span>
-<span class="fc" id="L24">        this.entityManager = entityManager;</span>
-<span class="fc" id="L25">        this.auditLogRepository = auditLogRepository;</span>
-<span class="fc" id="L26">    }</span>
+<span class="nc" id="L22">    public AuditLogArchivalService(EntityManager entityManager,</span>
+                                   AuditLogRepository auditLogRepository) {
+<span class="nc" id="L24">        this.entityManager = entityManager;</span>
+<span class="nc" id="L25">        this.auditLogRepository = auditLogRepository;</span>
+<span class="nc" id="L26">    }</span>
 
     public void archiveOldAuditLogs() {
         try {
@@ -34,7 +34,7 @@ public class AuditLogArchivalService {
 <span class="nc" id="L34">            log.info(&quot;Archived {} audit log entries to audit_logs_archive table&quot;, rowsAffected);</span>
 <span class="nc" id="L35">        } catch (Exception e) {</span>
 <span class="nc" id="L36">            log.error(&quot;Failed to archive old audit logs&quot;, e);</span>
-<span class="nc" id="L37">        }</span>
+        }
 <span class="nc" id="L38">    }</span>
 
     private long archiveLogsOlderThan(LocalDateTime cutoffDate) {

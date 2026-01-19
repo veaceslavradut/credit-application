@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
  * Provides pagination, sorting, and caching for offer history queries.
  */
 @Service
-<span class="fc" id="L34">@RequiredArgsConstructor</span>
-<span class="fc" id="L35">@Slf4j</span>
+@RequiredArgsConstructor
+<span class="nc" id="L35">@Slf4j</span>
 public class OfferHistoryService {
     private final OfferRepository offerRepository;
     private final ApplicationRepository applicationRepository;
@@ -50,58 +50,58 @@ public class OfferHistoryService {
     @Transactional(readOnly = true)
     @Cacheable(value = &quot;borrowerOfferHistory&quot;, key = &quot;#borrowerId&quot;)
     public OfferHistoryResponse getOfferHistory(UUID borrowerId, Integer limit, Integer offset, String sortBy) {
-<span class="fc" id="L53">        long startTime = System.currentTimeMillis();</span>
-<span class="fc" id="L54">        log.debug(&quot;[HISTORY] Retrieving offer history for borrower: {}, limit: {}, offset: {}, sortBy: {}&quot;, </span>
-            borrowerId, limit, offset, sortBy);
+<span class="nc" id="L53">        long startTime = System.currentTimeMillis();</span>
+<span class="nc" id="L54">        log.debug(&quot;[HISTORY] Retrieving offer history for borrower: {}, limit: {}, offset: {}, sortBy: {}&quot;, </span>
+<span class="nc" id="L55">            borrowerId, limit, offset, sortBy);</span>
         
-<span class="pc bpc" id="L57" title="2 of 4 branches missed.">        if (limit == null || limit &lt;= 0) {</span>
+<span class="nc bnc" id="L57" title="All 4 branches missed.">        if (limit == null || limit &lt;= 0) {</span>
 <span class="nc" id="L58">            limit = 20;</span>
         }
-<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (limit &gt; 100) {</span>
-<span class="fc" id="L61">            limit = 100;</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (limit &gt; 100) {</span>
+<span class="nc" id="L61">            limit = 100;</span>
         }
-<span class="pc bpc" id="L63" title="2 of 4 branches missed.">        if (offset == null || offset &lt; 0) {</span>
+<span class="nc bnc" id="L63" title="All 4 branches missed.">        if (offset == null || offset &lt; 0) {</span>
 <span class="nc" id="L64">            offset = 0;</span>
         }
-<span class="pc bpc" id="L66" title="2 of 4 branches missed.">        if (sortBy == null || sortBy.isEmpty()) {</span>
+<span class="nc bnc" id="L66" title="All 4 branches missed.">        if (sortBy == null || sortBy.isEmpty()) {</span>
 <span class="nc" id="L67">            sortBy = &quot;createdAt&quot;;</span>
         }
 
-<span class="fc" id="L70">        Sort sort = Sort.by(Sort.Direction.DESC, sortBy);</span>
-<span class="fc" id="L71">        Pageable pageable = PageRequest.of(offset / limit, limit, sort);</span>
+<span class="nc" id="L70">        Sort sort = Sort.by(Sort.Direction.DESC, sortBy);</span>
+<span class="nc" id="L71">        Pageable pageable = PageRequest.of(offset / limit, limit, sort);</span>
 
         // Query offers by borrower using custom repository method
-<span class="fc" id="L74">        Page&lt;Offer&gt; offerPage = offerRepository.findOffersByBorrowerId(borrowerId, pageable);</span>
+<span class="nc" id="L74">        Page&lt;Offer&gt; offerPage = offerRepository.findOffersByBorrowerId(borrowerId, pageable);</span>
         
-<span class="fc" id="L76">        long totalCount = offerPage.getTotalElements();</span>
+<span class="nc" id="L76">        long totalCount = offerPage.getTotalElements();</span>
         
         // Warn if large history detected
-<span class="pc bpc" id="L79" title="1 of 2 branches missed.">        if (totalCount &gt; 1000) {</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (totalCount &gt; 1000) {</span>
 <span class="nc" id="L80">            log.warn(&quot;[HISTORY] Large offer history detected for borrower {}: {} total offers&quot;, borrowerId, totalCount);</span>
         }
         
         // Pre-load all related applications and organizations to avoid N+1 queries
-<span class="fc" id="L84">        Map&lt;UUID, Application&gt; applicationCache = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L85">        Map&lt;UUID, Organization&gt; organizationCache = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L84">        Map&lt;UUID, Application&gt; applicationCache = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L85">        Map&lt;UUID, Organization&gt; organizationCache = new HashMap&lt;&gt;();</span>
         
-<span class="fc" id="L87">        List&lt;OfferHistoryRecord&gt; records = offerPage.getContent().stream()</span>
-<span class="fc" id="L88">            .map(offer -&gt; mapToRecord(offer, applicationCache, organizationCache))</span>
-<span class="fc" id="L89">            .collect(Collectors.toList());</span>
+<span class="nc" id="L87">        List&lt;OfferHistoryRecord&gt; records = offerPage.getContent().stream()</span>
+<span class="nc" id="L88">            .map(offer -&gt; mapToRecord(offer, applicationCache, organizationCache))</span>
+<span class="nc" id="L89">            .collect(Collectors.toList());</span>
 
-<span class="pc bpc" id="L91" title="1 of 2 branches missed.">        boolean hasMore = (offset + limit) &lt; totalCount;</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        boolean hasMore = (offset + limit) &lt; totalCount;</span>
 
-<span class="fc" id="L93">        long queryTimeMs = System.currentTimeMillis() - startTime;</span>
-<span class="fc" id="L94">        log.info(&quot;[HISTORY] Retrieved {} offers for borrower {} in {}ms, total: {}, hasMore: {}&quot;, </span>
-<span class="fc" id="L95">            records.size(), borrowerId, queryTimeMs, totalCount, hasMore);</span>
+<span class="nc" id="L93">        long queryTimeMs = System.currentTimeMillis() - startTime;</span>
+<span class="nc" id="L94">        log.info(&quot;[HISTORY] Retrieved {} offers for borrower {} in {}ms, total: {}, hasMore: {}&quot;, </span>
+<span class="nc" id="L95">            records.size(), borrowerId, queryTimeMs, totalCount, hasMore);</span>
 
-<span class="fc" id="L97">        return OfferHistoryResponse.builder()</span>
-<span class="fc" id="L98">            .offers(records)</span>
-<span class="fc" id="L99">            .totalCount((int) totalCount)</span>
-<span class="fc" id="L100">            .limit(limit)</span>
-<span class="fc" id="L101">            .offset(offset)</span>
-<span class="fc" id="L102">            .hasMore(hasMore)</span>
-<span class="fc" id="L103">            .retrievedAt(LocalDateTime.now())</span>
-<span class="fc" id="L104">            .build();</span>
+<span class="nc" id="L97">        return OfferHistoryResponse.builder()</span>
+<span class="nc" id="L98">            .offers(records)</span>
+<span class="nc" id="L99">            .totalCount((int) totalCount)</span>
+<span class="nc" id="L100">            .limit(limit)</span>
+<span class="nc" id="L101">            .offset(offset)</span>
+<span class="nc" id="L102">            .hasMore(hasMore)</span>
+<span class="nc" id="L103">            .retrievedAt(LocalDateTime.now())</span>
+<span class="nc" id="L104">            .build();</span>
     }
 
     /**
@@ -110,35 +110,35 @@ public class OfferHistoryService {
      */
     private OfferHistoryRecord mapToRecord(Offer offer, Map&lt;UUID, Application&gt; appCache, Map&lt;UUID, Organization&gt; orgCache) {
         // Get application details from cache or database
-<span class="fc" id="L113">        Application app = appCache.computeIfAbsent(offer.getApplicationId(), id -&gt; </span>
-<span class="fc" id="L114">            applicationRepository.findById(id).orElse(null)</span>
+<span class="nc" id="L113">        Application app = appCache.computeIfAbsent(offer.getApplicationId(), id -&gt; </span>
+<span class="nc" id="L114">            applicationRepository.findById(id).orElse(null)</span>
         );
 
         // Get organization (bank) details from cache or database
-<span class="fc" id="L118">        Organization org = orgCache.computeIfAbsent(offer.getBankId(), id -&gt; </span>
-<span class="fc" id="L119">            organizationRepository.findById(id).orElse(null)</span>
+<span class="nc" id="L118">        Organization org = orgCache.computeIfAbsent(offer.getBankId(), id -&gt; </span>
+<span class="nc" id="L119">            organizationRepository.findById(id).orElse(null)</span>
         );
 
-<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        String bankName = org != null ? org.getName() : &quot;Unknown Bank&quot;;</span>
-<span class="pc bpc" id="L123" title="1 of 2 branches missed.">        Integer termMonths = app != null ? app.getLoanTermMonths() : null;</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        String bankName = org != null ? org.getName() : &quot;Unknown Bank&quot;;</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        Integer termMonths = app != null ? app.getLoanTermMonths() : null;</span>
 
-<span class="fc" id="L125">        return OfferHistoryRecord.builder()</span>
-<span class="fc" id="L126">            .offerId(offer.getId())</span>
-<span class="fc" id="L127">            .applicationId(offer.getApplicationId())</span>
-<span class="fc" id="L128">            .bankName(bankName)</span>
-<span class="fc" id="L129">            .apr(offer.getApr())</span>
-<span class="fc" id="L130">            .monthlyPayment(offer.getMonthlyPayment())</span>
-<span class="fc" id="L131">            .totalCost(offer.getTotalCost())</span>
-<span class="fc" id="L132">            .originationFee(offer.getOriginationFee())</span>
-<span class="fc" id="L133">            .insuranceCost(offer.getInsuranceCost())</span>
-<span class="fc" id="L134">            .termMonths(termMonths)</span>
-<span class="fc" id="L135">            .validityPeriodDays(offer.getValidityPeriodDays())</span>
-<span class="fc" id="L136">            .expiresAt(offer.getExpiresAt())</span>
-<span class="fc" id="L137">            .offerStatus(offer.getOfferStatus().toString())</span>
-<span class="fc" id="L138">            .offerReceivedAt(offer.getCreatedAt())</span>
-<span class="fc" id="L139">            .borrowerSelectedAt(offer.getBorrowerSelectedAt())</span>
-<span class="fc" id="L140">            .finalAcceptedAt(offer.getOfferSubmittedAt())</span>
-<span class="fc" id="L141">            .build();</span>
+<span class="nc" id="L125">        return OfferHistoryRecord.builder()</span>
+<span class="nc" id="L126">            .offerId(offer.getId())</span>
+<span class="nc" id="L127">            .applicationId(offer.getApplicationId())</span>
+<span class="nc" id="L128">            .bankName(bankName)</span>
+<span class="nc" id="L129">            .apr(offer.getApr())</span>
+<span class="nc" id="L130">            .monthlyPayment(offer.getMonthlyPayment())</span>
+<span class="nc" id="L131">            .totalCost(offer.getTotalCost())</span>
+<span class="nc" id="L132">            .originationFee(offer.getOriginationFee())</span>
+<span class="nc" id="L133">            .insuranceCost(offer.getInsuranceCost())</span>
+<span class="nc" id="L134">            .termMonths(termMonths)</span>
+<span class="nc" id="L135">            .validityPeriodDays(offer.getValidityPeriodDays())</span>
+<span class="nc" id="L136">            .expiresAt(offer.getExpiresAt())</span>
+<span class="nc" id="L137">            .offerStatus(offer.getOfferStatus().toString())</span>
+<span class="nc" id="L138">            .offerReceivedAt(offer.getCreatedAt())</span>
+<span class="nc" id="L139">            .borrowerSelectedAt(offer.getBorrowerSelectedAt())</span>
+<span class="nc" id="L140">            .finalAcceptedAt(offer.getOfferSubmittedAt())</span>
+<span class="nc" id="L141">            .build();</span>
     }
 
     /**

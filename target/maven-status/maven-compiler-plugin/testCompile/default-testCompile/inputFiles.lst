@@ -30,6 +30,7 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integrat
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\OfferDocumentRetrievalServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\ApplicationCreationUnitTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\ApplicationSubmissionServiceTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\shared\LegalDocumentServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\BorrowerNotificationUnitTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ApplicationStatusTrackingIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest.java

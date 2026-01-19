@@ -30,7 +30,8 @@ public enum AuditAction {
     RATE_CARD_CREATED("Rate card created"),
     RATE_CARD_UPDATED("Rate card updated"),
     CONSENT_GRANTED("Consent granted"),
-    CONSENT_WITHDRAWN("Consent withdrawn");
+    CONSENT_WITHDRAWN("Consent withdrawn"),
+    LEGAL_DOCUMENT_UPDATED("Legal document updated");
 
     private final String description;
 

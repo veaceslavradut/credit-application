@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-<span class="fc" id="L14">@RequiredArgsConstructor</span>
+@RequiredArgsConstructor
 public class RateLimitInterceptor implements HandlerInterceptor {
 
     private final RateLimiter scenarioCalculatorRateLimiter;
@@ -37,7 +37,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 <span class="nc" id="L37">                response.setContentType(&quot;application/json&quot;);</span>
 <span class="nc" id="L38">                response.getWriter().write(&quot;{\&quot;error\&quot;: \&quot;Rate Limit Exceeded\&quot;, \&quot;message\&quot;: \&quot;Maximum 100 requests per minute\&quot;, \&quot;retryAfter\&quot;: 60}&quot;);</span>
 <span class="nc" id="L39">                return false;</span>
-<span class="nc" id="L40">            }</span>
+            }
         }
         
 <span class="nc" id="L43">        return true;</span>

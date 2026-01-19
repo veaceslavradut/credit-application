@@ -31,8 +31,8 @@ import java.util.UUID;
  * Service for retrieving complete application details for bank review panel
  */
 @Service
-<span class="fc" id="L34">@RequiredArgsConstructor</span>
-<span class="fc" id="L35">@Slf4j</span>
+@RequiredArgsConstructor
+<span class="nc" id="L35">@Slf4j</span>
 public class BankApplicationDetailsService {
 
     private final ApplicationRepository applicationRepository;
@@ -137,9 +137,9 @@ public class BankApplicationDetailsService {
         
         // Define standard consent templates
 <span class="nc" id="L139">        String[] consentTexts = {</span>
-                &quot;I authorize the bank to check my credit report and history&quot;,
-                &quot;I authorize the bank to share my information with third-party service providers&quot;,
-                &quot;I agree to the loan service terms and conditions&quot;
+<span class="nc" id="L140">                &quot;I authorize the bank to check my credit report and history&quot;,</span>
+<span class="nc" id="L141">                &quot;I authorize the bank to share my information with third-party service providers&quot;,</span>
+<span class="nc" id="L142">                &quot;I agree to the loan service terms and conditions&quot;</span>
         };
         
         // Build DTOs for each of the 3 standard consents
@@ -154,8 +154,8 @@ public class BankApplicationDetailsService {
             
 <span class="nc" id="L155">            ConsentDetailsDTO dto = ConsentDetailsDTO.builder()</span>
 <span class="nc" id="L156">                    .consentNumber(consentNum)</span>
-<span class="nc bnc" id="L157" title="All 4 branches missed.">                    .consentText(dbConsent != null ? dbConsent.getConsentText() : consentTexts[i - 1])</span>
-<span class="nc bnc" id="L158" title="All 4 branches missed.">                    .signed(dbConsent != null &amp;&amp; dbConsent.getIsSigned() != null &amp;&amp; dbConsent.getIsSigned())</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">                    .consentText(dbConsent != null ? dbConsent.getConsentText() : consentTexts[i - 1])</span>
+<span class="nc bnc" id="L158" title="All 6 branches missed.">                    .signed(dbConsent != null &amp;&amp; dbConsent.getIsSigned() != null &amp;&amp; dbConsent.getIsSigned())</span>
 <span class="nc bnc" id="L159" title="All 2 branches missed.">                    .borrowerSignature(dbConsent != null ? dbConsent.getBorrowerSignature() : &quot;&quot;)</span>
 <span class="nc bnc" id="L160" title="All 2 branches missed.">                    .signedAt(dbConsent != null ? dbConsent.getSignedAt() : null)</span>
 <span class="nc" id="L161">                    .build();</span>
@@ -198,18 +198,18 @@ public class BankApplicationDetailsService {
 <span class="nc" id="L198">            auditDetails.put(&quot;viewedAt&quot;, LocalDateTime.now());</span>
             
 <span class="nc" id="L200">            auditService.logAction(</span>
-                    &quot;Application&quot;,
+<span class="nc" id="L201">                    &quot;Application&quot;,</span>
 <span class="nc" id="L202">                    application.getId(),</span>
-                    AuditAction.APPLICATION_VIEWED,
-                    bankId,
-                    &quot;BANK_ADMIN&quot;
+<span class="nc" id="L203">                    AuditAction.APPLICATION_VIEWED,</span>
+<span class="nc" id="L204">                    bankId,</span>
+<span class="nc" id="L205">                    &quot;BANK_ADMIN&quot;</span>
             );
             
 <span class="nc" id="L208">            log.info(&quot;Application {} marked as VIEWED by bank {}&quot;, application.getId(), bankId);</span>
 <span class="nc" id="L209">        } catch (Exception e) {</span>
 <span class="nc" id="L210">            log.warn(&quot;Failed to log APPLICATION_VIEWED audit for app {}: {}&quot;, application.getId(), e.getMessage());</span>
             // Non-blocking: don't fail the operation if audit logging fails
-<span class="nc" id="L212">        }</span>
+        }
 <span class="nc" id="L213">    }</span>
 
     /**
@@ -245,18 +245,18 @@ public class BankApplicationDetailsService {
 <span class="nc" id="L245">            newValues.put(&quot;notes&quot;, notes);</span>
 
 <span class="nc" id="L247">            auditService.logActionWithValues(</span>
-                    &quot;Application&quot;,
-                    applicationId,
-                    AuditAction.APPLICATION_UPDATED,
-                    oldValues,
-                    newValues
+<span class="nc" id="L248">                    &quot;Application&quot;,</span>
+<span class="nc" id="L249">                    applicationId,</span>
+<span class="nc" id="L250">                    AuditAction.APPLICATION_UPDATED,</span>
+<span class="nc" id="L251">                    oldValues,</span>
+<span class="nc" id="L252">                    newValues</span>
             );
 
 <span class="nc" id="L255">            log.info(&quot;Internal notes updated for application {} by bank {}&quot;, applicationId, bankId);</span>
 <span class="nc" id="L256">        } catch (Exception e) {</span>
 <span class="nc" id="L257">            log.error(&quot;Failed to update internal notes for application {}: {}&quot;, applicationId, e.getMessage());</span>
 <span class="nc" id="L258">            throw new RuntimeException(&quot;Failed to update internal notes&quot;, e);</span>
-<span class="nc" id="L259">        }</span>
+        }
 <span class="nc" id="L260">    }</span>
 
     /**
@@ -296,7 +296,7 @@ public class BankApplicationDetailsService {
 <span class="nc" id="L296">        } catch (Exception e) {</span>
 <span class="nc" id="L297">            log.error(&quot;Failed to sign consent {} for app {}: {}&quot;, consentNumber, applicationId, e.getMessage());</span>
 <span class="nc" id="L298">            throw new RuntimeException(&quot;Failed to sign consent&quot;, e);</span>
-<span class="nc" id="L299">        }</span>
+        }
 <span class="nc" id="L300">    }</span>
 
     /**

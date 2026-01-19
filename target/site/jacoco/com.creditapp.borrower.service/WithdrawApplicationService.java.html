@@ -20,7 +20,7 @@ import java.util.UUID;
  * Service for handling application withdrawal operations.
  */
 @Service
-<span class="fc" id="L23">@RequiredArgsConstructor</span>
+@RequiredArgsConstructor
 public class WithdrawApplicationService {
 
     private final ApplicationRepository applicationRepository;
@@ -56,7 +56,7 @@ public class WithdrawApplicationService {
 <span class="nc" id="L56">        ApplicationStatus currentStatus = application.getStatus();</span>
 <span class="nc bnc" id="L57" title="All 2 branches missed.">        if (!isWithdrawable(currentStatus)) {</span>
 <span class="nc" id="L58">            throw new ApplicationNotWithdrawableException(</span>
-                    &quot;Cannot withdraw application in status: &quot; + currentStatus,
+<span class="nc" id="L59">                    &quot;Cannot withdraw application in status: &quot; + currentStatus,</span>
 <span class="nc" id="L60">                    currentStatus.toString());</span>
         }
 
@@ -65,11 +65,11 @@ public class WithdrawApplicationService {
 <span class="nc" id="L65">                ? request.getWithdrawalReason() </span>
 <span class="nc" id="L66">                : &quot;User withdrew application&quot;;</span>
 <span class="nc" id="L67">        statusTransitionService.recordStatusTransition(</span>
-                applicationId,
-                currentStatus,
-                ApplicationStatus.WITHDRAWN,
-                borrowerId,
-                withdrawalReason);
+<span class="nc" id="L68">                applicationId,</span>
+<span class="nc" id="L69">                currentStatus,</span>
+<span class="nc" id="L70">                ApplicationStatus.WITHDRAWN,</span>
+<span class="nc" id="L71">                borrowerId,</span>
+<span class="nc" id="L72">                withdrawalReason);</span>
 
         // Update application
 <span class="nc" id="L75">        application.setStatus(ApplicationStatus.WITHDRAWN);</span>
@@ -101,10 +101,10 @@ public class WithdrawApplicationService {
     private boolean isWithdrawable(ApplicationStatus status) {
         // Withdrawable states: DRAFT, SUBMITTED, UNDER_REVIEW, OFFERS_AVAILABLE
         // Terminal states: ACCEPTED, REJECTED, EXPIRED, COMPLETED, WITHDRAWN
-<span class="nc bnc" id="L104" title="All 8 branches missed.">        return status == ApplicationStatus.DRAFT</span>
-                || status == ApplicationStatus.SUBMITTED
-                || status == ApplicationStatus.UNDER_REVIEW
-                || status == ApplicationStatus.OFFERS_AVAILABLE;
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        return status == ApplicationStatus.DRAFT</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">                || status == ApplicationStatus.SUBMITTED</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">                || status == ApplicationStatus.UNDER_REVIEW</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">                || status == ApplicationStatus.OFFERS_AVAILABLE;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -13,10 +13,10 @@ import java.util.UUID;
 
 @Entity
 @Table(name = &quot;organizations&quot;)
-<span class="nc" id="L16">@Data</span>
-<span class="pc" id="L17">@Builder</span>
-<span class="fc" id="L18">@NoArgsConstructor</span>
-<span class="fc" id="L19">@AllArgsConstructor</span>
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Organization {
 
     @Id
@@ -32,13 +32,13 @@ public class Organization {
     @Column(name = &quot;country_code&quot;, nullable = false)
     private String countryCode;
 
-<span class="fc" id="L35">    @Column(name = &quot;is_active&quot;, nullable = false)</span>
+    @Column(name = &quot;is_active&quot;, nullable = false)
     private boolean active = true;
 
     @Column(name = &quot;registration_number&quot;, unique = true)
     private String registrationNumber;
 
-<span class="fc" id="L41">    @Enumerated(EnumType.STRING)</span>
+    @Enumerated(EnumType.STRING)
     @Column(name = &quot;status&quot;, nullable = false)
     private BankStatus status = BankStatus.PENDING_ACTIVATION;
 
@@ -86,48 +86,48 @@ public class Organization {
     @Column(name = &quot;updated_at&quot;, nullable = false)
     private LocalDateTime updatedAt;
 
-<span class="fc" id="L89">    public UUID getId() { return id; }</span>
-<span class="fc" id="L90">    public void setId(UUID id) { this.id = id; }</span>
-<span class="fc" id="L91">    public String getName() { return name; }</span>
-<span class="fc" id="L92">    public void setName(String name) { this.name = name; }</span>
+<span class="nc" id="L89">    public UUID getId() { return id; }</span>
+<span class="nc" id="L90">    public void setId(UUID id) { this.id = id; }</span>
+<span class="nc" id="L91">    public String getName() { return name; }</span>
+<span class="nc" id="L92">    public void setName(String name) { this.name = name; }</span>
 <span class="nc" id="L93">    public String getTaxId() { return taxId; }</span>
-<span class="fc" id="L94">    public void setTaxId(String taxId) { this.taxId = taxId; }</span>
+<span class="nc" id="L94">    public void setTaxId(String taxId) { this.taxId = taxId; }</span>
 <span class="nc" id="L95">    public String getCountryCode() { return countryCode; }</span>
-<span class="fc" id="L96">    public void setCountryCode(String countryCode) { this.countryCode = countryCode; }</span>
+<span class="nc" id="L96">    public void setCountryCode(String countryCode) { this.countryCode = countryCode; }</span>
 <span class="nc" id="L97">    public boolean isActive() { return active; }</span>
-<span class="fc" id="L98">    public void setActive(boolean active) { this.active = active; }</span>
+<span class="nc" id="L98">    public void setActive(boolean active) { this.active = active; }</span>
 <span class="nc" id="L99">    public LocalDateTime getCreatedAt() { return createdAt; }</span>
 <span class="nc" id="L100">    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }</span>
 <span class="nc" id="L101">    public LocalDateTime getUpdatedAt() { return updatedAt; }</span>
 <span class="nc" id="L102">    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }</span>
-<span class="fc" id="L103">    public String getRegistrationNumber() { return registrationNumber; }</span>
-<span class="fc" id="L104">    public void setRegistrationNumber(String registrationNumber) { this.registrationNumber = registrationNumber; }</span>
-<span class="fc" id="L105">    public BankStatus getStatus() { return status; }</span>
-<span class="fc" id="L106">    public void setStatus(BankStatus status) { this.status = status; }</span>
-<span class="fc" id="L107">    public String getActivationToken() { return activationToken; }</span>
-<span class="fc" id="L108">    public void setActivationToken(String activationToken) { this.activationToken = activationToken; }</span>
-<span class="fc" id="L109">    public LocalDateTime getActivationTokenExpiresAt() { return activationTokenExpiresAt; }</span>
-<span class="fc" id="L110">    public void setActivationTokenExpiresAt(LocalDateTime activationTokenExpiresAt) { this.activationTokenExpiresAt = activationTokenExpiresAt; }</span>
-<span class="fc" id="L111">    public LocalDateTime getActivatedAt() { return activatedAt; }</span>
-<span class="fc" id="L112">    public void setActivatedAt(LocalDateTime activatedAt) { this.activatedAt = activatedAt; }</span>
+<span class="nc" id="L103">    public String getRegistrationNumber() { return registrationNumber; }</span>
+<span class="nc" id="L104">    public void setRegistrationNumber(String registrationNumber) { this.registrationNumber = registrationNumber; }</span>
+<span class="nc" id="L105">    public BankStatus getStatus() { return status; }</span>
+<span class="nc" id="L106">    public void setStatus(BankStatus status) { this.status = status; }</span>
+<span class="nc" id="L107">    public String getActivationToken() { return activationToken; }</span>
+<span class="nc" id="L108">    public void setActivationToken(String activationToken) { this.activationToken = activationToken; }</span>
+<span class="nc" id="L109">    public LocalDateTime getActivationTokenExpiresAt() { return activationTokenExpiresAt; }</span>
+<span class="nc" id="L110">    public void setActivationTokenExpiresAt(LocalDateTime activationTokenExpiresAt) { this.activationTokenExpiresAt = activationTokenExpiresAt; }</span>
+<span class="nc" id="L111">    public LocalDateTime getActivatedAt() { return activatedAt; }</span>
+<span class="nc" id="L112">    public void setActivatedAt(LocalDateTime activatedAt) { this.activatedAt = activatedAt; }</span>
 <span class="nc" id="L113">    public LocalDateTime getDeletedAt() { return deletedAt; }</span>
 <span class="nc" id="L114">    public void setDeletedAt(LocalDateTime deletedAt) { this.deletedAt = deletedAt; }</span>
-<span class="fc" id="L115">    public String getLogoUrl() { return logoUrl; }</span>
-<span class="fc" id="L116">    public void setLogoUrl(String logoUrl) { this.logoUrl = logoUrl; }</span>
-<span class="fc" id="L117">    public String getContactEmail() { return contactEmail; }</span>
-<span class="fc" id="L118">    public void setContactEmail(String contactEmail) { this.contactEmail = contactEmail; }</span>
-<span class="fc" id="L119">    public String getPhone() { return phone; }</span>
-<span class="fc" id="L120">    public void setPhone(String phone) { this.phone = phone; }</span>
-<span class="fc" id="L121">    public String getAddressStreet() { return addressStreet; }</span>
-<span class="fc" id="L122">    public void setAddressStreet(String addressStreet) { this.addressStreet = addressStreet; }</span>
-<span class="fc" id="L123">    public String getAddressCity() { return addressCity; }</span>
-<span class="fc" id="L124">    public void setAddressCity(String addressCity) { this.addressCity = addressCity; }</span>
-<span class="fc" id="L125">    public String getAddressState() { return addressState; }</span>
+<span class="nc" id="L115">    public String getLogoUrl() { return logoUrl; }</span>
+<span class="nc" id="L116">    public void setLogoUrl(String logoUrl) { this.logoUrl = logoUrl; }</span>
+<span class="nc" id="L117">    public String getContactEmail() { return contactEmail; }</span>
+<span class="nc" id="L118">    public void setContactEmail(String contactEmail) { this.contactEmail = contactEmail; }</span>
+<span class="nc" id="L119">    public String getPhone() { return phone; }</span>
+<span class="nc" id="L120">    public void setPhone(String phone) { this.phone = phone; }</span>
+<span class="nc" id="L121">    public String getAddressStreet() { return addressStreet; }</span>
+<span class="nc" id="L122">    public void setAddressStreet(String addressStreet) { this.addressStreet = addressStreet; }</span>
+<span class="nc" id="L123">    public String getAddressCity() { return addressCity; }</span>
+<span class="nc" id="L124">    public void setAddressCity(String addressCity) { this.addressCity = addressCity; }</span>
+<span class="nc" id="L125">    public String getAddressState() { return addressState; }</span>
 <span class="nc" id="L126">    public void setAddressState(String addressState) { this.addressState = addressState; }</span>
-<span class="fc" id="L127">    public String getAddressZip() { return addressZip; }</span>
-<span class="fc" id="L128">    public void setAddressZip(String addressZip) { this.addressZip = addressZip; }</span>
-<span class="fc" id="L129">    public String getWebsite() { return website; }</span>
-<span class="fc" id="L130">    public void setWebsite(String website) { this.website = website; }</span>
+<span class="nc" id="L127">    public String getAddressZip() { return addressZip; }</span>
+<span class="nc" id="L128">    public void setAddressZip(String addressZip) { this.addressZip = addressZip; }</span>
+<span class="nc" id="L129">    public String getWebsite() { return website; }</span>
+<span class="nc" id="L130">    public void setWebsite(String website) { this.website = website; }</span>
 
     @Override
     public boolean equals(Object o) {

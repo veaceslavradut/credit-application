@@ -16,8 +16,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-<span class="fc" id="L19">@RequiredArgsConstructor</span>
-<span class="fc" id="L20">@Slf4j</span>
+@RequiredArgsConstructor
+<span class="nc" id="L20">@Slf4j</span>
 @Transactional
 public class GDPRConsentService {
     
@@ -25,85 +25,85 @@ public class GDPRConsentService {
     private final AuditService auditService;
     
     public List&lt;ConsentResponseDTO&gt; grantConsent(UUID borrowerId, List&lt;ConsentType&gt; types, String ipAddress, String userAgent) {
-<span class="fc" id="L28">        log.info(&quot;Granting consent for borrower {} with types {}&quot;, borrowerId, types);</span>
+<span class="nc" id="L28">        log.info(&quot;Granting consent for borrower {} with types {}&quot;, borrowerId, types);</span>
         
-<span class="fc" id="L30">        List&lt;GDPRConsent&gt; consents = types.stream()</span>
-<span class="fc" id="L31">            .map(type -&gt; {</span>
-<span class="fc" id="L32">                GDPRConsent consent = GDPRConsent.builder()</span>
-<span class="fc" id="L33">                    .borrowerId(borrowerId)</span>
-<span class="fc" id="L34">                    .consentType(type)</span>
-<span class="fc" id="L35">                    .consentedAt(LocalDateTime.now())</span>
-<span class="fc" id="L36">                    .ipAddress(ipAddress)</span>
-<span class="fc" id="L37">                    .userAgent(userAgent)</span>
-<span class="fc" id="L38">                    .version(1)</span>
-<span class="fc" id="L39">                    .build();</span>
+<span class="nc" id="L30">        List&lt;GDPRConsent&gt; consents = types.stream()</span>
+<span class="nc" id="L31">            .map(type -&gt; {</span>
+<span class="nc" id="L32">                GDPRConsent consent = GDPRConsent.builder()</span>
+<span class="nc" id="L33">                    .borrowerId(borrowerId)</span>
+<span class="nc" id="L34">                    .consentType(type)</span>
+<span class="nc" id="L35">                    .consentedAt(LocalDateTime.now())</span>
+<span class="nc" id="L36">                    .ipAddress(ipAddress)</span>
+<span class="nc" id="L37">                    .userAgent(userAgent)</span>
+<span class="nc" id="L38">                    .version(1)</span>
+<span class="nc" id="L39">                    .build();</span>
                 
-<span class="fc" id="L41">                GDPRConsent saved = consentRepository.save(consent);</span>
+<span class="nc" id="L41">                GDPRConsent saved = consentRepository.save(consent);</span>
                 
-<span class="fc" id="L43">                auditService.logActionWithValues(</span>
-                    &quot;GDPRConsent&quot;,
-                    borrowerId,
-                    AuditAction.CONSENT_GRANTED,
-                    null,
-<span class="fc" id="L48">                    java.util.Map.of(&quot;consentType&quot;, type.toString(), &quot;ipAddress&quot;, ipAddress)</span>
+<span class="nc" id="L43">                auditService.logActionWithValues(</span>
+<span class="nc" id="L44">                    &quot;GDPRConsent&quot;,</span>
+<span class="nc" id="L45">                    borrowerId,</span>
+<span class="nc" id="L46">                    AuditAction.CONSENT_GRANTED,</span>
+<span class="nc" id="L47">                    null,</span>
+<span class="nc" id="L48">                    java.util.Map.of(&quot;consentType&quot;, type.toString(), &quot;ipAddress&quot;, ipAddress)</span>
                 );
                 
-<span class="fc" id="L51">                log.info(&quot;Consent granted: {} for borrower {}&quot;, type, borrowerId);</span>
-<span class="fc" id="L52">                return saved;</span>
+<span class="nc" id="L51">                log.info(&quot;Consent granted: {} for borrower {}&quot;, type, borrowerId);</span>
+<span class="nc" id="L52">                return saved;</span>
             })
-<span class="fc" id="L54">            .collect(Collectors.toList());</span>
+<span class="nc" id="L54">            .collect(Collectors.toList());</span>
         
-<span class="fc" id="L56">        return consents.stream()</span>
-<span class="fc" id="L57">            .map(this::toConsentResponse)</span>
-<span class="fc" id="L58">            .collect(Collectors.toList());</span>
+<span class="nc" id="L56">        return consents.stream()</span>
+<span class="nc" id="L57">            .map(this::toConsentResponse)</span>
+<span class="nc" id="L58">            .collect(Collectors.toList());</span>
     }
     
     public ConsentResponseDTO withdrawConsent(UUID borrowerId, ConsentType type) {
-<span class="fc" id="L62">        log.info(&quot;Withdrawing consent for borrower {} with type {}&quot;, borrowerId, type);</span>
+<span class="nc" id="L62">        log.info(&quot;Withdrawing consent for borrower {} with type {}&quot;, borrowerId, type);</span>
         
-<span class="fc" id="L64">        GDPRConsent consent = consentRepository.findLatestByBorrowerIdAndType(borrowerId, type)</span>
-<span class="fc" id="L65">            .orElseThrow(() -&gt; {</span>
+<span class="nc" id="L64">        GDPRConsent consent = consentRepository.findLatestByBorrowerIdAndType(borrowerId, type)</span>
+<span class="nc" id="L65">            .orElseThrow(() -&gt; {</span>
 <span class="nc" id="L66">                log.error(&quot;Consent not found for borrower {} with type {}&quot;, borrowerId, type);</span>
 <span class="nc" id="L67">                return new RuntimeException(&quot;Consent not found&quot;);</span>
             });
         
-<span class="fc" id="L70">        consent.setWithdrawnAt(LocalDateTime.now());</span>
-<span class="fc" id="L71">        GDPRConsent updated = consentRepository.save(consent);</span>
+<span class="nc" id="L70">        consent.setWithdrawnAt(LocalDateTime.now());</span>
+<span class="nc" id="L71">        GDPRConsent updated = consentRepository.save(consent);</span>
         
-<span class="fc" id="L73">        auditService.logActionWithValues(</span>
-            &quot;GDPRConsent&quot;,
-            borrowerId,
-            AuditAction.CONSENT_WITHDRAWN,
-            null,
-<span class="fc" id="L78">            java.util.Map.of(&quot;consentType&quot;, type.toString())</span>
+<span class="nc" id="L73">        auditService.logActionWithValues(</span>
+<span class="nc" id="L74">            &quot;GDPRConsent&quot;,</span>
+<span class="nc" id="L75">            borrowerId,</span>
+<span class="nc" id="L76">            AuditAction.CONSENT_WITHDRAWN,</span>
+<span class="nc" id="L77">            null,</span>
+<span class="nc" id="L78">            java.util.Map.of(&quot;consentType&quot;, type.toString())</span>
         );
         
-<span class="fc" id="L81">        log.info(&quot;Consent withdrawn: {} for borrower {}&quot;, type, borrowerId);</span>
+<span class="nc" id="L81">        log.info(&quot;Consent withdrawn: {} for borrower {}&quot;, type, borrowerId);</span>
         
-<span class="fc" id="L83">        return toConsentResponse(updated);</span>
+<span class="nc" id="L83">        return toConsentResponse(updated);</span>
     }
     
     public boolean isConsentGiven(UUID borrowerId, ConsentType type) {
-<span class="fc" id="L87">        return consentRepository.findByBorrowerIdAndConsentTypeAndWithdrawnAtNull(borrowerId, type)</span>
-<span class="fc" id="L88">            .isPresent();</span>
+<span class="nc" id="L87">        return consentRepository.findByBorrowerIdAndConsentTypeAndWithdrawnAtNull(borrowerId, type)</span>
+<span class="nc" id="L88">            .isPresent();</span>
     }
     
     public List&lt;ConsentResponseDTO&gt; getCurrentConsents(UUID borrowerId) {
-<span class="fc" id="L92">        return consentRepository.findAllByBorrowerId(borrowerId)</span>
-<span class="fc" id="L93">            .stream()</span>
-<span class="fc bfc" id="L94" title="All 2 branches covered.">            .filter(c -&gt; c.getWithdrawnAt() == null)</span>
-<span class="fc" id="L95">            .map(this::toConsentResponse)</span>
-<span class="fc" id="L96">            .collect(Collectors.toList());</span>
+<span class="nc" id="L92">        return consentRepository.findAllByBorrowerId(borrowerId)</span>
+<span class="nc" id="L93">            .stream()</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">            .filter(c -&gt; c.getWithdrawnAt() == null)</span>
+<span class="nc" id="L95">            .map(this::toConsentResponse)</span>
+<span class="nc" id="L96">            .collect(Collectors.toList());</span>
     }
     
     private ConsentResponseDTO toConsentResponse(GDPRConsent consent) {
-<span class="fc" id="L100">        return ConsentResponseDTO.builder()</span>
-<span class="fc" id="L101">            .consentType(consent.getConsentType())</span>
-<span class="fc" id="L102">            .consentedAt(consent.getConsentedAt())</span>
-<span class="fc" id="L103">            .withdrawnAt(consent.getWithdrawnAt())</span>
-<span class="fc" id="L104">            .version(consent.getVersion())</span>
-<span class="fc bfc" id="L105" title="All 2 branches covered.">            .currentlyConsented(consent.getWithdrawnAt() == null)</span>
-<span class="fc" id="L106">            .build();</span>
+<span class="nc" id="L100">        return ConsentResponseDTO.builder()</span>
+<span class="nc" id="L101">            .consentType(consent.getConsentType())</span>
+<span class="nc" id="L102">            .consentedAt(consent.getConsentedAt())</span>
+<span class="nc" id="L103">            .withdrawnAt(consent.getWithdrawnAt())</span>
+<span class="nc" id="L104">            .version(consent.getVersion())</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">            .currentlyConsented(consent.getWithdrawnAt() == null)</span>
+<span class="nc" id="L106">            .build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
