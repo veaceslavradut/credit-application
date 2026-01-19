@@ -22,7 +22,8 @@ public class TestCacheConfig {
             "marketAverage", 
             "rateCards",
             "scenarioCalculations",
-            "helpArticles"
+            "helpArticles",
+            "applicationDetails"
         );
     }
 }
