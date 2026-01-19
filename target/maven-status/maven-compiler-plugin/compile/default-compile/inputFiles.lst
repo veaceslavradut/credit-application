@@ -8,6 +8,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\mod
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\scheduler\OfferExpirationScheduler.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\ApplicationQueueItem.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\exception\NotFoundException.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\service\BankOfferHistoryService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\CreateApplicationRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\ApplicationStatusTrackingService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\OfferHistoryService.java
