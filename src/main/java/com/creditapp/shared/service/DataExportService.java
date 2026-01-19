@@ -6,6 +6,7 @@ import com.creditapp.shared.model.DataExport;
 import com.creditapp.shared.model.ExportFormat;
 import com.creditapp.shared.model.ExportStatus;
 import com.creditapp.shared.repository.DataExportRepository;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class DataExportService {
     private final DataExportRepository dataExportRepository;
     private final AuditService auditService;
     private final ObjectMapper objectMapper;
+    private final ExportFileGenerator exportFileGenerator;
     
     @Transactional
     public DataExportResponse initiateExport(UUID borrowerId, ExportFormat format, String ipAddress) {
@@ -146,7 +148,11 @@ public class DataExportService {
             }
             
             // Generate export data
-            ObjectNode exportData = generateExportData(borrowerId, export.getFormat());
+            JsonNode exportData = exportFileGenerator.generateJsonExport(borrowerId);
+            
+            // TODO: Upload to S3 and get actual file URL
+            String fileContent = objectMapper.writeValueAsString(exportData);
+            log.debug("Generated export file size: {} bytes", fileContent.length());
             
             // Mark as completed (in real scenario, would upload to S3)
             export.setStatus(ExportStatus.COMPLETED);
@@ -165,21 +171,6 @@ public class DataExportService {
             log.error("Error generating export: {}", exportId, e);
             handleExportFailure(exportId);
         }
-    }
-    
-    private ObjectNode generateExportData(UUID borrowerId, ExportFormat format) {
-        ObjectNode root = objectMapper.createObjectNode();
-        
-        root.put("borrowerId", borrowerId.toString());
-        root.put("exportedAt", LocalDateTime.now().toString());
-        root.putArray("profile");
-        root.putArray("applications");
-        root.putArray("offers");
-        root.putArray("consents");
-        root.putArray("auditLog");
-        
-        log.debug("Generated export data for borrower: {}", borrowerId);
-        return root;
     }
     
     private void handleExportFailure(UUID exportId) {

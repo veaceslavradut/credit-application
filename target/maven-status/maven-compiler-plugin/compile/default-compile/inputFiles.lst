@@ -100,6 +100,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\v
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\DeliveryStatus.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\exception\PasswordValidationException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\repository\TeamMemberInviteRepository.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\ExportFileGenerator.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\RequestContextService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\ApplicationCreationException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\UnauthorizedException.java
