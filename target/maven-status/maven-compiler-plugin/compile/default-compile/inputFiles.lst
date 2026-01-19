@@ -19,6 +19,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\OfferHistoryService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\RefreshTokenRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\model\Offer.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\ESignatureService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\audit\BusinessAudit.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\BankRateCardResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\websocket\ApplicationQueueWebSocketHandler.java
@@ -33,6 +34,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\r
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\SignatureLogRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\EmailTemplate.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\ApplicationDocument.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\DocumentUploadService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\ConsentRequestDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\service\BankAnalyticsService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\AmountRangeBreakdownDTO.java
@@ -49,6 +51,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\eve
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\OfferRetrievalService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\LoginResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\controller\UserProfileController.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\DocumentService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\DeclineApplicationResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\service\OfferService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\ApplicationDetailsResponse.java
@@ -276,6 +279,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\con
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\WithdrawApplicationResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\model\BankRateCard.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\dto\EmailMetricsDTO.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\ESignatureProviderConfig.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\CustomAccessDeniedHandler.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\DataExportService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\SelectOfferResponse.java
@@ -318,6 +322,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\s
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\DataExport.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\controller\BankProfileController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\exception\DuplicateRateCardException.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\controller\DocumentController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\UpdateApplicationResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\exception\InsufficientMarketDataException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\repository\ApplicationRepository.java
