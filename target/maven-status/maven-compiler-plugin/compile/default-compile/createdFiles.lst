@@ -102,6 +102,7 @@ com\creditapp\borrower\dto\ApplicationHistoryRecord.class
 com\creditapp\bank\dto\OfferDocumentUploadRequest.class
 com\creditapp\borrower\exception\ApplicationAlreadySubmittedException.class
 com\creditapp\bank\controller\BankOfferHistoryController.class
+com\creditapp\shared\service\DataExportService.class
 com\creditapp\auth\controller\AuthController.class
 com\creditapp\shared\model\ExportFormat.class
 com\creditapp\borrower\exception\ApplicationNotFoundException.class
@@ -244,6 +245,7 @@ com\creditapp\bank\model\Offer.class
 com\creditapp\bank\dto\ConsentDetailsDTO.class
 com\creditapp\shared\service\MockEmailService.class
 com\creditapp\shared\security\AuthorizationService.class
+com\creditapp\shared\service\ExportFileGenerator.class
 com\creditapp\borrower\dto\DocumentDTO.class
 com\creditapp\shared\model\HelpSection$HelpSectionBuilder.class
 com\creditapp\borrower\repository\ConsentRepository.class

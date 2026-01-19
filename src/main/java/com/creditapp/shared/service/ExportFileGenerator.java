@@ -25,103 +25,83 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class ExportFileGenerator {
     
-    private final ObjectMapper objectMapper;
     private final UserRepository userRepository;
     private final ApplicationRepository applicationRepository;
     private final ApplicationHistoryRepository applicationHistoryRepository;
     private final OfferRepository offerRepository;
     private final GDPRConsentRepository gdprConsentRepository;
     private final AuditLogRepository auditLogRepository;
-    
-    @Transactional(readOnly = true)
+    private final ObjectMapper objectMapper;
+
     public JsonNode generateJsonExport(UUID borrowerId) {
         log.info("Generating JSON export for borrower: {}", borrowerId);
         
-        ObjectNode root = objectMapper.createObjectNode();
+        ObjectNode export = objectMapper.createObjectNode();
+        export.put("borrowerId", borrowerId.toString());
+        export.put("exportedAt", LocalDateTime.now().toString());
+        export.put("dataFormat", "JSON");
         
-        root.put("borrowerId", borrowerId.toString());
-        root.put("exportedAt", LocalDateTime.now().toString());
-        root.put("dataFormat", "GDPR Article 20 - Structured Machine-Readable Format");
+        export.set("profile", buildProfileSection(borrowerId));
+        export.set("applications", buildApplicationsSection(borrowerId));
+        export.set("offers", buildOffersSection(borrowerId));
+        export.set("consents", buildConsentsSection(borrowerId));
+        export.set("auditLog", buildAuditLogSection(borrowerId));
         
-        // Profile section
-        root.set("profile", buildProfileSection(borrowerId));
-        
-        // Applications section
-        root.set("applications", buildApplicationsSection(borrowerId));
-        
-        // Offers section
-        root.set("offers", buildOffersSection(borrowerId));
-        
-        // Consents section
-        root.set("consents", buildConsentsSection(borrowerId));
-        
-        // Audit log section
-        root.set("auditLog", buildAuditLogSection(borrowerId));
-        
-        log.info("JSON export generated successfully for borrower: {}", borrowerId);
-        return root;
+        return export;
     }
     
     private JsonNode buildProfileSection(UUID borrowerId) {
-        ObjectNode profile = objectMapper.createObjectNode();
-        
-        Optional<User> userOpt = userRepository.findById(borrowerId);
-        if (userOpt.isEmpty()) {
-            profile.put("error", "User not found");
-            return profile;
-        }
-        
-        User user = userOpt.get();
-        profile.put("id", user.getId().toString());
-        profile.put("email", user.getEmail());
-        profile.put("firstName", user.getFirstName());
-        profile.put("lastName", user.getLastName());
-        profile.put("phoneNumber", user.getPhoneNumber() != null ? user.getPhoneNumber() : "");
-        profile.put("role", user.getRole() != null ? user.getRole().toString() : "");
-        profile.put("active", user.isActive());
-        profile.put("accountCreatedAt", user.getCreatedAt() != null ? user.getCreatedAt().toString() : "");
-        
-        return profile;
+        return userRepository.findById(borrowerId)
+            .map(user -> {
+                ObjectNode profile = objectMapper.createObjectNode();
+                profile.put("id", user.getId().toString());
+                profile.put("email", user.getEmail() != null ? user.getEmail() : "");
+                profile.put("firstName", user.getFirstName() != null ? user.getFirstName() : "");
+                profile.put("lastName", user.getLastName() != null ? user.getLastName() : "");
+                profile.put("phoneNumber", user.getPhoneNumber() != null ? user.getPhoneNumber() : "");
+                profile.put("role", user.getRole() != null ? user.getRole().name() : "");
+                profile.put("active", user.getIsActive() != null ? user.getIsActive() : false);
+                profile.put("accountCreatedAt", user.getCreatedAt() != null ? user.getCreatedAt().toString() : "");
+                return (JsonNode) profile;
+            })
+            .orElse(objectMapper.createObjectNode().put("error", "User not found"));
     }
     
     private JsonNode buildApplicationsSection(UUID borrowerId) {
         ArrayNode applications = objectMapper.createArrayNode();
         
-        List<Application> apps = applicationRepository.findByBorrowerIdOrderByCreatedAtDesc(borrowerId, PageRequest.of(0, 1000));
+        List<Application> apps = applicationRepository.findByBorrowerId(borrowerId, PageRequest.of(0, 1000)).getContent();
         
         for (Application app : apps) {
             ObjectNode appNode = objectMapper.createObjectNode();
             appNode.put("id", app.getId().toString());
-            appNode.put("loanType", app.getLoanType() != null ? app.getLoanType().toString() : "");
-            appNode.put("amount", app.getAmount() != null ? app.getAmount().toString() : "0");
-            appNode.put("currency", app.getCurrency() != null ? app.getCurrency().toString() : "");
-            appNode.put("status", app.getStatus() != null ? app.getStatus().toString() : "");
-            appNode.put("submittedAt", app.getSubmittedAt() != null ? app.getSubmittedAt().toString() : "");
+            appNode.put("loanType", app.getLoanType() != null ? app.getLoanType() : "");
+            appNode.put("loanAmount", app.getLoanAmount() != null ? app.getLoanAmount().toString() : "0");
+            appNode.put("loanTermMonths", app.getLoanTermMonths() != null ? app.getLoanTermMonths() : 0);
+            appNode.put("currency", app.getCurrency() != null ? app.getCurrency() : "");
+            appNode.put("status", app.getStatus() != null ? app.getStatus().name() : "");
             appNode.put("createdAt", app.getCreatedAt() != null ? app.getCreatedAt().toString() : "");
-            appNode.put("updatedAt", app.getUpdatedAt() != null ? app.getUpdatedAt().toString() : "");
+            appNode.put("submittedAt", app.getSubmittedAt() != null ? app.getSubmittedAt().toString() : "");
             
-            // Application history
-            List<ApplicationHistory> history = applicationHistoryRepository.findByApplicationIdOrderByCreatedAtDesc(app.getId());
-            if (!history.isEmpty()) {
-                ArrayNode historyArray = objectMapper.createArrayNode();
-                for (ApplicationHistory h : history) {
-                    ObjectNode histNode = objectMapper.createObjectNode();
-                    histNode.put("status", h.getStatus() != null ? h.getStatus().toString() : "");
-                    histNode.put("changedAt", h.getCreatedAt() != null ? h.getCreatedAt().toString() : "");
-                    histNode.put("notes", h.getNotes() != null ? h.getNotes() : "");
-                    historyArray.add(histNode);
-                }
-                appNode.set("history", historyArray);
+            ArrayNode history = objectMapper.createArrayNode();
+            List<ApplicationHistory> historyRecords = applicationHistoryRepository.findByApplicationIdOrderByChangedAtDesc(app.getId());
+            for (ApplicationHistory h : historyRecords) {
+                ObjectNode histNode = objectMapper.createObjectNode();
+                histNode.put("oldStatus", h.getOldStatus() != null ? h.getOldStatus().name() : "");
+                histNode.put("newStatus", h.getNewStatus() != null ? h.getNewStatus().name() : "");
+                histNode.put("changedAt", h.getChangedAt() != null ? h.getChangedAt().toString() : "");
+                histNode.put("changeReason", h.getChangeReason() != null ? h.getChangeReason() : "");
+                history.add(histNode);
             }
-            
+            appNode.set("history", history);
             applications.add(appNode);
         }
         
@@ -131,22 +111,21 @@ public class ExportFileGenerator {
     private JsonNode buildOffersSection(UUID borrowerId) {
         ArrayNode offers = objectMapper.createArrayNode();
         
-        List<Application> apps = applicationRepository.findByBorrowerIdOrderByCreatedAtDesc(borrowerId, PageRequest.of(0, 1000));
+        List<Application> apps = applicationRepository.findByBorrowerId(borrowerId, PageRequest.of(0, 1000)).getContent();
         
         for (Application app : apps) {
             List<Offer> appOffers = offerRepository.findByApplicationId(app.getId());
-            
             for (Offer offer : appOffers) {
                 ObjectNode offerNode = objectMapper.createObjectNode();
                 offerNode.put("id", offer.getId().toString());
-                offerNode.put("applicationId", app.getId().toString());
-                offerNode.put("bankId", offer.getBankId() != null ? offer.getBankId().toString() : "");
+                offerNode.put("applicationId", offer.getApplicationId().toString());
+                offerNode.put("bankId", offer.getBankId().toString());
                 offerNode.put("apr", offer.getApr() != null ? offer.getApr().toString() : "0");
                 offerNode.put("monthlyPayment", offer.getMonthlyPayment() != null ? offer.getMonthlyPayment().toString() : "0");
-                offerNode.put("termMonths", offer.getTermMonths() != null ? offer.getTermMonths().toString() : "0");
-                offerNode.put("status", offer.getStatus() != null ? offer.getStatus().toString() : "");
+                offerNode.put("totalCost", offer.getTotalCost() != null ? offer.getTotalCost().toString() : "0");
+                offerNode.put("processingTimeDays", offer.getProcessingTimeDays() != null ? offer.getProcessingTimeDays() : 0);
+                offerNode.put("status", offer.getOfferStatus() != null ? offer.getOfferStatus().name() : "");
                 offerNode.put("expiresAt", offer.getExpiresAt() != null ? offer.getExpiresAt().toString() : "");
-                offerNode.put("createdAt", offer.getCreatedAt() != null ? offer.getCreatedAt().toString() : "");
                 offers.add(offerNode);
             }
         }
@@ -157,12 +136,12 @@ public class ExportFileGenerator {
     private JsonNode buildConsentsSection(UUID borrowerId) {
         ArrayNode consents = objectMapper.createArrayNode();
         
-        List<GDPRConsent> userConsents = gdprConsentRepository.findByUserIdOrderByConsentedAtDesc(borrowerId);
+        List<GDPRConsent> userConsents = gdprConsentRepository.findAllByBorrowerId(borrowerId);
         
         for (GDPRConsent consent : userConsents) {
             ObjectNode consentNode = objectMapper.createObjectNode();
             consentNode.put("id", consent.getId().toString());
-            consentNode.put("consentType", consent.getConsentType() != null ? consent.getConsentType().toString() : "");
+            consentNode.put("consentType", consent.getConsentType() != null ? consent.getConsentType().name() : "");
             consentNode.put("consentedAt", consent.getConsentedAt() != null ? consent.getConsentedAt().toString() : "");
             consentNode.put("withdrawnAt", consent.getWithdrawnAt() != null ? consent.getWithdrawnAt().toString() : "");
             consentNode.put("ipAddress", consent.getIpAddress() != null ? consent.getIpAddress() : "");
@@ -176,29 +155,27 @@ public class ExportFileGenerator {
     private JsonNode buildAuditLogSection(UUID borrowerId) {
         ArrayNode auditLogs = objectMapper.createArrayNode();
         
-        List<AuditLog> logs = auditLogRepository.findByActorIdOrderByTimestampDesc(borrowerId, PageRequest.of(0, 500));
+        List<AuditLog> logs = auditLogRepository.findByActorIdOrderByCreatedAtDesc(borrowerId);
+        if (logs.size() > 500) {
+            logs = logs.subList(0, 500);
+        }
         
         for (AuditLog log : logs) {
             ObjectNode logNode = objectMapper.createObjectNode();
             logNode.put("id", log.getId() != null ? log.getId().toString() : "");
-            logNode.put("action", log.getAction() != null ? log.getAction().toString() : "");
+            logNode.put("action", log.getAction() != null ? log.getAction().name() : "");
             logNode.put("entityType", log.getEntityType() != null ? log.getEntityType() : "");
             logNode.put("entityId", log.getEntityId() != null ? log.getEntityId().toString() : "");
-            logNode.put("timestamp", log.getTimestamp() != null ? log.getTimestamp().toString() : "");
+            logNode.put("timestamp", log.getCreatedAt() != null ? log.getCreatedAt().toString() : "");
             logNode.put("ipAddress", log.getIpAddress() != null ? log.getIpAddress() : "");
-            logNode.put("success", log.isSuccess());
             auditLogs.add(logNode);
         }
         
         return auditLogs;
     }
     
-    public byte[] generatePdfExport(UUID borrowerId) {
-        log.info("Generating PDF export for borrower: {}", borrowerId);
-        
-        // TODO: Implement PDF generation with iText library
-        // For now, return placeholder
-        String placeholder = "PDF Export for Borrower: " + borrowerId + "\\n\\nExported at: " + LocalDateTime.now();
-        return placeholder.getBytes();
+    public byte[] generatePdfExport(UUID borrowerId, ExportFormat format) {
+        log.warn("PDF export not yet implemented for borrower: {}", borrowerId);
+        return "PDF export not yet implemented".getBytes();
     }
 }
