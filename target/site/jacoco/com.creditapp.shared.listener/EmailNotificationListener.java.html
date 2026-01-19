@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmailNotificationListener {
 
-<span class="nc" id="L14">    private static final Logger logger = LoggerFactory.getLogger(EmailNotificationListener.class);</span>
+<span class="fc" id="L14">    private static final Logger logger = LoggerFactory.getLogger(EmailNotificationListener.class);</span>
 
     private final EmailService emailService;
 
-<span class="nc" id="L18">    public EmailNotificationListener(EmailService emailService) {</span>
-<span class="nc" id="L19">        this.emailService = emailService;</span>
-<span class="nc" id="L20">    }</span>
+<span class="fc" id="L18">    public EmailNotificationListener(EmailService emailService) {</span>
+<span class="fc" id="L19">        this.emailService = emailService;</span>
+<span class="fc" id="L20">    }</span>
 
     @EventListener
     @Async

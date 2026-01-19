@@ -15,17 +15,17 @@ import java.util.UUID;
     @Index(name = &quot;idx_gdpr_consents_borrower_type&quot;, columnList = &quot;borrower_id,consent_type&quot;)
 })
 <span class="pc bnc" id="L17" title="All 78 branches missed.">@Data</span>
-<span class="nc" id="L18">@NoArgsConstructor</span>
+<span class="fc" id="L18">@NoArgsConstructor</span>
 <span class="fc" id="L19">@AllArgsConstructor</span>
 <span class="pc" id="L20">@Builder</span>
 public class GDPRConsent {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-<span class="nc" id="L25">    private UUID id;</span>
+<span class="fc" id="L25">    private UUID id;</span>
     
     @Column(nullable = false)
-<span class="nc" id="L28">    private UUID borrowerId;</span>
+<span class="fc" id="L28">    private UUID borrowerId;</span>
     
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -38,13 +38,13 @@ public class GDPRConsent {
 <span class="fc" id="L38">    private LocalDateTime withdrawnAt;</span>
     
     @Column(name = &quot;ip_address&quot;, length = 45)
-<span class="nc" id="L41">    private String ipAddress;</span>
+<span class="fc" id="L41">    private String ipAddress;</span>
     
     @Column(columnDefinition = &quot;TEXT&quot;)
 <span class="nc" id="L44">    private String userAgent;</span>
     
-<span class="pc" id="L46">    @Column(nullable = false)</span>
-<span class="pc" id="L47">    private Integer version = 1;</span>
+<span class="fc" id="L46">    @Column(nullable = false)</span>
+<span class="fc" id="L47">    private Integer version = 1;</span>
     
     @CreationTimestamp
     @Column(nullable = false)

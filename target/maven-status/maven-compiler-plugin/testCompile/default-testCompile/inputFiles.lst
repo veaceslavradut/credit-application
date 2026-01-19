@@ -52,6 +52,7 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\ban
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\BankMarketAnalysisServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\bank\BankOfferHistoryIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\config\TestCacheConfig.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\GDPRConsentIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\HelpContentIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\bank\BankRateCardIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\notification\NotificationServiceIntegrationTest.java

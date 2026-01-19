@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
-<span class="nc" id="L27">@Slf4j</span>
+<span class="fc" id="L27">@Slf4j</span>
 public class BankTeamService {
     private final BankTeamMemberRepository teamMemberRepository;
     private final TeamMemberInviteRepository inviteRepository;
@@ -37,126 +37,126 @@ public class BankTeamService {
             BankTeamMemberRepository teamMemberRepository,
             TeamMemberInviteRepository inviteRepository,
             NotificationService notificationService,
-<span class="nc" id="L40">            AuditService auditService) {</span>
-<span class="nc" id="L41">        this.teamMemberRepository = teamMemberRepository;</span>
-<span class="nc" id="L42">        this.inviteRepository = inviteRepository;</span>
-<span class="nc" id="L43">        this.notificationService = notificationService;</span>
-<span class="nc" id="L44">        this.auditService = auditService;</span>
-<span class="nc" id="L45">    }</span>
+<span class="fc" id="L40">            AuditService auditService) {</span>
+<span class="fc" id="L41">        this.teamMemberRepository = teamMemberRepository;</span>
+<span class="fc" id="L42">        this.inviteRepository = inviteRepository;</span>
+<span class="fc" id="L43">        this.notificationService = notificationService;</span>
+<span class="fc" id="L44">        this.auditService = auditService;</span>
+<span class="fc" id="L45">    }</span>
 
     /**
      * Get all active team members for a bank.
      */
     @Transactional(readOnly = true)
     public List&lt;TeamMemberDTO&gt; getTeamMembers(UUID bankId) {
-<span class="nc" id="L52">        log.debug(&quot;Retrieving team members for bankId: {}&quot;, bankId);</span>
-<span class="nc" id="L53">        return teamMemberRepository.findByBankIdAndStatus(bankId, &quot;ACTIVE&quot;)</span>
-<span class="nc" id="L54">            .stream()</span>
-<span class="nc" id="L55">            .map(this::mapToDTO)</span>
-<span class="nc" id="L56">            .collect(Collectors.toList());</span>
+<span class="fc" id="L52">        log.debug(&quot;Retrieving team members for bankId: {}&quot;, bankId);</span>
+<span class="fc" id="L53">        return teamMemberRepository.findByBankIdAndStatus(bankId, &quot;ACTIVE&quot;)</span>
+<span class="fc" id="L54">            .stream()</span>
+<span class="fc" id="L55">            .map(this::mapToDTO)</span>
+<span class="fc" id="L56">            .collect(Collectors.toList());</span>
     }
 
     /**
      * Invite a team member to the bank.
      */
     public InviteTeamMemberResponse inviteTeamMember(UUID bankId, InviteTeamMemberRequest request) {
-<span class="nc" id="L63">        log.debug(&quot;Inviting team member: {} to bankId: {}&quot;, request.getEmail(), bankId);</span>
+<span class="fc" id="L63">        log.debug(&quot;Inviting team member: {} to bankId: {}&quot;, request.getEmail(), bankId);</span>
 
         // Check if already a member
-<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (teamMemberRepository.findByBankIdAndEmail(bankId, request.getEmail()).isPresent()) {</span>
-<span class="nc" id="L67">            throw new RuntimeException(&quot;User already a team member&quot;);</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        if (teamMemberRepository.findByBankIdAndEmail(bankId, request.getEmail()).isPresent()) {</span>
+<span class="fc" id="L67">            throw new RuntimeException(&quot;User already a team member&quot;);</span>
         }
 
         // Check if already has pending invite
-<span class="nc bnc" id="L71" title="All 2 branches missed.">        if (inviteRepository.findByBankIdAndEmail(bankId, request.getEmail()).isPresent()) {</span>
-<span class="nc" id="L72">            throw new RuntimeException(&quot;Invitation already pending&quot;);</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (inviteRepository.findByBankIdAndEmail(bankId, request.getEmail()).isPresent()) {</span>
+<span class="fc" id="L72">            throw new RuntimeException(&quot;Invitation already pending&quot;);</span>
         }
 
-<span class="nc" id="L75">        String inviteToken = UUID.randomUUID().toString();</span>
-<span class="nc" id="L76">        TeamMemberInvite invite = TeamMemberInvite.builder()</span>
-<span class="nc" id="L77">            .bankId(bankId)</span>
-<span class="nc" id="L78">            .email(request.getEmail())</span>
-<span class="nc" id="L79">            .name(request.getName())</span>
-<span class="nc" id="L80">            .inviteToken(inviteToken)</span>
-<span class="nc" id="L81">            .status(&quot;PENDING&quot;)</span>
-<span class="nc" id="L82">            .sentAt(LocalDateTime.now())</span>
-<span class="nc" id="L83">            .expiresAt(LocalDateTime.now().plusDays(inviteExpirationDays))</span>
-<span class="nc" id="L84">            .build();</span>
+<span class="fc" id="L75">        String inviteToken = UUID.randomUUID().toString();</span>
+<span class="fc" id="L76">        TeamMemberInvite invite = TeamMemberInvite.builder()</span>
+<span class="fc" id="L77">            .bankId(bankId)</span>
+<span class="fc" id="L78">            .email(request.getEmail())</span>
+<span class="fc" id="L79">            .name(request.getName())</span>
+<span class="fc" id="L80">            .inviteToken(inviteToken)</span>
+<span class="fc" id="L81">            .status(&quot;PENDING&quot;)</span>
+<span class="fc" id="L82">            .sentAt(LocalDateTime.now())</span>
+<span class="fc" id="L83">            .expiresAt(LocalDateTime.now().plusDays(inviteExpirationDays))</span>
+<span class="fc" id="L84">            .build();</span>
 
-<span class="nc" id="L86">        TeamMemberInvite saved = inviteRepository.save(invite);</span>
+<span class="fc" id="L86">        TeamMemberInvite saved = inviteRepository.save(invite);</span>
 
         // Send invitation email
         try {
-<span class="nc" id="L90">            notificationService.sendTeamInviteEmail(request.getEmail(), request.getName(), inviteToken);</span>
+<span class="fc" id="L90">            notificationService.sendTeamInviteEmail(request.getEmail(), request.getName(), inviteToken);</span>
 <span class="nc" id="L91">        } catch (Exception e) {</span>
 <span class="nc" id="L92">            log.error(&quot;Failed to send team invite email to: {}&quot;, request.getEmail(), e);</span>
-<span class="nc" id="L93">        }</span>
+<span class="fc" id="L93">        }</span>
 
         // TODO: Use proper AuditAction enum once defined for team member invitations
         // auditService.logAction(&quot;ORGANIZATION&quot;, bankId, AuditAction.TEAM_MEMBER_INVITED);
-<span class="nc" id="L97">        log.info(&quot;Team member invitation sent to: {} for bankId: {}&quot;, request.getEmail(), bankId);</span>
+<span class="fc" id="L97">        log.info(&quot;Team member invitation sent to: {} for bankId: {}&quot;, request.getEmail(), bankId);</span>
 
-<span class="nc" id="L99">        return InviteTeamMemberResponse.builder()</span>
-<span class="nc" id="L100">            .inviteId(saved.getId())</span>
-<span class="nc" id="L101">            .email(saved.getEmail())</span>
-<span class="nc" id="L102">            .status(saved.getStatus())</span>
-<span class="nc" id="L103">            .sentAt(saved.getSentAt())</span>
-<span class="nc" id="L104">            .expiresAt(saved.getExpiresAt())</span>
-<span class="nc" id="L105">            .build();</span>
+<span class="fc" id="L99">        return InviteTeamMemberResponse.builder()</span>
+<span class="fc" id="L100">            .inviteId(saved.getId())</span>
+<span class="fc" id="L101">            .email(saved.getEmail())</span>
+<span class="fc" id="L102">            .status(saved.getStatus())</span>
+<span class="fc" id="L103">            .sentAt(saved.getSentAt())</span>
+<span class="fc" id="L104">            .expiresAt(saved.getExpiresAt())</span>
+<span class="fc" id="L105">            .build();</span>
     }
 
     /**
      * Accept team member invitation.
      */
     public TeamMemberDTO acceptInvite(String inviteToken) {
-<span class="nc" id="L112">        log.debug(&quot;Processing invitation acceptance for token: {}&quot;, inviteToken);</span>
+<span class="fc" id="L112">        log.debug(&quot;Processing invitation acceptance for token: {}&quot;, inviteToken);</span>
 
-<span class="nc" id="L114">        TeamMemberInvite invite = inviteRepository.findByInviteToken(inviteToken)</span>
-<span class="nc" id="L115">            .orElseThrow(() -&gt; new RuntimeException(&quot;Invalid invitation token&quot;));</span>
+<span class="fc" id="L114">        TeamMemberInvite invite = inviteRepository.findByInviteToken(inviteToken)</span>
+<span class="fc" id="L115">            .orElseThrow(() -&gt; new RuntimeException(&quot;Invalid invitation token&quot;));</span>
 
-<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (invite.isExpired()) {</span>
-<span class="nc" id="L118">            throw new RuntimeException(&quot;Invitation has expired&quot;);</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (invite.isExpired()) {</span>
+<span class="fc" id="L118">            throw new RuntimeException(&quot;Invitation has expired&quot;);</span>
         }
 
-<span class="nc bnc" id="L121" title="All 2 branches missed.">        if (!&quot;PENDING&quot;.equals(invite.getStatus())) {</span>
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">        if (!&quot;PENDING&quot;.equals(invite.getStatus())) {</span>
 <span class="nc" id="L122">            throw new RuntimeException(&quot;Invitation already processed&quot;);</span>
         }
 
         // Create team member
-<span class="nc" id="L126">        BankTeamMember teamMember = BankTeamMember.builder()</span>
-<span class="nc" id="L127">            .bankId(invite.getBankId())</span>
-<span class="nc" id="L128">            .email(invite.getEmail())</span>
-<span class="nc" id="L129">            .name(invite.getName())</span>
-<span class="nc" id="L130">            .status(&quot;ACTIVE&quot;)</span>
-<span class="nc" id="L131">            .joinedDate(LocalDateTime.now())</span>
-<span class="nc" id="L132">            .build();</span>
+<span class="fc" id="L126">        BankTeamMember teamMember = BankTeamMember.builder()</span>
+<span class="fc" id="L127">            .bankId(invite.getBankId())</span>
+<span class="fc" id="L128">            .email(invite.getEmail())</span>
+<span class="fc" id="L129">            .name(invite.getName())</span>
+<span class="fc" id="L130">            .status(&quot;ACTIVE&quot;)</span>
+<span class="fc" id="L131">            .joinedDate(LocalDateTime.now())</span>
+<span class="fc" id="L132">            .build();</span>
 
-<span class="nc" id="L134">        BankTeamMember saved = teamMemberRepository.save(teamMember);</span>
+<span class="fc" id="L134">        BankTeamMember saved = teamMemberRepository.save(teamMember);</span>
 
         // Mark invite as accepted
-<span class="nc" id="L137">        invite.setStatus(&quot;ACCEPTED&quot;);</span>
-<span class="nc" id="L138">        invite.setAcceptedAt(LocalDateTime.now());</span>
-<span class="nc" id="L139">        inviteRepository.save(invite);</span>
+<span class="fc" id="L137">        invite.setStatus(&quot;ACCEPTED&quot;);</span>
+<span class="fc" id="L138">        invite.setAcceptedAt(LocalDateTime.now());</span>
+<span class="fc" id="L139">        inviteRepository.save(invite);</span>
 
         // TODO: Use proper AuditAction enum once defined for team member invitation acceptance
         // auditService.logAction(&quot;ORGANIZATION&quot;, invite.getBankId(), AuditAction.TEAM_MEMBER_INVITATION_ACCEPTED);
-<span class="nc" id="L143">        log.info(&quot;Team member invitation accepted for email: {}&quot;, invite.getEmail());</span>
+<span class="fc" id="L143">        log.info(&quot;Team member invitation accepted for email: {}&quot;, invite.getEmail());</span>
 
-<span class="nc" id="L145">        return mapToDTO(saved);</span>
+<span class="fc" id="L145">        return mapToDTO(saved);</span>
     }
 
     /**
      * Map BankTeamMember entity to DTO.
      */
     private TeamMemberDTO mapToDTO(BankTeamMember member) {
-<span class="nc" id="L152">        return TeamMemberDTO.builder()</span>
-<span class="nc" id="L153">            .id(member.getId())</span>
-<span class="nc" id="L154">            .email(member.getEmail())</span>
-<span class="nc" id="L155">            .name(member.getName())</span>
-<span class="nc" id="L156">            .joinedDate(member.getJoinedDate())</span>
-<span class="nc" id="L157">            .lastLogin(member.getLastLogin())</span>
-<span class="nc" id="L158">            .status(member.getStatus())</span>
-<span class="nc" id="L159">            .build();</span>
+<span class="fc" id="L152">        return TeamMemberDTO.builder()</span>
+<span class="fc" id="L153">            .id(member.getId())</span>
+<span class="fc" id="L154">            .email(member.getEmail())</span>
+<span class="fc" id="L155">            .name(member.getName())</span>
+<span class="fc" id="L156">            .joinedDate(member.getJoinedDate())</span>
+<span class="fc" id="L157">            .lastLogin(member.getLastLogin())</span>
+<span class="fc" id="L158">            .status(member.getStatus())</span>
+<span class="fc" id="L159">            .build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -12,15 +12,15 @@ import java.util.UUID;
  * Service for sending notifications when offers expire.
  * Handles both borrower and bank notifications.
  */
-<span class="nc" id="L15">@Slf4j</span>
+<span class="fc" id="L15">@Slf4j</span>
 @Service
 public class OfferExpirationEmailService {
 
     private final EmailService emailService;
 
-<span class="nc" id="L21">    public OfferExpirationEmailService(EmailService emailService) {</span>
-<span class="nc" id="L22">        this.emailService = emailService;</span>
-<span class="nc" id="L23">    }</span>
+<span class="fc" id="L21">    public OfferExpirationEmailService(EmailService emailService) {</span>
+<span class="fc" id="L22">        this.emailService = emailService;</span>
+<span class="fc" id="L23">    }</span>
 
     /**
      * Send expiration notification to borrower when their selected offer expires.

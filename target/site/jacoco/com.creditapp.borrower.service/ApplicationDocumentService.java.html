@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
  * Service for managing document uploads for loan applications.
  */
 @Service
-<span class="nc" id="L31">@RequiredArgsConstructor</span>
-<span class="nc" id="L32">@Slf4j</span>
+<span class="fc" id="L31">@RequiredArgsConstructor</span>
+<span class="fc" id="L32">@Slf4j</span>
 public class ApplicationDocumentService {
 
     private final ApplicationRepository applicationRepository;
@@ -41,7 +41,7 @@ public class ApplicationDocumentService {
     private static final long MAX_TOTAL_SIZE = 50 * 1024 * 1024; // 50 MB
 
     // Allowed MIME types
-<span class="nc" id="L44">    private static final Set&lt;String&gt; ALLOWED_MIME_TYPES = Set.of(</span>
+<span class="fc" id="L44">    private static final Set&lt;String&gt; ALLOWED_MIME_TYPES = Set.of(</span>
             &quot;application/pdf&quot;,
             &quot;image/jpeg&quot;,
             &quot;image/jpg&quot;,

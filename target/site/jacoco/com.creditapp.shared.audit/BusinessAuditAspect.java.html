@@ -17,8 +17,8 @@ import java.util.UUID;
  */
 @Aspect
 @Component
-<span class="nc" id="L20">@Slf4j</span>
-<span class="nc" id="L21">@RequiredArgsConstructor</span>
+<span class="fc" id="L20">@Slf4j</span>
+<span class="fc" id="L21">@RequiredArgsConstructor</span>
 public class BusinessAuditAspect {
 
     private final AuditService auditService;
@@ -29,19 +29,19 @@ public class BusinessAuditAspect {
     @AfterReturning(pointcut = &quot;@annotation(businessAudit)&quot;, returning = &quot;result&quot;)
     public void logBusinessAction(JoinPoint joinPoint, BusinessAudit businessAudit, Object result) {
         try {
-<span class="nc" id="L32">            UUID entityId = extractEntityId(result);</span>
-<span class="nc" id="L33">            String entityType = businessAudit.entityType();</span>
+<span class="fc" id="L32">            UUID entityId = extractEntityId(result);</span>
+<span class="fc" id="L33">            String entityType = businessAudit.entityType();</span>
             
-<span class="nc bnc" id="L35" title="All 2 branches missed.">            if (entityId != null) {</span>
-<span class="nc" id="L36">                auditService.logAction(entityType, entityId, businessAudit.action());</span>
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">            if (entityId != null) {</span>
+<span class="fc" id="L36">                auditService.logAction(entityType, entityId, businessAudit.action());</span>
             } else {
 <span class="nc" id="L38">                log.warn(&quot;Could not extract entity ID from result of method: {}&quot;, joinPoint.getSignature().getName());</span>
             }
 <span class="nc" id="L40">        } catch (Exception e) {</span>
 <span class="nc" id="L41">            log.error(&quot;Error in BusinessAuditAspect: {}&quot;, e.getMessage(), e);</span>
             // Don't fail business operation due to audit logging error
-<span class="nc" id="L43">        }</span>
-<span class="nc" id="L44">    }</span>
+<span class="fc" id="L43">        }</span>
+<span class="fc" id="L44">    }</span>
 
     /**
      * Log failed business operations
@@ -68,16 +68,16 @@ public class BusinessAuditAspect {
      * Looks for getId() or id field
      */
     private UUID extractEntityId(Object result) {
-<span class="nc bnc" id="L71" title="All 2 branches missed.">        if (result == null) {</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">        if (result == null) {</span>
 <span class="nc" id="L72">            return null;</span>
         }
 
         try {
             // Try getId() method first
-<span class="nc" id="L77">            var getIdMethod = result.getClass().getMethod(&quot;getId&quot;);</span>
-<span class="nc" id="L78">            Object id = getIdMethod.invoke(result);</span>
-<span class="nc bnc" id="L79" title="All 2 branches missed.">            if (id instanceof UUID) {</span>
-<span class="nc" id="L80">                return (UUID) id;</span>
+<span class="fc" id="L77">            var getIdMethod = result.getClass().getMethod(&quot;getId&quot;);</span>
+<span class="fc" id="L78">            Object id = getIdMethod.invoke(result);</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">            if (id instanceof UUID) {</span>
+<span class="fc" id="L80">                return (UUID) id;</span>
             }
 <span class="nc" id="L82">        } catch (Exception e) {</span>
             // Method doesn't exist, try next approach

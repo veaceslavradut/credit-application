@@ -20,14 +20,14 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping(&quot;/api/bank/team&quot;)
-<span class="nc" id="L23">@Slf4j</span>
+<span class="fc" id="L23">@Slf4j</span>
 @PreAuthorize(&quot;hasRole('''BANK_ADMIN''')&quot;)
 public class BankTeamController {
     private final BankTeamService bankTeamService;
 
-<span class="nc" id="L28">    public BankTeamController(BankTeamService bankTeamService) {</span>
-<span class="nc" id="L29">        this.bankTeamService = bankTeamService;</span>
-<span class="nc" id="L30">    }</span>
+<span class="fc" id="L28">    public BankTeamController(BankTeamService bankTeamService) {</span>
+<span class="fc" id="L29">        this.bankTeamService = bankTeamService;</span>
+<span class="fc" id="L30">    }</span>
 
     /**
      * GET /api/bank/team - Get all active team members.

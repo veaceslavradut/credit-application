@@ -26,10 +26,10 @@ public class BankAdminRateCardController {
     private final AuthorizationService authorizationService;
     
     public BankAdminRateCardController(BankRateCardService bankRateCardService,
-<span class="nc" id="L29">            AuthorizationService authorizationService) {</span>
-<span class="nc" id="L30">        this.bankRateCardService = bankRateCardService;</span>
-<span class="nc" id="L31">        this.authorizationService = authorizationService;</span>
-<span class="nc" id="L32">    }</span>
+<span class="fc" id="L29">            AuthorizationService authorizationService) {</span>
+<span class="fc" id="L30">        this.bankRateCardService = bankRateCardService;</span>
+<span class="fc" id="L31">        this.authorizationService = authorizationService;</span>
+<span class="fc" id="L32">    }</span>
     
     /**
      * Creates a new rate card for the authenticated bank.
@@ -41,9 +41,9 @@ public class BankAdminRateCardController {
     @PreAuthorize(&quot;hasAuthority('BANK_ADMIN')&quot;)
     public ResponseEntity&lt;BankRateCardResponse&gt; createRateCard(
             @Valid @RequestBody BankRateCardRequest request) {
-<span class="nc" id="L44">        UUID bankId = authorizationService.getBankIdFromContext();</span>
-<span class="nc" id="L45">        BankRateCardResponse response = bankRateCardService.createRateCard(bankId, request);</span>
-<span class="nc" id="L46">        return ResponseEntity.status(HttpStatus.CREATED).body(response);</span>
+<span class="fc" id="L44">        UUID bankId = authorizationService.getBankIdFromContext();</span>
+<span class="fc" id="L45">        BankRateCardResponse response = bankRateCardService.createRateCard(bankId, request);</span>
+<span class="fc" id="L46">        return ResponseEntity.status(HttpStatus.CREATED).body(response);</span>
     }
     
     /**
@@ -72,9 +72,9 @@ public class BankAdminRateCardController {
     public ResponseEntity&lt;BankRateCardResponse&gt; updateRateCard(
             @PathVariable UUID rateCardId,
             @Valid @RequestBody BankRateCardRequest request) {
-<span class="nc" id="L75">        UUID bankId = authorizationService.getBankIdFromContext();</span>
-<span class="nc" id="L76">        BankRateCardResponse response = bankRateCardService.updateRateCard(bankId, rateCardId, request);</span>
-<span class="nc" id="L77">        return ResponseEntity.ok(response);</span>
+<span class="fc" id="L75">        UUID bankId = authorizationService.getBankIdFromContext();</span>
+<span class="fc" id="L76">        BankRateCardResponse response = bankRateCardService.updateRateCard(bankId, rateCardId, request);</span>
+<span class="fc" id="L77">        return ResponseEntity.ok(response);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

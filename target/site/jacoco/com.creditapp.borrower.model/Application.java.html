@@ -22,64 +22,64 @@ import java.util.UUID;
         @Index(name = &quot;idx_applications_created_at&quot;, columnList = &quot;created_at&quot;),
         @Index(name = &quot;idx_applications_borrower_created&quot;, columnList = &quot;borrower_id, created_at&quot;)
 })
-<span class="nc" id="L25">@Data</span>
-<span class="nc" id="L26">@NoArgsConstructor</span>
-<span class="nc" id="L27">@AllArgsConstructor</span>
-<span class="nc bnc" id="L28" title="All 2 branches missed.">@Builder</span>
+<span class="pc" id="L25">@Data</span>
+<span class="fc" id="L26">@NoArgsConstructor</span>
+<span class="fc" id="L27">@AllArgsConstructor</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">@Builder</span>
 public class Application {
 
     @Id
-<span class="nc" id="L32">    private UUID id;</span>
+<span class="fc" id="L32">    private UUID id;</span>
 
     @Column(name = &quot;borrower_id&quot;, nullable = false)
-<span class="nc" id="L35">    private UUID borrowerId;</span>
+<span class="fc" id="L35">    private UUID borrowerId;</span>
 
     @Column(name = &quot;loan_type&quot;, nullable = false)
-<span class="nc" id="L38">    private String loanType;</span>
+<span class="fc" id="L38">    private String loanType;</span>
 
     @Column(name = &quot;loan_amount&quot;, nullable = false)
-<span class="nc" id="L41">    private BigDecimal loanAmount;</span>
+<span class="fc" id="L41">    private BigDecimal loanAmount;</span>
 
     @Column(name = &quot;loan_term_months&quot;, nullable = false)
-<span class="nc" id="L44">    private Integer loanTermMonths;</span>
+<span class="fc" id="L44">    private Integer loanTermMonths;</span>
 
     @Column(name = &quot;currency&quot;, nullable = false)
-<span class="nc" id="L47">    private String currency;</span>
+<span class="fc" id="L47">    private String currency;</span>
 
     @Column(name = &quot;rate_preference&quot;)
-<span class="nc" id="L50">    private String ratePreference;</span>
+<span class="fc" id="L50">    private String ratePreference;</span>
 
     @Column(name = &quot;status&quot;, nullable = false)
     @Enumerated(EnumType.STRING)
-<span class="nc" id="L54">    private ApplicationStatus status;</span>
+<span class="fc" id="L54">    private ApplicationStatus status;</span>
 
     @CreationTimestamp
     @Column(name = &quot;created_at&quot;, nullable = false, updatable = false)
-<span class="nc" id="L58">    private LocalDateTime createdAt;</span>
+<span class="fc" id="L58">    private LocalDateTime createdAt;</span>
 
     @Column(name = &quot;submitted_at&quot;)
-<span class="nc" id="L61">    private LocalDateTime submittedAt;</span>
+<span class="fc" id="L61">    private LocalDateTime submittedAt;</span>
 
     @UpdateTimestamp
     @Column(name = &quot;updated_at&quot;, nullable = false)
-<span class="nc" id="L65">    private LocalDateTime updatedAt;</span>
+<span class="fc" id="L65">    private LocalDateTime updatedAt;</span>
 
     @Column(name = &quot;withdrawn_at&quot;)
-<span class="nc" id="L68">    private LocalDateTime withdrawnAt;</span>
+<span class="fc" id="L68">    private LocalDateTime withdrawnAt;</span>
 
     @Column(name = &quot;withdrawal_reason&quot;, length = 500)
 <span class="nc" id="L71">    private String withdrawalReason;</span>
 
     @Version
     @Column(name = &quot;version&quot;)
-<span class="nc" id="L75">    private Long version;</span>
+<span class="fc" id="L75">    private Long version;</span>
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;borrower_id&quot;, insertable = false, updatable = false)
-<span class="nc" id="L79">    private User borrower;</span>
+<span class="fc" id="L79">    private User borrower;</span>
 
     @OneToOne(mappedBy = &quot;application&quot;, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-<span class="nc" id="L82">    private ApplicationDetails details;</span>
+<span class="fc" id="L82">    private ApplicationDetails details;</span>
 
     @OneToMany(mappedBy = &quot;application&quot;, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
@@ -87,16 +87,16 @@ public class Application {
 
     @PrePersist
     public void prePersist() {
-<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (id == null) {</span>
-<span class="nc" id="L91">            id = UUID.randomUUID();</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        if (id == null) {</span>
+<span class="fc" id="L91">            id = UUID.randomUUID();</span>
         }
-<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (status == null) {</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">        if (status == null) {</span>
 <span class="nc" id="L94">            status = ApplicationStatus.DRAFT;</span>
         }
-<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (ratePreference == null) {</span>
-<span class="nc" id="L97">            ratePreference = &quot;VARIABLE&quot;;</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (ratePreference == null) {</span>
+<span class="fc" id="L97">            ratePreference = &quot;VARIABLE&quot;;</span>
         }
-<span class="nc" id="L99">    }</span>
+<span class="fc" id="L99">    }</span>
 
     @Override
     public boolean equals(Object o) {

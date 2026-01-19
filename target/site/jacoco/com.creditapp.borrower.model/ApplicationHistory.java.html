@@ -19,9 +19,9 @@ import java.util.UUID;
         @Index(name = &quot;idx_application_history_changed_at&quot;, columnList = &quot;changed_at DESC&quot;)
 })
 <span class="nc" id="L21">@Data</span>
-<span class="nc" id="L22">@NoArgsConstructor</span>
-<span class="nc" id="L23">@AllArgsConstructor</span>
-<span class="nc" id="L24">@Builder</span>
+<span class="fc" id="L22">@NoArgsConstructor</span>
+<span class="fc" id="L23">@AllArgsConstructor</span>
+<span class="pc" id="L24">@Builder</span>
 public class ApplicationHistory {
 
     @Id
@@ -33,21 +33,21 @@ public class ApplicationHistory {
 
     @Column(name = &quot;old_status&quot;, nullable = false)
     @Enumerated(EnumType.STRING)
-<span class="nc" id="L36">    private ApplicationStatus oldStatus;</span>
+<span class="fc" id="L36">    private ApplicationStatus oldStatus;</span>
 
     @Column(name = &quot;new_status&quot;, nullable = false)
     @Enumerated(EnumType.STRING)
-<span class="nc" id="L40">    private ApplicationStatus newStatus;</span>
+<span class="fc" id="L40">    private ApplicationStatus newStatus;</span>
 
     @CreationTimestamp
     @Column(name = &quot;changed_at&quot;, nullable = false, updatable = false)
-<span class="nc" id="L44">    private LocalDateTime changedAt;</span>
+<span class="fc" id="L44">    private LocalDateTime changedAt;</span>
 
     @Column(name = &quot;changed_by_user_id&quot;)
-<span class="nc" id="L47">    private UUID changedByUserId;</span>
+<span class="fc" id="L47">    private UUID changedByUserId;</span>
 
     @Column(name = &quot;change_reason&quot;)
-<span class="nc" id="L50">    private String changeReason;</span>
+<span class="fc" id="L50">    private String changeReason;</span>
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;application_id&quot;, insertable = false, updatable = false)

@@ -34,8 +34,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-<span class="nc" id="L37">@RequiredArgsConstructor</span>
-<span class="nc" id="L38">@Slf4j</span>
+<span class="fc" id="L37">@RequiredArgsConstructor</span>
+<span class="fc" id="L38">@Slf4j</span>
 @Transactional
 public class ProfileService {
     
@@ -49,23 +49,23 @@ public class ProfileService {
     private final PasswordChangeEmailService passwordChangeEmailService;
     
     public UserProfileResponse getCurrentUserProfile(@org.springframework.lang.NonNull UUID userId) {
-<span class="nc" id="L52">        User user = userRepository.findById(userId)</span>
-<span class="nc" id="L53">                .orElseThrow(() -&gt; new NotFoundException(&quot;User not found with id: &quot; + userId));</span>
+<span class="fc" id="L52">        User user = userRepository.findById(userId)</span>
+<span class="pc" id="L53">                .orElseThrow(() -&gt; new NotFoundException(&quot;User not found with id: &quot; + userId));</span>
         
-<span class="nc" id="L55">        UserProfileResponse profile = new UserProfileResponse();</span>
-<span class="nc" id="L56">        profile.setUserId(user.getId());</span>
-<span class="nc" id="L57">        profile.setEmail(user.getEmail());</span>
-<span class="nc" id="L58">        profile.setFirstName(user.getFirstName());</span>
-<span class="nc" id="L59">        profile.setLastName(user.getLastName());</span>
-<span class="nc" id="L60">        profile.setPhoneNumber(user.getPhoneNumber());</span>
-<span class="nc" id="L61">        profile.setRole(user.getRole());</span>
-<span class="nc" id="L62">        profile.setCreatedAt(user.getCreatedAt());</span>
-<span class="nc" id="L63">        profile.setUpdatedAt(user.getUpdatedAt());</span>
+<span class="fc" id="L55">        UserProfileResponse profile = new UserProfileResponse();</span>
+<span class="fc" id="L56">        profile.setUserId(user.getId());</span>
+<span class="fc" id="L57">        profile.setEmail(user.getEmail());</span>
+<span class="fc" id="L58">        profile.setFirstName(user.getFirstName());</span>
+<span class="fc" id="L59">        profile.setLastName(user.getLastName());</span>
+<span class="fc" id="L60">        profile.setPhoneNumber(user.getPhoneNumber());</span>
+<span class="fc" id="L61">        profile.setRole(user.getRole());</span>
+<span class="fc" id="L62">        profile.setCreatedAt(user.getCreatedAt());</span>
+<span class="fc" id="L63">        profile.setUpdatedAt(user.getUpdatedAt());</span>
         
-<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (user.getRole() == UserRole.BORROWER) {</span>
-<span class="nc" id="L66">            List&lt;LoanPreference&gt; preferences = loanPreferenceRepository.findByUserIdOrderByPriorityAsc(userId);</span>
-<span class="nc" id="L67">            List&lt;LoanPreferenceDTO&gt; preferenceDTOs = preferences.stream()</span>
-<span class="nc" id="L68">                    .map(p -&gt; new LoanPreferenceDTO(</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if (user.getRole() == UserRole.BORROWER) {</span>
+<span class="fc" id="L66">            List&lt;LoanPreference&gt; preferences = loanPreferenceRepository.findByUserIdOrderByPriorityAsc(userId);</span>
+<span class="fc" id="L67">            List&lt;LoanPreferenceDTO&gt; preferenceDTOs = preferences.stream()</span>
+<span class="pc" id="L68">                    .map(p -&gt; new LoanPreferenceDTO(</span>
 <span class="nc" id="L69">                            p.getId(),</span>
 <span class="nc" id="L70">                            p.getPreferredAmount(),</span>
 <span class="nc" id="L71">                            p.getMinTerm(),</span>
@@ -73,9 +73,9 @@ public class ProfileService {
 <span class="nc" id="L73">                            p.getPurposeCategory(),</span>
 <span class="nc" id="L74">                            p.getPriority()</span>
                     ))
-<span class="nc" id="L76">                    .collect(Collectors.toList());</span>
-<span class="nc" id="L77">            profile.setLoanPreferences(preferenceDTOs);</span>
-<span class="nc bnc" id="L78" title="All 2 branches missed.">        } else if (user.getRole() == UserRole.BANK_ADMIN) {</span>
+<span class="fc" id="L76">                    .collect(Collectors.toList());</span>
+<span class="fc" id="L77">            profile.setLoanPreferences(preferenceDTOs);</span>
+<span class="pc bnc" id="L78" title="All 2 branches missed.">        } else if (user.getRole() == UserRole.BANK_ADMIN) {</span>
 <span class="nc bnc" id="L79" title="All 2 branches missed.">            if (user.getOrganizationId() != null) {</span>
 <span class="nc" id="L80">                Organization org = organizationRepository.findById(Objects.requireNonNull(user.getOrganizationId()))</span>
 <span class="nc" id="L81">                        .orElse(null);</span>
@@ -87,100 +87,100 @@ public class ProfileService {
             }
         }
         
-<span class="nc" id="L90">        return profile;</span>
+<span class="fc" id="L90">        return profile;</span>
     }
     
     public UserProfileResponse updateProfile(@org.springframework.lang.NonNull UUID userId, UpdateProfileRequest request) {
-<span class="nc" id="L94">        User user = userRepository.findById(userId)</span>
-<span class="nc" id="L95">                .orElseThrow(() -&gt; new NotFoundException(&quot;User not found with id: &quot; + userId));</span>
+<span class="fc" id="L94">        User user = userRepository.findById(userId)</span>
+<span class="pc" id="L95">                .orElseThrow(() -&gt; new NotFoundException(&quot;User not found with id: &quot; + userId));</span>
         
-<span class="nc" id="L97">        String oldFirstName = user.getFirstName();</span>
-<span class="nc" id="L98">        String oldLastName = user.getLastName();</span>
-<span class="nc" id="L99">        String oldPhoneNumber = user.getPhoneNumber();</span>
+<span class="fc" id="L97">        String oldFirstName = user.getFirstName();</span>
+<span class="fc" id="L98">        String oldLastName = user.getLastName();</span>
+<span class="fc" id="L99">        String oldPhoneNumber = user.getPhoneNumber();</span>
         
-<span class="nc" id="L101">        user.setFirstName(request.getFirstName());</span>
-<span class="nc" id="L102">        user.setLastName(request.getLastName());</span>
-<span class="nc" id="L103">        user.setPhoneNumber(request.getPhoneNumber());</span>
-<span class="nc" id="L104">        user.setUpdatedAt(LocalDateTime.now());</span>
+<span class="fc" id="L101">        user.setFirstName(request.getFirstName());</span>
+<span class="fc" id="L102">        user.setLastName(request.getLastName());</span>
+<span class="fc" id="L103">        user.setPhoneNumber(request.getPhoneNumber());</span>
+<span class="fc" id="L104">        user.setUpdatedAt(LocalDateTime.now());</span>
         
-<span class="nc" id="L106">        User updatedUser = userRepository.save(user);</span>
+<span class="fc" id="L106">        User updatedUser = userRepository.save(user);</span>
         
-<span class="nc" id="L108">        Map&lt;String, Object&gt; oldValues = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L109">        oldValues.put(&quot;firstName&quot;, oldFirstName);</span>
-<span class="nc" id="L110">        oldValues.put(&quot;lastName&quot;, oldLastName);</span>
-<span class="nc" id="L111">        oldValues.put(&quot;phoneNumber&quot;, oldPhoneNumber);</span>
+<span class="fc" id="L108">        Map&lt;String, Object&gt; oldValues = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L109">        oldValues.put(&quot;firstName&quot;, oldFirstName);</span>
+<span class="fc" id="L110">        oldValues.put(&quot;lastName&quot;, oldLastName);</span>
+<span class="fc" id="L111">        oldValues.put(&quot;phoneNumber&quot;, oldPhoneNumber);</span>
         
-<span class="nc" id="L113">        Map&lt;String, Object&gt; newValues = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L114">        newValues.put(&quot;firstName&quot;, request.getFirstName());</span>
-<span class="nc" id="L115">        newValues.put(&quot;lastName&quot;, request.getLastName());</span>
-<span class="nc" id="L116">        newValues.put(&quot;phoneNumber&quot;, request.getPhoneNumber());</span>
+<span class="fc" id="L113">        Map&lt;String, Object&gt; newValues = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L114">        newValues.put(&quot;firstName&quot;, request.getFirstName());</span>
+<span class="fc" id="L115">        newValues.put(&quot;lastName&quot;, request.getLastName());</span>
+<span class="fc" id="L116">        newValues.put(&quot;phoneNumber&quot;, request.getPhoneNumber());</span>
         
-<span class="nc" id="L118">        auditService.logActionWithValues(</span>
+<span class="fc" id="L118">        auditService.logActionWithValues(</span>
                 &quot;User&quot;, userId, 
                 AuditAction.PROFILE_UPDATED, 
                 oldValues, newValues
         );
         
-<span class="nc" id="L124">        return getCurrentUserProfile(updatedUser.getId());</span>
+<span class="fc" id="L124">        return getCurrentUserProfile(updatedUser.getId());</span>
     }
     
     public ChangePasswordResponse changePassword(@org.springframework.lang.NonNull UUID userId, ChangePasswordRequest request) {
-<span class="nc" id="L128">        User user = userRepository.findById(userId)</span>
-<span class="nc" id="L129">                .orElseThrow(() -&gt; new NotFoundException(&quot;User not found with id: &quot; + userId));</span>
+<span class="fc" id="L128">        User user = userRepository.findById(userId)</span>
+<span class="pc" id="L129">                .orElseThrow(() -&gt; new NotFoundException(&quot;User not found with id: &quot; + userId));</span>
         
-<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash())) {</span>
-<span class="nc" id="L132">            throw new InvalidPasswordException(&quot;Current password is incorrect&quot;);</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash())) {</span>
+<span class="fc" id="L132">            throw new InvalidPasswordException(&quot;Current password is incorrect&quot;);</span>
         }
         
-<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (request.getCurrentPassword().equals(request.getNewPassword())) {</span>
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">        if (request.getCurrentPassword().equals(request.getNewPassword())) {</span>
 <span class="nc" id="L136">            throw new IllegalArgumentException(&quot;New password must differ from current password&quot;);</span>
         }
         
-<span class="nc bnc" id="L139" title="All 2 branches missed.">        if (!request.getNewPassword().equals(request.getNewPasswordConfirm())) {</span>
-<span class="nc" id="L140">            throw new IllegalArgumentException(&quot;Password confirmation does not match&quot;);</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        if (!request.getNewPassword().equals(request.getNewPasswordConfirm())) {</span>
+<span class="fc" id="L140">            throw new IllegalArgumentException(&quot;Password confirmation does not match&quot;);</span>
         }
         
-<span class="nc" id="L143">        PasswordValidationService.ValidationResult validationResult = </span>
-<span class="nc" id="L144">                passwordValidationService.validatePasswordStrength(request.getNewPassword());</span>
-<span class="nc bnc" id="L145" title="All 2 branches missed.">        if (!validationResult.isValid()) {</span>
+<span class="fc" id="L143">        PasswordValidationService.ValidationResult validationResult = </span>
+<span class="fc" id="L144">                passwordValidationService.validatePasswordStrength(request.getNewPassword());</span>
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">        if (!validationResult.isValid()) {</span>
 <span class="nc" id="L146">            throw new IllegalArgumentException(validationResult.getMessage());</span>
         }
         
-<span class="nc" id="L149">        String newPasswordHash = passwordEncoder.encode(request.getNewPassword());</span>
-<span class="nc" id="L150">        user.setPasswordHash(newPasswordHash);</span>
-<span class="nc" id="L151">        user.setUpdatedAt(LocalDateTime.now());</span>
-<span class="nc" id="L152">        userRepository.save(user);</span>
+<span class="fc" id="L149">        String newPasswordHash = passwordEncoder.encode(request.getNewPassword());</span>
+<span class="fc" id="L150">        user.setPasswordHash(newPasswordHash);</span>
+<span class="fc" id="L151">        user.setUpdatedAt(LocalDateTime.now());</span>
+<span class="fc" id="L152">        userRepository.save(user);</span>
         
-<span class="nc" id="L154">        invalidateAllRefreshTokens(userId);</span>
+<span class="fc" id="L154">        invalidateAllRefreshTokens(userId);</span>
         
-<span class="nc" id="L156">        Map&lt;String, Object&gt; oldValues = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L157">        oldValues.put(&quot;passwordHash&quot;, &quot;[REDACTED]&quot;);</span>
+<span class="fc" id="L156">        Map&lt;String, Object&gt; oldValues = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L157">        oldValues.put(&quot;passwordHash&quot;, &quot;[REDACTED]&quot;);</span>
         
-<span class="nc" id="L159">        Map&lt;String, Object&gt; newValues = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L160">        newValues.put(&quot;passwordHash&quot;, &quot;[REDACTED]&quot;);</span>
+<span class="fc" id="L159">        Map&lt;String, Object&gt; newValues = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L160">        newValues.put(&quot;passwordHash&quot;, &quot;[REDACTED]&quot;);</span>
         
-<span class="nc" id="L162">        auditService.logActionWithValues(</span>
+<span class="fc" id="L162">        auditService.logActionWithValues(</span>
                 &quot;User&quot;, userId,
                 AuditAction.PASSWORD_CHANGED,
                 oldValues, newValues
         );
         
-<span class="nc" id="L168">        passwordChangeEmailService.sendPasswordChangeNotification(user.getEmail(), user.getFirstName());</span>
+<span class="fc" id="L168">        passwordChangeEmailService.sendPasswordChangeNotification(user.getEmail(), user.getFirstName());</span>
         
-<span class="nc" id="L170">        return new ChangePasswordResponse(</span>
+<span class="fc" id="L170">        return new ChangePasswordResponse(</span>
                 &quot;Password changed successfully. You have been logged out on all devices.&quot;,
-<span class="nc" id="L172">                LocalDateTime.now()</span>
+<span class="fc" id="L172">                LocalDateTime.now()</span>
         );
     }
     
     public void invalidateAllRefreshTokens(@org.springframework.lang.NonNull UUID userId) {
-<span class="nc" id="L177">        List&lt;RefreshToken&gt; activeTokens = refreshTokenRepository.findByUserIdAndRevokedFalse(userId);</span>
-<span class="nc bnc" id="L178" title="All 2 branches missed.">        for (RefreshToken token : activeTokens) {</span>
+<span class="fc" id="L177">        List&lt;RefreshToken&gt; activeTokens = refreshTokenRepository.findByUserIdAndRevokedFalse(userId);</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">        for (RefreshToken token : activeTokens) {</span>
 <span class="nc" id="L179">            token.setRevoked(true);</span>
 <span class="nc" id="L180">            token.setRevokedAt(LocalDateTime.now());</span>
 <span class="nc" id="L181">            refreshTokenRepository.save(token);</span>
 <span class="nc" id="L182">        }</span>
-<span class="nc" id="L183">        log.info(&quot;Invalidated {} refresh tokens for user {}&quot;, activeTokens.size(), userId);</span>
-<span class="nc" id="L184">    }</span>
+<span class="fc" id="L183">        log.info(&quot;Invalidated {} refresh tokens for user {}&quot;, activeTokens.size(), userId);</span>
+<span class="fc" id="L184">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

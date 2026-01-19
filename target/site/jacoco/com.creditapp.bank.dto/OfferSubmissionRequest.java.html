@@ -14,8 +14,8 @@ import java.util.UUID;
  */
 <span class="nc bnc" id="L15" title="All 46 branches missed.">@Data</span>
 <span class="nc" id="L16">@NoArgsConstructor</span>
-<span class="nc" id="L17">@AllArgsConstructor</span>
-<span class="nc" id="L18">@Builder</span>
+<span class="fc" id="L17">@AllArgsConstructor</span>
+<span class="pc" id="L18">@Builder</span>
 public class OfferSubmissionRequest {
     /**
      * The application ID for which the offer is being submitted
@@ -26,21 +26,21 @@ public class OfferSubmissionRequest {
      * If true, submit offer AS-IS from calculated offer (Story 3.3)
      * If false, apply overrides (APR, fees, processingTime)
      */
-<span class="nc" id="L29">    private Boolean acceptCalculatedOffer;</span>
+<span class="fc" id="L29">    private Boolean acceptCalculatedOffer;</span>
     
     /**
      * Optional: Override APR (0.5% to 50%), only used if acceptCalculatedOffer=false
      */
-<span class="nc" id="L34">    private BigDecimal overrideAPR;</span>
+<span class="fc" id="L34">    private BigDecimal overrideAPR;</span>
     
     /**
      * Optional: Override origination fees (0 to 10,000), only used if acceptCalculatedOffer=false
      */
-<span class="nc" id="L39">    private BigDecimal overrideFees;</span>
+<span class="fc" id="L39">    private BigDecimal overrideFees;</span>
     
     /**
      * Optional: Override processing time in days (1 to 365), only used if acceptCalculatedOffer=false
      */
-<span class="nc" id="L44">    private Integer overrideProcessingTime;</span>
+<span class="fc" id="L44">    private Integer overrideProcessingTime;</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

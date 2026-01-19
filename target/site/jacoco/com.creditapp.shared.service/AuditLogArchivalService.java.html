@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 
-<span class="nc" id="L12">@Slf4j</span>
+<span class="fc" id="L12">@Slf4j</span>
 @Service
 @Transactional
 public class AuditLogArchivalService {
@@ -20,10 +20,10 @@ public class AuditLogArchivalService {
     private int retentionYears;
 
     public AuditLogArchivalService(EntityManager entityManager,
-<span class="nc" id="L23">                                   AuditLogRepository auditLogRepository) {</span>
-<span class="nc" id="L24">        this.entityManager = entityManager;</span>
-<span class="nc" id="L25">        this.auditLogRepository = auditLogRepository;</span>
-<span class="nc" id="L26">    }</span>
+<span class="fc" id="L23">                                   AuditLogRepository auditLogRepository) {</span>
+<span class="fc" id="L24">        this.entityManager = entityManager;</span>
+<span class="fc" id="L25">        this.auditLogRepository = auditLogRepository;</span>
+<span class="fc" id="L26">    }</span>
 
     public void archiveOldAuditLogs() {
         try {

@@ -17,8 +17,8 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(&quot;/api/profile&quot;)
-<span class="nc" id="L20">@RequiredArgsConstructor</span>
-<span class="nc" id="L21">@Slf4j</span>
+<span class="fc" id="L20">@RequiredArgsConstructor</span>
+<span class="fc" id="L21">@Slf4j</span>
 public class UserProfileController {
     
     private final ProfileService profileService;
@@ -27,31 +27,31 @@ public class UserProfileController {
     @GetMapping
     @PreAuthorize(&quot;isAuthenticated()&quot;)
     public ResponseEntity&lt;UserProfileResponse&gt; getProfile() {
-<span class="nc" id="L30">        UUID userId = authorizationService.getCurrentUserId();</span>
-<span class="nc" id="L31">        log.info(&quot;User {} retrieved their profile&quot;, userId);</span>
+<span class="fc" id="L30">        UUID userId = authorizationService.getCurrentUserId();</span>
+<span class="fc" id="L31">        log.info(&quot;User {} retrieved their profile&quot;, userId);</span>
         
-<span class="nc" id="L33">        UserProfileResponse profile = profileService.getCurrentUserProfile(userId);</span>
-<span class="nc" id="L34">        return ResponseEntity.ok(profile);</span>
+<span class="fc" id="L33">        UserProfileResponse profile = profileService.getCurrentUserProfile(userId);</span>
+<span class="fc" id="L34">        return ResponseEntity.ok(profile);</span>
     }
     
     @PutMapping
     @PreAuthorize(&quot;isAuthenticated()&quot;)
     public ResponseEntity&lt;UserProfileResponse&gt; updateProfile(@Valid @RequestBody UpdateProfileRequest request) {
-<span class="nc" id="L40">        UUID userId = authorizationService.getCurrentUserId();</span>
-<span class="nc" id="L41">        log.info(&quot;User {} updating profile&quot;, userId);</span>
+<span class="fc" id="L40">        UUID userId = authorizationService.getCurrentUserId();</span>
+<span class="fc" id="L41">        log.info(&quot;User {} updating profile&quot;, userId);</span>
         
-<span class="nc" id="L43">        UserProfileResponse updatedProfile = profileService.updateProfile(userId, request);</span>
-<span class="nc" id="L44">        return ResponseEntity.ok(updatedProfile);</span>
+<span class="fc" id="L43">        UserProfileResponse updatedProfile = profileService.updateProfile(userId, request);</span>
+<span class="fc" id="L44">        return ResponseEntity.ok(updatedProfile);</span>
     }
     
     @PutMapping(&quot;/change-password&quot;)
     @PreAuthorize(&quot;isAuthenticated()&quot;)
     public ResponseEntity&lt;ChangePasswordResponse&gt; changePassword(@Valid @RequestBody ChangePasswordRequest request) {
-<span class="nc" id="L50">        UUID userId = authorizationService.getCurrentUserId();</span>
-<span class="nc" id="L51">        log.info(&quot;User {} requested password change&quot;, userId);</span>
+<span class="fc" id="L50">        UUID userId = authorizationService.getCurrentUserId();</span>
+<span class="fc" id="L51">        log.info(&quot;User {} requested password change&quot;, userId);</span>
         
-<span class="nc" id="L53">        ChangePasswordResponse response = profileService.changePassword(userId, request);</span>
-<span class="nc" id="L54">        return ResponseEntity.ok(response);</span>
+<span class="fc" id="L53">        ChangePasswordResponse response = profileService.changePassword(userId, request);</span>
+<span class="fc" id="L54">        return ResponseEntity.ok(response);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

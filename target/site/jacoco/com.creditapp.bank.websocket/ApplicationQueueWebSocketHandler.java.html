@@ -15,14 +15,14 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-<span class="nc" id="L18">@RequiredArgsConstructor</span>
-<span class="nc" id="L19">@Slf4j</span>
+<span class="fc" id="L18">@RequiredArgsConstructor</span>
+<span class="fc" id="L19">@Slf4j</span>
 public class ApplicationQueueWebSocketHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper;
     
     // Map: bankId -&gt; Set of WebSocketSessions
-<span class="nc" id="L25">    private static final Map&lt;String, Set&lt;WebSocketSession&gt;&gt; BANK_CONNECTIONS = </span>
+<span class="fc" id="L25">    private static final Map&lt;String, Set&lt;WebSocketSession&gt;&gt; BANK_CONNECTIONS = </span>
         new ConcurrentHashMap&lt;&gt;();
 
     @Override
@@ -95,8 +95,8 @@ public class ApplicationQueueWebSocketHandler extends TextWebSocketHandler {
      * Broadcast status change to all connected officers for a bank
      */
     public void broadcastStatusChange(String bankId, String applicationId, String oldStatus, String newStatus) {
-<span class="nc" id="L98">        Set&lt;WebSocketSession&gt; connections = BANK_CONNECTIONS.get(bankId);</span>
-<span class="nc bnc" id="L99" title="All 4 branches missed.">        if (connections != null &amp;&amp; !connections.isEmpty()) {</span>
+<span class="fc" id="L98">        Set&lt;WebSocketSession&gt; connections = BANK_CONNECTIONS.get(bankId);</span>
+<span class="pc bpc" id="L99" title="3 of 4 branches missed.">        if (connections != null &amp;&amp; !connections.isEmpty()) {</span>
 <span class="nc" id="L100">            Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();</span>
 <span class="nc" id="L101">            data.put(&quot;applicationId&quot;, applicationId);</span>
 <span class="nc" id="L102">            data.put(&quot;oldStatus&quot;, oldStatus);</span>
@@ -116,7 +116,7 @@ public class ApplicationQueueWebSocketHandler extends TextWebSocketHandler {
 <span class="nc" id="L116">            log.info(&quot;[WEBSOCKET] Broadcasted status change for app {} to {} clients&quot;,</span>
 <span class="nc" id="L117">                applicationId, connections.size());</span>
         }
-<span class="nc" id="L119">    }</span>
+<span class="fc" id="L119">    }</span>
 
     private String extractBankId(WebSocketSession session) {
         try {

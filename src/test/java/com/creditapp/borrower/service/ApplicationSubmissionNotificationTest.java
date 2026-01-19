@@ -6,7 +6,9 @@ import com.creditapp.borrower.model.Application;
 import com.creditapp.borrower.model.ApplicationStatus;
 import com.creditapp.borrower.repository.ApplicationHistoryRepository;
 import com.creditapp.borrower.repository.ApplicationRepository;
+import com.creditapp.shared.model.ConsentType;
 import com.creditapp.shared.model.User;
+import com.creditapp.shared.service.GDPRConsentService;
 import com.creditapp.shared.service.NotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,6 +42,9 @@ class ApplicationSubmissionNotificationTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private GDPRConsentService consentService;
+
     @InjectMocks
     private ApplicationService applicationService;
 
@@ -50,6 +55,10 @@ class ApplicationSubmissionNotificationTest {
     void setUp() {
         borrowerId = UUID.randomUUID();
         applicationId = UUID.randomUUID();
+
+        // Mock default consent behavior
+        lenient().when(consentService.isConsentGiven(any(UUID.class), eq(ConsentType.DATA_COLLECTION))).thenReturn(true);
+        lenient().when(consentService.isConsentGiven(any(UUID.class), eq(ConsentType.BANK_SHARING))).thenReturn(true);
     }
 
     @Test

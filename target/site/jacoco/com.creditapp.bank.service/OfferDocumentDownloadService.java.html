@@ -20,8 +20,8 @@ import java.util.UUID;
  * Service for downloading offer documents.
  */
 @Service
-<span class="nc" id="L23">@RequiredArgsConstructor</span>
-<span class="nc" id="L24">@Slf4j</span>
+<span class="fc" id="L23">@RequiredArgsConstructor</span>
+<span class="fc" id="L24">@Slf4j</span>
 public class OfferDocumentDownloadService {
     
     private final OfferDocumentRepository offerDocumentRepository;
@@ -35,41 +35,41 @@ public class OfferDocumentDownloadService {
     @Transactional(readOnly = true)
     public String getDownloadUrl(UUID offerId, UUID documentId, UUID userId) {
         // Fetch document and verify ownership
-<span class="nc" id="L38">        OfferDocument document = offerDocumentRepository.findByIdAndOfferId(documentId, offerId)</span>
-<span class="nc" id="L39">            .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Document not found&quot;));</span>
+<span class="fc" id="L38">        OfferDocument document = offerDocumentRepository.findByIdAndOfferId(documentId, offerId)</span>
+<span class="fc" id="L39">            .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Document not found&quot;));</span>
         
         // Fetch offer
-<span class="nc" id="L42">        Offer offer = offerRepository.findById(offerId)</span>
-<span class="nc" id="L43">            .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Offer not found&quot;));</span>
+<span class="fc" id="L42">        Offer offer = offerRepository.findById(offerId)</span>
+<span class="fc" id="L43">            .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Offer not found&quot;));</span>
         
         // Verify access: borrower owns offer or bank officer from same bank
-<span class="nc" id="L46">        verifyAccess(offer, userId);</span>
+<span class="fc" id="L46">        verifyAccess(offer, userId);</span>
         
         // Check virus scan status
-<span class="nc bnc" id="L49" title="All 2 branches missed.">        if (&quot;INFECTED&quot;.equals(document.getVirusScanStatus())) {</span>
-<span class="nc" id="L50">            log.warn(&quot;Attempted to download infected document: documentId={}, userId={}&quot;, documentId, userId);</span>
-<span class="nc" id="L51">            throw new IllegalArgumentException(&quot;Document is infected and cannot be downloaded&quot;);</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        if (&quot;INFECTED&quot;.equals(document.getVirusScanStatus())) {</span>
+<span class="fc" id="L50">            log.warn(&quot;Attempted to download infected document: documentId={}, userId={}&quot;, documentId, userId);</span>
+<span class="fc" id="L51">            throw new IllegalArgumentException(&quot;Document is infected and cannot be downloaded&quot;);</span>
         }
         
-<span class="nc bnc" id="L54" title="All 2 branches missed.">        if (&quot;PENDING&quot;.equals(document.getVirusScanStatus())) {</span>
-<span class="nc" id="L55">            log.info(&quot;Document scan pending: documentId={}, userId={}&quot;, documentId, userId);</span>
-<span class="nc" id="L56">            throw new IllegalArgumentException(&quot;Document is pending virus scan, please try again shortly&quot;);</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (&quot;PENDING&quot;.equals(document.getVirusScanStatus())) {</span>
+<span class="fc" id="L55">            log.info(&quot;Document scan pending: documentId={}, userId={}&quot;, documentId, userId);</span>
+<span class="fc" id="L56">            throw new IllegalArgumentException(&quot;Document is pending virus scan, please try again shortly&quot;);</span>
         }
         
         // Log audit event
-<span class="nc" id="L60">        Map&lt;String, String&gt; auditContext = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L61">        auditContext.put(&quot;offerId&quot;, offerId.toString());</span>
-<span class="nc" id="L62">        auditContext.put(&quot;documentId&quot;, documentId.toString());</span>
-<span class="nc" id="L63">        auditContext.put(&quot;downloadedByUserId&quot;, userId.toString());</span>
-<span class="nc" id="L64">        auditContext.put(&quot;documentType&quot;, document.getDocumentType());</span>
+<span class="fc" id="L60">        Map&lt;String, String&gt; auditContext = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L61">        auditContext.put(&quot;offerId&quot;, offerId.toString());</span>
+<span class="fc" id="L62">        auditContext.put(&quot;documentId&quot;, documentId.toString());</span>
+<span class="fc" id="L63">        auditContext.put(&quot;downloadedByUserId&quot;, userId.toString());</span>
+<span class="fc" id="L64">        auditContext.put(&quot;documentType&quot;, document.getDocumentType());</span>
         
-<span class="nc" id="L66">        Map&lt;String, Object&gt; auditContextObj = auditContext.entrySet().stream()</span>
-<span class="nc" id="L67">            .collect(java.util.stream.Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));</span>
-<span class="nc" id="L68">        auditService.logActionWithValues(&quot;OfferDocument&quot;, documentId, AuditAction.DOCUMENT_DOWNLOADED, auditContextObj, null);</span>
+<span class="fc" id="L66">        Map&lt;String, Object&gt; auditContextObj = auditContext.entrySet().stream()</span>
+<span class="fc" id="L67">            .collect(java.util.stream.Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));</span>
+<span class="fc" id="L68">        auditService.logActionWithValues(&quot;OfferDocument&quot;, documentId, AuditAction.DOCUMENT_DOWNLOADED, auditContextObj, null);</span>
         
-<span class="nc" id="L70">        log.info(&quot;Document download initiated: documentId={}, offerId={}, userId={}&quot;, documentId, offerId, userId);</span>
+<span class="fc" id="L70">        log.info(&quot;Document download initiated: documentId={}, offerId={}, userId={}&quot;, documentId, offerId, userId);</span>
         
-<span class="nc" id="L72">        return document.getS3Url();</span>
+<span class="fc" id="L72">        return document.getS3Url();</span>
     }
     
     /**
@@ -77,17 +77,17 @@ public class OfferDocumentDownloadService {
      */
     private void verifyAccess(Offer offer, UUID userId) {
         // Check if borrower owns the offer
-<span class="nc bnc" id="L80" title="All 2 branches missed.">        if (applicationRepository.findById(offer.getApplicationId())</span>
-<span class="nc" id="L81">            .map(app -&gt; app.getBorrowerId().equals(userId))</span>
-<span class="nc" id="L82">            .orElse(false)) {</span>
-<span class="nc" id="L83">            return; // Borrower can access their offer documents</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (applicationRepository.findById(offer.getApplicationId())</span>
+<span class="fc" id="L81">            .map(app -&gt; app.getBorrowerId().equals(userId))</span>
+<span class="fc" id="L82">            .orElse(false)) {</span>
+<span class="fc" id="L83">            return; // Borrower can access their offer documents</span>
         }
         
         // Check if officer owns the bank that created the offer
         // This would require checking user's bank association (TBD)
         // For now, we assume bank_id matches officer's bank
         
-<span class="nc" id="L90">        throw new IllegalArgumentException(&quot;Unauthorized access to document&quot;);</span>
+<span class="fc" id="L90">        throw new IllegalArgumentException(&quot;Unauthorized access to document&quot;);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

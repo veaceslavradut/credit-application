@@ -7,58 +7,58 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 <span class="nc" id="L8">public class CalculationUtils {</span>
     
-<span class="nc" id="L10">    private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);</span>
-<span class="nc" id="L11">    private static final BigDecimal TWELVE = BigDecimal.valueOf(12);</span>
+<span class="fc" id="L10">    private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);</span>
+<span class="fc" id="L11">    private static final BigDecimal TWELVE = BigDecimal.valueOf(12);</span>
     private static final int SCALE = 2;
     
     public static BigDecimal calculateMonthlyPayment(BigDecimal principal, int months, BigDecimal apr) {
-<span class="nc bnc" id="L15" title="All 6 branches missed.">        if (principal == null || apr == null || months &lt;= 0) {</span>
+<span class="pc bpc" id="L15" title="3 of 6 branches missed.">        if (principal == null || apr == null || months &lt;= 0) {</span>
 <span class="nc" id="L16">            return BigDecimal.ZERO;</span>
         }
         
-<span class="nc" id="L19">        BigDecimal monthlyRate = apr.divide(HUNDRED, 10, RoundingMode.HALF_UP)</span>
-<span class="nc" id="L20">            .divide(TWELVE, 10, RoundingMode.HALF_UP);</span>
+<span class="fc" id="L19">        BigDecimal monthlyRate = apr.divide(HUNDRED, 10, RoundingMode.HALF_UP)</span>
+<span class="fc" id="L20">            .divide(TWELVE, 10, RoundingMode.HALF_UP);</span>
         
-<span class="nc bnc" id="L22" title="All 2 branches missed.">        if (monthlyRate.compareTo(BigDecimal.ZERO) == 0) {</span>
+<span class="pc bpc" id="L22" title="1 of 2 branches missed.">        if (monthlyRate.compareTo(BigDecimal.ZERO) == 0) {</span>
 <span class="nc" id="L23">            return principal.divide(BigDecimal.valueOf(months), SCALE, RoundingMode.HALF_UP);</span>
         }
         
-<span class="nc" id="L26">        BigDecimal one = BigDecimal.ONE;</span>
-<span class="nc" id="L27">        BigDecimal numerator = monthlyRate.multiply(</span>
-<span class="nc" id="L28">            one.add(monthlyRate).pow(months)</span>
+<span class="fc" id="L26">        BigDecimal one = BigDecimal.ONE;</span>
+<span class="fc" id="L27">        BigDecimal numerator = monthlyRate.multiply(</span>
+<span class="fc" id="L28">            one.add(monthlyRate).pow(months)</span>
         );
-<span class="nc" id="L30">        BigDecimal denominator = one.add(monthlyRate).pow(months).subtract(one);</span>
+<span class="fc" id="L30">        BigDecimal denominator = one.add(monthlyRate).pow(months).subtract(one);</span>
         
-<span class="nc" id="L32">        return principal.multiply(numerator)</span>
-<span class="nc" id="L33">            .divide(denominator, SCALE, RoundingMode.HALF_UP);</span>
+<span class="fc" id="L32">        return principal.multiply(numerator)</span>
+<span class="fc" id="L33">            .divide(denominator, SCALE, RoundingMode.HALF_UP);</span>
     }
     
     public static BigDecimal calculateOriginationFee(BigDecimal loanAmount, BigDecimal feePercent) {
-<span class="nc bnc" id="L37" title="All 4 branches missed.">        if (loanAmount == null || feePercent == null) {</span>
+<span class="pc bpc" id="L37" title="2 of 4 branches missed.">        if (loanAmount == null || feePercent == null) {</span>
 <span class="nc" id="L38">            return BigDecimal.ZERO;</span>
         }
-<span class="nc" id="L40">        return loanAmount.multiply(feePercent)</span>
-<span class="nc" id="L41">            .divide(HUNDRED, SCALE, RoundingMode.HALF_UP);</span>
+<span class="fc" id="L40">        return loanAmount.multiply(feePercent)</span>
+<span class="fc" id="L41">            .divide(HUNDRED, SCALE, RoundingMode.HALF_UP);</span>
     }
     
     public static BigDecimal calculateInsuranceCost(BigDecimal loanAmount, int months, BigDecimal insurancePercent) {
-<span class="nc bnc" id="L45" title="All 6 branches missed.">        if (loanAmount == null || insurancePercent == null || months &lt;= 0) {</span>
+<span class="pc bpc" id="L45" title="3 of 6 branches missed.">        if (loanAmount == null || insurancePercent == null || months &lt;= 0) {</span>
 <span class="nc" id="L46">            return BigDecimal.ZERO;</span>
         }
-<span class="nc" id="L48">        BigDecimal yearFraction = BigDecimal.valueOf(months).divide(TWELVE, 10, RoundingMode.HALF_UP);</span>
-<span class="nc" id="L49">        return loanAmount.multiply(insurancePercent)</span>
-<span class="nc" id="L50">            .divide(HUNDRED, 10, RoundingMode.HALF_UP)</span>
-<span class="nc" id="L51">            .multiply(yearFraction)</span>
-<span class="nc" id="L52">            .setScale(SCALE, RoundingMode.HALF_UP);</span>
+<span class="fc" id="L48">        BigDecimal yearFraction = BigDecimal.valueOf(months).divide(TWELVE, 10, RoundingMode.HALF_UP);</span>
+<span class="fc" id="L49">        return loanAmount.multiply(insurancePercent)</span>
+<span class="fc" id="L50">            .divide(HUNDRED, 10, RoundingMode.HALF_UP)</span>
+<span class="fc" id="L51">            .multiply(yearFraction)</span>
+<span class="fc" id="L52">            .setScale(SCALE, RoundingMode.HALF_UP);</span>
     }
     
     public static BigDecimal calculateTotalCost(BigDecimal monthlyPayment, int months, BigDecimal principal) {
-<span class="nc bnc" id="L56" title="All 6 branches missed.">        if (monthlyPayment == null || principal == null || months &lt;= 0) {</span>
+<span class="pc bpc" id="L56" title="3 of 6 branches missed.">        if (monthlyPayment == null || principal == null || months &lt;= 0) {</span>
 <span class="nc" id="L57">            return BigDecimal.ZERO;</span>
         }
-<span class="nc" id="L59">        return monthlyPayment.multiply(BigDecimal.valueOf(months))</span>
-<span class="nc" id="L60">            .subtract(principal)</span>
-<span class="nc" id="L61">            .setScale(SCALE, RoundingMode.HALF_UP);</span>
+<span class="fc" id="L59">        return monthlyPayment.multiply(BigDecimal.valueOf(months))</span>
+<span class="fc" id="L60">            .subtract(principal)</span>
+<span class="fc" id="L61">            .setScale(SCALE, RoundingMode.HALF_UP);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

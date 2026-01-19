@@ -9,7 +9,9 @@ import com.creditapp.borrower.model.ApplicationStatus;
 import com.creditapp.borrower.repository.ApplicationHistoryRepository;
 import com.creditapp.borrower.repository.ApplicationRepository;
 import com.creditapp.borrower.service.ApplicationService;
+import com.creditapp.shared.model.ConsentType;
 import com.creditapp.shared.service.AuditService;
+import com.creditapp.shared.service.GDPRConsentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +26,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,6 +40,9 @@ class ApplicationSubmissionServiceTest {
 
     @Mock
     private AuditService auditService;
+
+    @Mock
+    private GDPRConsentService consentService;
 
     @InjectMocks
     private ApplicationService applicationService;
@@ -61,6 +67,10 @@ class ApplicationSubmissionServiceTest {
                 .status(ApplicationStatus.DRAFT)
                 .createdAt(LocalDateTime.now())
                 .build();
+
+        // Mock default consent behavior
+        lenient().when(consentService.isConsentGiven(any(UUID.class), eq(ConsentType.DATA_COLLECTION))).thenReturn(true);
+        lenient().when(consentService.isConsentGiven(any(UUID.class), eq(ConsentType.BANK_SHARING))).thenReturn(true);
     }
 
     @Test

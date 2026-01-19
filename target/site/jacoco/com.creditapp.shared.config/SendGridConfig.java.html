@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Configuration;
  * Creates SendGrid client bean when sendgrid.enabled=true
  */
 @Configuration
-<span class="nc" id="L15">@Slf4j</span>
-<span class="nc" id="L16">public class SendGridConfig {</span>
+<span class="fc" id="L15">@Slf4j</span>
+<span class="fc" id="L16">public class SendGridConfig {</span>
     
     @Value(&quot;${sendgrid.api-key}&quot;)
     private String apiKey;
@@ -31,16 +31,16 @@ import org.springframework.context.annotation.Configuration;
     @Bean
     @ConditionalOnProperty(name = &quot;sendgrid.enabled&quot;, havingValue = &quot;true&quot;, matchIfMissing = true)
     public SendGrid sendGrid() {
-<span class="nc bnc" id="L34" title="All 4 branches missed.">        if (apiKey == null || apiKey.equals(&quot;test-key&quot;)) {</span>
-<span class="nc" id="L35">            log.warn(&quot;SendGrid API key is not configured. Email sending will fail in production.&quot;);</span>
+<span class="pc bpc" id="L34" title="2 of 4 branches missed.">        if (apiKey == null || apiKey.equals(&quot;test-key&quot;)) {</span>
+<span class="fc" id="L35">            log.warn(&quot;SendGrid API key is not configured. Email sending will fail in production.&quot;);</span>
         }
-<span class="nc" id="L37">        log.info(&quot;SendGrid client initialized with from-email: {}&quot;, fromEmail);</span>
-<span class="nc" id="L38">        return new SendGrid(apiKey);</span>
+<span class="fc" id="L37">        log.info(&quot;SendGrid client initialized with from-email: {}&quot;, fromEmail);</span>
+<span class="fc" id="L38">        return new SendGrid(apiKey);</span>
     }
     
     @Bean
     public String sendGridFromEmail() {
-<span class="nc" id="L43">        return fromEmail;</span>
+<span class="fc" id="L43">        return fromEmail;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

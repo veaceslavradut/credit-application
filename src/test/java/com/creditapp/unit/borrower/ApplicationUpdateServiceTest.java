@@ -65,7 +65,8 @@ class ApplicationUpdateServiceTest {
                 auditService,
                 notificationService,
                 userRepository,
-                mock(com.creditapp.bank.service.OfferCalculationService.class)
+                mock(com.creditapp.bank.service.OfferCalculationService.class),
+                mock(com.creditapp.shared.service.GDPRConsentService.class)
         );
 
         borrowerId = UUID.randomUUID();

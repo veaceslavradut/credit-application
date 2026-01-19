@@ -10,35 +10,35 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-<span class="nc bnc" id="L13" title="All 134 branches missed.">@Data</span>
-<span class="nc" id="L14">@Builder</span>
+<span class="pc bnc" id="L13" title="All 134 branches missed.">@Data</span>
+<span class="pc" id="L14">@Builder</span>
 <span class="nc" id="L15">@NoArgsConstructor</span>
-<span class="nc" id="L16">@AllArgsConstructor</span>
+<span class="fc" id="L16">@AllArgsConstructor</span>
 public class ApplicationQueueItem {
-<span class="nc" id="L18">    private UUID applicationId;</span>
-<span class="nc" id="L19">    private String referenceNumber;</span>
+<span class="fc" id="L18">    private UUID applicationId;</span>
+<span class="fc" id="L19">    private String referenceNumber;</span>
 
-<span class="nc" id="L21">    private String borrowerName;</span>
-<span class="nc" id="L22">    private String borrowerEmail;</span>
-<span class="nc" id="L23">    private String borrowerPhone;</span>
+<span class="fc" id="L21">    private String borrowerName;</span>
+<span class="fc" id="L22">    private String borrowerEmail;</span>
+<span class="fc" id="L23">    private String borrowerPhone;</span>
 
-<span class="nc" id="L25">    private BigDecimal loanAmount;</span>
-<span class="nc" id="L26">    private Integer termMonths;</span>
-<span class="nc" id="L27">    private BigDecimal selectedOfferAPR;</span>
-<span class="nc" id="L28">    private BigDecimal selectedOfferMonthlyPayment;</span>
+<span class="fc" id="L25">    private BigDecimal loanAmount;</span>
+<span class="fc" id="L26">    private Integer termMonths;</span>
+<span class="fc" id="L27">    private BigDecimal selectedOfferAPR;</span>
+<span class="fc" id="L28">    private BigDecimal selectedOfferMonthlyPayment;</span>
 
     /** Application status (e.g., OFFER_ACCEPTED, DOCUMENTS_SUBMITTED, APPROVED, FUNDED, REJECTED) */
-<span class="nc" id="L31">    private String status;</span>
+<span class="fc" id="L31">    private String status;</span>
 
-<span class="nc" id="L33">    private LocalDateTime receivedAt;</span>
-<span class="nc" id="L34">    private LocalDateTime submittedAt;</span>
-<span class="nc" id="L35">    private LocalDateTime lastUpdatedAt;</span>
+<span class="fc" id="L33">    private LocalDateTime receivedAt;</span>
+<span class="fc" id="L34">    private LocalDateTime submittedAt;</span>
+<span class="fc" id="L35">    private LocalDateTime lastUpdatedAt;</span>
 
     /** documents status: none, submitted, verified */
-<span class="nc" id="L38">    private String documentsStatus;</span>
+<span class="fc" id="L38">    private String documentsStatus;</span>
     /** approval status: pending, approved, rejected */
-<span class="nc" id="L40">    private String approvalStatus;</span>
+<span class="fc" id="L40">    private String approvalStatus;</span>
 
-<span class="nc" id="L42">    private List&lt;String&gt; actionItems;</span>
+<span class="fc" id="L42">    private List&lt;String&gt; actionItems;</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

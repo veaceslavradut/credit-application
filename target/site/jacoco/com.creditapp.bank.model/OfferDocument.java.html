@@ -17,54 +17,54 @@ import java.util.UUID;
     @Index(name = &quot;idx_offer_id_document_type&quot;, columnList = &quot;offer_id,document_type&quot;)
 })
 <span class="nc" id="L19">@Data</span>
-<span class="nc" id="L20">@Builder</span>
-<span class="nc" id="L21">@NoArgsConstructor</span>
-<span class="nc" id="L22">@AllArgsConstructor</span>
+<span class="pc" id="L20">@Builder</span>
+<span class="fc" id="L21">@NoArgsConstructor</span>
+<span class="fc" id="L22">@AllArgsConstructor</span>
 <span class="nc bnc" id="L23" title="All 110 branches missed.">@EqualsAndHashCode(exclude = {&quot;offer&quot;})</span>
 <span class="nc" id="L24">@ToString(exclude = {&quot;offer&quot;})</span>
 public class OfferDocument {
     
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-<span class="nc" id="L29">    private UUID id;</span>
+<span class="fc" id="L29">    private UUID id;</span>
     
     @Column(name = &quot;offer_id&quot;, nullable = false)
-<span class="nc" id="L32">    private UUID offerId;</span>
+<span class="fc" id="L32">    private UUID offerId;</span>
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;offer_id&quot;, insertable = false, updatable = false)
 <span class="nc" id="L36">    private Offer offer;</span>
     
     @Column(name = &quot;document_type&quot;, nullable = false, length = 50)
-<span class="nc" id="L39">    private String documentType; // TERMS_CONDITIONS, FEE_SCHEDULE, DISCLOSURE, TRUTH_IN_LENDING, CUSTOM</span>
+<span class="fc" id="L39">    private String documentType; // TERMS_CONDITIONS, FEE_SCHEDULE, DISCLOSURE, TRUTH_IN_LENDING, CUSTOM</span>
     
     @Column(name = &quot;file_name&quot;, nullable = false, length = 255)
-<span class="nc" id="L42">    private String fileName;</span>
+<span class="fc" id="L42">    private String fileName;</span>
     
     @Column(name = &quot;file_size&quot;, nullable = false)
-<span class="nc" id="L45">    private Long fileSize; // in bytes</span>
+<span class="fc" id="L45">    private Long fileSize; // in bytes</span>
     
     @Column(name = &quot;mime_type&quot;, nullable = false, length = 100)
 <span class="nc" id="L48">    private String mimeType; // application/pdf, etc.</span>
     
     @Column(name = &quot;s3_key&quot;, nullable = false, length = 500)
-<span class="nc" id="L51">    private String s3Key; // AWS S3 object key</span>
+<span class="fc" id="L51">    private String s3Key; // AWS S3 object key</span>
     
     @Column(name = &quot;s3_url&quot;, nullable = false, length = 1000)
-<span class="nc" id="L54">    private String s3Url; // Pre-signed download URL (expires in 24 hours)</span>
+<span class="fc" id="L54">    private String s3Url; // Pre-signed download URL (expires in 24 hours)</span>
     
     @Column(name = &quot;uploaded_by_officer_id&quot;, nullable = false)
-<span class="nc" id="L57">    private UUID uploadedByOfficerId;</span>
+<span class="fc" id="L57">    private UUID uploadedByOfficerId;</span>
     
     @CreationTimestamp
     @Column(name = &quot;uploaded_at&quot;, nullable = false, updatable = false)
-<span class="nc" id="L61">    private LocalDateTime uploadedAt;</span>
+<span class="fc" id="L61">    private LocalDateTime uploadedAt;</span>
     
     @Column(name = &quot;description&quot;, length = 2000)
-<span class="nc" id="L64">    private String description;</span>
+<span class="fc" id="L64">    private String description;</span>
     
     @Column(name = &quot;virus_scan_status&quot;, nullable = false, length = 20)
-<span class="nc" id="L67">    private String virusScanStatus; // PENDING, CLEAN, INFECTED</span>
+<span class="fc" id="L67">    private String virusScanStatus; // PENDING, CLEAN, INFECTED</span>
     
     @Column(name = &quot;virus_scan_result&quot;, length = 1000)
 <span class="nc" id="L70">    private String virusScanResult; // Details if infected</span>

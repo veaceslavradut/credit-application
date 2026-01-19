@@ -23,6 +23,8 @@ import com.creditapp.shared.service.AuditService;
 import com.creditapp.shared.service.NotificationService;
 import com.creditapp.auth.repository.UserRepository;
 import com.creditapp.bank.service.OfferCalculationService;
+import com.creditapp.shared.service.GDPRConsentService;
+import com.creditapp.shared.model.ConsentType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -50,6 +52,7 @@ public class ApplicationService {
     private final NotificationService notificationService;
     private final UserRepository userRepository;
     private final OfferCalculationService offerCalculationService;
+    private final GDPRConsentService consentService;
 
     /**
      * Create a new application in DRAFT status.
@@ -174,6 +177,9 @@ public class ApplicationService {
             throw new ApplicationAlreadySubmittedException(
                     "Application is already in " + application.getStatus() + " status. Only DRAFT applications can be submitted.");
         }
+
+        // Validate required consents before submission (GDPR compliance)
+        validateRequiredConsents(borrowerId);
 
         // Validate required fields
         List<String> missingFields = new ArrayList<>();
@@ -400,5 +406,25 @@ public class ApplicationService {
                 .changedByUserId(history.getChangedByUserId())
                 .changeReason(history.getChangeReason())
                 .build();
+    }
+
+    /**
+     * Validate that required GDPR consents are given before application submission.
+     * Requires: DATA_COLLECTION and BANK_SHARING consents.
+     */
+    private void validateRequiredConsents(UUID borrowerId) {
+        if (!consentService.isConsentGiven(borrowerId, ConsentType.DATA_COLLECTION)) {
+            throw new SubmissionValidationException(
+                    "Required consent missing: You must consent to data collection to submit an application.",
+                    List.of("DATA_COLLECTION_CONSENT"));
+        }
+        
+        if (!consentService.isConsentGiven(borrowerId, ConsentType.BANK_SHARING)) {
+            throw new SubmissionValidationException(
+                    "Required consent missing: You must consent to bank sharing to submit an application.",
+                    List.of("BANK_SHARING_CONSENT"));
+        }
+        
+        log.info("Consent validation passed for borrower: {}", borrowerId);
     }
 }
