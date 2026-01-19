@@ -15,38 +15,38 @@ import java.util.UUID;
  */
 <span class="nc bnc" id="L16" title="All 70 branches missed.">@Data</span>
 <span class="nc" id="L17">@NoArgsConstructor</span>
-<span class="nc" id="L18">@AllArgsConstructor</span>
-<span class="nc" id="L19">@Builder</span>
+<span class="fc" id="L18">@AllArgsConstructor</span>
+<span class="pc" id="L19">@Builder</span>
 public class OfferSubmissionResponse {
     /**
      * The generated offer ID
      */
-<span class="nc" id="L24">    private UUID offerId;</span>
+<span class="fc" id="L24">    private UUID offerId;</span>
     
     /**
      * Annual Percentage Rate (APR) with 4 decimal precision
      */
-<span class="nc" id="L29">    private BigDecimal apr;</span>
+<span class="fc" id="L29">    private BigDecimal apr;</span>
     
     /**
      * Origination fees (2 decimal precision)
      */
-<span class="nc" id="L34">    private BigDecimal fees;</span>
+<span class="fc" id="L34">    private BigDecimal fees;</span>
     
     /**
      * Processing time in days
      */
-<span class="nc" id="L39">    private Integer processingTime;</span>
+<span class="fc" id="L39">    private Integer processingTime;</span>
     
     /**
      * Monthly payment amount (2 decimal precision)
      */
-<span class="nc" id="L44">    private BigDecimal monthlyPayment;</span>
+<span class="fc" id="L44">    private BigDecimal monthlyPayment;</span>
     
     /**
      * Total cost including all fees (2 decimal precision)
      */
-<span class="nc" id="L49">    private BigDecimal totalCost;</span>
+<span class="fc" id="L49">    private BigDecimal totalCost;</span>
     
     /**
      * Timestamp when offer was submitted (ISO-8601 UTC)
@@ -56,6 +56,6 @@ public class OfferSubmissionResponse {
     /**
      * HTTP status code (201 for new offer, 200 for existing)
      */
-<span class="nc" id="L59">    private Integer httpStatus;</span>
+<span class="fc" id="L59">    private Integer httpStatus;</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

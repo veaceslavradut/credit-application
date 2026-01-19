@@ -7,30 +7,30 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 <span class="nc" id="L8">public class CalculationUtils {</span>
     
-<span class="nc" id="L10">    private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);</span>
-<span class="nc" id="L11">    private static final BigDecimal TWELVE = BigDecimal.valueOf(12);</span>
+<span class="fc" id="L10">    private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);</span>
+<span class="fc" id="L11">    private static final BigDecimal TWELVE = BigDecimal.valueOf(12);</span>
     private static final int SCALE = 2;
     
     public static BigDecimal calculateMonthlyPayment(BigDecimal principal, int months, BigDecimal apr) {
-<span class="nc bnc" id="L15" title="All 6 branches missed.">        if (principal == null || apr == null || months &lt;= 0) {</span>
+<span class="pc bpc" id="L15" title="3 of 6 branches missed.">        if (principal == null || apr == null || months &lt;= 0) {</span>
 <span class="nc" id="L16">            return BigDecimal.ZERO;</span>
         }
         
-<span class="nc" id="L19">        BigDecimal monthlyRate = apr.divide(HUNDRED, 10, RoundingMode.HALF_UP)</span>
-<span class="nc" id="L20">            .divide(TWELVE, 10, RoundingMode.HALF_UP);</span>
+<span class="fc" id="L19">        BigDecimal monthlyRate = apr.divide(HUNDRED, 10, RoundingMode.HALF_UP)</span>
+<span class="fc" id="L20">            .divide(TWELVE, 10, RoundingMode.HALF_UP);</span>
         
-<span class="nc bnc" id="L22" title="All 2 branches missed.">        if (monthlyRate.compareTo(BigDecimal.ZERO) == 0) {</span>
+<span class="pc bpc" id="L22" title="1 of 2 branches missed.">        if (monthlyRate.compareTo(BigDecimal.ZERO) == 0) {</span>
 <span class="nc" id="L23">            return principal.divide(BigDecimal.valueOf(months), SCALE, RoundingMode.HALF_UP);</span>
         }
         
-<span class="nc" id="L26">        BigDecimal one = BigDecimal.ONE;</span>
-<span class="nc" id="L27">        BigDecimal numerator = monthlyRate.multiply(</span>
-<span class="nc" id="L28">            one.add(monthlyRate).pow(months)</span>
+<span class="fc" id="L26">        BigDecimal one = BigDecimal.ONE;</span>
+<span class="fc" id="L27">        BigDecimal numerator = monthlyRate.multiply(</span>
+<span class="fc" id="L28">            one.add(monthlyRate).pow(months)</span>
         );
-<span class="nc" id="L30">        BigDecimal denominator = one.add(monthlyRate).pow(months).subtract(one);</span>
+<span class="fc" id="L30">        BigDecimal denominator = one.add(monthlyRate).pow(months).subtract(one);</span>
         
-<span class="nc" id="L32">        return principal.multiply(numerator)</span>
-<span class="nc" id="L33">            .divide(denominator, SCALE, RoundingMode.HALF_UP);</span>
+<span class="fc" id="L32">        return principal.multiply(numerator)</span>
+<span class="fc" id="L33">            .divide(denominator, SCALE, RoundingMode.HALF_UP);</span>
     }
     
     public static BigDecimal calculateOriginationFee(BigDecimal loanAmount, BigDecimal feePercent) {
