@@ -18,15 +18,15 @@ import java.util.Collection;
 import java.util.UUID;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-<span class="fc" id="L21">    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);</span>
+<span class="nc" id="L21">    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);</span>
     private static final String BEARER_PREFIX = &quot;Bearer &quot;;
     private static final String AUTHORIZATION_HEADER = &quot;Authorization&quot;;
     private final JwtTokenService jwtTokenService;
 
-<span class="fc" id="L26">    public JwtAuthenticationFilter(JwtTokenService jwtTokenService) {</span>
-<span class="fc" id="L27">        this.jwtTokenService = jwtTokenService;</span>
-<span class="fc" id="L28">        logger.debug(&quot;JwtAuthenticationFilter initialized&quot;);</span>
-<span class="fc" id="L29">    }</span>
+<span class="nc" id="L26">    public JwtAuthenticationFilter(JwtTokenService jwtTokenService) {</span>
+<span class="nc" id="L27">        this.jwtTokenService = jwtTokenService;</span>
+<span class="nc" id="L28">        logger.debug(&quot;JwtAuthenticationFilter initialized&quot;);</span>
+<span class="nc" id="L29">    }</span>
 
     @Override
     protected void doFilterInternal(@org.springframework.lang.NonNull HttpServletRequest request, 

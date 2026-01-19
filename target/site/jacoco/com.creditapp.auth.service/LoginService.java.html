@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Service
 public class LoginService {
-<span class="fc" id="L27">    private static final Logger logger = LoggerFactory.getLogger(LoginService.class);</span>
+<span class="nc" id="L27">    private static final Logger logger = LoggerFactory.getLogger(LoginService.class);</span>
     private final UserRepository userRepository;
     private final OrganizationRepository organizationRepository;
     private final JwtTokenService jwtTokenService;
@@ -32,13 +32,13 @@ public class LoginService {
     private final PasswordEncoder passwordEncoder;
 
     public LoginService(UserRepository userRepository, OrganizationRepository organizationRepository,
-<span class="fc" id="L35">                       JwtTokenService jwtTokenService, LoginRateLimiter loginRateLimiter, PasswordEncoder passwordEncoder) {</span>
-<span class="fc" id="L36">        this.userRepository = userRepository;</span>
-<span class="fc" id="L37">        this.organizationRepository = organizationRepository;</span>
-<span class="fc" id="L38">        this.jwtTokenService = jwtTokenService;</span>
-<span class="fc" id="L39">        this.loginRateLimiter = loginRateLimiter;</span>
-<span class="fc" id="L40">        this.passwordEncoder = passwordEncoder;</span>
-<span class="fc" id="L41">    }</span>
+<span class="nc" id="L35">                       JwtTokenService jwtTokenService, LoginRateLimiter loginRateLimiter, PasswordEncoder passwordEncoder) {</span>
+<span class="nc" id="L36">        this.userRepository = userRepository;</span>
+<span class="nc" id="L37">        this.organizationRepository = organizationRepository;</span>
+<span class="nc" id="L38">        this.jwtTokenService = jwtTokenService;</span>
+<span class="nc" id="L39">        this.loginRateLimiter = loginRateLimiter;</span>
+<span class="nc" id="L40">        this.passwordEncoder = passwordEncoder;</span>
+<span class="nc" id="L41">    }</span>
 
     public LoginResponse login(LoginRequest request) {
 <span class="nc" id="L44">        String email = request.getEmail();</span>

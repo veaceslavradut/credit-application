@@ -29,11 +29,11 @@ public class OfferInsightsService {
 
     public OfferInsightsService(OfferRepository offerRepository, 
                                ApplicationRepository applicationRepository,
-<span class="fc" id="L32">                               OrganizationRepository organizationRepository) {</span>
-<span class="fc" id="L33">        this.offerRepository = offerRepository;</span>
-<span class="fc" id="L34">        this.applicationRepository = applicationRepository;</span>
-<span class="fc" id="L35">        this.organizationRepository = organizationRepository;</span>
-<span class="fc" id="L36">    }</span>
+<span class="nc" id="L32">                               OrganizationRepository organizationRepository) {</span>
+<span class="nc" id="L33">        this.offerRepository = offerRepository;</span>
+<span class="nc" id="L34">        this.applicationRepository = applicationRepository;</span>
+<span class="nc" id="L35">        this.organizationRepository = organizationRepository;</span>
+<span class="nc" id="L36">    }</span>
 
     public OfferInsightsDTO calculateInsights(UUID applicationId, UUID borrowerId) {
         // Verify borrower owns the application

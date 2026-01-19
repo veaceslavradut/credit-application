@@ -20,7 +20,7 @@ import java.util.UUID;
 @Service
 public class OfferExpirationService {
     
-<span class="fc" id="L23">    private static final Logger logger = LoggerFactory.getLogger(OfferExpirationService.class);</span>
+<span class="nc" id="L23">    private static final Logger logger = LoggerFactory.getLogger(OfferExpirationService.class);</span>
     
     private final OfferRepository offerRepository;
     private final ApplicationRepository applicationRepository;
@@ -30,12 +30,12 @@ public class OfferExpirationService {
     public OfferExpirationService(OfferRepository offerRepository,
                                   ApplicationRepository applicationRepository,
                                   AuditService auditService,
-<span class="fc" id="L33">                                  MeterRegistry meterRegistry) {</span>
-<span class="fc" id="L34">        this.offerRepository = offerRepository;</span>
-<span class="fc" id="L35">        this.applicationRepository = applicationRepository;</span>
-<span class="fc" id="L36">        this.auditService = auditService;</span>
-<span class="fc" id="L37">        this.meterRegistry = meterRegistry;</span>
-<span class="fc" id="L38">    }</span>
+<span class="nc" id="L33">                                  MeterRegistry meterRegistry) {</span>
+<span class="nc" id="L34">        this.offerRepository = offerRepository;</span>
+<span class="nc" id="L35">        this.applicationRepository = applicationRepository;</span>
+<span class="nc" id="L36">        this.auditService = auditService;</span>
+<span class="nc" id="L37">        this.meterRegistry = meterRegistry;</span>
+<span class="nc" id="L38">    }</span>
     
     @Transactional
     public int expireOffers() {

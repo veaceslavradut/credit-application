@@ -31,7 +31,7 @@ import com.creditapp.shared.service.AuditService;
 @Service
 public class OfferRetrievalService {
 
-<span class="fc" id="L34">    private static final Logger log = LoggerFactory.getLogger(OfferRetrievalService.class);</span>
+<span class="nc" id="L34">    private static final Logger log = LoggerFactory.getLogger(OfferRetrievalService.class);</span>
 
     private final OfferRepository offerRepository;
     private final ApplicationRepository applicationRepository;
@@ -41,12 +41,12 @@ public class OfferRetrievalService {
     public OfferRetrievalService(OfferRepository offerRepository,
                                  ApplicationRepository applicationRepository,
                                  OrganizationRepository organizationRepository,
-<span class="fc" id="L44">                                 AuditService auditService) {</span>
-<span class="fc" id="L45">        this.offerRepository = offerRepository;</span>
-<span class="fc" id="L46">        this.applicationRepository = applicationRepository;</span>
-<span class="fc" id="L47">        this.organizationRepository = organizationRepository;</span>
-<span class="fc" id="L48">        this.auditService = auditService;</span>
-<span class="fc" id="L49">    }</span>
+<span class="nc" id="L44">                                 AuditService auditService) {</span>
+<span class="nc" id="L45">        this.offerRepository = offerRepository;</span>
+<span class="nc" id="L46">        this.applicationRepository = applicationRepository;</span>
+<span class="nc" id="L47">        this.organizationRepository = organizationRepository;</span>
+<span class="nc" id="L48">        this.auditService = auditService;</span>
+<span class="nc" id="L49">    }</span>
 
     @Transactional(readOnly = true)
     public List&lt;OfferComparisonDTO&gt; getOffersForApplication(UUID applicationId, UUID borrowerId) {

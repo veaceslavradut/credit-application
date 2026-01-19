@@ -15,14 +15,14 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-<span class="fc" id="L18">@RequiredArgsConstructor</span>
-<span class="fc" id="L19">@Slf4j</span>
+<span class="nc" id="L18">@RequiredArgsConstructor</span>
+<span class="nc" id="L19">@Slf4j</span>
 public class ApplicationQueueWebSocketHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper;
     
     // Map: bankId -&gt; Set of WebSocketSessions
-<span class="fc" id="L25">    private static final Map&lt;String, Set&lt;WebSocketSession&gt;&gt; BANK_CONNECTIONS = </span>
+<span class="nc" id="L25">    private static final Map&lt;String, Set&lt;WebSocketSession&gt;&gt; BANK_CONNECTIONS = </span>
         new ConcurrentHashMap&lt;&gt;();
 
     @Override

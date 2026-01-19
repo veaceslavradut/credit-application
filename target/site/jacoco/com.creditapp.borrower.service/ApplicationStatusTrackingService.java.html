@@ -20,15 +20,15 @@ import java.util.UUID;
  * Service for tracking and retrieving application status history.
  */
 @Service
-<span class="fc" id="L23">@RequiredArgsConstructor</span>
-<span class="fc" id="L24">@Slf4j</span>
+<span class="nc" id="L23">@RequiredArgsConstructor</span>
+<span class="nc" id="L24">@Slf4j</span>
 public class ApplicationStatusTrackingService {
 
     private final ApplicationRepository applicationRepository;
     private final ApplicationHistoryRepository applicationHistoryRepository;
 
     // Define the expected workflow progression for percentage calculation
-<span class="fc" id="L31">    private static final List&lt;ApplicationStatus&gt; WORKFLOW_PROGRESSION = List.of(</span>
+<span class="nc" id="L31">    private static final List&lt;ApplicationStatus&gt; WORKFLOW_PROGRESSION = List.of(</span>
             ApplicationStatus.DRAFT,
             ApplicationStatus.SUBMITTED,
             ApplicationStatus.UNDER_REVIEW,

@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-<span class="fc" id="L29">@Slf4j</span>
+<span class="nc" id="L29">@Slf4j</span>
 @Service
 public class OfferSelectionService {
 
@@ -42,14 +42,14 @@ public class OfferSelectionService {
                                 OrganizationRepository organizationRepository,
                                 OfferSelectionEmailService emailService,
                                 AuditService auditService,
-<span class="fc" id="L45">                                NextStepsService nextStepsService) {</span>
-<span class="fc" id="L46">        this.offerRepository = offerRepository;</span>
-<span class="fc" id="L47">        this.applicationRepository = applicationRepository;</span>
-<span class="fc" id="L48">        this.organizationRepository = organizationRepository;</span>
-<span class="fc" id="L49">        this.emailService = emailService;</span>
-<span class="fc" id="L50">        this.auditService = auditService;</span>
-<span class="fc" id="L51">        this.nextStepsService = nextStepsService;</span>
-<span class="fc" id="L52">    }</span>
+<span class="nc" id="L45">                                NextStepsService nextStepsService) {</span>
+<span class="nc" id="L46">        this.offerRepository = offerRepository;</span>
+<span class="nc" id="L47">        this.applicationRepository = applicationRepository;</span>
+<span class="nc" id="L48">        this.organizationRepository = organizationRepository;</span>
+<span class="nc" id="L49">        this.emailService = emailService;</span>
+<span class="nc" id="L50">        this.auditService = auditService;</span>
+<span class="nc" id="L51">        this.nextStepsService = nextStepsService;</span>
+<span class="nc" id="L52">    }</span>
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public SelectOfferResponse selectOffer(UUID applicationId, UUID borrowerId, UUID offerId) {

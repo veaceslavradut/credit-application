@@ -22,9 +22,9 @@ public class BankMarketAnalysisService {
     
     private final BankRateCardRepository rateCardRepository;
 
-<span class="fc" id="L25">    public BankMarketAnalysisService(BankRateCardRepository rateCardRepository) {</span>
-<span class="fc" id="L26">        this.rateCardRepository = rateCardRepository;</span>
-<span class="fc" id="L27">    }</span>
+<span class="nc" id="L25">    public BankMarketAnalysisService(BankRateCardRepository rateCardRepository) {</span>
+<span class="nc" id="L26">        this.rateCardRepository = rateCardRepository;</span>
+<span class="nc" id="L27">    }</span>
 
     @Cacheable(value = &quot;bankMarketAnalysis&quot;, key = &quot;#bankId.toString()&quot;)
     public MarketAnalysisDTO analyzeMarket(UUID bankId) {

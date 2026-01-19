@@ -17,16 +17,16 @@ import java.util.Map;
  * Service for interacting with AWS S3 for document storage.
  */
 @Service
-<span class="fc" id="L20">@Slf4j</span>
+<span class="nc" id="L20">@Slf4j</span>
 public class S3DocumentStorageService {
     
     private final S3Client s3Client;
     private final S3Configuration s3Configuration;
     
-<span class="fc" id="L26">    public S3DocumentStorageService(S3Client s3Client, S3Configuration s3Configuration) {</span>
-<span class="fc" id="L27">        this.s3Client = s3Client;</span>
-<span class="fc" id="L28">        this.s3Configuration = s3Configuration;</span>
-<span class="fc" id="L29">    }</span>
+<span class="nc" id="L26">    public S3DocumentStorageService(S3Client s3Client, S3Configuration s3Configuration) {</span>
+<span class="nc" id="L27">        this.s3Client = s3Client;</span>
+<span class="nc" id="L28">        this.s3Configuration = s3Configuration;</span>
+<span class="nc" id="L29">    }</span>
     
     /**
      * Upload file to S3.

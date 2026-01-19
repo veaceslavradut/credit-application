@@ -13,9 +13,9 @@ public class RateLimitingInterceptor implements HandlerInterceptor {
 
     private final StringRedisTemplate redisTemplate;
 
-<span class="fc" id="L16">    public RateLimitingInterceptor(StringRedisTemplate redisTemplate) {</span>
-<span class="fc" id="L17">        this.redisTemplate = redisTemplate;</span>
-<span class="fc" id="L18">    }</span>
+<span class="nc" id="L16">    public RateLimitingInterceptor(StringRedisTemplate redisTemplate) {</span>
+<span class="nc" id="L17">        this.redisTemplate = redisTemplate;</span>
+<span class="nc" id="L18">    }</span>
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {

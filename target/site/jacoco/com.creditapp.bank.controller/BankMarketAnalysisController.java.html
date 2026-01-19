@@ -17,10 +17,10 @@ public class BankMarketAnalysisController {
     private final AuthorizationService authorizationService;
 
     public BankMarketAnalysisController(BankMarketAnalysisService analysisService,
-<span class="fc" id="L20">                                        AuthorizationService authorizationService) {</span>
-<span class="fc" id="L21">        this.analysisService = analysisService;</span>
-<span class="fc" id="L22">        this.authorizationService = authorizationService;</span>
-<span class="fc" id="L23">    }</span>
+<span class="nc" id="L20">                                        AuthorizationService authorizationService) {</span>
+<span class="nc" id="L21">        this.analysisService = analysisService;</span>
+<span class="nc" id="L22">        this.authorizationService = authorizationService;</span>
+<span class="nc" id="L23">    }</span>
 
     @GetMapping(&quot;/market-analysis&quot;)
     @PreAuthorize(&quot;hasAuthority('BANK_ADMIN')&quot;)

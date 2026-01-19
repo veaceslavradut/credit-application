@@ -13,14 +13,14 @@ import java.util.Set;
  * Checks file size, MIME type, and extension.
  */
 @Service
-<span class="fc" id="L16">@Slf4j</span>
-<span class="fc" id="L17">public class FileValidationService {</span>
+<span class="nc" id="L16">@Slf4j</span>
+<span class="nc" id="L17">public class FileValidationService {</span>
     
     private static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-<span class="fc" id="L20">    private static final Set&lt;String&gt; ALLOWED_EXTENSIONS = new HashSet&lt;&gt;(Arrays.asList(</span>
+<span class="nc" id="L20">    private static final Set&lt;String&gt; ALLOWED_EXTENSIONS = new HashSet&lt;&gt;(Arrays.asList(</span>
         &quot;pdf&quot;, &quot;doc&quot;, &quot;docx&quot;, &quot;xls&quot;, &quot;xlsx&quot;
     ));
-<span class="fc" id="L23">    private static final Set&lt;String&gt; ALLOWED_MIME_TYPES = new HashSet&lt;&gt;(Arrays.asList(</span>
+<span class="nc" id="L23">    private static final Set&lt;String&gt; ALLOWED_MIME_TYPES = new HashSet&lt;&gt;(Arrays.asList(</span>
         &quot;application/pdf&quot;,
         &quot;application/msword&quot;,
         &quot;application/vnd.openxmlformats-officedocument.wordprocessingml.document&quot;,

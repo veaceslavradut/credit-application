@@ -15,7 +15,7 @@ import java.util.UUID;
 @Table(name = &quot;organizations&quot;)
 <span class="nc" id="L16">@Data</span>
 <span class="nc" id="L17">@Builder</span>
-<span class="fc" id="L18">@NoArgsConstructor</span>
+<span class="nc" id="L18">@NoArgsConstructor</span>
 <span class="nc" id="L19">@AllArgsConstructor</span>
 public class Organization {
 
@@ -32,13 +32,13 @@ public class Organization {
     @Column(name = &quot;country_code&quot;, nullable = false)
     private String countryCode;
 
-<span class="pc" id="L35">    @Column(name = &quot;is_active&quot;, nullable = false)</span>
+<span class="nc" id="L35">    @Column(name = &quot;is_active&quot;, nullable = false)</span>
     private boolean active = true;
 
     @Column(name = &quot;registration_number&quot;, unique = true)
     private String registrationNumber;
 
-<span class="pc" id="L41">    @Enumerated(EnumType.STRING)</span>
+<span class="nc" id="L41">    @Enumerated(EnumType.STRING)</span>
     @Column(name = &quot;status&quot;, nullable = false)
     private BankStatus status = BankStatus.PENDING_ACTIVATION;
 

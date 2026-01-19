@@ -28,7 +28,9 @@ public enum AuditAction {
     ROLE_ASSIGNED("Role assigned"),
     NOTIFICATION_SENT("Notification sent"),
     RATE_CARD_CREATED("Rate card created"),
-    RATE_CARD_UPDATED("Rate card updated");
+    RATE_CARD_UPDATED("Rate card updated"),
+    CONSENT_GRANTED("Consent granted"),
+    CONSENT_WITHDRAWN("Consent withdrawn");
 
     private final String description;
 

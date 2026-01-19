@@ -3,6 +3,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\ser
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\ApplicationDocumentService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\validator\ApplicationStatusValidator.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\ApplicationQueueResponse.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\GDPRConsentRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\filter\JwtAuthenticationToken.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\model\OfferCalculationLog.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\scheduler\OfferExpirationScheduler.java
@@ -26,6 +27,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\con
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\EmailDeliveryLogRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\EmailTemplate.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\ApplicationDocument.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\ConsentRequestDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\service\BankAnalyticsService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\AmountRangeBreakdownDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\HelpArticleNotFoundException.java
@@ -83,6 +85,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\ApplicationNotFoundException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\service\PasswordValidator.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\RedisConfig.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\ConsentWithdrawalRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\DocumentDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\controller\BankOfferSubmissionController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\service\OfferDocumentDownloadService.java
@@ -98,6 +101,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\u
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\ApplicationQueueMetrics.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\exception\InvalidCredentialsException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\service\ApplicationStatusUpdateService.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\ConsentType.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\exception\RateCardNotFoundException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\ApplicationDetailsDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\ApplicationStatusUpdateResponse.java
@@ -147,6 +151,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\exc
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\controller\BankTeamController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\exception\LoginRateLimitExceededException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\controller\BankApplicationReviewController.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\GDPRConsent.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\ApplicationQueueRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\LoanType.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\EmailDeliveryLog.java
@@ -179,6 +184,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\ser
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\EmailService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\RateLimitingAspect.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\BankOfferSubmissionRequest.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\GDPRConsentService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\QuickLink.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\OfferHistoryRecord.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\OfferExpiredException.java
@@ -227,6 +233,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\DocumentStorageService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\controller\BankOfferHistoryController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\TeamMemberDTO.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\controller\GDPRConsentController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\ApplicationService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\audit\AuditLogListener.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\HelpArticleListDTO.java
@@ -317,6 +324,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\ActivationTokenService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\exception\DuplicateBankRegistrationException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\OfferSubmissionRequest.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\ConsentResponseDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\websocket\ApplicationQueueWebSocketInterceptor.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\OfferComparisonResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\ApplicationHistory.java

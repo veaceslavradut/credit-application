@@ -28,16 +28,18 @@
 <span class="fc" id="L28">    ROLE_ASSIGNED(&quot;Role assigned&quot;),</span>
 <span class="fc" id="L29">    NOTIFICATION_SENT(&quot;Notification sent&quot;),</span>
 <span class="fc" id="L30">    RATE_CARD_CREATED(&quot;Rate card created&quot;),</span>
-<span class="fc" id="L31">    RATE_CARD_UPDATED(&quot;Rate card updated&quot;);</span>
+<span class="fc" id="L31">    RATE_CARD_UPDATED(&quot;Rate card updated&quot;),</span>
+<span class="fc" id="L32">    CONSENT_GRANTED(&quot;Consent granted&quot;),</span>
+<span class="fc" id="L33">    CONSENT_WITHDRAWN(&quot;Consent withdrawn&quot;);</span>
 
     private final String description;
 
-<span class="fc" id="L35">    AuditAction(String description) {</span>
-<span class="fc" id="L36">        this.description = description;</span>
-<span class="fc" id="L37">    }</span>
+<span class="fc" id="L37">    AuditAction(String description) {</span>
+<span class="fc" id="L38">        this.description = description;</span>
+<span class="fc" id="L39">    }</span>
 
     public String getDescription() {
-<span class="nc" id="L40">        return description;</span>
+<span class="nc" id="L42">        return description;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

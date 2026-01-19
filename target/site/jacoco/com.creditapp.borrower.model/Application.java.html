@@ -22,17 +22,17 @@ import java.util.UUID;
         @Index(name = &quot;idx_applications_created_at&quot;, columnList = &quot;created_at&quot;),
         @Index(name = &quot;idx_applications_borrower_created&quot;, columnList = &quot;borrower_id, created_at&quot;)
 })
-<span class="pc" id="L25">@Data</span>
-<span class="fc" id="L26">@NoArgsConstructor</span>
+<span class="nc" id="L25">@Data</span>
+<span class="nc" id="L26">@NoArgsConstructor</span>
 <span class="nc" id="L27">@AllArgsConstructor</span>
-<span class="pc bnc" id="L28" title="All 2 branches missed.">@Builder</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">@Builder</span>
 public class Application {
 
     @Id
-<span class="fc" id="L32">    private UUID id;</span>
+<span class="nc" id="L32">    private UUID id;</span>
 
     @Column(name = &quot;borrower_id&quot;, nullable = false)
-<span class="fc" id="L35">    private UUID borrowerId;</span>
+<span class="nc" id="L35">    private UUID borrowerId;</span>
 
     @Column(name = &quot;loan_type&quot;, nullable = false)
 <span class="nc" id="L38">    private String loanType;</span>
@@ -51,7 +51,7 @@ public class Application {
 
     @Column(name = &quot;status&quot;, nullable = false)
     @Enumerated(EnumType.STRING)
-<span class="fc" id="L54">    private ApplicationStatus status;</span>
+<span class="nc" id="L54">    private ApplicationStatus status;</span>
 
     @CreationTimestamp
     @Column(name = &quot;created_at&quot;, nullable = false, updatable = false)
@@ -72,7 +72,7 @@ public class Application {
 
     @Version
     @Column(name = &quot;version&quot;)
-<span class="fc" id="L75">    private Long version;</span>
+<span class="nc" id="L75">    private Long version;</span>
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = &quot;borrower_id&quot;, insertable = false, updatable = false)
@@ -87,16 +87,16 @@ public class Application {
 
     @PrePersist
     public void prePersist() {
-<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if (id == null) {</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (id == null) {</span>
 <span class="nc" id="L91">            id = UUID.randomUUID();</span>
         }
-<span class="pc bpc" id="L93" title="1 of 2 branches missed.">        if (status == null) {</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (status == null) {</span>
 <span class="nc" id="L94">            status = ApplicationStatus.DRAFT;</span>
         }
-<span class="pc bpc" id="L96" title="1 of 2 branches missed.">        if (ratePreference == null) {</span>
-<span class="fc" id="L97">            ratePreference = &quot;VARIABLE&quot;;</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (ratePreference == null) {</span>
+<span class="nc" id="L97">            ratePreference = &quot;VARIABLE&quot;;</span>
         }
-<span class="fc" id="L99">    }</span>
+<span class="nc" id="L99">    }</span>
 
     @Override
     public boolean equals(Object o) {

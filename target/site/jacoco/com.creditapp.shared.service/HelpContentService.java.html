@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 public class HelpContentService {
     private final HelpArticleRepository helpArticleRepository;
 
-<span class="fc" id="L23">    public HelpContentService(HelpArticleRepository helpArticleRepository) {</span>
-<span class="fc" id="L24">        this.helpArticleRepository = helpArticleRepository;</span>
-<span class="fc" id="L25">    }</span>
+<span class="nc" id="L23">    public HelpContentService(HelpArticleRepository helpArticleRepository) {</span>
+<span class="nc" id="L24">        this.helpArticleRepository = helpArticleRepository;</span>
+<span class="nc" id="L25">    }</span>
 
     @Cacheable(value = &quot;helpArticles&quot;, key = &quot;#topic + ':' + #language&quot;)
     public HelpArticleDTO getHelpArticle(String topic, String language) {

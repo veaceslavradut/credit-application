@@ -46,9 +46,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-<span class="fc" id="L49">public class GlobalExceptionHandler {</span>
+<span class="nc" id="L49">public class GlobalExceptionHandler {</span>
 
-<span class="fc" id="L51">    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);</span>
+<span class="nc" id="L51">    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);</span>
 
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity&lt;?&gt; handleDuplicateEmail(DuplicateEmailException ex, WebRequest request) {

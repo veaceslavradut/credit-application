@@ -17,9 +17,9 @@ import java.util.UUID;
 public class JwtTokenService {
     private final JwtConfig.JwtProperties jwtProperties;
 
-<span class="fc" id="L20">    public JwtTokenService(@Autowired(required = false) JwtConfig.JwtProperties jwtProperties) {</span>
-<span class="fc" id="L21">        this.jwtProperties = jwtProperties;</span>
-<span class="fc" id="L22">    }</span>
+<span class="nc" id="L20">    public JwtTokenService(@Autowired(required = false) JwtConfig.JwtProperties jwtProperties) {</span>
+<span class="nc" id="L21">        this.jwtProperties = jwtProperties;</span>
+<span class="nc" id="L22">    }</span>
 
     public boolean isConfigured() {
 <span class="nc bnc" id="L25" title="All 2 branches missed.">        return jwtProperties != null;</span>

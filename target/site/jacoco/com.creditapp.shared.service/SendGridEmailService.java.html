@@ -22,8 +22,8 @@ import java.util.UUID;
  */
 @Service
 @ConditionalOnProperty(name = &quot;sendgrid.enabled&quot;, havingValue = &quot;true&quot;, matchIfMissing = true)
-<span class="fc" id="L25">@RequiredArgsConstructor</span>
-<span class="fc" id="L26">@Slf4j</span>
+<span class="nc" id="L25">@RequiredArgsConstructor</span>
+<span class="nc" id="L26">@Slf4j</span>
 public class SendGridEmailService implements EmailService {
     
     private final SendGrid sendGridClient;

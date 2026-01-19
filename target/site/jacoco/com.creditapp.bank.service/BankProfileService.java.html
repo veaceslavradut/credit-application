@@ -18,15 +18,15 @@ import java.util.UUID;
  */
 @Service
 @Transactional
-<span class="fc" id="L21">@Slf4j</span>
+<span class="nc" id="L21">@Slf4j</span>
 public class BankProfileService {
     private final OrganizationRepository organizationRepository;
     private final AuditService auditService;
 
-<span class="fc" id="L26">    public BankProfileService(OrganizationRepository organizationRepository, AuditService auditService) {</span>
-<span class="fc" id="L27">        this.organizationRepository = organizationRepository;</span>
-<span class="fc" id="L28">        this.auditService = auditService;</span>
-<span class="fc" id="L29">    }</span>
+<span class="nc" id="L26">    public BankProfileService(OrganizationRepository organizationRepository, AuditService auditService) {</span>
+<span class="nc" id="L27">        this.organizationRepository = organizationRepository;</span>
+<span class="nc" id="L28">        this.auditService = auditService;</span>
+<span class="nc" id="L29">    }</span>
 
     /**
      * Retrieve bank profile by bank ID.

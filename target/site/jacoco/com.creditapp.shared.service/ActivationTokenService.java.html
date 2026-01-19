@@ -6,11 +6,11 @@ import java.security.SecureRandom;
 import java.util.regex.Pattern;
 
 @Service
-<span class="fc" id="L9">public class ActivationTokenService {</span>
+<span class="nc" id="L9">public class ActivationTokenService {</span>
     private static final int TOKEN_LENGTH = 32;
     private static final String TOKEN_CHARSET = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789&quot;;
-<span class="fc" id="L12">    private static final Pattern TOKEN_PATTERN = Pattern.compile(&quot;^[a-zA-Z0-9]{32}$&quot;);</span>
-<span class="fc" id="L13">    private final SecureRandom secureRandom = new SecureRandom();</span>
+<span class="nc" id="L12">    private static final Pattern TOKEN_PATTERN = Pattern.compile(&quot;^[a-zA-Z0-9]{32}$&quot;);</span>
+<span class="nc" id="L13">    private final SecureRandom secureRandom = new SecureRandom();</span>
 
     public String generateToken() {
 <span class="nc" id="L16">        StringBuilder token = new StringBuilder(TOKEN_LENGTH);</span>

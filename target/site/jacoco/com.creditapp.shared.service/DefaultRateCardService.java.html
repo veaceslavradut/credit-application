@@ -8,20 +8,20 @@ import com.creditapp.borrower.model.Currency;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-<span class="fc" id="L11">@Slf4j</span>
+<span class="nc" id="L11">@Slf4j</span>
 public class DefaultRateCardService {
     
     private final BigDecimal defaultApr;
     private final BigDecimal defaultOriginationFee;
     private final BigDecimal defaultInsuranceCost;
     
-<span class="fc" id="L18">    public DefaultRateCardService() {</span>
-<span class="fc" id="L19">        this.defaultApr = BigDecimal.valueOf(8.5);</span>
-<span class="fc" id="L20">        this.defaultOriginationFee = BigDecimal.valueOf(1.5);</span>
-<span class="fc" id="L21">        this.defaultInsuranceCost = BigDecimal.valueOf(0.5);</span>
-<span class="fc" id="L22">        log.info(&quot;DefaultRateCardService initialized with APR: {}, Origination Fee: {}, Insurance: {}&quot;, </span>
+<span class="nc" id="L18">    public DefaultRateCardService() {</span>
+<span class="nc" id="L19">        this.defaultApr = BigDecimal.valueOf(8.5);</span>
+<span class="nc" id="L20">        this.defaultOriginationFee = BigDecimal.valueOf(1.5);</span>
+<span class="nc" id="L21">        this.defaultInsuranceCost = BigDecimal.valueOf(0.5);</span>
+<span class="nc" id="L22">        log.info(&quot;DefaultRateCardService initialized with APR: {}, Origination Fee: {}, Insurance: {}&quot;, </span>
             defaultApr, defaultOriginationFee, defaultInsuranceCost);
-<span class="fc" id="L24">    }</span>
+<span class="nc" id="L24">    }</span>
     
     public BankRateCard getDefaultRateCard() {
 <span class="nc" id="L27">        BankRateCard defaultCard = new BankRateCard();</span>

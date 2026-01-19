@@ -8,15 +8,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-<span class="fc" id="L11">@Slf4j</span>
+<span class="nc" id="L11">@Slf4j</span>
 @Service
 public class OfferSelectionEmailService {
 
     private final EmailService emailService;
 
-<span class="fc" id="L17">    public OfferSelectionEmailService(EmailService emailService) {</span>
-<span class="fc" id="L18">        this.emailService = emailService;</span>
-<span class="fc" id="L19">    }</span>
+<span class="nc" id="L17">    public OfferSelectionEmailService(EmailService emailService) {</span>
+<span class="nc" id="L18">        this.emailService = emailService;</span>
+<span class="nc" id="L19">    }</span>
 
     @Async
     public void sendOfferSelectedToBorrower(UUID borrowerId, Offer offer, Application application) {

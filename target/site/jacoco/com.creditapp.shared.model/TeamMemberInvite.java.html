@@ -20,8 +20,8 @@ import java.util.UUID;
     @Index(name = &quot;idx_team_invites_status&quot;, columnList = &quot;status&quot;)
 })
 <span class="nc bnc" id="L22" title="All 94 branches missed.">@Data</span>
-<span class="pc bnc" id="L23" title="All 6 branches missed.">@Builder</span>
-<span class="fc" id="L24">@NoArgsConstructor</span>
+<span class="nc bnc" id="L23" title="All 6 branches missed.">@Builder</span>
+<span class="nc" id="L24">@NoArgsConstructor</span>
 <span class="nc" id="L25">@AllArgsConstructor</span>
 public class TeamMemberInvite {
     @Id
@@ -46,7 +46,7 @@ public class TeamMemberInvite {
 
     @Column(nullable = false)
     @Builder.Default
-<span class="pc" id="L49">    private LocalDateTime sentAt = LocalDateTime.now();</span>
+<span class="nc" id="L49">    private LocalDateTime sentAt = LocalDateTime.now();</span>
 
     @Column(nullable = false)
 <span class="nc" id="L52">    private LocalDateTime expiresAt;</span>
@@ -55,7 +55,7 @@ public class TeamMemberInvite {
 
     @Column(nullable = false)
     @Builder.Default
-<span class="pc" id="L58">    private LocalDateTime createdAt = LocalDateTime.now();</span>
+<span class="nc" id="L58">    private LocalDateTime createdAt = LocalDateTime.now();</span>
 
 <span class="nc" id="L60">    private LocalDateTime updatedAt;</span>
 
