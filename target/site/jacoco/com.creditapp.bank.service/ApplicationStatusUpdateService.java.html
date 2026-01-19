@@ -37,57 +37,57 @@ public class ApplicationStatusUpdateService {
         UUID bankId,
         ApplicationStatusUpdateRequest request
     ) {
-<span class="fc" id="L40">        long start = System.currentTimeMillis();</span>
-<span class="fc" id="L41">        log.debug(&quot;[QUEUE] Updating application {} status to {} for bank {}&quot;, applicationId, request.getStatus(), bankId);</span>
+<span class="nc" id="L40">        long start = System.currentTimeMillis();</span>
+<span class="nc" id="L41">        log.debug(&quot;[QUEUE] Updating application {} status to {} for bank {}&quot;, applicationId, request.getStatus(), bankId);</span>
 
-<span class="fc" id="L43">        Application application = applicationRepository.findById(applicationId)</span>
-<span class="fc" id="L44">            .orElseThrow(() -&gt; new NotFoundException(&quot;Application not found: &quot; + applicationId));</span>
+<span class="nc" id="L43">        Application application = applicationRepository.findById(applicationId)</span>
+<span class="nc" id="L44">            .orElseThrow(() -&gt; new NotFoundException(&quot;Application not found: &quot; + applicationId));</span>
 
-<span class="fc" id="L46">        Optional&lt;Offer&gt; bankOffer = offerRepository.findByApplicationIdAndBankId(applicationId, bankId);</span>
-<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (bankOffer.isEmpty()) {</span>
-<span class="fc" id="L48">            log.warn(&quot;[QUEUE] Bank {} has no offer for application {}&quot;, bankId, applicationId);</span>
-<span class="fc" id="L49">            throw new NotFoundException(&quot;Bank has no offer for this application&quot;);</span>
+<span class="nc" id="L46">        Optional&lt;Offer&gt; bankOffer = offerRepository.findByApplicationIdAndBankId(applicationId, bankId);</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (bankOffer.isEmpty()) {</span>
+<span class="nc" id="L48">            log.warn(&quot;[QUEUE] Bank {} has no offer for application {}&quot;, bankId, applicationId);</span>
+<span class="nc" id="L49">            throw new NotFoundException(&quot;Bank has no offer for this application&quot;);</span>
         }
 
-<span class="fc" id="L52">        Offer offer = bankOffer.get();</span>
-<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (!OfferStatus.ACCEPTED.equals(offer.getOfferStatus())) {</span>
-<span class="fc" id="L54">            log.warn(&quot;[QUEUE] Offer status is {} (not ACCEPTED) for application {} from bank {}&quot;,</span>
-<span class="fc" id="L55">                offer.getOfferStatus(), applicationId, bankId);</span>
-<span class="fc" id="L56">            throw new IllegalArgumentException(&quot;Offer has not been accepted by borrower&quot;);</span>
+<span class="nc" id="L52">        Offer offer = bankOffer.get();</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if (!OfferStatus.ACCEPTED.equals(offer.getOfferStatus())) {</span>
+<span class="nc" id="L54">            log.warn(&quot;[QUEUE] Offer status is {} (not ACCEPTED) for application {} from bank {}&quot;,</span>
+<span class="nc" id="L55">                offer.getOfferStatus(), applicationId, bankId);</span>
+<span class="nc" id="L56">            throw new IllegalArgumentException(&quot;Offer has not been accepted by borrower&quot;);</span>
         }
 
         ApplicationStatus targetStatus;
         try {
-<span class="fc" id="L61">            targetStatus = ApplicationStatus.valueOf(request.getStatus().toUpperCase());</span>
+<span class="nc" id="L61">            targetStatus = ApplicationStatus.valueOf(request.getStatus().toUpperCase());</span>
 <span class="nc" id="L62">        } catch (IllegalArgumentException e) {</span>
 <span class="nc" id="L63">            log.warn(&quot;[QUEUE] Invalid status provided: {}&quot;, request.getStatus());</span>
 <span class="nc" id="L64">            throw new IllegalArgumentException(&quot;Invalid application status: &quot; + request.getStatus());</span>
-<span class="fc" id="L65">        }</span>
+<span class="nc" id="L65">        }</span>
 
-<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (!ApplicationStatusValidator.isValidTransition(application.getStatus(), targetStatus)) {</span>
-<span class="fc" id="L68">            String msg = ApplicationStatusValidator.getTransitionErrorMessage(application.getStatus(), targetStatus);</span>
-<span class="fc" id="L69">            log.warn(&quot;[QUEUE] {}&quot;, msg);</span>
-<span class="fc" id="L70">            throw new IllegalArgumentException(msg);</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (!ApplicationStatusValidator.isValidTransition(application.getStatus(), targetStatus)) {</span>
+<span class="nc" id="L68">            String msg = ApplicationStatusValidator.getTransitionErrorMessage(application.getStatus(), targetStatus);</span>
+<span class="nc" id="L69">            log.warn(&quot;[QUEUE] {}&quot;, msg);</span>
+<span class="nc" id="L70">            throw new IllegalArgumentException(msg);</span>
         }
 
-<span class="fc" id="L73">        ApplicationStatus previousStatus = application.getStatus();</span>
-<span class="fc" id="L74">        application.setStatus(targetStatus);</span>
-<span class="fc" id="L75">        application.setUpdatedAt(LocalDateTime.now());</span>
-<span class="fc" id="L76">        Application updated = applicationRepository.save(application);</span>
-<span class="fc" id="L77">        applicationRepository.flush();</span>
+<span class="nc" id="L73">        ApplicationStatus previousStatus = application.getStatus();</span>
+<span class="nc" id="L74">        application.setStatus(targetStatus);</span>
+<span class="nc" id="L75">        application.setUpdatedAt(LocalDateTime.now());</span>
+<span class="nc" id="L76">        Application updated = applicationRepository.save(application);</span>
+<span class="nc" id="L77">        applicationRepository.flush();</span>
 
         try {
-<span class="fc" id="L80">            Map&lt;String, Object&gt; oldValues = Map.of(</span>
-<span class="fc" id="L81">                &quot;status&quot;, previousStatus.name(),</span>
-<span class="fc" id="L82">                &quot;reason&quot;, request.getReason(),</span>
-<span class="fc bfc" id="L83" title="All 2 branches covered.">                &quot;comments&quot;, request.getComments() != null ? request.getComments() : &quot;&quot;</span>
+<span class="nc" id="L80">            Map&lt;String, Object&gt; oldValues = Map.of(</span>
+<span class="nc" id="L81">                &quot;status&quot;, previousStatus.name(),</span>
+<span class="nc" id="L82">                &quot;reason&quot;, request.getReason(),</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">                &quot;comments&quot;, request.getComments() != null ? request.getComments() : &quot;&quot;</span>
             );
-<span class="fc" id="L85">            Map&lt;String, Object&gt; newValues = Map.of(</span>
-<span class="fc" id="L86">                &quot;status&quot;, targetStatus.name(),</span>
-<span class="fc" id="L87">                &quot;reason&quot;, request.getReason(),</span>
-<span class="fc bfc" id="L88" title="All 2 branches covered.">                &quot;comments&quot;, request.getComments() != null ? request.getComments() : &quot;&quot;</span>
+<span class="nc" id="L85">            Map&lt;String, Object&gt; newValues = Map.of(</span>
+<span class="nc" id="L86">                &quot;status&quot;, targetStatus.name(),</span>
+<span class="nc" id="L87">                &quot;reason&quot;, request.getReason(),</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">                &quot;comments&quot;, request.getComments() != null ? request.getComments() : &quot;&quot;</span>
             );
-<span class="fc" id="L90">            auditService.logActionWithValues(</span>
+<span class="nc" id="L90">            auditService.logActionWithValues(</span>
                 &quot;Application&quot;,
                 applicationId,
                 com.creditapp.shared.model.AuditAction.APPLICATION_STATUS_CHANGED,
@@ -96,33 +96,33 @@ public class ApplicationStatusUpdateService {
             );
 <span class="nc" id="L97">        } catch (Exception e) {</span>
 <span class="nc" id="L98">            log.error(&quot;[QUEUE] Failed to log audit event for application {} status change&quot;, applicationId, e);</span>
-<span class="fc" id="L99">        }</span>
+<span class="nc" id="L99">        }</span>
 
         // Broadcast status change to connected WebSocket clients
         try {
-<span class="fc" id="L103">            webSocketHandler.broadcastStatusChange(</span>
-<span class="fc" id="L104">                bankId.toString(),</span>
-<span class="fc" id="L105">                applicationId.toString(),</span>
-<span class="fc" id="L106">                previousStatus.name(),</span>
-<span class="fc" id="L107">                targetStatus.name()</span>
+<span class="nc" id="L103">            webSocketHandler.broadcastStatusChange(</span>
+<span class="nc" id="L104">                bankId.toString(),</span>
+<span class="nc" id="L105">                applicationId.toString(),</span>
+<span class="nc" id="L106">                previousStatus.name(),</span>
+<span class="nc" id="L107">                targetStatus.name()</span>
             );
 <span class="nc" id="L109">        } catch (Exception e) {</span>
 <span class="nc" id="L110">            log.error(&quot;[QUEUE] Failed to broadcast status change via WebSocket&quot;, e);</span>
-<span class="fc" id="L111">        }</span>
+<span class="nc" id="L111">        }</span>
 
-<span class="fc" id="L113">        long took = System.currentTimeMillis() - start;</span>
-<span class="fc" id="L114">        log.info(&quot;[QUEUE] Updated application {} status from {} to {} in {}ms&quot;,</span>
-<span class="fc" id="L115">            applicationId, previousStatus, targetStatus, took);</span>
-<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        if (took &gt; 200) {</span>
+<span class="nc" id="L113">        long took = System.currentTimeMillis() - start;</span>
+<span class="nc" id="L114">        log.info(&quot;[QUEUE] Updated application {} status from {} to {} in {}ms&quot;,</span>
+<span class="nc" id="L115">            applicationId, previousStatus, targetStatus, took);</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (took &gt; 200) {</span>
 <span class="nc" id="L117">            log.warn(&quot;[QUEUE] Performance warning: status update took {}ms (&gt;200ms)&quot;, took);</span>
         }
 
-<span class="fc" id="L120">        return ApplicationStatusUpdateResponse.builder()</span>
-<span class="fc" id="L121">            .applicationId(applicationId)</span>
-<span class="fc" id="L122">            .previousStatus(previousStatus.name())</span>
-<span class="fc" id="L123">            .newStatus(targetStatus.name())</span>
-<span class="fc" id="L124">            .changedAt(updated.getUpdatedAt())</span>
-<span class="fc" id="L125">            .build();</span>
+<span class="nc" id="L120">        return ApplicationStatusUpdateResponse.builder()</span>
+<span class="nc" id="L121">            .applicationId(applicationId)</span>
+<span class="nc" id="L122">            .previousStatus(previousStatus.name())</span>
+<span class="nc" id="L123">            .newStatus(targetStatus.name())</span>
+<span class="nc" id="L124">            .changedAt(updated.getUpdatedAt())</span>
+<span class="nc" id="L125">            .build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

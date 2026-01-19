@@ -188,10 +188,10 @@ public class BankMarketAnalysisService {
     }
 
     public CompetitivePosition determineCompetitivePosition(Integer percentile) {
-<span class="fc bfc" id="L191" title="All 2 branches covered.">        if (percentile &gt;= 75) {</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">        if (percentile &gt;= 75) {</span>
 <span class="fc" id="L192">            return CompetitivePosition.MORE_COMPETITIVE;</span>
-<span class="pc bpc" id="L193" title="1 of 2 branches missed.">        } else if (percentile &gt;= 25) {</span>
-<span class="fc" id="L194">            return CompetitivePosition.AVERAGE;</span>
+<span class="nc bnc" id="L193" title="All 2 branches missed.">        } else if (percentile &gt;= 25) {</span>
+<span class="nc" id="L194">            return CompetitivePosition.AVERAGE;</span>
         } else {
 <span class="nc" id="L196">            return CompetitivePosition.LESS_COMPETITIVE;</span>
         }

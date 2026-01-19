@@ -1,6 +1,5 @@
 com\creditapp\integration\borrower\BorrowerNotificationIntegrationTest.class
 com\creditapp\integration\security\RBACIntegrationTest$TestConfig.class
-com\creditapp\unit\bank\BankOfferSubmissionServiceTest.class
 com\creditapp\integration\bank\OfferDocumentIntegrationTest.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$6.class
 com\creditapp\shared\service\AuditServiceTest.class

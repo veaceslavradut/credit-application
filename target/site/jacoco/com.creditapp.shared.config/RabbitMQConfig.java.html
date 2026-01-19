@@ -28,11 +28,11 @@ import org.springframework.context.annotation.Configuration;
      */
     @Bean
     public Queue notificationQueue() {
-<span class="fc" id="L31">        return QueueBuilder.durable(NOTIFICATION_QUEUE)</span>
-<span class="fc" id="L32">            .withArgument(&quot;x-message-ttl&quot;, 604800000) // 7 days in milliseconds</span>
-<span class="fc" id="L33">            .withArgument(&quot;x-dead-letter-exchange&quot;, &quot;&quot;)</span>
-<span class="fc" id="L34">            .withArgument(&quot;x-dead-letter-routing-key&quot;, NOTIFICATION_DLQ)</span>
-<span class="fc" id="L35">            .build();</span>
+<span class="nc" id="L31">        return QueueBuilder.durable(NOTIFICATION_QUEUE)</span>
+<span class="nc" id="L32">            .withArgument(&quot;x-message-ttl&quot;, 604800000) // 7 days in milliseconds</span>
+<span class="nc" id="L33">            .withArgument(&quot;x-dead-letter-exchange&quot;, &quot;&quot;)</span>
+<span class="nc" id="L34">            .withArgument(&quot;x-dead-letter-routing-key&quot;, NOTIFICATION_DLQ)</span>
+<span class="nc" id="L35">            .build();</span>
     }
     
     /**
@@ -40,7 +40,7 @@ import org.springframework.context.annotation.Configuration;
      */
     @Bean
     public Queue notificationDeadLetterQueue() {
-<span class="fc" id="L43">        return QueueBuilder.durable(NOTIFICATION_DLQ).build();</span>
+<span class="nc" id="L43">        return QueueBuilder.durable(NOTIFICATION_DLQ).build();</span>
     }
     
     /**
@@ -48,7 +48,7 @@ import org.springframework.context.annotation.Configuration;
      */
     @Bean
     public TopicExchange notificationExchange() {
-<span class="fc" id="L51">        return new TopicExchange(NOTIFICATION_EXCHANGE);</span>
+<span class="nc" id="L51">        return new TopicExchange(NOTIFICATION_EXCHANGE);</span>
     }
     
     /**
@@ -56,10 +56,10 @@ import org.springframework.context.annotation.Configuration;
      */
     @Bean
     public Binding notificationBinding(Queue notificationQueue, TopicExchange notificationExchange) {
-<span class="fc" id="L59">        return BindingBuilder</span>
-<span class="fc" id="L60">            .bind(notificationQueue)</span>
-<span class="fc" id="L61">            .to(notificationExchange)</span>
-<span class="fc" id="L62">            .with(NOTIFICATION_ROUTING_KEY);</span>
+<span class="nc" id="L59">        return BindingBuilder</span>
+<span class="nc" id="L60">            .bind(notificationQueue)</span>
+<span class="nc" id="L61">            .to(notificationExchange)</span>
+<span class="nc" id="L62">            .with(NOTIFICATION_ROUTING_KEY);</span>
     }
     
     /**

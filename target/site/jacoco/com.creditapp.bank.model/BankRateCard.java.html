@@ -92,7 +92,7 @@ public class BankRateCard {
 
     // Getters and Setters
     public UUID getId() {
-<span class="fc" id="L95">        return id;</span>
+<span class="nc" id="L95">        return id;</span>
     }
 
     public void setId(UUID id) {
@@ -124,20 +124,20 @@ public class BankRateCard {
 <span class="fc" id="L124">    }</span>
 
     public BigDecimal getMinLoanAmount() {
-<span class="fc" id="L127">        return minLoanAmount;</span>
+<span class="nc" id="L127">        return minLoanAmount;</span>
     }
 
     public void setMinLoanAmount(BigDecimal minLoanAmount) {
-<span class="fc" id="L131">        this.minLoanAmount = minLoanAmount;</span>
-<span class="fc" id="L132">    }</span>
+<span class="nc" id="L131">        this.minLoanAmount = minLoanAmount;</span>
+<span class="nc" id="L132">    }</span>
 
     public BigDecimal getMaxLoanAmount() {
-<span class="fc" id="L135">        return maxLoanAmount;</span>
+<span class="nc" id="L135">        return maxLoanAmount;</span>
     }
 
     public void setMaxLoanAmount(BigDecimal maxLoanAmount) {
-<span class="fc" id="L139">        this.maxLoanAmount = maxLoanAmount;</span>
-<span class="fc" id="L140">    }</span>
+<span class="nc" id="L139">        this.maxLoanAmount = maxLoanAmount;</span>
+<span class="nc" id="L140">    }</span>
 
     public BigDecimal getBaseApr() {
 <span class="fc" id="L143">        return baseApr;</span>
@@ -148,12 +148,12 @@ public class BankRateCard {
 <span class="fc" id="L148">    }</span>
 
     public BigDecimal getAprAdjustmentRange() {
-<span class="fc" id="L151">        return aprAdjustmentRange;</span>
+<span class="nc" id="L151">        return aprAdjustmentRange;</span>
     }
 
     public void setAprAdjustmentRange(BigDecimal aprAdjustmentRange) {
-<span class="fc" id="L155">        this.aprAdjustmentRange = aprAdjustmentRange;</span>
-<span class="fc" id="L156">    }</span>
+<span class="nc" id="L155">        this.aprAdjustmentRange = aprAdjustmentRange;</span>
+<span class="nc" id="L156">    }</span>
 
     public BigDecimal getOriginationFeePercent() {
 <span class="fc" id="L159">        return originationFeePercent;</span>
@@ -180,7 +180,7 @@ public class BankRateCard {
 <span class="fc" id="L180">    }</span>
 
     public LocalDateTime getValidFrom() {
-<span class="fc" id="L183">        return validFrom;</span>
+<span class="nc" id="L183">        return validFrom;</span>
     }
 
     public void setValidFrom(LocalDateTime validFrom) {
@@ -188,7 +188,7 @@ public class BankRateCard {
 <span class="fc" id="L188">    }</span>
 
     public LocalDateTime getValidTo() {
-<span class="fc" id="L191">        return validTo;</span>
+<span class="nc" id="L191">        return validTo;</span>
     }
 
     public void setValidTo(LocalDateTime validTo) {
@@ -209,7 +209,7 @@ public class BankRateCard {
      */
     @Transient
     public boolean isActive() {
-<span class="pc bpc" id="L212" title="1 of 2 branches missed.">        return this.validTo == null;</span>
+<span class="nc bnc" id="L212" title="All 2 branches missed.">        return this.validTo == null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
