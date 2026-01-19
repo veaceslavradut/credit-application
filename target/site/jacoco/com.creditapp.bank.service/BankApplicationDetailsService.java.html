@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankApplicationDetailsService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.bank.service</a> &gt; <span class="el_source">BankApplicationDetailsService.java</span></div><h1>BankApplicationDetailsService.java</h1><pre class="source lang-java linenums">package com.creditapp.bank.service;
+
+import com.creditapp.bank.dto.*;
+import com.creditapp.bank.model.Offer;
+import com.creditapp.bank.repository.OfferRepository;
+import com.creditapp.borrower.model.Application;
+import com.creditapp.borrower.model.ApplicationDetails;
+import com.creditapp.borrower.repository.ApplicationRepository;
+import com.creditapp.shared.model.User;
+import com.creditapp.auth.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * Service for retrieving complete application details for bank review panel
+ */
+@Service
+<span class="fc" id="L24">@RequiredArgsConstructor</span>
+<span class="fc" id="L25">@Slf4j</span>
+public class BankApplicationDetailsService {
+
+    private final ApplicationRepository applicationRepository;
+    private final UserRepository userRepository;
+    private final OfferRepository offerRepository;
+
+    /**
+     * Get full application details for bank review panel
+     * Includes borrower info, loan details, employment, consents, and offer
+     *
+     * @param bankId bank admin's organization id
+     * @param applicationId the application to retrieve
+     * @return complete application details response
+     */
+    @Cacheable(value = &quot;applicationDetails&quot;, key = &quot;#bankId + '-' + #applicationId&quot;, unless = &quot;#result == null&quot;)
+    public ApplicationDetailsResponse getApplicationDetails(UUID bankId, UUID applicationId) {
+<span class="fc" id="L42">        long startTime = System.currentTimeMillis();</span>
+        
+        // Fetch application
+<span class="fc" id="L45">        Application application = applicationRepository.findById(applicationId)</span>
+<span class="fc" id="L46">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Application not found&quot;));</span>
+
+        // Verify bank has an offer for this application
+<span class="fc" id="L49">        Offer bankOffer = offerRepository.findByApplicationIdAndBankId(applicationId, bankId)</span>
+<span class="pc" id="L50">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Bank has no offer for this application&quot;));</span>
+
+        // Fetch borrower
+<span class="fc" id="L53">        User borrower = userRepository.findById(application.getBorrowerId())</span>
+<span class="pc" id="L54">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Borrower not found&quot;));</span>
+
+        // Build borrower details
+<span class="fc" id="L57">        BorrowerDetailsDTO borrowerDetails = BorrowerDetailsDTO.builder()</span>
+<span class="fc" id="L58">                .firstName(borrower.getFirstName())</span>
+<span class="fc" id="L59">                .lastName(borrower.getLastName())</span>
+<span class="fc" id="L60">                .email(borrower.getEmail())</span>
+<span class="fc" id="L61">                .phone(borrower.getPhoneNumber())</span>
+<span class="fc" id="L62">                .address(&quot;&quot;)</span>
+<span class="fc" id="L63">                .build();</span>
+
+        // Build loan request details
+<span class="fc" id="L66">        LoanRequestDetailsDTO loanRequest = LoanRequestDetailsDTO.builder()</span>
+<span class="fc" id="L67">                .loanType(application.getLoanType())</span>
+<span class="fc" id="L68">                .amount(application.getLoanAmount())</span>
+<span class="fc" id="L69">                .termMonths(application.getLoanTermMonths())</span>
+<span class="fc" id="L70">                .purpose(&quot;&quot;)</span>
+<span class="fc" id="L71">                .incomeDocumentationStatus(&quot;PENDING&quot;)</span>
+<span class="fc" id="L72">                .build();</span>
+
+        // Build employment details from ApplicationDetails
+<span class="fc" id="L75">        ApplicationDetails appDetails = application.getDetails();</span>
+<span class="fc" id="L76">        EmploymentDetailsDTO employment = EmploymentDetailsDTO.builder()</span>
+<span class="fc" id="L77">                .employer(&quot;&quot;)</span>
+<span class="fc" id="L78">                .position(&quot;&quot;)</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">                .annualIncome(appDetails != null ? appDetails.getAnnualIncome() : null)</span>
+<span class="fc" id="L80">                .yearsEmployed(0)</span>
+<span class="fc" id="L81">                .build();</span>
+
+        // Build consent details (3 standard consents)
+<span class="fc" id="L84">        List&lt;ConsentDetailsDTO&gt; consents = buildConsents();</span>
+
+        // Build offer DTO from bank's offer
+<span class="fc" id="L87">        OfferDTO offerDto = buildOfferDTO(bankOffer);</span>
+
+        // Build response
+<span class="fc" id="L90">        ApplicationDetailsResponse response = ApplicationDetailsResponse.builder()</span>
+<span class="fc" id="L91">                .applicationId(applicationId)</span>
+<span class="fc" id="L92">                .borrower(borrowerDetails)</span>
+<span class="fc" id="L93">                .loanRequest(loanRequest)</span>
+<span class="fc" id="L94">                .employment(employment)</span>
+<span class="fc" id="L95">                .consents(consents)</span>
+<span class="fc" id="L96">                .offer(offerDto)</span>
+<span class="fc" id="L97">                .internalNotes(&quot;&quot;)</span>
+<span class="fc" id="L98">                .build();</span>
+
+<span class="fc" id="L100">        long elapsed = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L101">        log.debug(&quot;Retrieved application details for app {} from bank {} in {}ms&quot;, applicationId, bankId, elapsed);</span>
+
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">        if (elapsed &gt; 200) {</span>
+<span class="nc" id="L104">            log.warn(&quot;Application details retrieval exceeded 200ms SLA: {}ms&quot;, elapsed);</span>
+        }
+
+<span class="fc" id="L107">        return response;</span>
+    }
+
+    private List&lt;ConsentDetailsDTO&gt; buildConsents() {
+<span class="fc" id="L111">        List&lt;ConsentDetailsDTO&gt; consents = new ArrayList&lt;&gt;();</span>
+        
+        // Consent 1: Credit Check
+<span class="fc" id="L114">        consents.add(ConsentDetailsDTO.builder()</span>
+<span class="fc" id="L115">                .consentNumber(1)</span>
+<span class="fc" id="L116">                .consentText(&quot;I authorize the bank to check my credit report and history&quot;)</span>
+<span class="fc" id="L117">                .signed(false)</span>
+<span class="fc" id="L118">                .build());</span>
+
+        // Consent 2: Third-party Share
+<span class="fc" id="L121">        consents.add(ConsentDetailsDTO.builder()</span>
+<span class="fc" id="L122">                .consentNumber(2)</span>
+<span class="fc" id="L123">                .consentText(&quot;I authorize the bank to share my information with third-party service providers&quot;)</span>
+<span class="fc" id="L124">                .signed(false)</span>
+<span class="fc" id="L125">                .build());</span>
+
+        // Consent 3: Loan Service Terms
+<span class="fc" id="L128">        consents.add(ConsentDetailsDTO.builder()</span>
+<span class="fc" id="L129">                .consentNumber(3)</span>
+<span class="fc" id="L130">                .consentText(&quot;I agree to the loan service terms and conditions&quot;)</span>
+<span class="fc" id="L131">                .signed(false)</span>
+<span class="fc" id="L132">                .build());</span>
+
+<span class="fc" id="L134">        return consents;</span>
+    }
+
+    private OfferDTO buildOfferDTO(Offer offer) {
+<span class="fc" id="L138">        OfferDTO offerDto = new OfferDTO();</span>
+<span class="fc" id="L139">        offerDto.id = offer.getId();</span>
+<span class="fc" id="L140">        offerDto.applicationId = offer.getApplicationId();</span>
+<span class="fc" id="L141">        offerDto.bankId = offer.getBankId();</span>
+<span class="fc" id="L142">        offerDto.apr = offer.getApr();</span>
+<span class="fc" id="L143">        offerDto.monthlyPayment = offer.getMonthlyPayment();</span>
+<span class="fc" id="L144">        offerDto.totalCost = offer.getTotalCost();</span>
+<span class="fc" id="L145">        offerDto.originationFee = offer.getOriginationFee();</span>
+<span class="fc" id="L146">        offerDto.processingTimeDays = offer.getProcessingTimeDays();</span>
+<span class="fc" id="L147">        offerDto.validityPeriodDays = offer.getValidityPeriodDays();</span>
+<span class="fc" id="L148">        offerDto.offerStatus = offer.getOfferStatus();</span>
+<span class="fc" id="L149">        offerDto.expiresAt = offer.getExpiresAt();</span>
+<span class="fc" id="L150">        offerDto.createdAt = offer.getCreatedAt();</span>
+<span class="fc" id="L151">        return offerDto;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

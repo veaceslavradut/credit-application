@@ -45,10 +45,12 @@ com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$1.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$4.class
 com\creditapp\unit\borrower\ApplicationCreationUnitTest.class
 com\creditapp\integration\borrower\ScenarioCalculatorIntegrationTest.class
+com\creditapp\unit\bank\BankAdminQueueServiceTest.class
 com\creditapp\shared\config\TestCacheConfig.class
 com\creditapp\unit\auth\LoginServiceUnitTest.class
 com\creditapp\unit\bank\OfferDocumentDownloadServiceTest.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$7.class
+com\creditapp\unit\bank\BankDashboardServiceTest.class
 com\creditapp\unit\bank\OfferDocumentRetrievalServiceTest.class
 com\creditapp\borrower\service\ApplicationServiceTest.class
 com\creditapp\integration\borrower\ApplicationHistoryIntegrationTest.class

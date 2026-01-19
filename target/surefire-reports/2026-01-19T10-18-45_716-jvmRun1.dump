@@ -1,5 +1,5 @@
-# Created at 2026-01-19T00:06:31.496
-Thread dump for process (179840@MDMOB40671) after 30 seconds shutdown timeout:
+# Created at 2026-01-19T10:22:09.142
+Thread dump for process (38492@MDMOB40671) after 30 seconds shutdown timeout:
 "main" 
    java.lang.Thread.State: WAITING
         at java.base@17.0.7/java.lang.Object.wait(Native Method)
@@ -53,13 +53,6 @@ Thread dump for process (179840@MDMOB40671) after 30 seconds shutdown timeout:
         at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
         at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
         at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
-
-"Keep-Alive-Timer" 
-   java.lang.Thread.State: TIMED_WAITING
-        at java.base@17.0.7/java.lang.Thread.sleep(Native Method)
-        at java.base@17.0.7/sun.net.www.http.KeepAliveCache.run(KeepAliveCache.java:236)
-        at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
-        at java.base@17.0.7/jdk.internal.misc.InnocuousThread.run(InnocuousThread.java:162)
 
 "Thread-6" 
    java.lang.Thread.State: RUNNABLE
@@ -273,11 +266,18 @@ Thread dump for process (179840@MDMOB40671) after 30 seconds shutdown timeout:
    java.lang.Thread.State: TIMED_WAITING
         at java.base@17.0.7/java.lang.Object.wait(Native Method)
         at app//org.testcontainers.utility.RyukResourceReaper.lambda$null$1(RyukResourceReaper.java:115)
-        at app//org.testcontainers.utility.RyukResourceReaper$$Lambda$3472/0x0000000801f4dd38.run(Unknown Source)
+        at app//org.testcontainers.utility.RyukResourceReaper$$Lambda$3484/0x0000000801f4ab30.run(Unknown Source)
         at app//org.rnorth.ducttape.ratelimits.RateLimiter.doWhenReady(RateLimiter.java:27)
         at app//org.testcontainers.utility.RyukResourceReaper.lambda$maybeStart$2(RyukResourceReaper.java:101)
-        at app//org.testcontainers.utility.RyukResourceReaper$$Lambda$3471/0x0000000801f4db18.run(Unknown Source)
+        at app//org.testcontainers.utility.RyukResourceReaper$$Lambda$3483/0x0000000801f4a910.run(Unknown Source)
         at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
+
+"Keep-Alive-Timer" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@17.0.7/java.lang.Thread.sleep(Native Method)
+        at java.base@17.0.7/sun.net.www.http.KeepAliveCache.run(KeepAliveCache.java:236)
+        at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
+        at java.base@17.0.7/jdk.internal.misc.InnocuousThread.run(InnocuousThread.java:162)
 
 "PostgreSQL-JDBC-Cleaner" 
    java.lang.Thread.State: TIMED_WAITING
@@ -414,7 +414,7 @@ Thread dump for process (179840@MDMOB40671) after 30 seconds shutdown timeout:
         at java.base@17.0.7/java.lang.reflect.Method.invoke(Method.java:568)
         at app//org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.invokeProxyMethod(AbstractEntityManagerFactoryBean.java:519)
         at app//org.springframework.orm.jpa.AbstractEntityManagerFactoryBean$ManagedEntityManagerFactoryInvocationHandler.invoke(AbstractEntityManagerFactoryBean.java:735)
-        at app/jdk.proxy2/jdk.proxy2.$Proxy224.close(Unknown Source)
+        at app/jdk.proxy2/jdk.proxy2.$Proxy188.close(Unknown Source)
         at app//org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.destroy(AbstractEntityManagerFactoryBean.java:652)
         at app//org.springframework.beans.factory.support.DisposableBeanAdapter.destroy(DisposableBeanAdapter.java:211)
         at app//org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.destroyBean(DefaultSingletonBeanRegistry.java:587)
@@ -426,7 +426,7 @@ Thread dump for process (179840@MDMOB40671) after 30 seconds shutdown timeout:
         at app//org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1145)
         at app//org.springframework.context.support.AbstractApplicationContext.close(AbstractApplicationContext.java:1091)
         at app//org.springframework.boot.SpringApplicationShutdownHook.closeAndWait(SpringApplicationShutdownHook.java:145)
-        at app//org.springframework.boot.SpringApplicationShutdownHook$$Lambda$3759/0x00000008020bb9f0.accept(Unknown Source)
+        at app//org.springframework.boot.SpringApplicationShutdownHook$$Lambda$3780/0x00000008020bef80.accept(Unknown Source)
         at java.base@17.0.7/java.lang.Iterable.forEach(Iterable.java:75)
         at app//org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:114)
         at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)

@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.creditapp.borrower.service.ApplicationServiceTest
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.808 s -- in com.creditapp.borrower.service.ApplicationServiceTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.745 s -- in com.creditapp.borrower.service.ApplicationServiceTest

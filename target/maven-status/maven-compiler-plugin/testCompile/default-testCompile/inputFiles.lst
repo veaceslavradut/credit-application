@@ -52,6 +52,7 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\sha
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\ListApplicationsServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\OfferDocumentDownloadServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ApplicationHistoryIntegrationTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\BankAdminQueueServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\auth\LoginServiceUnitTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\security\RBACIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\SpringContextIntegrationTest.java
