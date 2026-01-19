@@ -2370,6 +2370,188 @@ curl -X GET "https://api.creditapp.com/api/bank/dashboard?timePeriod=LAST_7_DAYS
 
 ---
 
+### GET /api/bank/applications/queue
+**Description:** Retrieve a paginated, filtered, and searchable list of applications for the bank. Supports filtering by application status, loan type, date range, and loan amount range. Includes search by application ID, borrower email, or borrower name. Returns new applications badge count.
+
+**Authentication:** Required - BANK_ADMIN role
+
+**Request Method:** GET
+
+**Request Headers:**
+- Authorization: Bearer {jwt_token}
+- Content-Type: application/json
+
+**Request Parameters:**
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| page | Integer | No | 0 | Page number (0-indexed) |
+| status | List<String> | No | - | Filter by application status (SUBMITTED, UNDER_REVIEW, OFFERS_AVAILABLE, ACCEPTED, etc.) |
+| loanType | List<String> | No | - | Filter by loan type (PERSONAL_LOAN, HOME_LOAN, AUTO_LOAN, etc.) |
+| dateFrom | LocalDate | No | - | Filter applications submitted on or after this date (ISO format: YYYY-MM-DD) |
+| dateTo | LocalDate | No | - | Filter applications submitted on or before this date (ISO format: YYYY-MM-DD) |
+| amountFrom | BigDecimal | No | - | Filter applications with loan amount >= this value |
+| amountTo | BigDecimal | No | - | Filter applications with loan amount <= this value |
+| sortBy | String | No | NEWEST_FIRST | Sort option: NEWEST_FIRST, OLDEST_FIRST, AMOUNT_LOW_HIGH, AMOUNT_HIGH_LOW, STATUS |
+| applicationId | String | No | - | Search by application ID (partial match) |
+| borrowerEmail | String | No | - | Search by borrower email (case-insensitive partial match) |
+| borrowerName | String | No | - | Search by borrower name (case-insensitive partial match) |
+
+**Response Status:** 200 OK
+
+**Response Body:**
+```json
+{
+  "applications": [
+    {
+      "applicationId": "550e8400-e29b-41d4-a716-446655440000",
+      "referenceNumber": null,
+      "borrowerName": "John Doe",
+      "borrowerEmail": "john.doe@example.com",
+      "borrowerPhone": null,
+      "loanAmount": 50000.00,
+      "termMonths": 24,
+      "selectedOfferAPR": 5.50,
+      "selectedOfferMonthlyPayment": 850.00,
+      "status": "SUBMITTED",
+      "receivedAt": "2024-01-15T10:30:00Z",
+      "submittedAt": "2024-01-15T10:30:00Z",
+      "lastUpdatedAt": "2024-01-15T10:30:00Z",
+      "documentsStatus": null,
+      "approvalStatus": null,
+      "actionItems": []
+    }
+  ],
+  "totalCount": 42,
+  "limit": 20,
+  "offset": 0,
+  "hasMore": true,
+  "queueMetrics": {
+    "totalApplications": 42,
+    "documentsAwaitingReview": 8,
+    "approvedCount": 0,
+    "rejectedCount": 0
+  },
+  "retrievedAt": "2024-01-15T14:30:45Z"
+}
+```
+
+**Response Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| applications | Array | List of application queue items for current page |
+| applications[].applicationId | UUID | Unique application identifier |
+| applications[].borrowerName | String | Full name of borrower |
+| applications[].borrowerEmail | String | Borrower's email address |
+| applications[].loanAmount | BigDecimal | Requested loan amount |
+| applications[].termMonths | Integer | Loan term in months |
+| applications[].selectedOfferAPR | BigDecimal | APR from bank's offer (if exists) |
+| applications[].selectedOfferMonthlyPayment | BigDecimal | Monthly payment from bank's offer (if exists) |
+| applications[].status | String | Application status (SUBMITTED, UNDER_REVIEW, ACCEPTED, etc.) |
+| applications[].submittedAt | LocalDateTime | When application was submitted |
+| applications[].lastUpdatedAt | LocalDateTime | Last modification timestamp |
+| totalCount | Integer | Total number of applications matching filters |
+| limit | Integer | Page size (always 20) |
+| offset | Integer | Starting index for current page |
+| hasMore | Boolean | Whether more pages exist |
+| queueMetrics | Object | Summary metrics for the queue |
+| queueMetrics.totalApplications | Integer | Total applications in filtered results |
+| queueMetrics.documentsAwaitingReview | Integer | Badge count - number of SUBMITTED applications (not yet reviewed) |
+| retrievedAt | LocalDateTime | Timestamp when response was generated |
+
+**Pagination:**
+- Page size is fixed at 20 items per page
+- Use `page` parameter to navigate pages (0-indexed)
+- `hasMore` indicates if additional pages exist
+- Total count allows calculating total pages
+
+**Filtering:**
+- Multiple filters can be combined (AND logic)
+- Status and loanType support multiple values (OR logic within each filter)
+- Date range is inclusive on both ends
+- Amount range is inclusive on both ends
+
+**Search:**
+- Search by applicationId is partial UUID match
+- Search by email is case-insensitive partial match
+- Search by name is case-insensitive partial match
+- Only one search parameter should be used at a time
+
+**Sorting Options:**
+- `NEWEST_FIRST`: Most recent submissions first (default)
+- `OLDEST_FIRST`: Oldest submissions first
+- `AMOUNT_LOW_HIGH`: Lowest loan amounts first
+- `AMOUNT_HIGH_LOW`: Highest loan amounts first
+- `STATUS`: Sort alphabetically by status
+
+**New Applications Badge:**
+- `queueMetrics.documentsAwaitingReview` contains count of SUBMITTED applications
+- These are applications that have not yet been reviewed by bank staff
+- Useful for displaying a badge/notification in UI
+
+**Performance Notes:**
+- Response time optimized to be <200ms even with 500+ applications
+- Efficient filtering and sorting using in-memory operations
+- Only returns applications where bank has submitted offers
+
+**Error Responses:**
+
+```json
+{
+  "status": 401,
+  "message": "Unauthorized: No valid JWT token provided",
+  "timestamp": "2024-01-15T14:30:45Z"
+}
+```
+
+```json
+{
+  "status": 403,
+  "message": "Forbidden: User does not have BANK_ADMIN role",
+  "timestamp": "2024-01-15T14:30:45Z"
+}
+```
+
+**cURL Examples:**
+
+Get first page (default):
+```bash
+curl -X GET https://api.creditapp.com/api/bank/applications/queue \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -H "Content-Type: application/json"
+```
+
+Filter by SUBMITTED status:
+```bash
+curl -X GET "https://api.creditapp.com/api/bank/applications/queue?status=SUBMITTED" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -H "Content-Type: application/json"
+```
+
+Filter by loan amount range:
+```bash
+curl -X GET "https://api.creditapp.com/api/bank/applications/queue?amountFrom=50000&amountTo=100000" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -H "Content-Type: application/json"
+```
+
+Search by borrower email:
+```bash
+curl -X GET "https://api.creditapp.com/api/bank/applications/queue?borrowerEmail=john" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -H "Content-Type: application/json"
+```
+
+Get page 2 sorted by amount (high to low):
+```bash
+curl -X GET "https://api.creditapp.com/api/bank/applications/queue?page=1&sortBy=AMOUNT_HIGH_LOW" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -H "Content-Type: application/json"
+```
+
+---
+
 ## Bank Rate Card Configuration API
 
 ### POST /api/bank/rate-cards

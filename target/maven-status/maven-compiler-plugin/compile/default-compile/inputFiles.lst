@@ -90,6 +90,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\exc
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\ApplicationDetailsDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\ApplicationStatusUpdateResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\OfferComparisonTableResponse.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\controller\BankAdminApplicationQueueController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\OfferCalculationLogDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\BankRegistrationResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\RequiresBorrowerRole.java
@@ -234,6 +235,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\controller\HealthController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\model\OfferDocument.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\controller\ScenarioCalculatorController.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\service\BankAdminQueueService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\repository\OfferDocumentRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\controller\BorrowerApplicationController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\InvalidDocumentException.java
