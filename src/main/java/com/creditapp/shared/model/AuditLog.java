@@ -56,6 +56,9 @@ public class AuditLog {
     @Column(name = "user_agent")
     private String userAgent;
 
+    @Column(name = "result", nullable = false)
+    private String result;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -63,7 +66,7 @@ public class AuditLog {
     public AuditLog(String entityType, UUID entityId, AuditAction action,
                    UUID actorId, String actorRole,
                    Map<String, Object> oldValues, Map<String, Object> newValues,
-                   String ipAddress, String userAgent) {
+                   String ipAddress, String userAgent, String result) {
         this.entityType = entityType;
         this.entityId = entityId;
         this.action = action;
@@ -73,5 +76,6 @@ public class AuditLog {
         this.newValues = newValues;
         this.ipAddress = ipAddress;
         this.userAgent = userAgent;
+        this.result = result;
     }
 }

@@ -111,7 +111,8 @@ public class AuditService {
                     sanitizedOldValues,
                     sanitizedNewValues,
                     ipAddress,
-                    userAgent
+                userAgent,
+                "SUCCESS"
             );
 
             auditLogRepository.save(auditLog);
