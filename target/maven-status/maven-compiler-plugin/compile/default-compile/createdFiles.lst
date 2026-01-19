@@ -26,6 +26,7 @@ com\creditapp\bank\service\BankAdminQueueService.class
 com\creditapp\bank\dto\MarketVisualizationDTO.class
 com\creditapp\auth\filter\JwtAuthenticationFilter.class
 com\creditapp\shared\service\S3DocumentStorageService$S3ObjectMetadataBuilder.class
+com\creditapp\bank\service\BankOfferWithdrawalService.class
 com\creditapp\shared\util\SortBuilder.class
 com\creditapp\bank\dto\OfferHistoryItem.class
 com\creditapp\bank\service\BankAnalyticsService.class
@@ -104,6 +105,7 @@ com\creditapp\borrower\exception\DocumentNotFoundException.class
 com\creditapp\borrower\service\WithdrawApplicationService.class
 com\creditapp\bank\dto\BankOfferSubmissionRequest$BankOfferSubmissionRequestBuilder.class
 com\creditapp\bank\exception\InsufficientMarketDataException.class
+com\creditapp\bank\dto\DeclineApplicationResponse$DeclineApplicationResponseBuilder.class
 com\creditapp\borrower\dto\OfferComparisonDTO.class
 com\creditapp\borrower\model\Consent.class
 com\creditapp\borrower\dto\SubmitApplicationResponse.class
@@ -121,6 +123,7 @@ com\creditapp\bank\dto\AmountRangeBreakdownDTO$AmountRangeBreakdownDTOBuilder.cl
 com\creditapp\borrower\controller\BorrowerOfferController.class
 com\creditapp\bank\dto\ApplicationQueueResponse.class
 com\creditapp\bank\model\OfferDocument$OfferDocumentBuilder.class
+com\creditapp\bank\service\BankApplicationDeclineService.class
 com\creditapp\shared\repository\EmailDeliveryLogRepository.class
 com\creditapp\shared\config\RabbitMQConfig.class
 com\creditapp\shared\repository\EmailTemplateRepository.class
@@ -182,6 +185,7 @@ com\creditapp\shared\model\EmailTemplate$EmailTemplateBuilder.class
 com\creditapp\bank\service\OfferDocumentRetrievalService.class
 com\creditapp\borrower\dto\DocumentDTO$DocumentDTOBuilder.class
 com\creditapp\shared\service\NotificationService.class
+com\creditapp\bank\dto\WithdrawOfferResponse$WithdrawOfferResponseBuilder.class
 com\creditapp\shared\service\PasswordChangeEmailService.class
 com\creditapp\borrower\exception\ApplicationNotEditableException.class
 com\creditapp\bank\repository\BankRateCardRepository.class
@@ -196,6 +200,7 @@ com\creditapp\borrower\model\LoanType.class
 com\creditapp\bank\dto\AnalyticsRequest.class
 com\creditapp\auth\dto\RegistrationResponse.class
 com\creditapp\shared\dto\NotificationEvent$NotificationEventBuilder.class
+com\creditapp\bank\dto\DeclineApplicationRequest$DeclineApplicationRequestBuilder.class
 com\creditapp\borrower\dto\WithdrawApplicationRequest.class
 com\creditapp\bank\service\OfferCalculationService$OfferCalculationResult.class
 com\creditapp\bank\dto\AnalyticsMetricsDTO.class
@@ -210,6 +215,7 @@ com\creditapp\bank\exception\OfferCalculationException.class
 com\creditapp\borrower\dto\LoanPreferenceDTO.class
 com\creditapp\auth\service\ProfileService.class
 com\creditapp\bank\dto\ConsentDetailsDTO$ConsentDetailsDTOBuilder.class
+com\creditapp\bank\dto\DeclineApplicationResponse.class
 com\creditapp\bank\dto\OfferSubmissionResponse$OfferSubmissionResponseBuilder.class
 com\creditapp\shared\repository\AuditLogRepository.class
 com\creditapp\bank\dto\ApplicationStatusUpdateResponse$ApplicationStatusUpdateResponseBuilder.class
@@ -293,6 +299,7 @@ com\creditapp\bank\dto\OfferDocumentsListResponse.class
 com\creditapp\borrower\service\ApplicationStatusTrackingService.class
 com\creditapp\shared\config\CacheConfig.class
 com\creditapp\borrower\service\OfferRetrievalService.class
+com\creditapp\bank\dto\DeclineApplicationRequest.class
 com\creditapp\shared\model\HelpArticle.class
 com\creditapp\bank\repository\TeamMemberInviteRepository.class
 com\creditapp\bank\dto\AnalyticsTrendDTO$AnalyticsTrendDTOBuilder.class
@@ -314,11 +321,13 @@ com\creditapp\shared\exception\LoginRateLimitExceededException.class
 com\creditapp\auth\dto\UserProfileResponse.class
 com\creditapp\shared\security\RequiresComplianceOfficer.class
 com\creditapp\shared\model\Organization$OrganizationBuilder.class
+com\creditapp\bank\controller\BankOfferWithdrawalController.class
 com\creditapp\bank\dto\ApplicationStatusUpdateRequest$ApplicationStatusUpdateRequestBuilder.class
 com\creditapp\CreditApplicationApplication.class
 com\creditapp\bank\dto\OfferDocumentMetadata$OfferDocumentMetadataBuilder.class
 com\creditapp\borrower\exception\HelpArticleNotFoundException.class
 com\creditapp\shared\service\S3DocumentStorageService$S3ObjectMetadata.class
+com\creditapp\bank\dto\WithdrawOfferResponse.class
 com\creditapp\borrower\exception\ApplicationNotWithdrawableException.class
 com\creditapp\bank\dto\ApplicationDetailsResponse.class
 com\creditapp\borrower\controller\BorrowerApplicationController.class
@@ -334,6 +343,7 @@ com\creditapp\borrower\dto\CalculateScenarioRequest.class
 com\creditapp\shared\model\HelpFAQ.class
 com\creditapp\bank\service\ApplicationQueueService$1.class
 com\creditapp\bank\websocket\ApplicationQueueWebSocketHandler.class
+com\creditapp\bank\controller\BankApplicationDeclineController.class
 com\creditapp\bank\dto\BankDashboardMetrics.class
 com\creditapp\borrower\dto\ApplicationDTO.class
 com\creditapp\borrower\dto\UpdateApplicationRequest.class

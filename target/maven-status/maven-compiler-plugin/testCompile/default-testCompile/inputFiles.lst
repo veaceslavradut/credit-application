@@ -42,6 +42,7 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integrat
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\test\config\TestSecurityConfig.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\controller\HealthControllerTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\service\OfferInsightsServiceTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\bank\BankApplicationDeclineWithdrawalIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ApplicationWithdrawalIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\bank\OfferDataModelIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\ApplicationStatusUpdateServiceTest.java
@@ -61,6 +62,7 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\ban
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ApplicationHistoryIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\BankAdminQueueServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\auth\LoginServiceUnitTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\BankApplicationDeclineWithdrawalTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\security\RBACIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\SpringContextIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\BorrowerHistoryControllerTest.java

@@ -4,6 +4,7 @@ com\creditapp\unit\bank\BankOfferSubmissionServiceTest.class
 com\creditapp\integration\bank\OfferDocumentIntegrationTest.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$6.class
 com\creditapp\shared\service\AuditServiceTest.class
+com\creditapp\unit\bank\BankApplicationDeclineWithdrawalTest.class
 com\creditapp\unit\bank\OfferServiceUnitTest.class
 com\creditapp\SpringContextIntegrationTest.class
 com\creditapp\unit\bank\BankProfileServiceTest.class
@@ -47,6 +48,7 @@ com\creditapp\unit\borrower\OfferHistoryServiceTest.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$1.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$4.class
 com\creditapp\unit\borrower\ApplicationCreationUnitTest.class
+com\creditapp\integration\bank\BankApplicationDeclineWithdrawalIntegrationTest.class
 com\creditapp\integration\borrower\ScenarioCalculatorIntegrationTest.class
 com\creditapp\integration\bank\BankSettingsIntegrationTest.class
 com\creditapp\unit\bank\BankAdminQueueServiceTest.class
@@ -55,6 +57,7 @@ com\creditapp\shared\config\TestCacheConfig.class
 com\creditapp\unit\auth\LoginServiceUnitTest.class
 com\creditapp\unit\bank\OfferDocumentDownloadServiceTest.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$7.class
+com\creditapp\unit\bank\BankAnalyticsServiceTest.class
 com\creditapp\unit\bank\BankDashboardServiceTest.class
 com\creditapp\unit\bank\OfferDocumentRetrievalServiceTest.class
 com\creditapp\borrower\service\ApplicationServiceTest.class
@@ -64,6 +67,7 @@ com\creditapp\unit\bank\ApplicationStatusUpdateServiceTest.class
 com\creditapp\unit\bank\BankMarketAnalysisServiceTest.class
 com\creditapp\unit\borrower\BorrowerNotificationUnitTest.class
 com\creditapp\integration\bank\OfferDataModelIntegrationTest.class
+com\creditapp\integration\bank\BankAnalyticsIntegrationTest.class
 com\creditapp\unit\borrower\service\OfferInsightsServiceTest.class
 com\creditapp\shared\controller\HealthControllerTest.class
 com\creditapp\unit\borrower\OfferRetrievalServiceTest.class

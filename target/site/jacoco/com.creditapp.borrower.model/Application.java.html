@@ -32,13 +32,13 @@ public class Application {
 <span class="fc" id="L32">    private UUID id;</span>
 
     @Column(name = &quot;borrower_id&quot;, nullable = false)
-<span class="nc" id="L35">    private UUID borrowerId;</span>
+<span class="fc" id="L35">    private UUID borrowerId;</span>
 
     @Column(name = &quot;loan_type&quot;, nullable = false)
-<span class="fc" id="L38">    private String loanType;</span>
+<span class="nc" id="L38">    private String loanType;</span>
 
     @Column(name = &quot;loan_amount&quot;, nullable = false)
-<span class="fc" id="L41">    private BigDecimal loanAmount;</span>
+<span class="nc" id="L41">    private BigDecimal loanAmount;</span>
 
     @Column(name = &quot;loan_term_months&quot;, nullable = false)
 <span class="nc" id="L44">    private Integer loanTermMonths;</span>
@@ -51,11 +51,11 @@ public class Application {
 
     @Column(name = &quot;status&quot;, nullable = false)
     @Enumerated(EnumType.STRING)
-<span class="nc" id="L54">    private ApplicationStatus status;</span>
+<span class="fc" id="L54">    private ApplicationStatus status;</span>
 
     @CreationTimestamp
     @Column(name = &quot;created_at&quot;, nullable = false, updatable = false)
-<span class="fc" id="L58">    private LocalDateTime createdAt;</span>
+<span class="nc" id="L58">    private LocalDateTime createdAt;</span>
 
     @Column(name = &quot;submitted_at&quot;)
 <span class="nc" id="L61">    private LocalDateTime submittedAt;</span>

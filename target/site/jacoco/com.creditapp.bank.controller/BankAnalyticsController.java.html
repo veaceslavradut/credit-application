@@ -29,14 +29,14 @@ public class BankAnalyticsController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo,
             @RequestParam(required = false) AnalyticsRequest.DatePreset preset) {
         
-<span class="fc" id="L32">        UUID bankId = extractBankId();</span>
-<span class="fc" id="L33">        log.info(&quot;GET /api/bank/analytics for bank: {} with preset: {}&quot;, bankId, preset);</span>
+<span class="nc" id="L32">        UUID bankId = extractBankId();</span>
+<span class="nc" id="L33">        log.info(&quot;GET /api/bank/analytics for bank: {} with preset: {}&quot;, bankId, preset);</span>
         
-<span class="fc" id="L35">        AnalyticsRequest request = AnalyticsRequest.builder()</span>
-<span class="fc" id="L36">                .dateFrom(dateFrom)</span>
-<span class="fc" id="L37">                .dateTo(dateTo)</span>
-<span class="fc bfc" id="L38" title="All 2 branches covered.">                .preset(preset != null ? preset : AnalyticsRequest.DatePreset.LAST_30)</span>
-<span class="fc" id="L39">                .build();</span>
+<span class="nc" id="L35">        AnalyticsRequest request = AnalyticsRequest.builder()</span>
+<span class="nc" id="L36">                .dateFrom(dateFrom)</span>
+<span class="nc" id="L37">                .dateTo(dateTo)</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">                .preset(preset != null ? preset : AnalyticsRequest.DatePreset.LAST_30)</span>
+<span class="nc" id="L39">                .build();</span>
         
 <span class="nc" id="L41">        AnalyticsResponseDTO response = analyticsService.getAnalytics(bankId, request);</span>
         
@@ -50,12 +50,12 @@ public class BankAnalyticsController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo) {
         
-<span class="fc" id="L53">        UUID bankId = extractBankId();</span>
+<span class="nc" id="L53">        UUID bankId = extractBankId();</span>
         
-<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (dateFrom == null) {</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (dateFrom == null) {</span>
 <span class="nc" id="L56">            dateFrom = LocalDate.now().minusDays(29);</span>
         }
-<span class="pc bpc" id="L58" title="1 of 2 branches missed.">        if (dateTo == null) {</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (dateTo == null) {</span>
 <span class="nc" id="L59">            dateTo = LocalDate.now();</span>
         }
         
@@ -69,12 +69,12 @@ public class BankAnalyticsController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo) {
         
-<span class="fc" id="L72">        UUID bankId = extractBankId();</span>
+<span class="nc" id="L72">        UUID bankId = extractBankId();</span>
         
-<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if (dateFrom == null) {</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (dateFrom == null) {</span>
 <span class="nc" id="L75">            dateFrom = LocalDate.now().minusDays(29);</span>
         }
-<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        if (dateTo == null) {</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (dateTo == null) {</span>
 <span class="nc" id="L78">            dateTo = LocalDate.now();</span>
         }
         
@@ -89,12 +89,12 @@ public class BankAnalyticsController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo,
             @RequestParam(defaultValue = &quot;DAILY&quot;) String granularity) {
         
-<span class="fc" id="L92">        UUID bankId = extractBankId();</span>
+<span class="nc" id="L92">        UUID bankId = extractBankId();</span>
         
-<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (dateFrom == null) {</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (dateFrom == null) {</span>
 <span class="nc" id="L95">            dateFrom = LocalDate.now().minusDays(29);</span>
         }
-<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        if (dateTo == null) {</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        if (dateTo == null) {</span>
 <span class="nc" id="L98">            dateTo = LocalDate.now();</span>
         }
         
@@ -103,7 +103,7 @@ public class BankAnalyticsController {
     }
     
     private UUID extractBankId() {
-<span class="fc" id="L106">        return UUID.fromString(&quot;00000000-0000-0000-0000-000000000000&quot;);</span>
+<span class="nc" id="L106">        return UUID.fromString(&quot;00000000-0000-0000-0000-000000000000&quot;);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
