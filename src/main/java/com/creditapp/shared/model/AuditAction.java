@@ -34,7 +34,11 @@ public enum AuditAction {
     LEGAL_DOCUMENT_UPDATED("Legal document updated"),
     DATA_EXPORT_REQUESTED("Data export requested"),
     DATA_EXPORT_COMPLETED("Data export completed"),
-    DATA_EXPORT_DOWNLOADED("Data export downloaded");
+    DATA_EXPORT_DOWNLOADED("Data export downloaded"),
+    DATA_DELETION_REQUESTED("Data deletion requested"),
+    DATA_DELETION_CONFIRMED("Data deletion confirmed"),
+    DATA_DELETION_COMPLETED("Data deletion completed"),
+    DATA_DELETION_CANCELLED("Data deletion cancelled");
 
     private final String description;
 
