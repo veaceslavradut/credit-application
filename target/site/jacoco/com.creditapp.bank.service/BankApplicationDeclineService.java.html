@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankApplicationDeclineService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.bank.service</a> &gt; <span class="el_source">BankApplicationDeclineService.java</span></div><h1>BankApplicationDeclineService.java</h1><pre class="source lang-java linenums">package com.creditapp.bank.service;
+
+import com.creditapp.bank.dto.DeclineApplicationRequest;
+import com.creditapp.bank.dto.DeclineApplicationResponse;
+import com.creditapp.borrower.model.Application;
+import com.creditapp.borrower.model.ApplicationStatus;
+import com.creditapp.borrower.repository.ApplicationRepository;
+import com.creditapp.shared.exception.NotFoundException;
+import com.creditapp.shared.service.AuditService;
+import com.creditapp.shared.service.NotificationService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+<span class="nc" id="L19">@Slf4j</span>
+@Service
+<span class="nc" id="L21">@RequiredArgsConstructor</span>
+@Transactional
+public class BankApplicationDeclineService {
+
+    private final ApplicationRepository applicationRepository;
+    private final AuditService auditService;
+    private final NotificationService notificationService;
+
+    public DeclineApplicationResponse declineApplication(UUID bankId, UUID applicationId, DeclineApplicationRequest request) {
+<span class="nc" id="L30">        log.info(&quot;Declining application {} for bank {}&quot;, applicationId, bankId);</span>
+
+        // Fetch Application
+<span class="nc" id="L33">        Application application = applicationRepository.findById(applicationId)</span>
+<span class="nc" id="L34">                .orElseThrow(() -&gt; new NotFoundException(&quot;Application not found: &quot; + applicationId));</span>
+
+        // Verify application status &lt; OFFERS_AVAILABLE (OFFER_SUBMITTED equivalent in enum)
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        if (application.getStatus().ordinal() &gt;= ApplicationStatus.OFFERS_AVAILABLE.ordinal()) {</span>
+<span class="nc" id="L38">            throw new IllegalStateException(</span>
+<span class="nc" id="L39">                    &quot;Cannot decline application in status: &quot; + application.getStatus() +</span>
+                    &quot;. Application must be in DRAFT, SUBMITTED, or UNDER_REVIEW status.&quot;);
+        }
+
+        // Validate reason length
+<span class="nc bnc" id="L44" title="All 4 branches missed.">        if (request.getReason() != null &amp;&amp; request.getReason().length() &gt; 500) {</span>
+<span class="nc" id="L45">            throw new IllegalArgumentException(&quot;Decline reason must not exceed 500 characters&quot;);</span>
+        }
+
+        // Update application status
+<span class="nc" id="L49">        application.setStatus(ApplicationStatus.REJECTED);</span>
+<span class="nc" id="L50">        Application updatedApplication = applicationRepository.save(application);</span>
+
+        // Create audit log
+<span class="nc" id="L53">        auditService.logAction(</span>
+                &quot;APPLICATION&quot;,
+                applicationId,
+                com.creditapp.shared.model.AuditAction.APPLICATION_DECLINED
+        );
+
+        // Queue email notification
+        try {
+<span class="nc bnc" id="L61" title="All 2 branches missed.">            String reason = request.getReason() != null ? request.getReason() : &quot;Application declined&quot;;</span>
+<span class="nc" id="L62">            notificationService.createNotification(</span>
+<span class="nc" id="L63">                    application.getBorrowerId(),</span>
+                    applicationId,
+                    com.creditapp.shared.model.NotificationType.APPLICATION_REJECTED,
+                    &quot;Application Status Update&quot;,
+                    &quot;Your application has been declined. Reason: &quot; + reason
+            );
+<span class="nc" id="L69">        } catch (Exception e) {</span>
+<span class="nc" id="L70">            log.error(&quot;Failed to send decline notification&quot;, e);</span>
+<span class="nc" id="L71">        }</span>
+
+<span class="nc" id="L73">        LocalDateTime declinedAt = LocalDateTime.now();</span>
+<span class="nc" id="L74">        log.info(&quot;Application {} declined successfully at {}&quot;, applicationId, declinedAt);</span>
+
+<span class="nc" id="L76">        return DeclineApplicationResponse.builder()</span>
+<span class="nc" id="L77">                .applicationId(applicationId)</span>
+<span class="nc" id="L78">                .status(updatedApplication.getStatus())</span>
+<span class="nc" id="L79">                .declinedAt(declinedAt)</span>
+<span class="nc" id="L80">                .reason(request.getReason())</span>
+<span class="nc" id="L81">                .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

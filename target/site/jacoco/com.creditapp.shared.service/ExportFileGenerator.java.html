@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExportFileGenerator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.service</a> &gt; <span class="el_source">ExportFileGenerator.java</span></div><h1>ExportFileGenerator.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.service;
+
+import com.creditapp.auth.repository.UserRepository;
+import com.creditapp.bank.model.Offer;
+import com.creditapp.bank.repository.OfferRepository;
+import com.creditapp.borrower.model.Application;
+import com.creditapp.borrower.model.ApplicationHistory;
+import com.creditapp.borrower.repository.ApplicationHistoryRepository;
+import com.creditapp.borrower.repository.ApplicationRepository;
+import com.creditapp.shared.model.AuditLog;
+import com.creditapp.shared.model.ExportFormat;
+import com.creditapp.shared.model.GDPRConsent;
+import com.creditapp.shared.model.User;
+import com.creditapp.shared.repository.AuditLogRepository;
+import com.creditapp.shared.repository.GDPRConsentRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+<span class="nc" id="L31">@RequiredArgsConstructor</span>
+<span class="fc" id="L32">@Slf4j</span>
+@Transactional(readOnly = true)
+public class ExportFileGenerator {
+    
+    private final UserRepository userRepository;
+    private final ApplicationRepository applicationRepository;
+    private final ApplicationHistoryRepository applicationHistoryRepository;
+    private final OfferRepository offerRepository;
+    private final GDPRConsentRepository gdprConsentRepository;
+    private final AuditLogRepository auditLogRepository;
+    private final ObjectMapper objectMapper;
+
+    public JsonNode generateJsonExport(UUID borrowerId) {
+<span class="nc" id="L45">        log.info(&quot;Generating JSON export for borrower: {}&quot;, borrowerId);</span>
+        
+<span class="nc" id="L47">        ObjectNode export = objectMapper.createObjectNode();</span>
+<span class="nc" id="L48">        export.put(&quot;borrowerId&quot;, borrowerId.toString());</span>
+<span class="nc" id="L49">        export.put(&quot;exportedAt&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L50">        export.put(&quot;dataFormat&quot;, &quot;JSON&quot;);</span>
+        
+<span class="nc" id="L52">        export.set(&quot;profile&quot;, buildProfileSection(borrowerId));</span>
+<span class="nc" id="L53">        export.set(&quot;applications&quot;, buildApplicationsSection(borrowerId));</span>
+<span class="nc" id="L54">        export.set(&quot;offers&quot;, buildOffersSection(borrowerId));</span>
+<span class="nc" id="L55">        export.set(&quot;consents&quot;, buildConsentsSection(borrowerId));</span>
+<span class="nc" id="L56">        export.set(&quot;auditLog&quot;, buildAuditLogSection(borrowerId));</span>
+        
+<span class="nc" id="L58">        return export;</span>
+    }
+    
+    private JsonNode buildProfileSection(UUID borrowerId) {
+<span class="nc" id="L62">        return userRepository.findById(borrowerId)</span>
+<span class="nc" id="L63">            .map(user -&gt; {</span>
+<span class="nc" id="L64">                ObjectNode profile = objectMapper.createObjectNode();</span>
+<span class="nc" id="L65">                profile.put(&quot;id&quot;, user.getId().toString());</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">                profile.put(&quot;email&quot;, user.getEmail() != null ? user.getEmail() : &quot;&quot;);</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">                profile.put(&quot;firstName&quot;, user.getFirstName() != null ? user.getFirstName() : &quot;&quot;);</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">                profile.put(&quot;lastName&quot;, user.getLastName() != null ? user.getLastName() : &quot;&quot;);</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">                profile.put(&quot;phoneNumber&quot;, user.getPhoneNumber() != null ? user.getPhoneNumber() : &quot;&quot;);</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">                profile.put(&quot;role&quot;, user.getRole() != null ? user.getRole().name() : &quot;&quot;);</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">                profile.put(&quot;active&quot;, user.getIsActive() != null ? user.getIsActive() : false);</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">                profile.put(&quot;accountCreatedAt&quot;, user.getCreatedAt() != null ? user.getCreatedAt().toString() : &quot;&quot;);</span>
+<span class="nc" id="L73">                return (JsonNode) profile;</span>
+            })
+<span class="nc" id="L75">            .orElse(objectMapper.createObjectNode().put(&quot;error&quot;, &quot;User not found&quot;));</span>
+    }
+    
+    private JsonNode buildApplicationsSection(UUID borrowerId) {
+<span class="nc" id="L79">        ArrayNode applications = objectMapper.createArrayNode();</span>
+        
+<span class="nc" id="L81">        List&lt;Application&gt; apps = applicationRepository.findByBorrowerId(borrowerId, PageRequest.of(0, 1000)).getContent();</span>
+        
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        for (Application app : apps) {</span>
+<span class="nc" id="L84">            ObjectNode appNode = objectMapper.createObjectNode();</span>
+<span class="nc" id="L85">            appNode.put(&quot;id&quot;, app.getId().toString());</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">            appNode.put(&quot;loanType&quot;, app.getLoanType() != null ? app.getLoanType() : &quot;&quot;);</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">            appNode.put(&quot;loanAmount&quot;, app.getLoanAmount() != null ? app.getLoanAmount().toString() : &quot;0&quot;);</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">            appNode.put(&quot;loanTermMonths&quot;, app.getLoanTermMonths() != null ? app.getLoanTermMonths() : 0);</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">            appNode.put(&quot;currency&quot;, app.getCurrency() != null ? app.getCurrency() : &quot;&quot;);</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">            appNode.put(&quot;status&quot;, app.getStatus() != null ? app.getStatus().name() : &quot;&quot;);</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">            appNode.put(&quot;createdAt&quot;, app.getCreatedAt() != null ? app.getCreatedAt().toString() : &quot;&quot;);</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">            appNode.put(&quot;submittedAt&quot;, app.getSubmittedAt() != null ? app.getSubmittedAt().toString() : &quot;&quot;);</span>
+            
+<span class="nc" id="L94">            ArrayNode history = objectMapper.createArrayNode();</span>
+<span class="nc" id="L95">            List&lt;ApplicationHistory&gt; historyRecords = applicationHistoryRepository.findByApplicationIdOrderByChangedAtDesc(app.getId());</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">            for (ApplicationHistory h : historyRecords) {</span>
+<span class="nc" id="L97">                ObjectNode histNode = objectMapper.createObjectNode();</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">                histNode.put(&quot;oldStatus&quot;, h.getOldStatus() != null ? h.getOldStatus().name() : &quot;&quot;);</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">                histNode.put(&quot;newStatus&quot;, h.getNewStatus() != null ? h.getNewStatus().name() : &quot;&quot;);</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">                histNode.put(&quot;changedAt&quot;, h.getChangedAt() != null ? h.getChangedAt().toString() : &quot;&quot;);</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">                histNode.put(&quot;changeReason&quot;, h.getChangeReason() != null ? h.getChangeReason() : &quot;&quot;);</span>
+<span class="nc" id="L102">                history.add(histNode);</span>
+<span class="nc" id="L103">            }</span>
+<span class="nc" id="L104">            appNode.set(&quot;history&quot;, history);</span>
+<span class="nc" id="L105">            applications.add(appNode);</span>
+<span class="nc" id="L106">        }</span>
+        
+<span class="nc" id="L108">        return applications;</span>
+    }
+    
+    private JsonNode buildOffersSection(UUID borrowerId) {
+<span class="nc" id="L112">        ArrayNode offers = objectMapper.createArrayNode();</span>
+        
+<span class="nc" id="L114">        List&lt;Application&gt; apps = applicationRepository.findByBorrowerId(borrowerId, PageRequest.of(0, 1000)).getContent();</span>
+        
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        for (Application app : apps) {</span>
+<span class="nc" id="L117">            List&lt;Offer&gt; appOffers = offerRepository.findByApplicationId(app.getId());</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">            for (Offer offer : appOffers) {</span>
+<span class="nc" id="L119">                ObjectNode offerNode = objectMapper.createObjectNode();</span>
+<span class="nc" id="L120">                offerNode.put(&quot;id&quot;, offer.getId().toString());</span>
+<span class="nc" id="L121">                offerNode.put(&quot;applicationId&quot;, offer.getApplicationId().toString());</span>
+<span class="nc" id="L122">                offerNode.put(&quot;bankId&quot;, offer.getBankId().toString());</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">                offerNode.put(&quot;apr&quot;, offer.getApr() != null ? offer.getApr().toString() : &quot;0&quot;);</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">                offerNode.put(&quot;monthlyPayment&quot;, offer.getMonthlyPayment() != null ? offer.getMonthlyPayment().toString() : &quot;0&quot;);</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">                offerNode.put(&quot;totalCost&quot;, offer.getTotalCost() != null ? offer.getTotalCost().toString() : &quot;0&quot;);</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">                offerNode.put(&quot;processingTimeDays&quot;, offer.getProcessingTimeDays() != null ? offer.getProcessingTimeDays() : 0);</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">                offerNode.put(&quot;status&quot;, offer.getOfferStatus() != null ? offer.getOfferStatus().name() : &quot;&quot;);</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">                offerNode.put(&quot;expiresAt&quot;, offer.getExpiresAt() != null ? offer.getExpiresAt().toString() : &quot;&quot;);</span>
+<span class="nc" id="L129">                offers.add(offerNode);</span>
+<span class="nc" id="L130">            }</span>
+<span class="nc" id="L131">        }</span>
+        
+<span class="nc" id="L133">        return offers;</span>
+    }
+    
+    private JsonNode buildConsentsSection(UUID borrowerId) {
+<span class="nc" id="L137">        ArrayNode consents = objectMapper.createArrayNode();</span>
+        
+<span class="nc" id="L139">        List&lt;GDPRConsent&gt; userConsents = gdprConsentRepository.findAllByBorrowerId(borrowerId);</span>
+        
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        for (GDPRConsent consent : userConsents) {</span>
+<span class="nc" id="L142">            ObjectNode consentNode = objectMapper.createObjectNode();</span>
+<span class="nc" id="L143">            consentNode.put(&quot;id&quot;, consent.getId().toString());</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">            consentNode.put(&quot;consentType&quot;, consent.getConsentType() != null ? consent.getConsentType().name() : &quot;&quot;);</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">            consentNode.put(&quot;consentedAt&quot;, consent.getConsentedAt() != null ? consent.getConsentedAt().toString() : &quot;&quot;);</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">            consentNode.put(&quot;withdrawnAt&quot;, consent.getWithdrawnAt() != null ? consent.getWithdrawnAt().toString() : &quot;&quot;);</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">            consentNode.put(&quot;ipAddress&quot;, consent.getIpAddress() != null ? consent.getIpAddress() : &quot;&quot;);</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">            consentNode.put(&quot;userAgent&quot;, consent.getUserAgent() != null ? consent.getUserAgent() : &quot;&quot;);</span>
+<span class="nc" id="L149">            consents.add(consentNode);</span>
+<span class="nc" id="L150">        }</span>
+        
+<span class="nc" id="L152">        return consents;</span>
+    }
+    
+    private JsonNode buildAuditLogSection(UUID borrowerId) {
+<span class="nc" id="L156">        ArrayNode auditLogs = objectMapper.createArrayNode();</span>
+        
+<span class="nc" id="L158">        List&lt;AuditLog&gt; logs = auditLogRepository.findByActorIdOrderByCreatedAtDesc(borrowerId);</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">        if (logs.size() &gt; 500) {</span>
+<span class="nc" id="L160">            logs = logs.subList(0, 500);</span>
+        }
+        
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        for (AuditLog log : logs) {</span>
+<span class="nc" id="L164">            ObjectNode logNode = objectMapper.createObjectNode();</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">            logNode.put(&quot;id&quot;, log.getId() != null ? log.getId().toString() : &quot;&quot;);</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">            logNode.put(&quot;action&quot;, log.getAction() != null ? log.getAction().name() : &quot;&quot;);</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">            logNode.put(&quot;entityType&quot;, log.getEntityType() != null ? log.getEntityType() : &quot;&quot;);</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">            logNode.put(&quot;entityId&quot;, log.getEntityId() != null ? log.getEntityId().toString() : &quot;&quot;);</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">            logNode.put(&quot;timestamp&quot;, log.getCreatedAt() != null ? log.getCreatedAt().toString() : &quot;&quot;);</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">            logNode.put(&quot;ipAddress&quot;, log.getIpAddress() != null ? log.getIpAddress() : &quot;&quot;);</span>
+<span class="nc" id="L171">            auditLogs.add(logNode);</span>
+<span class="nc" id="L172">        }</span>
+        
+<span class="nc" id="L174">        return auditLogs;</span>
+    }
+    
+    public byte[] generatePdfExport(UUID borrowerId, ExportFormat format) {
+<span class="nc" id="L178">        log.warn(&quot;PDF export not yet implemented for borrower: {}&quot;, borrowerId);</span>
+<span class="nc" id="L179">        return &quot;PDF export not yet implemented&quot;.getBytes();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
