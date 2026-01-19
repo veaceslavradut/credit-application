@@ -1,5 +1,5 @@
-# Created at 2026-01-19T11:32:09.665
-Thread dump for process (124680@MDMOB40671) after 30 seconds shutdown timeout:
+# Created at 2026-01-19T12:33:51.237
+Thread dump for process (177472@MDMOB40671) after 30 seconds shutdown timeout:
 "main" 
    java.lang.Thread.State: WAITING
         at java.base@17.0.7/java.lang.Object.wait(Native Method)
@@ -45,6 +45,21 @@ Thread dump for process (124680@MDMOB40671) after 30 seconds shutdown timeout:
 
 "Notification Thread" 
    java.lang.Thread.State: RUNNABLE
+
+"idle-connection-reaper" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@17.0.7/java.lang.Thread.sleep(Native Method)
+        at app//software.amazon.awssdk.http.apache.internal.conn.IdleConnectionReaper$ReaperTask.run(IdleConnectionReaper.java:151)
+        at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+        at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+        at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
+
+"Keep-Alive-Timer" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@17.0.7/java.lang.Thread.sleep(Native Method)
+        at java.base@17.0.7/sun.net.www.http.KeepAliveCache.run(KeepAliveCache.java:236)
+        at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
+        at java.base@17.0.7/jdk.internal.misc.InnocuousThread.run(InnocuousThread.java:162)
 
 "Thread-6" 
    java.lang.Thread.State: RUNNABLE
@@ -232,7 +247,7 @@ Thread dump for process (124680@MDMOB40671) after 30 seconds shutdown timeout:
         at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
         at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
 
-"Thread-29" 
+"Thread-30" 
    java.lang.Thread.State: TIMED_WAITING
         at java.base@17.0.7/jdk.internal.misc.Unsafe.park(Native Method)
         at java.base@17.0.7/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
@@ -243,7 +258,7 @@ Thread dump for process (124680@MDMOB40671) after 30 seconds shutdown timeout:
         at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
         at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
 
-"Thread-30" 
+"Thread-31" 
    java.lang.Thread.State: TIMED_WAITING
         at java.base@17.0.7/jdk.internal.misc.Unsafe.park(Native Method)
         at java.base@17.0.7/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
@@ -258,10 +273,10 @@ Thread dump for process (124680@MDMOB40671) after 30 seconds shutdown timeout:
    java.lang.Thread.State: TIMED_WAITING
         at java.base@17.0.7/java.lang.Object.wait(Native Method)
         at app//org.testcontainers.utility.RyukResourceReaper.lambda$null$1(RyukResourceReaper.java:115)
-        at app//org.testcontainers.utility.RyukResourceReaper$$Lambda$2696/0x0000000801c94438.run(Unknown Source)
+        at app//org.testcontainers.utility.RyukResourceReaper$$Lambda$3469/0x0000000801f2e438.run(Unknown Source)
         at app//org.rnorth.ducttape.ratelimits.RateLimiter.doWhenReady(RateLimiter.java:27)
         at app//org.testcontainers.utility.RyukResourceReaper.lambda$maybeStart$2(RyukResourceReaper.java:101)
-        at app//org.testcontainers.utility.RyukResourceReaper$$Lambda$2695/0x0000000801c94218.run(Unknown Source)
+        at app//org.testcontainers.utility.RyukResourceReaper$$Lambda$3468/0x0000000801f2e218.run(Unknown Source)
         at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
 
 "PostgreSQL-JDBC-Cleaner" 
@@ -272,6 +287,70 @@ Thread dump for process (124680@MDMOB40671) after 30 seconds shutdown timeout:
         at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
 
 "HikariPool-5 housekeeper" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@17.0.7/jdk.internal.misc.Unsafe.park(Native Method)
+        at java.base@17.0.7/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
+        at java.base@17.0.7/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1672)
+        at java.base@17.0.7/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+        at java.base@17.0.7/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+        at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1062)
+        at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
+        at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+        at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
+
+"HikariPool-6 housekeeper" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@17.0.7/jdk.internal.misc.Unsafe.park(Native Method)
+        at java.base@17.0.7/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
+        at java.base@17.0.7/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1672)
+        at java.base@17.0.7/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+        at java.base@17.0.7/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+        at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1062)
+        at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
+        at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+        at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
+
+"lettuce-timer-11-1" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@17.0.7/java.lang.Thread.sleep(Native Method)
+        at app//io.netty.util.HashedWheelTimer$Worker.waitForNextTick(HashedWheelTimer.java:600)
+        at app//io.netty.util.HashedWheelTimer$Worker.run(HashedWheelTimer.java:496)
+        at app//io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+        at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
+
+"scheduling-1" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@17.0.7/jdk.internal.misc.Unsafe.park(Native Method)
+        at java.base@17.0.7/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
+        at java.base@17.0.7/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1672)
+        at java.base@17.0.7/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+        at java.base@17.0.7/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+        at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1062)
+        at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
+        at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+        at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
+
+"HikariPool-7 housekeeper" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@17.0.7/jdk.internal.misc.Unsafe.park(Native Method)
+        at java.base@17.0.7/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
+        at java.base@17.0.7/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1672)
+        at java.base@17.0.7/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+        at java.base@17.0.7/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+        at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1062)
+        at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
+        at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+        at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
+
+"lettuce-timer-13-1" 
+   java.lang.Thread.State: TIMED_WAITING
+        at java.base@17.0.7/java.lang.Thread.sleep(Native Method)
+        at app//io.netty.util.HashedWheelTimer$Worker.waitForNextTick(HashedWheelTimer.java:600)
+        at app//io.netty.util.HashedWheelTimer$Worker.run(HashedWheelTimer.java:496)
+        at app//io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+        at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
+
+"scheduling-1" 
    java.lang.Thread.State: TIMED_WAITING
         at java.base@17.0.7/jdk.internal.misc.Unsafe.park(Native Method)
         at java.base@17.0.7/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
@@ -347,7 +426,7 @@ Thread dump for process (124680@MDMOB40671) after 30 seconds shutdown timeout:
         at app//org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1145)
         at app//org.springframework.context.support.AbstractApplicationContext.close(AbstractApplicationContext.java:1091)
         at app//org.springframework.boot.SpringApplicationShutdownHook.closeAndWait(SpringApplicationShutdownHook.java:145)
-        at app//org.springframework.boot.SpringApplicationShutdownHook$$Lambda$3255/0x0000000801f06450.accept(Unknown Source)
+        at app//org.springframework.boot.SpringApplicationShutdownHook$$Lambda$3754/0x00000008020c3438.accept(Unknown Source)
         at java.base@17.0.7/java.lang.Iterable.forEach(Iterable.java:75)
         at app//org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:114)
         at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)

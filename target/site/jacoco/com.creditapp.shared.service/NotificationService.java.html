@@ -55,24 +55,24 @@ public class NotificationService {
     public void sendNotificationAsync(UUID notificationId) {
         try {
 <span class="fc" id="L57">            BorrowerNotification notification = notificationRepository.findById(notificationId)</span>
-<span class="pc" id="L58">                    .orElseThrow(() -&gt; new NotificationNotFoundException(notificationId));</span>
+<span class="fc" id="L58">                    .orElseThrow(() -&gt; new NotificationNotFoundException(notificationId));</span>
             
             // TODO: Implement actual email sending via SendGrid in future stories
             // For now, just mark as SENT
-<span class="nc" id="L62">            notification.setDeliveryStatus(DeliveryStatus.SENT);</span>
-<span class="nc" id="L63">            notification.setSentAt(LocalDateTime.now());</span>
-<span class="nc" id="L64">            notificationRepository.save(notification);</span>
+<span class="fc" id="L62">            notification.setDeliveryStatus(DeliveryStatus.SENT);</span>
+<span class="fc" id="L63">            notification.setSentAt(LocalDateTime.now());</span>
+<span class="fc" id="L64">            notificationRepository.save(notification);</span>
             
             // Log audit event
-<span class="nc" id="L67">            auditService.logAction(</span>
+<span class="fc" id="L67">            auditService.logAction(</span>
                     &quot;NOTIFICATION&quot;,
                     notificationId,
                     AuditAction.NOTIFICATION_SENT,
-<span class="nc" id="L71">                    notification.getBorrowerId(),</span>
+<span class="fc" id="L71">                    notification.getBorrowerId(),</span>
                     &quot;BORROWER&quot;
             );
             
-<span class="nc" id="L75">            log.info(&quot;Notification sent successfully: {}&quot;, notificationId);</span>
+<span class="fc" id="L75">            log.info(&quot;Notification sent successfully: {}&quot;, notificationId);</span>
 <span class="fc" id="L76">        } catch (Exception e) {</span>
 <span class="fc" id="L77">            log.error(&quot;Failed to send notification: {}&quot;, notificationId, e);</span>
             // Mark as failed
@@ -80,7 +80,7 @@ public class NotificationService {
 <span class="nc" id="L80">                n.setDeliveryStatus(DeliveryStatus.FAILED);</span>
 <span class="nc" id="L81">                notificationRepository.save(n);</span>
 <span class="nc" id="L82">            });</span>
-<span class="nc" id="L83">        }</span>
+<span class="fc" id="L83">        }</span>
 <span class="fc" id="L84">    }</span>
 
     @Transactional(readOnly = true)

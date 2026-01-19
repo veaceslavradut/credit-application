@@ -31,14 +31,6 @@ public class BankAdminController {
     }
 
     @RequiresBankAdmin
-    @PostMapping("/offers")
-    public ResponseEntity<?> createOffer() {
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Placeholder endpoint - Epic 3/4 implementation pending");
-        return ResponseEntity.status(201).body(response);
-    }
-
-    @RequiresBankAdmin
     @GetMapping("/offers/{id}")
     public ResponseEntity<?> getOffer(@PathVariable String id) {
         Map<String, Object> response = new HashMap<>();

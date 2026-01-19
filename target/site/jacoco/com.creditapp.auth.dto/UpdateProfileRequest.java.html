@@ -7,22 +7,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-<span class="nc bnc" id="L10" title="All 30 branches missed.">@Data</span>
-<span class="nc" id="L11">@NoArgsConstructor</span>
+<span class="pc bnc" id="L10" title="All 30 branches missed.">@Data</span>
+<span class="fc" id="L11">@NoArgsConstructor</span>
 <span class="nc" id="L12">@AllArgsConstructor</span>
 public class UpdateProfileRequest {
     
     @NotBlank(message = &quot;First name is required&quot;)
     @Size(min = 1, max = 50, message = &quot;First name must be between 1 and 50 characters&quot;)
-<span class="nc" id="L17">    private String firstName;</span>
+<span class="fc" id="L17">    private String firstName;</span>
     
     @NotBlank(message = &quot;Last name is required&quot;)
     @Size(min = 1, max = 50, message = &quot;Last name must be between 1 and 50 characters&quot;)
-<span class="nc" id="L21">    private String lastName;</span>
+<span class="fc" id="L21">    private String lastName;</span>
     
     @NotBlank(message = &quot;Phone number is required&quot;)
     @Pattern(regexp = &quot;^\\+[0-9]{1,3}-[0-9]{1,4}-[0-9]{1,8}(\\-[0-9]{1,8})?$&quot;, 
             message = &quot;Phone must be in format +XXX-XXXX-XXXXXXX&quot;)
-<span class="nc" id="L26">    private String phoneNumber;</span>
+<span class="fc" id="L26">    private String phoneNumber;</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
