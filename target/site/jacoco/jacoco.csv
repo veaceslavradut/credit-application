@@ -63,6 +63,7 @@ Credit Application Platform,com.creditapp.bank.controller,BankAdminRateCardContr
 Credit Application Platform,com.creditapp.bank.controller,BankApplicationReviewController,83,13,0,0,15,2,2,2,2,2
 Credit Application Platform,com.creditapp.bank.controller,BankApplicationQueueController,0,53,0,0,0,18,0,3,0,3
 Credit Application Platform,com.creditapp.bank.controller,OfferDocumentController,222,16,10,0,46,2,9,2,4,2
+Credit Application Platform,com.creditapp.bank.controller,BankOfferHistoryController,4,3,0,0,1,1,1,1,1,1
 Credit Application Platform,com.creditapp.bank.controller,BankAdminController,46,3,0,0,11,1,3,1,3,1
 Credit Application Platform,com.creditapp.bank.controller,BankAdminApplicationQueueController,28,13,0,0,4,2,1,2,1,2
 Credit Application Platform,com.creditapp.bank.controller,BankDashboardController,45,13,0,0,6,2,1,2,1,2
@@ -90,6 +91,7 @@ Credit Application Platform,com.creditapp.shared.dto,AuditLogDTO,425,0,78,0,12,0
 Credit Application Platform,com.creditapp.shared.dto,EmailMetricsDTO,269,31,54,0,6,4,42,4,15,4
 Credit Application Platform,com.creditapp.shared.dto,NotificationEvent,386,0,70,0,12,0,58,0,23,0
 Credit Application Platform,com.creditapp.common.interceptor,RateLimitingInterceptor,77,13,11,1,18,5,7,2,1,2
+Credit Application Platform,com.creditapp.bank.dto,OfferHistoryFilter.OfferHistoryFilterBuilder,81,0,0,0,1,0,11,0,11,0
 Credit Application Platform,com.creditapp.bank.dto,BankOfferSubmissionRequest.BankOfferSubmissionRequestBuilder,108,0,0,0,1,0,14,0,14,0
 Credit Application Platform,com.creditapp.bank.dto,MyBankRateCardDTO,0,27,0,0,0,1,0,1,0,1
 Credit Application Platform,com.creditapp.bank.dto,OfferSubmissionResponse.OfferSubmissionResponseBuilder,18,63,0,0,0,1,1,10,1,10
@@ -106,6 +108,7 @@ Credit Application Platform,com.creditapp.bank.dto,BorrowerDetailsDTO,257,0,46,0
 Credit Application Platform,com.creditapp.bank.dto,MarketVisualizationDTO.FeeComparisonItem,0,21,0,0,0,1,0,1,0,1
 Credit Application Platform,com.creditapp.bank.dto,BankDashboardMetrics,0,24,0,0,0,1,0,1,0,1
 Credit Application Platform,com.creditapp.bank.dto,OfferSubmissionRequest,223,34,46,0,3,6,34,6,11,6
+Credit Application Platform,com.creditapp.bank.dto,OfferHistoryResponse.OfferHistoryResponseBuilder,45,0,0,0,1,0,7,0,7,0
 Credit Application Platform,com.creditapp.bank.dto,ApplicationQueueResponse.ApplicationQueueResponseBuilder,16,56,0,0,0,1,1,9,1,9
 Credit Application Platform,com.creditapp.bank.dto,QuickLink,12,0,0,0,1,0,1,0,1,0
 Credit Application Platform,com.creditapp.bank.dto,BankOfferSubmissionRequest,515,0,94,0,15,0,76,0,29,0
@@ -115,6 +118,9 @@ Credit Application Platform,com.creditapp.bank.dto,OfferDocumentUploadRequest,18
 Credit Application Platform,com.creditapp.bank.dto,MarketAnalysisDTO,0,21,0,0,0,1,0,1,0,1
 Credit Application Platform,com.creditapp.bank.dto,ApplicationDetailsResponse,343,0,62,0,11,0,52,0,21,0
 Credit Application Platform,com.creditapp.bank.dto,OfferDTO,0,3,0,0,0,1,0,1,0,1
+Credit Application Platform,com.creditapp.bank.dto,OfferHistoryItem.OfferHistoryItemBuilder,81,0,0,0,1,0,11,0,11,0
+Credit Application Platform,com.creditapp.bank.dto,OfferHistoryResponse,214,0,38,0,8,0,34,0,15,0
+Credit Application Platform,com.creditapp.bank.dto,OfferHistoryFilter,386,0,70,0,12,0,58,0,23,0
 Credit Application Platform,com.creditapp.bank.dto,OfferSubmissionResponse,334,52,70,0,3,9,49,9,14,9
 Credit Application Platform,com.creditapp.bank.dto,ApplicationQueueRequest,469,46,94,0,11,4,72,4,25,4
 Credit Application Platform,com.creditapp.bank.dto,ApplicationStatusUpdateResponse.ApplicationStatusUpdateResponseBuilder,12,42,0,0,0,1,1,7,1,7
@@ -124,6 +130,7 @@ Credit Application Platform,com.creditapp.bank.dto,BankOfferSubmissionResponse.B
 Credit Application Platform,com.creditapp.bank.dto,OfferSubmissionRequest.OfferSubmissionRequestBuilder,12,42,0,0,0,1,1,7,1,7
 Credit Application Platform,com.creditapp.bank.dto,ConsentDetailsDTO,257,0,46,0,9,0,40,0,17,0
 Credit Application Platform,com.creditapp.bank.dto,OfferDocumentMetadata,460,55,94,0,8,7,69,7,22,7
+Credit Application Platform,com.creditapp.bank.dto,OfferHistoryItem,386,0,70,0,12,0,58,0,23,0
 Credit Application Platform,com.creditapp.bank.dto,ApplicationQueueItem.ApplicationQueueItemBuilder,34,119,0,0,0,1,1,18,1,18
 Credit Application Platform,com.creditapp.bank.dto,ApplicationDetailsResponse.ApplicationDetailsResponseBuilder,72,0,0,0,1,0,10,0,10,0
 Credit Application Platform,com.creditapp.bank.dto,BankDashboardResponse,12,0,0,0,1,0,1,0,1,0
@@ -196,7 +203,7 @@ Credit Application Platform,com.creditapp.borrower.service,OfferSelectionService
 Credit Application Platform,com.creditapp.borrower.service,ApplicationService,114,733,12,74,27,164,16,44,5,12
 Credit Application Platform,com.creditapp.borrower.service,OfferHistoryService,23,273,10,12,6,54,11,8,1,7
 Credit Application Platform,com.creditapp.borrower.service,OfferInsightsService,1,354,1,5,0,86,1,11,0,9
-Credit Application Platform,com.creditapp.borrower.service,OfferComparisonTableService,112,426,37,31,18,88,28,21,0,15
+Credit Application Platform,com.creditapp.borrower.service,OfferComparisonTableService,113,425,38,30,18,88,29,20,0,15
 Credit Application Platform,com.creditapp.borrower.service,ApplicationDocumentService,373,24,28,0,77,3,25,2,11,2
 Credit Application Platform,com.creditapp.borrower.service,NextStepsService,136,54,5,1,37,13,5,3,0,3
 Credit Application Platform,com.creditapp.borrower.service,ApplicationHistoryService,122,311,40,16,27,66,31,12,4,11

@@ -176,7 +176,7 @@ public class OfferComparisonTableService {
 <span class="fc" id="L176">        long days = duration.toDays();</span>
 <span class="fc" id="L177">        long remainingHours = hours % 24;</span>
 <span class="pc bpc" id="L178" title="1 of 2 branches missed.">        return days + &quot; day&quot; + (days == 1 ? &quot;&quot; : &quot;s&quot;) + </span>
-<span class="pc bpc" id="L179" title="1 of 4 branches missed.">               (remainingHours &gt; 0 ? &quot; &quot; + remainingHours + &quot; hour&quot; + (remainingHours == 1 ? &quot;&quot; : &quot;s&quot;) : &quot;&quot;);</span>
+<span class="pc bpc" id="L179" title="2 of 4 branches missed.">               (remainingHours &gt; 0 ? &quot; &quot; + remainingHours + &quot; hour&quot; + (remainingHours == 1 ? &quot;&quot; : &quot;s&quot;) : &quot;&quot;);</span>
     }
     
     // Package-private for testing

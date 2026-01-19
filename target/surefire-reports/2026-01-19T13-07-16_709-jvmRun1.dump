@@ -1,5 +1,5 @@
-# Created at 2026-01-19T12:36:41.089
-Thread dump for process (179348@MDMOB40671) after 30 seconds shutdown timeout:
+# Created at 2026-01-19T13:09:50.843
+Thread dump for process (124304@MDMOB40671) after 30 seconds shutdown timeout:
 "main" 
    java.lang.Thread.State: WAITING
         at java.base@17.0.7/java.lang.Object.wait(Native Method)
@@ -247,7 +247,7 @@ Thread dump for process (179348@MDMOB40671) after 30 seconds shutdown timeout:
         at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
         at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
 
-"Thread-30" 
+"Thread-29" 
    java.lang.Thread.State: TIMED_WAITING
         at java.base@17.0.7/jdk.internal.misc.Unsafe.park(Native Method)
         at java.base@17.0.7/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
@@ -258,7 +258,7 @@ Thread dump for process (179348@MDMOB40671) after 30 seconds shutdown timeout:
         at java.base@17.0.7/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
         at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
 
-"Thread-31" 
+"Thread-30" 
    java.lang.Thread.State: TIMED_WAITING
         at java.base@17.0.7/jdk.internal.misc.Unsafe.park(Native Method)
         at java.base@17.0.7/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
@@ -273,10 +273,10 @@ Thread dump for process (179348@MDMOB40671) after 30 seconds shutdown timeout:
    java.lang.Thread.State: TIMED_WAITING
         at java.base@17.0.7/java.lang.Object.wait(Native Method)
         at app//org.testcontainers.utility.RyukResourceReaper.lambda$null$1(RyukResourceReaper.java:115)
-        at app//org.testcontainers.utility.RyukResourceReaper$$Lambda$3469/0x0000000801f2a710.run(Unknown Source)
+        at app//org.testcontainers.utility.RyukResourceReaper$$Lambda$3469/0x0000000801f2c700.run(Unknown Source)
         at app//org.rnorth.ducttape.ratelimits.RateLimiter.doWhenReady(RateLimiter.java:27)
         at app//org.testcontainers.utility.RyukResourceReaper.lambda$maybeStart$2(RyukResourceReaper.java:101)
-        at app//org.testcontainers.utility.RyukResourceReaper$$Lambda$3468/0x0000000801f2a4f0.run(Unknown Source)
+        at app//org.testcontainers.utility.RyukResourceReaper$$Lambda$3468/0x0000000801f2c4e0.run(Unknown Source)
         at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)
 
 "PostgreSQL-JDBC-Cleaner" 
@@ -426,7 +426,7 @@ Thread dump for process (179348@MDMOB40671) after 30 seconds shutdown timeout:
         at app//org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1145)
         at app//org.springframework.context.support.AbstractApplicationContext.close(AbstractApplicationContext.java:1091)
         at app//org.springframework.boot.SpringApplicationShutdownHook.closeAndWait(SpringApplicationShutdownHook.java:145)
-        at app//org.springframework.boot.SpringApplicationShutdownHook$$Lambda$3759/0x00000008020c0678.accept(Unknown Source)
+        at app//org.springframework.boot.SpringApplicationShutdownHook$$Lambda$3759/0x00000008020bf628.accept(Unknown Source)
         at java.base@17.0.7/java.lang.Iterable.forEach(Iterable.java:75)
         at app//org.springframework.boot.SpringApplicationShutdownHook.run(SpringApplicationShutdownHook.java:114)
         at java.base@17.0.7/java.lang.Thread.run(Thread.java:833)

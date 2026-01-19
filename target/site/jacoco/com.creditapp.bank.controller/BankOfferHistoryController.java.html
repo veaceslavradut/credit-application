@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankOfferHistoryController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.bank.controller</a> &gt; <span class="el_source">BankOfferHistoryController.java</span></div><h1>BankOfferHistoryController.java</h1><pre class="source lang-java linenums">package com.creditapp.bank.controller;
+
+import com.creditapp.shared.security.RequiresBankAdmin;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+
+/**
+ * REST controller for bank offer history endpoints.
+ * Provides filtered, sorted, and paginated views of all offers submitted by a bank.
+ * 
+ * Status: DTOs ready. Service and controller endpoints placeholder for backend integration.
+ */
+@RestController
+@RequestMapping(&quot;/api/bank/offers&quot;)
+<span class="fc" id="L18">public class BankOfferHistoryController {</span>
+    
+    /**
+     * Get paginated history of all offers submitted by the authenticated bank.
+     * NOTE: Full implementation will integrate with BankOfferHistoryService
+     * 
+     * Query parameters:
+     * - page: 0-based page number (default 0)
+     * - pageSize: items per page, 1-100 (default 20)
+     * - statuses: comma-separated filter (SUBMITTED,ACCEPTED,EXPIRED,WITHDRAWN)
+     * - dateFrom, dateTo: YYYY-MM-DD format
+     * - aprFrom, aprTo: BigDecimal APR range
+     * - paymentFrom, paymentTo: BigDecimal monthly payment range
+     * - sortBy: submittedDate_DESC (default), apr_ASC, monthlyPayment_DESC, etc.
+     */
+    @RequiresBankAdmin
+    @GetMapping
+    public ResponseEntity&lt;?&gt; getOfferHistory(
+            @RequestParam(defaultValue = &quot;0&quot;) int page,
+            @RequestParam(defaultValue = &quot;20&quot;) int pageSize,
+            @RequestParam(required = false) String statuses,
+            @RequestParam(required = false) String dateFrom,
+            @RequestParam(required = false) String dateTo,
+            @RequestParam(required = false) BigDecimal aprFrom,
+            @RequestParam(required = false) BigDecimal aprTo,
+            @RequestParam(required = false) BigDecimal paymentFrom,
+            @RequestParam(required = false) BigDecimal paymentTo,
+            @RequestParam(required = false, defaultValue = &quot;submittedDate_DESC&quot;) String sortBy) {
+        
+        // TODO: Complete integration:
+        // 1. Inject BankOfferHistoryService
+        // 2. Extract bankId from SecurityContext (JwtAuthenticationToken)
+        // 3. Build OfferHistoryFilter from query parameters
+        // 4. Call offerHistoryService.getOfferHistory(bankId, filter, page, pageSize)
+        // 5. Return OfferHistoryResponse with 200 OK or error handling
+        
+<span class="nc" id="L54">        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

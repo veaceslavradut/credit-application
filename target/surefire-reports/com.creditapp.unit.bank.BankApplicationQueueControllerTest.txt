@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.creditapp.unit.bank.BankApplicationQueueControllerTest
 -------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.390 s -- in com.creditapp.unit.bank.BankApplicationQueueControllerTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.331 s -- in com.creditapp.unit.bank.BankApplicationQueueControllerTest
