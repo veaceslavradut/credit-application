@@ -19,8 +19,8 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(&quot;/api/legal&quot;)
-@RequiredArgsConstructor
-<span class="nc" id="L23">@Slf4j</span>
+<span class="fc" id="L22">@RequiredArgsConstructor</span>
+<span class="fc" id="L23">@Slf4j</span>
 public class LegalDocumentController {
 
     private final LegalDocumentService legalDocumentService;
@@ -32,10 +32,10 @@ public class LegalDocumentController {
     @GetMapping(&quot;/privacy-policy&quot;)
     public ResponseEntity&lt;LegalDocumentResponse&gt; getPrivacyPolicy(
             @RequestParam(defaultValue = &quot;en&quot;) String language) {
-<span class="nc" id="L35">        log.info(&quot;Retrieving privacy policy in language: {}&quot;, language);</span>
-<span class="nc" id="L36">        LegalDocumentResponse response = legalDocumentService.getPublishedDocument(</span>
-<span class="nc" id="L37">            DocumentType.PRIVACY_POLICY, language);</span>
-<span class="nc" id="L38">        return ResponseEntity.ok(response);</span>
+<span class="fc" id="L35">        log.info(&quot;Retrieving privacy policy in language: {}&quot;, language);</span>
+<span class="fc" id="L36">        LegalDocumentResponse response = legalDocumentService.getPublishedDocument(</span>
+            DocumentType.PRIVACY_POLICY, language);
+<span class="fc" id="L38">        return ResponseEntity.ok(response);</span>
     }
 
     /**
@@ -45,10 +45,10 @@ public class LegalDocumentController {
     @GetMapping(&quot;/terms-of-service&quot;)
     public ResponseEntity&lt;LegalDocumentResponse&gt; getTermsOfService(
             @RequestParam(defaultValue = &quot;en&quot;) String language) {
-<span class="nc" id="L48">        log.info(&quot;Retrieving terms of service in language: {}&quot;, language);</span>
-<span class="nc" id="L49">        LegalDocumentResponse response = legalDocumentService.getPublishedDocument(</span>
-<span class="nc" id="L50">            DocumentType.TERMS_OF_SERVICE, language);</span>
-<span class="nc" id="L51">        return ResponseEntity.ok(response);</span>
+<span class="fc" id="L48">        log.info(&quot;Retrieving terms of service in language: {}&quot;, language);</span>
+<span class="fc" id="L49">        LegalDocumentResponse response = legalDocumentService.getPublishedDocument(</span>
+            DocumentType.TERMS_OF_SERVICE, language);
+<span class="fc" id="L51">        return ResponseEntity.ok(response);</span>
     }
 
     /**
@@ -65,10 +65,10 @@ public class LegalDocumentController {
         
 <span class="nc" id="L66">        DocumentType type = DocumentType.valueOf(documentType.toUpperCase());</span>
 <span class="nc" id="L67">        LegalDocumentResponse response = legalDocumentService.updateDocument(</span>
-<span class="nc" id="L68">            type,</span>
+            type,
 <span class="nc" id="L69">            request.getContent(),</span>
 <span class="nc" id="L70">            request.getIsMaterialChange(),</span>
-<span class="nc" id="L71">            null // Will be populated by security context in actual implementation</span>
+            null // Will be populated by security context in actual implementation
         );
         
 <span class="nc" id="L74">        return ResponseEntity.ok(response);</span>

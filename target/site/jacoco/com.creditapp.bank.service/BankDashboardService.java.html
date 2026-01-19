@@ -18,99 +18,99 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
-<span class="nc" id="L22">@Slf4j</span>
+<span class="fc" id="L21">@RequiredArgsConstructor</span>
+<span class="fc" id="L22">@Slf4j</span>
 public class BankDashboardService {
 
     private final OfferRepository offerRepository;
 
     public BankDashboardMetrics getDashboardMetrics(UUID bankId, String timePeriod) {
-<span class="nc" id="L28">        long startTime = System.currentTimeMillis();</span>
-<span class="nc" id="L29">        log.debug(&quot;[DASHBOARD] Calculating metrics for bank {} with period {}&quot;, bankId, timePeriod);</span>
+<span class="fc" id="L28">        long startTime = System.currentTimeMillis();</span>
+<span class="fc" id="L29">        log.debug(&quot;[DASHBOARD] Calculating metrics for bank {} with period {}&quot;, bankId, timePeriod);</span>
 
-<span class="nc" id="L31">        LocalDateTime filterStart = calculateFilterStart(timePeriod);</span>
-<span class="nc" id="L32">        LocalDateTime now = LocalDateTime.now();</span>
+<span class="fc" id="L31">        LocalDateTime filterStart = calculateFilterStart(timePeriod);</span>
+<span class="fc" id="L32">        LocalDateTime now = LocalDateTime.now();</span>
 
         // Get all offers for this bank within the time period
-<span class="nc" id="L35">        List&lt;Offer&gt; allOffers = offerRepository.findByBankIdAndCreatedAtAfter(bankId, filterStart);</span>
+<span class="fc" id="L35">        List&lt;Offer&gt; allOffers = offerRepository.findByBankIdAndCreatedAtAfter(bankId, filterStart);</span>
         
         // Count today's applications (distinct by applicationId)
-<span class="nc" id="L38">        LocalDateTime todayStart = LocalDate.now().atStartOfDay();</span>
-<span class="nc" id="L39">        long todayCount = allOffers.stream()</span>
-<span class="nc" id="L40">            .filter(o -&gt; o.getCreatedAt().isAfter(todayStart))</span>
-<span class="nc" id="L41">            .map(Offer::getApplicationId)</span>
-<span class="nc" id="L42">            .distinct()</span>
-<span class="nc" id="L43">            .count();</span>
+<span class="fc" id="L38">        LocalDateTime todayStart = LocalDate.now().atStartOfDay();</span>
+<span class="fc" id="L39">        long todayCount = allOffers.stream()</span>
+<span class="fc" id="L40">            .filter(o -&gt; o.getCreatedAt().isAfter(todayStart))</span>
+<span class="fc" id="L41">            .map(Offer::getApplicationId)</span>
+<span class="fc" id="L42">            .distinct()</span>
+<span class="fc" id="L43">            .count();</span>
 
         // Count all applications (distinct by applicationId)
-<span class="nc" id="L46">        long allCount = allOffers.stream()</span>
-<span class="nc" id="L47">            .map(Offer::getApplicationId)</span>
-<span class="nc" id="L48">            .distinct()</span>
-<span class="nc" id="L49">            .count();</span>
+<span class="fc" id="L46">        long allCount = allOffers.stream()</span>
+<span class="fc" id="L47">            .map(Offer::getApplicationId)</span>
+<span class="fc" id="L48">            .distinct()</span>
+<span class="fc" id="L49">            .count();</span>
 
         // Count submitted offers
-<span class="nc" id="L52">        long offersSubmitted = allOffers.stream()</span>
-<span class="nc bnc" id="L53" title="All 2 branches missed.">            .filter(o -&gt; o.getOfferStatus() == OfferStatus.SUBMITTED || </span>
-<span class="nc bnc" id="L54" title="All 2 branches missed.">                         o.getOfferStatus() == OfferStatus.ACCEPTED ||</span>
-<span class="nc bnc" id="L55" title="All 2 branches missed.">                         o.getOfferStatus() == OfferStatus.REJECTED ||</span>
+<span class="fc" id="L52">        long offersSubmitted = allOffers.stream()</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">            .filter(o -&gt; o.getOfferStatus() == OfferStatus.SUBMITTED || </span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">                         o.getOfferStatus() == OfferStatus.ACCEPTED ||</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">                         o.getOfferStatus() == OfferStatus.REJECTED ||</span>
 <span class="nc bnc" id="L56" title="All 2 branches missed.">                         o.getOfferStatus() == OfferStatus.EXPIRED ||</span>
-<span class="nc bnc" id="L57" title="All 2 branches missed.">                         o.getOfferStatus() == OfferStatus.EXPIRED_WITH_SELECTION)</span>
-<span class="nc" id="L58">            .count();</span>
+<span class="pc bnc" id="L57" title="All 2 branches missed.">                         o.getOfferStatus() == OfferStatus.EXPIRED_WITH_SELECTION)</span>
+<span class="fc" id="L58">            .count();</span>
 
         // Count accepted offers
-<span class="nc" id="L61">        long offersAccepted = allOffers.stream()</span>
-<span class="nc bnc" id="L62" title="All 2 branches missed.">            .filter(o -&gt; o.getOfferStatus() == OfferStatus.ACCEPTED ||</span>
-<span class="nc bnc" id="L63" title="All 2 branches missed.">                         o.getOfferStatus() == OfferStatus.EXPIRED_WITH_SELECTION)</span>
-<span class="nc" id="L64">            .count();</span>
+<span class="fc" id="L61">        long offersAccepted = allOffers.stream()</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">            .filter(o -&gt; o.getOfferStatus() == OfferStatus.ACCEPTED ||</span>
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">                         o.getOfferStatus() == OfferStatus.EXPIRED_WITH_SELECTION)</span>
+<span class="fc" id="L64">            .count();</span>
 
         // Calculate conversion rate
-<span class="nc" id="L67">        BigDecimal conversionRate = BigDecimal.ZERO;</span>
-<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (offersSubmitted &gt; 0) {</span>
-<span class="nc" id="L69">            conversionRate = BigDecimal.valueOf(offersAccepted)</span>
-<span class="nc" id="L70">                .divide(BigDecimal.valueOf(offersSubmitted), 4, RoundingMode.HALF_UP)</span>
-<span class="nc" id="L71">                .multiply(BigDecimal.valueOf(100));</span>
+<span class="fc" id="L67">        BigDecimal conversionRate = BigDecimal.ZERO;</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (offersSubmitted &gt; 0) {</span>
+<span class="fc" id="L69">            conversionRate = BigDecimal.valueOf(offersAccepted)</span>
+<span class="fc" id="L70">                .divide(BigDecimal.valueOf(offersSubmitted), 4, RoundingMode.HALF_UP)</span>
+<span class="fc" id="L71">                .multiply(BigDecimal.valueOf(100));</span>
         }
 
         // Calculate average time to offer (from application created to offer submitted)
-<span class="nc" id="L75">        int averageTimeToOfferDays = calculateAverageTimeToOffer(allOffers);</span>
+<span class="fc" id="L75">        int averageTimeToOfferDays = calculateAverageTimeToOffer(allOffers);</span>
 
-<span class="nc" id="L77">        long duration = System.currentTimeMillis() - startTime;</span>
-<span class="nc" id="L78">        log.debug(&quot;[DASHBOARD] Metrics calculated in {}ms for bank {}&quot;, duration, bankId);</span>
+<span class="fc" id="L77">        long duration = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L78">        log.debug(&quot;[DASHBOARD] Metrics calculated in {}ms for bank {}&quot;, duration, bankId);</span>
 
-<span class="nc" id="L80">        return new BankDashboardMetrics(</span>
-<span class="nc" id="L81">            (int) todayCount,</span>
-<span class="nc" id="L82">            (int) allCount,</span>
-<span class="nc" id="L83">            (int) offersSubmitted,</span>
-<span class="nc" id="L84">            (int) offersAccepted,</span>
-<span class="nc" id="L85">            conversionRate,</span>
-<span class="nc" id="L86">            averageTimeToOfferDays,</span>
-<span class="nc" id="L87">            now</span>
+<span class="fc" id="L80">        return new BankDashboardMetrics(</span>
+<span class="fc" id="L81">            (int) todayCount,</span>
+<span class="fc" id="L82">            (int) allCount,</span>
+<span class="fc" id="L83">            (int) offersSubmitted,</span>
+<span class="fc" id="L84">            (int) offersAccepted,</span>
+            conversionRate,
+<span class="fc" id="L86">            averageTimeToOfferDays,</span>
+            now
         );
     }
 
     private LocalDateTime calculateFilterStart(String timePeriod) {
-<span class="nc bnc" id="L92" title="All 4 branches missed.">        return switch (timePeriod.toUpperCase()) {</span>
-<span class="nc" id="L93">            case &quot;TODAY&quot; -&gt; LocalDate.now().atStartOfDay();</span>
-<span class="nc" id="L94">            case &quot;LAST_7_DAYS&quot; -&gt; LocalDateTime.now().minusDays(7);</span>
-<span class="nc" id="L95">            case &quot;LAST_30_DAYS&quot; -&gt; LocalDateTime.now().minusDays(30);</span>
+<span class="pc bpc" id="L92" title="1 of 4 branches missed.">        return switch (timePeriod.toUpperCase()) {</span>
+<span class="fc" id="L93">            case &quot;TODAY&quot; -&gt; LocalDate.now().atStartOfDay();</span>
+<span class="fc" id="L94">            case &quot;LAST_7_DAYS&quot; -&gt; LocalDateTime.now().minusDays(7);</span>
+<span class="fc" id="L95">            case &quot;LAST_30_DAYS&quot; -&gt; LocalDateTime.now().minusDays(30);</span>
 <span class="nc" id="L96">            default -&gt; LocalDate.now().atStartOfDay(); // Default to TODAY</span>
         };
     }
 
     private int calculateAverageTimeToOffer(List&lt;Offer&gt; offers) {
-<span class="nc" id="L101">        List&lt;Offer&gt; submittedOffers = offers.stream()</span>
-<span class="nc bnc" id="L102" title="All 2 branches missed.">            .filter(o -&gt; o.getOfferSubmittedAt() != null)</span>
-<span class="nc" id="L103">            .toList();</span>
+<span class="fc" id="L101">        List&lt;Offer&gt; submittedOffers = offers.stream()</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">            .filter(o -&gt; o.getOfferSubmittedAt() != null)</span>
+<span class="fc" id="L103">            .toList();</span>
 
-<span class="nc bnc" id="L105" title="All 2 branches missed.">        if (submittedOffers.isEmpty()) {</span>
-<span class="nc" id="L106">            return 0;</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (submittedOffers.isEmpty()) {</span>
+<span class="fc" id="L106">            return 0;</span>
         }
 
-<span class="nc" id="L109">        long totalDays = submittedOffers.stream()</span>
-<span class="nc" id="L110">            .mapToLong(o -&gt; ChronoUnit.DAYS.between(o.getCreatedAt(), o.getOfferSubmittedAt()))</span>
-<span class="nc" id="L111">            .sum();</span>
+<span class="fc" id="L109">        long totalDays = submittedOffers.stream()</span>
+<span class="fc" id="L110">            .mapToLong(o -&gt; ChronoUnit.DAYS.between(o.getCreatedAt(), o.getOfferSubmittedAt()))</span>
+<span class="fc" id="L111">            .sum();</span>
 
-<span class="nc" id="L113">        return (int) (totalDays / submittedOffers.size());</span>
+<span class="fc" id="L113">        return (int) (totalDays / submittedOffers.size());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

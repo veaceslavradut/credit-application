@@ -12,15 +12,15 @@ import java.util.UUID;
  * Service for sending notifications when offers expire.
  * Handles both borrower and bank notifications.
  */
-<span class="nc" id="L15">@Slf4j</span>
+<span class="fc" id="L15">@Slf4j</span>
 @Service
 public class OfferExpirationEmailService {
 
     private final EmailService emailService;
 
-<span class="nc" id="L21">    public OfferExpirationEmailService(EmailService emailService) {</span>
-<span class="nc" id="L22">        this.emailService = emailService;</span>
-<span class="nc" id="L23">    }</span>
+<span class="fc" id="L21">    public OfferExpirationEmailService(EmailService emailService) {</span>
+<span class="fc" id="L22">        this.emailService = emailService;</span>
+<span class="fc" id="L23">    }</span>
 
     /**
      * Send expiration notification to borrower when their selected offer expires.
@@ -52,7 +52,7 @@ public class OfferExpirationEmailService {
 <span class="nc" id="L52">        } catch (Exception e) {</span>
 <span class="nc" id="L53">            log.error(&quot;Failed to send offer expiration email to borrower. BorrowerId: {}, OfferId: {}, Error: {}&quot;,</span>
 <span class="nc" id="L54">                    borrowerId, offer.getId(), e.getMessage(), e);</span>
-        }
+<span class="nc" id="L55">        }</span>
 <span class="nc" id="L56">    }</span>
 
     /**
@@ -85,7 +85,7 @@ public class OfferExpirationEmailService {
 <span class="nc" id="L85">        } catch (Exception e) {</span>
 <span class="nc" id="L86">            log.error(&quot;Failed to send offer expiration email to bank. BankId: {}, OfferId: {}, Error: {}&quot;,</span>
 <span class="nc" id="L87">                    bankId, offer.getId(), e.getMessage(), e);</span>
-        }
+<span class="nc" id="L88">        }</span>
 <span class="nc" id="L89">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

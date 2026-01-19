@@ -1,7 +1,8 @@
 package com.creditapp.shared.service;
 
-import com.creditapp.shared.dto.LegalDocumentListDTO;
 import com.creditapp.shared.dto.LegalDocumentResponse;
+import com.creditapp.shared.dto.UpdateLegalDocumentRequest;
+import com.creditapp.shared.model.AuditAction;
 import com.creditapp.shared.model.DocumentType;
 import com.creditapp.shared.model.LegalDocument;
 import com.creditapp.shared.model.LegalStatus;
@@ -14,57 +15,64 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
- * Service for managing legal documents with versioning and audit logging
+ * Service for managing legal documents (Privacy Policy, Terms of Service)
+ * with versioning, content validation, and audit trail
  */
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class LegalDocumentService {
 
     private final LegalDocumentRepository legalDocumentRepository;
     private final AuditService auditService;
 
     /**
-     * Get the latest published legal document
+     * Retrieve the latest published legal document by type and language
      */
+    @Transactional(readOnly = true)
     public LegalDocumentResponse getPublishedDocument(DocumentType type, String language) {
-        log.info("Retrieving published {} document in language: {}", type.getDisplayName(), language);
-        
-        LegalDocument document = legalDocumentRepository
-            .findLatestPublishedByType(type, language)
+        log.debug("Retrieving published {} document in language: {}", type, language);
+
+        LegalDocument document = legalDocumentRepository.findLatestPublishedByType(type, language)
             .orElseThrow(() -> {
-                log.warn("Published {} document not found for language: {}", type.getDisplayName(), language);
-                return new RuntimeException("Document not found: " + type + " in " + language);
+                log.warn("Published {} document not found for language: {}", type, language);
+                return new RuntimeException("Document not found: " + type);
             });
-        
+
         return mapToResponse(document);
     }
 
     /**
-     * Update a legal document with versioning
+     * Update a legal document with versioning and content validation
      */
-    public LegalDocumentResponse updateDocument(DocumentType type, String content, boolean isMaterialChange, UUID updatedBy) {
-        log.info("Updating {} document. Material change: {}", type.getDisplayName(), isMaterialChange);
-        
+    @Transactional
+    public LegalDocumentResponse updateDocument(
+            DocumentType type,
+            String content,
+            boolean isMaterialChange,
+            UUID updatedBy) {
+
         // Validate content structure
         validateContentStructure(content, type);
-        
-        // Get next version
-        List<LegalDocument> existing = legalDocumentRepository.findAllByDocumentTypeOrderByVersionDesc(type);
-        int nextVersion = existing.isEmpty() ? 1 : existing.get(0).getVersion() + 1;
-        
-        // Calculate content hash for tamper detection
-        String contentHash = calculateHash(content);
-        
-        // Create new document
+
+        // Get current version
+        int nextVersion = legalDocumentRepository
+            .findAllByDocumentTypeOrderByVersionDesc(type)
+            .stream()
+            .mapToInt(LegalDocument::getVersion)
+            .max()
+            .orElse(0) + 1;
+
+        // Calculate content hash
+        String contentHash = calculateContentHash(content);
+
+        // Create new version
         LegalDocument document = LegalDocument.builder()
-            .id(UUID.randomUUID())
             .documentType(type)
             .version(nextVersion)
             .content(content)
@@ -73,115 +81,99 @@ public class LegalDocumentService {
             .status(LegalStatus.PUBLISHED)
             .updatedBy(updatedBy)
             .build();
-        
+
         LegalDocument saved = legalDocumentRepository.save(document);
-        log.info("Document updated: {} version {}", type.getDisplayName(), nextVersion);
-        
+        log.info("Document updated: {} version {}, material change: {}", 
+            type.getDisplayName(), nextVersion, isMaterialChange);
+
         // Log audit event
-        auditService.logAction("LegalDocument", saved.getId(), com.creditapp.shared.model.AuditAction.LEGAL_DOCUMENT_UPDATED);
-        
+        auditService.logAction("LegalDocument", saved.getId(), AuditAction.LEGAL_DOCUMENT_UPDATED);
+
         return mapToResponse(saved);
     }
 
     /**
-     * Get all versions of a document
+     * Retrieve all versions of a legal document
      */
+    @Transactional(readOnly = true)
     public List<LegalDocumentResponse> getAllVersions(DocumentType type) {
-        log.info("Retrieving all versions of {}", type.getDisplayName());
-        
-        List<LegalDocument> documents = legalDocumentRepository.findAllByDocumentTypeOrderByVersionDesc(type);
-        return documents.stream()
+        log.debug("Retrieving all versions of {}", type);
+
+        return legalDocumentRepository.findAllByDocumentTypeOrderByVersionDesc(type)
+            .stream()
             .map(this::mapToResponse)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     /**
-     * Get document list for all types
-     */
-    public List<LegalDocumentListDTO> getDocumentList() {
-        List<LegalDocumentListDTO> result = List.of();
-        
-        for (DocumentType type : DocumentType.values()) {
-            legalDocumentRepository
-                .findLatestPublishedByType(type, "en")
-                .ifPresent(doc -> {
-                    result.add(LegalDocumentListDTO.builder()
-                        .documentType(type)
-                        .currentVersion(doc.getVersion())
-                        .lastUpdatedAt(doc.getUpdatedAt())
-                        .build());
-                });
-        }
-        
-        return result;
-    }
-
-    /**
-     * Validate content structure for required sections
+     * Validate document content structure based on document type
+     * Privacy Policy must include: data collected, purpose, sharing, retention, rights, contact
+     * Terms of Service must include: marketplace role, obligations, liability, dispute resolution
      */
     private void validateContentStructure(String content, DocumentType type) {
-        if (content == null || content.isEmpty()) {
+        if (content == null || content.isBlank()) {
             throw new IllegalArgumentException("Content cannot be empty");
         }
-        
+
         String lowerContent = content.toLowerCase();
-        
+
         if (type == DocumentType.PRIVACY_POLICY) {
-            // Verify privacy policy includes required sections
-            if (!lowerContent.contains("data collected") && !lowerContent.contains("collected")) {
-                throw new IllegalArgumentException("Privacy policy must include 'Data Collected' section");
+            // Privacy Policy required sections
+            if (!lowerContent.contains("data collected")) {
+                throw new IllegalArgumentException("Privacy Policy must include 'Data Collected' section");
             }
             if (!lowerContent.contains("purpose")) {
-                throw new IllegalArgumentException("Privacy policy must include 'Purpose' section");
+                throw new IllegalArgumentException("Privacy Policy must include 'Purpose' section");
             }
-            if (!lowerContent.contains("retention") || !lowerContent.contains("3 year")) {
-                throw new IllegalArgumentException("Privacy policy must include '3-year Retention' policy");
+            if (!lowerContent.contains("sharing") || !lowerContent.contains("disclosure")) {
+                throw new IllegalArgumentException("Privacy Policy must include 'Sharing/Disclosure' section");
+            }
+            if (!lowerContent.contains("retention") || !lowerContent.contains("3 years")) {
+                throw new IllegalArgumentException("Privacy Policy must include 'Retention' period (3 years)");
+            }
+            if (!lowerContent.contains("rights") || !lowerContent.contains("access") || 
+                !lowerContent.contains("deletion")) {
+                throw new IllegalArgumentException("Privacy Policy must include user 'Rights' section");
             }
             if (!lowerContent.contains("contact")) {
-                throw new IllegalArgumentException("Privacy policy must include contact information");
+                throw new IllegalArgumentException("Privacy Policy must include 'Contact' information");
             }
+            log.info("Privacy Policy validation passed");
+
         } else if (type == DocumentType.TERMS_OF_SERVICE) {
-            // Verify terms includes required sections
+            // Terms of Service required sections
             if (!lowerContent.contains("marketplace")) {
-                throw new IllegalArgumentException("Terms must clarify platform role as marketplace");
+                throw new IllegalArgumentException("Terms of Service must describe platform as 'Marketplace'");
             }
-            if (!lowerContent.contains("dispute") || !lowerContent.contains("resolution")) {
-                throw new IllegalArgumentException("Terms must include dispute resolution clause");
+            if (!lowerContent.contains("obligation")) {
+                throw new IllegalArgumentException("Terms of Service must include 'Obligations' section");
             }
-            if (!lowerContent.contains("limitation") || !lowerContent.contains("liability")) {
-                throw new IllegalArgumentException("Terms must include liability limitations");
+            if (!lowerContent.contains("liability")) {
+                throw new IllegalArgumentException("Terms of Service must include 'Liability' limitations");
             }
+            if (!lowerContent.contains("dispute")) {
+                throw new IllegalArgumentException("Terms of Service must include 'Dispute Resolution' clause");
+            }
+            log.info("Terms of Service validation passed");
         }
-        
-        log.info("Content structure validated for {}", type.getDisplayName());
     }
 
     /**
-     * Calculate SHA-256 hash of content for tamper detection
+     * Calculate SHA-256 hash of document content for tamper detection
      */
-    private String calculateHash(String content) {
+    private String calculateContentHash(String content) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(content.getBytes(StandardCharsets.UTF_8));
-            StringBuilder hexString = new StringBuilder();
-            
-            for (byte b : hash) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) {
-                    hexString.append('0');
-                }
-                hexString.append(hex);
-            }
-            
-            return hexString.toString();
+            return HexFormat.of().formatHex(hash);
         } catch (NoSuchAlgorithmException e) {
-            log.error("Error calculating hash", e);
-            throw new RuntimeException("Failed to calculate content hash", e);
+            log.error("Failed to calculate content hash", e);
+            throw new RuntimeException("Hashing algorithm not available", e);
         }
     }
 
     /**
-     * Map LegalDocument to response DTO
+     * Map LegalDocument entity to LegalDocumentResponse DTO
      */
     private LegalDocumentResponse mapToResponse(LegalDocument document) {
         return LegalDocumentResponse.builder()

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LegalDocumentService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.service</a> &gt; <span class="el_source">LegalDocumentService.java</span></div><h1>LegalDocumentService.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.service;
 
-import com.creditapp.shared.dto.LegalDocumentListDTO;
 import com.creditapp.shared.dto.LegalDocumentResponse;
+import com.creditapp.shared.dto.UpdateLegalDocumentRequest;
+import com.creditapp.shared.model.AuditAction;
 import com.creditapp.shared.model.DocumentType;
 import com.creditapp.shared.model.LegalDocument;
 import com.creditapp.shared.model.LegalStatus;
@@ -14,185 +15,176 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
- * Service for managing legal documents with versioning and audit logging
+ * Service for managing legal documents (Privacy Policy, Terms of Service)
+ * with versioning, content validation, and audit trail
  */
 @Service
-@RequiredArgsConstructor
-<span class="fc" id="L26">@Slf4j</span>
-@Transactional
+<span class="fc" id="L27">@RequiredArgsConstructor</span>
+<span class="fc" id="L28">@Slf4j</span>
 public class LegalDocumentService {
 
     private final LegalDocumentRepository legalDocumentRepository;
     private final AuditService auditService;
 
     /**
-     * Get the latest published legal document
+     * Retrieve the latest published legal document by type and language
      */
+    @Transactional(readOnly = true)
     public LegalDocumentResponse getPublishedDocument(DocumentType type, String language) {
-<span class="fc" id="L37">        log.info(&quot;Retrieving published {} document in language: {}&quot;, type.getDisplayName(), language);</span>
-        
-<span class="fc" id="L39">        LegalDocument document = legalDocumentRepository</span>
-<span class="fc" id="L40">            .findLatestPublishedByType(type, language)</span>
-<span class="fc" id="L41">            .orElseThrow(() -&gt; {</span>
-<span class="fc" id="L42">                log.warn(&quot;Published {} document not found for language: {}&quot;, type.getDisplayName(), language);</span>
-<span class="fc" id="L43">                return new RuntimeException(&quot;Document not found: &quot; + type + &quot; in &quot; + language);</span>
+<span class="fc" id="L39">        log.debug(&quot;Retrieving published {} document in language: {}&quot;, type, language);</span>
+
+<span class="fc" id="L41">        LegalDocument document = legalDocumentRepository.findLatestPublishedByType(type, language)</span>
+<span class="fc" id="L42">            .orElseThrow(() -&gt; {</span>
+<span class="fc" id="L43">                log.warn(&quot;Published {} document not found for language: {}&quot;, type, language);</span>
+<span class="fc" id="L44">                return new RuntimeException(&quot;Document not found: &quot; + type);</span>
             });
-        
-<span class="fc" id="L46">        return mapToResponse(document);</span>
+
+<span class="fc" id="L47">        return mapToResponse(document);</span>
     }
 
     /**
-     * Update a legal document with versioning
+     * Update a legal document with versioning and content validation
      */
-    public LegalDocumentResponse updateDocument(DocumentType type, String content, boolean isMaterialChange, UUID updatedBy) {
-<span class="fc" id="L53">        log.info(&quot;Updating {} document. Material change: {}&quot;, type.getDisplayName(), isMaterialChange);</span>
-        
+    @Transactional
+    public LegalDocumentResponse updateDocument(
+            DocumentType type,
+            String content,
+            boolean isMaterialChange,
+            UUID updatedBy) {
+
         // Validate content structure
-<span class="fc" id="L56">        validateContentStructure(content, type);</span>
-        
-        // Get next version
-<span class="fc" id="L59">        List&lt;LegalDocument&gt; existing = legalDocumentRepository.findAllByDocumentTypeOrderByVersionDesc(type);</span>
-<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        int nextVersion = existing.isEmpty() ? 1 : existing.get(0).getVersion() + 1;</span>
-        
-        // Calculate content hash for tamper detection
-<span class="fc" id="L63">        String contentHash = calculateHash(content);</span>
-        
-        // Create new document
-<span class="fc" id="L66">        LegalDocument document = LegalDocument.builder()</span>
-<span class="fc" id="L67">            .id(UUID.randomUUID())</span>
-<span class="fc" id="L68">            .documentType(type)</span>
-<span class="fc" id="L69">            .version(nextVersion)</span>
-<span class="fc" id="L70">            .content(content)</span>
-<span class="fc" id="L71">            .contentHash(contentHash)</span>
-<span class="fc" id="L72">            .language(&quot;en&quot;)</span>
-<span class="fc" id="L73">            .status(LegalStatus.PUBLISHED)</span>
-<span class="fc" id="L74">            .updatedBy(updatedBy)</span>
-<span class="fc" id="L75">            .build();</span>
-        
-<span class="fc" id="L77">        LegalDocument saved = legalDocumentRepository.save(document);</span>
-<span class="fc" id="L78">        log.info(&quot;Document updated: {} version {}&quot;, type.getDisplayName(), nextVersion);</span>
-        
+<span class="fc" id="L61">        validateContentStructure(content, type);</span>
+
+        // Get current version
+<span class="fc" id="L64">        int nextVersion = legalDocumentRepository</span>
+<span class="fc" id="L65">            .findAllByDocumentTypeOrderByVersionDesc(type)</span>
+<span class="fc" id="L66">            .stream()</span>
+<span class="fc" id="L67">            .mapToInt(LegalDocument::getVersion)</span>
+<span class="fc" id="L68">            .max()</span>
+<span class="fc" id="L69">            .orElse(0) + 1;</span>
+
+        // Calculate content hash
+<span class="fc" id="L72">        String contentHash = calculateContentHash(content);</span>
+
+        // Create new version
+<span class="fc" id="L75">        LegalDocument document = LegalDocument.builder()</span>
+<span class="fc" id="L76">            .documentType(type)</span>
+<span class="fc" id="L77">            .version(nextVersion)</span>
+<span class="fc" id="L78">            .content(content)</span>
+<span class="fc" id="L79">            .contentHash(contentHash)</span>
+<span class="fc" id="L80">            .language(&quot;en&quot;)</span>
+<span class="fc" id="L81">            .status(LegalStatus.PUBLISHED)</span>
+<span class="fc" id="L82">            .updatedBy(updatedBy)</span>
+<span class="fc" id="L83">            .build();</span>
+
+<span class="fc" id="L85">        LegalDocument saved = legalDocumentRepository.save(document);</span>
+<span class="fc" id="L86">        log.info(&quot;Document updated: {} version {}, material change: {}&quot;, </span>
+<span class="fc" id="L87">            type.getDisplayName(), nextVersion, isMaterialChange);</span>
+
         // Log audit event
-<span class="fc" id="L81">        auditService.logAction(&quot;LegalDocument&quot;, saved.getId(), com.creditapp.shared.model.AuditAction.LEGAL_DOCUMENT_UPDATED);</span>
-        
-<span class="fc" id="L83">        return mapToResponse(saved);</span>
+<span class="fc" id="L90">        auditService.logAction(&quot;LegalDocument&quot;, saved.getId(), AuditAction.LEGAL_DOCUMENT_UPDATED);</span>
+
+<span class="fc" id="L92">        return mapToResponse(saved);</span>
     }
 
     /**
-     * Get all versions of a document
+     * Retrieve all versions of a legal document
      */
+    @Transactional(readOnly = true)
     public List&lt;LegalDocumentResponse&gt; getAllVersions(DocumentType type) {
-<span class="fc" id="L90">        log.info(&quot;Retrieving all versions of {}&quot;, type.getDisplayName());</span>
-        
-<span class="fc" id="L92">        List&lt;LegalDocument&gt; documents = legalDocumentRepository.findAllByDocumentTypeOrderByVersionDesc(type);</span>
-<span class="fc" id="L93">        return documents.stream()</span>
-<span class="fc" id="L94">            .map(this::mapToResponse)</span>
-<span class="fc" id="L95">            .collect(Collectors.toList());</span>
+<span class="fc" id="L100">        log.debug(&quot;Retrieving all versions of {}&quot;, type);</span>
+
+<span class="fc" id="L102">        return legalDocumentRepository.findAllByDocumentTypeOrderByVersionDesc(type)</span>
+<span class="fc" id="L103">            .stream()</span>
+<span class="fc" id="L104">            .map(this::mapToResponse)</span>
+<span class="fc" id="L105">            .toList();</span>
     }
 
     /**
-     * Get document list for all types
-     */
-    public List&lt;LegalDocumentListDTO&gt; getDocumentList() {
-<span class="nc" id="L102">        List&lt;LegalDocumentListDTO&gt; result = List.of();</span>
-        
-<span class="nc bnc" id="L104" title="All 2 branches missed.">        for (DocumentType type : DocumentType.values()) {</span>
-<span class="nc" id="L105">            legalDocumentRepository</span>
-<span class="nc" id="L106">                .findLatestPublishedByType(type, &quot;en&quot;)</span>
-<span class="nc" id="L107">                .ifPresent(doc -&gt; {</span>
-<span class="nc" id="L108">                    result.add(LegalDocumentListDTO.builder()</span>
-<span class="nc" id="L109">                        .documentType(type)</span>
-<span class="nc" id="L110">                        .currentVersion(doc.getVersion())</span>
-<span class="nc" id="L111">                        .lastUpdatedAt(doc.getUpdatedAt())</span>
-<span class="nc" id="L112">                        .build());</span>
-<span class="nc" id="L113">                });</span>
-        }
-        
-<span class="nc" id="L116">        return result;</span>
-    }
-
-    /**
-     * Validate content structure for required sections
+     * Validate document content structure based on document type
+     * Privacy Policy must include: data collected, purpose, sharing, retention, rights, contact
+     * Terms of Service must include: marketplace role, obligations, liability, dispute resolution
      */
     private void validateContentStructure(String content, DocumentType type) {
-<span class="pc bpc" id="L123" title="2 of 4 branches missed.">        if (content == null || content.isEmpty()) {</span>
-<span class="nc" id="L124">            throw new IllegalArgumentException(&quot;Content cannot be empty&quot;);</span>
+<span class="pc bpc" id="L114" title="1 of 4 branches missed.">        if (content == null || content.isBlank()) {</span>
+<span class="fc" id="L115">            throw new IllegalArgumentException(&quot;Content cannot be empty&quot;);</span>
         }
-        
-<span class="fc" id="L127">        String lowerContent = content.toLowerCase();</span>
-        
-<span class="fc bfc" id="L129" title="All 2 branches covered.">        if (type == DocumentType.PRIVACY_POLICY) {</span>
-            // Verify privacy policy includes required sections
-<span class="pc bpc" id="L131" title="1 of 4 branches missed.">            if (!lowerContent.contains(&quot;data collected&quot;) &amp;&amp; !lowerContent.contains(&quot;collected&quot;)) {</span>
-<span class="fc" id="L132">                throw new IllegalArgumentException(&quot;Privacy policy must include 'Data Collected' section&quot;);</span>
+
+<span class="fc" id="L118">        String lowerContent = content.toLowerCase();</span>
+
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (type == DocumentType.PRIVACY_POLICY) {</span>
+            // Privacy Policy required sections
+<span class="fc bfc" id="L122" title="All 2 branches covered.">            if (!lowerContent.contains(&quot;data collected&quot;)) {</span>
+<span class="fc" id="L123">                throw new IllegalArgumentException(&quot;Privacy Policy must include 'Data Collected' section&quot;);</span>
             }
-<span class="pc bpc" id="L134" title="1 of 2 branches missed.">            if (!lowerContent.contains(&quot;purpose&quot;)) {</span>
-<span class="nc" id="L135">                throw new IllegalArgumentException(&quot;Privacy policy must include 'Purpose' section&quot;);</span>
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">            if (!lowerContent.contains(&quot;purpose&quot;)) {</span>
+<span class="nc" id="L126">                throw new IllegalArgumentException(&quot;Privacy Policy must include 'Purpose' section&quot;);</span>
             }
-<span class="pc bpc" id="L137" title="1 of 4 branches missed.">            if (!lowerContent.contains(&quot;retention&quot;) || !lowerContent.contains(&quot;3 year&quot;)) {</span>
-<span class="fc" id="L138">                throw new IllegalArgumentException(&quot;Privacy policy must include '3-year Retention' policy&quot;);</span>
+<span class="pc bpc" id="L128" title="1 of 4 branches missed.">            if (!lowerContent.contains(&quot;sharing&quot;) || !lowerContent.contains(&quot;disclosure&quot;)) {</span>
+<span class="fc" id="L129">                throw new IllegalArgumentException(&quot;Privacy Policy must include 'Sharing/Disclosure' section&quot;);</span>
             }
-<span class="pc bpc" id="L140" title="1 of 2 branches missed.">            if (!lowerContent.contains(&quot;contact&quot;)) {</span>
-<span class="nc" id="L141">                throw new IllegalArgumentException(&quot;Privacy policy must include contact information&quot;);</span>
+<span class="pc bpc" id="L131" title="1 of 4 branches missed.">            if (!lowerContent.contains(&quot;retention&quot;) || !lowerContent.contains(&quot;3 years&quot;)) {</span>
+<span class="fc" id="L132">                throw new IllegalArgumentException(&quot;Privacy Policy must include 'Retention' period (3 years)&quot;);</span>
             }
+<span class="pc bpc" id="L134" title="2 of 4 branches missed.">            if (!lowerContent.contains(&quot;rights&quot;) || !lowerContent.contains(&quot;access&quot;) || </span>
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">                !lowerContent.contains(&quot;deletion&quot;)) {</span>
+<span class="nc" id="L136">                throw new IllegalArgumentException(&quot;Privacy Policy must include user 'Rights' section&quot;);</span>
+            }
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">            if (!lowerContent.contains(&quot;contact&quot;)) {</span>
+<span class="nc" id="L139">                throw new IllegalArgumentException(&quot;Privacy Policy must include 'Contact' information&quot;);</span>
+            }
+<span class="fc" id="L141">            log.info(&quot;Privacy Policy validation passed&quot;);</span>
+
 <span class="pc bpc" id="L143" title="1 of 2 branches missed.">        } else if (type == DocumentType.TERMS_OF_SERVICE) {</span>
-            // Verify terms includes required sections
-<span class="pc bpc" id="L145" title="1 of 2 branches missed.">            if (!lowerContent.contains(&quot;marketplace&quot;)) {</span>
-<span class="nc" id="L146">                throw new IllegalArgumentException(&quot;Terms must clarify platform role as marketplace&quot;);</span>
+            // Terms of Service required sections
+<span class="fc bfc" id="L145" title="All 2 branches covered.">            if (!lowerContent.contains(&quot;marketplace&quot;)) {</span>
+<span class="fc" id="L146">                throw new IllegalArgumentException(&quot;Terms of Service must describe platform as 'Marketplace'&quot;);</span>
             }
-<span class="pc bpc" id="L148" title="3 of 4 branches missed.">            if (!lowerContent.contains(&quot;dispute&quot;) || !lowerContent.contains(&quot;resolution&quot;)) {</span>
-<span class="fc" id="L149">                throw new IllegalArgumentException(&quot;Terms must include dispute resolution clause&quot;);</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">            if (!lowerContent.contains(&quot;obligation&quot;)) {</span>
+<span class="fc" id="L149">                throw new IllegalArgumentException(&quot;Terms of Service must include 'Obligations' section&quot;);</span>
             }
-<span class="nc bnc" id="L151" title="All 4 branches missed.">            if (!lowerContent.contains(&quot;limitation&quot;) || !lowerContent.contains(&quot;liability&quot;)) {</span>
-<span class="nc" id="L152">                throw new IllegalArgumentException(&quot;Terms must include liability limitations&quot;);</span>
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">            if (!lowerContent.contains(&quot;liability&quot;)) {</span>
+<span class="nc" id="L152">                throw new IllegalArgumentException(&quot;Terms of Service must include 'Liability' limitations&quot;);</span>
             }
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">            if (!lowerContent.contains(&quot;dispute&quot;)) {</span>
+<span class="nc" id="L155">                throw new IllegalArgumentException(&quot;Terms of Service must include 'Dispute Resolution' clause&quot;);</span>
+            }
+<span class="fc" id="L157">            log.info(&quot;Terms of Service validation passed&quot;);</span>
         }
-        
-<span class="fc" id="L156">        log.info(&quot;Content structure validated for {}&quot;, type.getDisplayName());</span>
-<span class="fc" id="L157">    }</span>
+<span class="fc" id="L159">    }</span>
 
     /**
-     * Calculate SHA-256 hash of content for tamper detection
+     * Calculate SHA-256 hash of document content for tamper detection
      */
-    private String calculateHash(String content) {
+    private String calculateContentHash(String content) {
         try {
-<span class="fc" id="L164">            MessageDigest digest = MessageDigest.getInstance(&quot;SHA-256&quot;);</span>
-<span class="fc" id="L165">            byte[] hash = digest.digest(content.getBytes(StandardCharsets.UTF_8));</span>
-<span class="fc" id="L166">            StringBuilder hexString = new StringBuilder();</span>
-            
-<span class="fc bfc" id="L168" title="All 2 branches covered.">            for (byte b : hash) {</span>
-<span class="fc" id="L169">                String hex = Integer.toHexString(0xff &amp; b);</span>
-<span class="fc bfc" id="L170" title="All 2 branches covered.">                if (hex.length() == 1) {</span>
-<span class="fc" id="L171">                    hexString.append('0');</span>
-                }
-<span class="fc" id="L173">                hexString.append(hex);</span>
-            }
-            
-<span class="fc" id="L176">            return hexString.toString();</span>
-<span class="nc" id="L177">        } catch (NoSuchAlgorithmException e) {</span>
-<span class="nc" id="L178">            log.error(&quot;Error calculating hash&quot;, e);</span>
-<span class="nc" id="L179">            throw new RuntimeException(&quot;Failed to calculate content hash&quot;, e);</span>
+<span class="fc" id="L166">            MessageDigest digest = MessageDigest.getInstance(&quot;SHA-256&quot;);</span>
+<span class="fc" id="L167">            byte[] hash = digest.digest(content.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L168">            return HexFormat.of().formatHex(hash);</span>
+<span class="nc" id="L169">        } catch (NoSuchAlgorithmException e) {</span>
+<span class="nc" id="L170">            log.error(&quot;Failed to calculate content hash&quot;, e);</span>
+<span class="nc" id="L171">            throw new RuntimeException(&quot;Hashing algorithm not available&quot;, e);</span>
         }
     }
 
     /**
-     * Map LegalDocument to response DTO
+     * Map LegalDocument entity to LegalDocumentResponse DTO
      */
     private LegalDocumentResponse mapToResponse(LegalDocument document) {
-<span class="fc" id="L187">        return LegalDocumentResponse.builder()</span>
-<span class="fc" id="L188">            .id(document.getId())</span>
-<span class="fc" id="L189">            .documentType(document.getDocumentType())</span>
-<span class="fc" id="L190">            .version(document.getVersion())</span>
-<span class="fc" id="L191">            .content(document.getContent())</span>
-<span class="fc" id="L192">            .language(document.getLanguage())</span>
-<span class="fc" id="L193">            .publishedAt(document.getUpdatedAt())</span>
-<span class="fc" id="L194">            .contentHash(document.getContentHash())</span>
-<span class="fc" id="L195">            .build();</span>
+<span class="fc" id="L179">        return LegalDocumentResponse.builder()</span>
+<span class="fc" id="L180">            .id(document.getId())</span>
+<span class="fc" id="L181">            .documentType(document.getDocumentType())</span>
+<span class="fc" id="L182">            .version(document.getVersion())</span>
+<span class="fc" id="L183">            .content(document.getContent())</span>
+<span class="fc" id="L184">            .language(document.getLanguage())</span>
+<span class="fc" id="L185">            .publishedAt(document.getUpdatedAt())</span>
+<span class="fc" id="L186">            .contentHash(document.getContentHash())</span>
+<span class="fc" id="L187">            .build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

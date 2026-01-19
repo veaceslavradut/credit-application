@@ -32,7 +32,7 @@ public class TestSecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/api/health/**", "/api/help/**", "/api/borrower/scenario-calculator", "/actuator/**").permitAll()
+                .requestMatchers("/api/auth/**", "/api/health/**", "/api/help/**", "/api/borrower/scenario-calculator", "/api/legal/privacy-policy", "/api/legal/terms-of-service", "/actuator/**").permitAll()
                 .anyRequest().authenticated()
             )
             .exceptionHandling(ex -> ex

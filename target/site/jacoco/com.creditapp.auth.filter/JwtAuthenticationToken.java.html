@@ -13,33 +13,33 @@ public class JwtAuthenticationToken implements Authentication {
     private final UUID organizationId;
 
     public JwtAuthenticationToken(UUID userId, String email, Collection&lt;GrantedAuthority&gt; authorities) {
-<span class="nc" id="L16">        this(userId, email, authorities, null);</span>
-<span class="nc" id="L17">    }</span>
+<span class="fc" id="L16">        this(userId, email, authorities, null);</span>
+<span class="fc" id="L17">    }</span>
 
-<span class="nc" id="L19">    public JwtAuthenticationToken(UUID userId, String email, Collection&lt;GrantedAuthority&gt; authorities, UUID organizationId) {</span>
-<span class="nc" id="L20">        this.userId = userId;</span>
-<span class="nc" id="L21">        this.email = email;</span>
-<span class="nc" id="L22">        this.authorities = authorities;</span>
-<span class="nc" id="L23">        this.organizationId = organizationId;</span>
-<span class="nc" id="L24">    }</span>
+<span class="fc" id="L19">    public JwtAuthenticationToken(UUID userId, String email, Collection&lt;GrantedAuthority&gt; authorities, UUID organizationId) {</span>
+<span class="fc" id="L20">        this.userId = userId;</span>
+<span class="fc" id="L21">        this.email = email;</span>
+<span class="fc" id="L22">        this.authorities = authorities;</span>
+<span class="fc" id="L23">        this.organizationId = organizationId;</span>
+<span class="fc" id="L24">    }</span>
 
     @Override
-<span class="nc" id="L27">    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() { return authorities; }</span>
+<span class="fc" id="L27">    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() { return authorities; }</span>
     @Override
 <span class="nc" id="L29">    public Object getCredentials() { return null; }</span>
     @Override
 <span class="nc" id="L31">    public Object getDetails() { return null; }</span>
     @Override
-<span class="nc" id="L33">    public Object getPrincipal() { return email; }</span>
+<span class="fc" id="L33">    public Object getPrincipal() { return email; }</span>
     @Override
-<span class="nc" id="L35">    public boolean isAuthenticated() { return true; }</span>
+<span class="fc" id="L35">    public boolean isAuthenticated() { return true; }</span>
     @Override
 <span class="nc" id="L37">    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException { }</span>
     @Override
-<span class="nc" id="L39">    public String getName() { return email; }</span>
+<span class="fc" id="L39">    public String getName() { return email; }</span>
 
-<span class="nc" id="L41">    public UUID getUserId() { return userId; }</span>
-<span class="nc" id="L42">    public String getEmail() { return email; }</span>
-<span class="nc" id="L43">    public UUID getOrganizationId() { return organizationId; }</span>
+<span class="fc" id="L41">    public UUID getUserId() { return userId; }</span>
+<span class="fc" id="L42">    public String getEmail() { return email; }</span>
+<span class="fc" id="L43">    public UUID getOrganizationId() { return organizationId; }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

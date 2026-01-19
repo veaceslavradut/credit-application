@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
  * Service for managing document uploads for loan applications.
  */
 @Service
-@RequiredArgsConstructor
-<span class="nc" id="L32">@Slf4j</span>
+<span class="fc" id="L31">@RequiredArgsConstructor</span>
+<span class="fc" id="L32">@Slf4j</span>
 public class ApplicationDocumentService {
 
     private final ApplicationRepository applicationRepository;
@@ -41,14 +41,14 @@ public class ApplicationDocumentService {
     private static final long MAX_TOTAL_SIZE = 50 * 1024 * 1024; // 50 MB
 
     // Allowed MIME types
-<span class="nc" id="L44">    private static final Set&lt;String&gt; ALLOWED_MIME_TYPES = Set.of(</span>
-<span class="nc" id="L45">            &quot;application/pdf&quot;,</span>
-<span class="nc" id="L46">            &quot;image/jpeg&quot;,</span>
-<span class="nc" id="L47">            &quot;image/jpg&quot;,</span>
-<span class="nc" id="L48">            &quot;image/png&quot;,</span>
-<span class="nc" id="L49">            &quot;application/msword&quot;,</span>
-<span class="nc" id="L50">            &quot;application/vnd.openxmlformats-officedocument.wordprocessingml.document&quot;</span>
-<span class="nc" id="L51">    );</span>
+<span class="fc" id="L44">    private static final Set&lt;String&gt; ALLOWED_MIME_TYPES = Set.of(</span>
+            &quot;application/pdf&quot;,
+            &quot;image/jpeg&quot;,
+            &quot;image/jpg&quot;,
+            &quot;image/png&quot;,
+            &quot;application/msword&quot;,
+            &quot;application/vnd.openxmlformats-officedocument.wordprocessingml.document&quot;
+    );
 
     /**
      * Upload a document to an application.
@@ -91,7 +91,7 @@ public class ApplicationDocumentService {
 <span class="nc" id="L91">            storageService.storeFile(file.getInputStream(), storedFilename, file.getContentType());</span>
 <span class="nc" id="L92">        } catch (IOException e) {</span>
 <span class="nc" id="L93">            throw new DocumentStorageException(&quot;Failed to read file content&quot;, e);</span>
-        }
+<span class="nc" id="L94">        }</span>
 
         // Create document entity
 <span class="nc" id="L97">        ApplicationDocument document = ApplicationDocument.builder()</span>
@@ -187,7 +187,7 @@ public class ApplicationDocumentService {
 <span class="nc" id="L187">        String mimeType = file.getContentType();</span>
 <span class="nc bnc" id="L188" title="All 4 branches missed.">        if (mimeType == null || !ALLOWED_MIME_TYPES.contains(mimeType.toLowerCase())) {</span>
 <span class="nc" id="L189">            throw new InvalidDocumentException(</span>
-<span class="nc" id="L190">                    &quot;Invalid file type. Allowed types: PDF, JPG, PNG, DOC, DOCX&quot;);</span>
+                    &quot;Invalid file type. Allowed types: PDF, JPG, PNG, DOC, DOCX&quot;);
         }
 <span class="nc" id="L192">    }</span>
 

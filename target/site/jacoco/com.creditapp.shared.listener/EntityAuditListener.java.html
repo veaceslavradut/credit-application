@@ -13,15 +13,15 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
-<span class="nc" id="L16">@Slf4j</span>
+<span class="fc" id="L16">@Slf4j</span>
 @Component
-<span class="nc" id="L18">public class EntityAuditListener {</span>
-<span class="nc" id="L19">    private static AuditService auditService;</span>
+<span class="fc" id="L18">public class EntityAuditListener {</span>
+    private static AuditService auditService;
 
     @Autowired
     public void setAuditService(AuditService auditService) {
-<span class="nc" id="L23">        EntityAuditListener.auditService = auditService;</span>
-<span class="nc" id="L24">    }</span>
+<span class="fc" id="L23">        EntityAuditListener.auditService = auditService;</span>
+<span class="fc" id="L24">    }</span>
 
     @PostPersist
     public void onUserCreate(User user) {
@@ -38,7 +38,7 @@ import java.util.Map;
 <span class="nc" id="L38">            log.debug(&quot;User creation audited: {}&quot;, user.getId());</span>
 <span class="nc" id="L39">        } catch (Exception e) {</span>
 <span class="nc" id="L40">            log.error(&quot;Failed to audit user creation&quot;, e);</span>
-        }
+<span class="nc" id="L41">        }</span>
 <span class="nc" id="L42">    }</span>
 
     @PostUpdate
@@ -53,7 +53,7 @@ import java.util.Map;
 <span class="nc" id="L53">            log.debug(&quot;User update audited: {}&quot;, user.getId());</span>
 <span class="nc" id="L54">        } catch (Exception e) {</span>
 <span class="nc" id="L55">            log.error(&quot;Failed to audit user update&quot;, e);</span>
-        }
+<span class="nc" id="L56">        }</span>
 <span class="nc" id="L57">    }</span>
 
     @PostPersist
@@ -69,7 +69,7 @@ import java.util.Map;
 <span class="nc" id="L69">            log.debug(&quot;Organization creation audited: {}&quot;, org.getId());</span>
 <span class="nc" id="L70">        } catch (Exception e) {</span>
 <span class="nc" id="L71">            log.error(&quot;Failed to audit organization creation&quot;, e);</span>
-        }
+<span class="nc" id="L72">        }</span>
 <span class="nc" id="L73">    }</span>
 
     @PostUpdate
@@ -84,7 +84,7 @@ import java.util.Map;
 <span class="nc" id="L84">            log.debug(&quot;Organization update audited: {}&quot;, org.getId());</span>
 <span class="nc" id="L85">        } catch (Exception e) {</span>
 <span class="nc" id="L86">            log.error(&quot;Failed to audit organization update&quot;, e);</span>
-        }
+<span class="nc" id="L87">        }</span>
 <span class="nc" id="L88">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
-<span class="nc" id="L13">@Slf4j</span>
+<span class="fc" id="L12">@RequiredArgsConstructor</span>
+<span class="fc" id="L13">@Slf4j</span>
 public class ApplicationQueueNotificationService {
 
     private final ApplicationQueueWebSocketHandler webSocketHandler;
@@ -24,7 +24,7 @@ public class ApplicationQueueNotificationService {
 <span class="nc" id="L24">            log.info(&quot;[QUEUE_NOTIFY] Notified bank {} about new application {}&quot;, bankId, item.getApplicationId());</span>
 <span class="nc" id="L25">        } catch (Exception e) {</span>
 <span class="nc" id="L26">            log.error(&quot;[QUEUE_NOTIFY] Failed to notify about new application&quot;, e);</span>
-        }
+<span class="nc" id="L27">        }</span>
 <span class="nc" id="L28">    }</span>
 
     /**
@@ -35,13 +35,13 @@ public class ApplicationQueueNotificationService {
 <span class="nc" id="L35">            webSocketHandler.broadcastStatusChange(</span>
 <span class="nc" id="L36">                bankId.toString(),</span>
 <span class="nc" id="L37">                applicationId.toString(),</span>
-<span class="nc" id="L38">                oldStatus,</span>
-<span class="nc" id="L39">                newStatus</span>
+                oldStatus,
+                newStatus
             );
 <span class="nc" id="L41">            log.info(&quot;[QUEUE_NOTIFY] Notified bank {} about status change for app {}&quot;, bankId, applicationId);</span>
 <span class="nc" id="L42">        } catch (Exception e) {</span>
 <span class="nc" id="L43">            log.error(&quot;[QUEUE_NOTIFY] Failed to notify about status change&quot;, e);</span>
-        }
+<span class="nc" id="L44">        }</span>
 <span class="nc" id="L45">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

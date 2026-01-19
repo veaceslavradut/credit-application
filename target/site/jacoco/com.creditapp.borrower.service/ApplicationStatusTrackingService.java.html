@@ -20,22 +20,22 @@ import java.util.UUID;
  * Service for tracking and retrieving application status history.
  */
 @Service
-@RequiredArgsConstructor
-<span class="nc" id="L24">@Slf4j</span>
+<span class="fc" id="L23">@RequiredArgsConstructor</span>
+<span class="fc" id="L24">@Slf4j</span>
 public class ApplicationStatusTrackingService {
 
     private final ApplicationRepository applicationRepository;
     private final ApplicationHistoryRepository applicationHistoryRepository;
 
     // Define the expected workflow progression for percentage calculation
-<span class="nc" id="L31">    private static final List&lt;ApplicationStatus&gt; WORKFLOW_PROGRESSION = List.of(</span>
-<span class="nc" id="L32">            ApplicationStatus.DRAFT,</span>
-<span class="nc" id="L33">            ApplicationStatus.SUBMITTED,</span>
-<span class="nc" id="L34">            ApplicationStatus.UNDER_REVIEW,</span>
-<span class="nc" id="L35">            ApplicationStatus.OFFERS_AVAILABLE,</span>
-<span class="nc" id="L36">            ApplicationStatus.ACCEPTED,</span>
-<span class="nc" id="L37">            ApplicationStatus.COMPLETED</span>
-<span class="nc" id="L38">    );</span>
+<span class="fc" id="L31">    private static final List&lt;ApplicationStatus&gt; WORKFLOW_PROGRESSION = List.of(</span>
+            ApplicationStatus.DRAFT,
+            ApplicationStatus.SUBMITTED,
+            ApplicationStatus.UNDER_REVIEW,
+            ApplicationStatus.OFFERS_AVAILABLE,
+            ApplicationStatus.ACCEPTED,
+            ApplicationStatus.COMPLETED
+    );
 
     /**
      * Get application status and full history timeline.
@@ -47,50 +47,50 @@ public class ApplicationStatusTrackingService {
      */
     public ApplicationStatusDTO getApplicationStatus(UUID applicationId, UUID borrowerId) {
         // Fetch application with access control
-<span class="nc" id="L50">        Application application = applicationRepository.findById(applicationId)</span>
-<span class="nc" id="L51">                .orElseThrow(() -&gt; new ApplicationNotFoundException(</span>
-<span class="nc" id="L52">                        &quot;Application not found: &quot; + applicationId</span>
-<span class="nc" id="L53">                ));</span>
+<span class="fc" id="L50">        Application application = applicationRepository.findById(applicationId)</span>
+<span class="pc" id="L51">                .orElseThrow(() -&gt; new ApplicationNotFoundException(</span>
+                        &quot;Application not found: &quot; + applicationId
+                ));
 
         // Verify borrower owns this application
-<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
-<span class="nc" id="L57">            throw new ApplicationNotFoundException(</span>
-<span class="nc" id="L58">                    &quot;Application not found: &quot; + applicationId</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
+<span class="fc" id="L57">            throw new ApplicationNotFoundException(</span>
+                    &quot;Application not found: &quot; + applicationId
             );
         }
 
         // Fetch status history (ordered by changedAt DESC)
-<span class="nc" id="L63">        List&lt;ApplicationHistory&gt; histories = applicationHistoryRepository</span>
-<span class="nc" id="L64">                .findByApplicationIdOrderByChangedAtDesc(applicationId);</span>
+<span class="fc" id="L63">        List&lt;ApplicationHistory&gt; histories = applicationHistoryRepository</span>
+<span class="fc" id="L64">                .findByApplicationIdOrderByChangedAtDesc(applicationId);</span>
 
         // Build status transitions
-<span class="nc" id="L67">        List&lt;StatusTransitionDTO&gt; statusHistory = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L68" title="All 2 branches missed.">        for (ApplicationHistory history : histories) {</span>
-<span class="nc" id="L69">            StatusTransitionDTO dto = StatusTransitionDTO.builder()</span>
-<span class="nc" id="L70">                    .oldStatus(history.getOldStatus())</span>
-<span class="nc" id="L71">                    .newStatus(history.getNewStatus())</span>
-<span class="nc" id="L72">                    .changedAt(history.getChangedAt())</span>
-<span class="nc" id="L73">                    .changedByUserId(history.getChangedByUserId())</span>
-<span class="nc" id="L74">                    .changedByName(extractUserName(history))</span>
-<span class="nc" id="L75">                    .reason(history.getChangeReason())</span>
-<span class="nc" id="L76">                    .build();</span>
-<span class="nc" id="L77">            statusHistory.add(dto);</span>
-        }
+<span class="fc" id="L67">        List&lt;StatusTransitionDTO&gt; statusHistory = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        for (ApplicationHistory history : histories) {</span>
+<span class="fc" id="L69">            StatusTransitionDTO dto = StatusTransitionDTO.builder()</span>
+<span class="fc" id="L70">                    .oldStatus(history.getOldStatus())</span>
+<span class="fc" id="L71">                    .newStatus(history.getNewStatus())</span>
+<span class="fc" id="L72">                    .changedAt(history.getChangedAt())</span>
+<span class="fc" id="L73">                    .changedByUserId(history.getChangedByUserId())</span>
+<span class="fc" id="L74">                    .changedByName(extractUserName(history))</span>
+<span class="fc" id="L75">                    .reason(history.getChangeReason())</span>
+<span class="fc" id="L76">                    .build();</span>
+<span class="fc" id="L77">            statusHistory.add(dto);</span>
+<span class="fc" id="L78">        }</span>
 
         // Calculate progression percentage based on workflow
-<span class="nc" id="L81">        int progressionPercentage = calculateProgressionPercentage(application.getStatus());</span>
+<span class="fc" id="L81">        int progressionPercentage = calculateProgressionPercentage(application.getStatus());</span>
 
-<span class="nc" id="L83">        log.info(&quot;Retrieved status for application {}: {} (progression: {}%)&quot;,</span>
-<span class="nc" id="L84">                applicationId, application.getStatus(), progressionPercentage);</span>
+<span class="fc" id="L83">        log.info(&quot;Retrieved status for application {}: {} (progression: {}%)&quot;,</span>
+<span class="fc" id="L84">                applicationId, application.getStatus(), progressionPercentage);</span>
 
-<span class="nc" id="L86">        return ApplicationStatusDTO.builder()</span>
-<span class="nc" id="L87">                .applicationId(applicationId)</span>
-<span class="nc" id="L88">                .currentStatus(application.getStatus())</span>
-<span class="nc" id="L89">                .submittedAt(application.getSubmittedAt())</span>
-<span class="nc" id="L90">                .createdAt(application.getCreatedAt())</span>
-<span class="nc" id="L91">                .statusHistory(statusHistory)</span>
-<span class="nc" id="L92">                .progressionPercentage(progressionPercentage)</span>
-<span class="nc" id="L93">                .build();</span>
+<span class="fc" id="L86">        return ApplicationStatusDTO.builder()</span>
+<span class="fc" id="L87">                .applicationId(applicationId)</span>
+<span class="fc" id="L88">                .currentStatus(application.getStatus())</span>
+<span class="fc" id="L89">                .submittedAt(application.getSubmittedAt())</span>
+<span class="fc" id="L90">                .createdAt(application.getCreatedAt())</span>
+<span class="fc" id="L91">                .statusHistory(statusHistory)</span>
+<span class="fc" id="L92">                .progressionPercentage(progressionPercentage)</span>
+<span class="fc" id="L93">                .build();</span>
     }
 
     /**
@@ -101,12 +101,12 @@ public class ApplicationStatusTrackingService {
      * @return progression percentage (0-100)
      */
     private int calculateProgressionPercentage(ApplicationStatus status) {
-<span class="nc" id="L104">        int index = WORKFLOW_PROGRESSION.indexOf(status);</span>
-<span class="nc bnc" id="L105" title="All 2 branches missed.">        if (index &lt; 0) {</span>
+<span class="fc" id="L104">        int index = WORKFLOW_PROGRESSION.indexOf(status);</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">        if (index &lt; 0) {</span>
             // Status not in main workflow (e.g., REJECTED, WITHDRAWN, EXPIRED)
 <span class="nc" id="L107">            return 50; // Default to 50% for terminal states</span>
         }
-<span class="nc" id="L109">        return (int) Math.round((index + 1) / (double) WORKFLOW_PROGRESSION.size() * 100);</span>
+<span class="fc" id="L109">        return (int) Math.round((index + 1) / (double) WORKFLOW_PROGRESSION.size() * 100);</span>
     }
 
     /**
@@ -116,11 +116,11 @@ public class ApplicationStatusTrackingService {
      * @return formatted user name or &quot;System&quot; if no user ID
      */
     private String extractUserName(ApplicationHistory history) {
-<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (history.getChangedByUserId() == null) {</span>
-<span class="nc" id="L120">            return &quot;System&quot;;</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        if (history.getChangedByUserId() == null) {</span>
+<span class="fc" id="L120">            return &quot;System&quot;;</span>
         }
         // In future, could fetch user details from database
-<span class="nc" id="L123">        return &quot;User &quot; + history.getChangedByUserId().toString().substring(0, 8);</span>
+<span class="fc" id="L123">        return &quot;User &quot; + history.getChangedByUserId().toString().substring(0, 8);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

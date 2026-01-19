@@ -4,9 +4,9 @@ public class ApplicationStaleException extends RuntimeException {
     private final Long currentVersion;
 
     public ApplicationStaleException(String message, Long currentVersion) {
-<span class="nc" id="L7">        super(message);</span>
-<span class="nc" id="L8">        this.currentVersion = currentVersion;</span>
-<span class="nc" id="L9">    }</span>
+<span class="fc" id="L7">        super(message);</span>
+<span class="fc" id="L8">        this.currentVersion = currentVersion;</span>
+<span class="fc" id="L9">    }</span>
 
     public Long getCurrentVersion() {
 <span class="nc" id="L12">        return currentVersion;</span>

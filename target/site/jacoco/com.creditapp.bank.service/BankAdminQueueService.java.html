@@ -30,14 +30,14 @@ import org.springframework.stereotype.Service;
  * Provides paginated, filtered, searchable view of applications for bank admins
  */
 @Service
-@RequiredArgsConstructor
-<span class="nc" id="L34">@Slf4j</span>
+<span class="fc" id="L33">@RequiredArgsConstructor</span>
+<span class="fc" id="L34">@Slf4j</span>
 public class BankAdminQueueService {
 
     private final OfferRepository offerRepository;
     private final ApplicationRepository applicationRepository;
 
-<span class="nc" id="L40">    private static final int PAGE_SIZE = 20;</span>
+    private static final int PAGE_SIZE = 20;
 
     public ApplicationQueueResponse getApplicationQueue(
         UUID bankId,
@@ -53,110 +53,110 @@ public class BankAdminQueueService {
         String searchBorrowerEmail,
         String searchBorrowerName
     ) {
-<span class="nc" id="L56">        long startTime = System.currentTimeMillis();</span>
-<span class="nc" id="L57">        log.debug(&quot;[BANK_ADMIN_QUEUE] Starting queue retrieval for bankId={}&quot;, bankId);</span>
+<span class="fc" id="L56">        long startTime = System.currentTimeMillis();</span>
+<span class="fc" id="L57">        log.debug(&quot;[BANK_ADMIN_QUEUE] Starting queue retrieval for bankId={}&quot;, bankId);</span>
 
         // Get all offers from this bank
-<span class="nc" id="L60">        List&lt;Offer&gt; allOffers = offerRepository.findByBankId(bankId, Pageable.unpaged()).getContent();</span>
+<span class="fc" id="L60">        List&lt;Offer&gt; allOffers = offerRepository.findByBankId(bankId, Pageable.unpaged()).getContent();</span>
         
         // Get unique application IDs
-<span class="nc" id="L63">        Set&lt;UUID&gt; applicationIds = allOffers.stream()</span>
-<span class="nc" id="L64">            .map(Offer::getApplicationId)</span>
-<span class="nc" id="L65">            .collect(Collectors.toSet());</span>
+<span class="fc" id="L63">        Set&lt;UUID&gt; applicationIds = allOffers.stream()</span>
+<span class="fc" id="L64">            .map(Offer::getApplicationId)</span>
+<span class="fc" id="L65">            .collect(Collectors.toSet());</span>
 
-<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (applicationIds.isEmpty()) {</span>
-<span class="nc" id="L68">            log.debug(&quot;[BANK_ADMIN_QUEUE] No applications found for bankId={}&quot;, bankId);</span>
-<span class="nc" id="L69">            return emptyResponse(page);</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (applicationIds.isEmpty()) {</span>
+<span class="fc" id="L68">            log.debug(&quot;[BANK_ADMIN_QUEUE] No applications found for bankId={}&quot;, bankId);</span>
+<span class="fc" id="L69">            return emptyResponse(page);</span>
         }
 
         // Load all applications
-<span class="nc" id="L73">        List&lt;Application&gt; applications = applicationRepository.findAllById(applicationIds);</span>
+<span class="fc" id="L73">        List&lt;Application&gt; applications = applicationRepository.findAllById(applicationIds);</span>
         
         // Create a map of offers by application ID
-<span class="nc" id="L76">        Map&lt;UUID, Offer&gt; offerMap = allOffers.stream()</span>
-<span class="nc" id="L77">            .collect(Collectors.toMap(</span>
-<span class="nc" id="L78">                Offer::getApplicationId,</span>
-<span class="nc" id="L79">                offer -&gt; offer,</span>
+<span class="fc" id="L76">        Map&lt;UUID, Offer&gt; offerMap = allOffers.stream()</span>
+<span class="fc" id="L77">            .collect(Collectors.toMap(</span>
+                Offer::getApplicationId,
+<span class="fc" id="L79">                offer -&gt; offer,</span>
 <span class="nc" id="L80">                (existing, replacement) -&gt; existing // Keep first offer if duplicates</span>
             ));
 
         // Build queue items
-<span class="nc" id="L84">        List&lt;ApplicationQueueItem&gt; items = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L85" title="All 2 branches missed.">        for (Application app : applications) {</span>
-<span class="nc" id="L86">            Offer offer = offerMap.get(app.getId());</span>
+<span class="fc" id="L84">        List&lt;ApplicationQueueItem&gt; items = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        for (Application app : applications) {</span>
+<span class="fc" id="L86">            Offer offer = offerMap.get(app.getId());</span>
             
             // Apply filters
-<span class="nc bnc" id="L89" title="All 2 branches missed.">            if (!matchesFilters(app, statusFilters, loanTypeFilters, dateFrom, dateTo, amountFrom, amountTo)) {</span>
-<span class="nc" id="L90">                continue;</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">            if (!matchesFilters(app, statusFilters, loanTypeFilters, dateFrom, dateTo, amountFrom, amountTo)) {</span>
+<span class="fc" id="L90">                continue;</span>
             }
             
             // Apply search
-<span class="nc bnc" id="L94" title="All 2 branches missed.">            if (!matchesSearch(app, searchApplicationId, searchBorrowerEmail, searchBorrowerName)) {</span>
-<span class="nc" id="L95">                continue;</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">            if (!matchesSearch(app, searchApplicationId, searchBorrowerEmail, searchBorrowerName)) {</span>
+<span class="fc" id="L95">                continue;</span>
             }
 
-<span class="nc" id="L98">            ApplicationQueueItem item = ApplicationQueueItem.builder()</span>
-<span class="nc" id="L99">                .applicationId(app.getId())</span>
-<span class="nc" id="L100">                .referenceNumber(null) // Not available in Application model</span>
-<span class="nc bnc" id="L101" title="All 2 branches missed.">                .borrowerName(app.getBorrower() != null ? </span>
-<span class="nc" id="L102">                    (app.getBorrower().getFirstName() + &quot; &quot; + app.getBorrower().getLastName()) : &quot;N/A&quot;)</span>
-<span class="nc bnc" id="L103" title="All 2 branches missed.">                .borrowerEmail(app.getBorrower() != null ? app.getBorrower().getEmail() : null)</span>
-<span class="nc" id="L104">                .loanAmount(app.getLoanAmount())</span>
-<span class="nc" id="L105">                .termMonths(app.getLoanTermMonths())</span>
-<span class="nc bnc" id="L106" title="All 2 branches missed.">                .selectedOfferAPR(offer != null ? offer.getApr() : null)</span>
-<span class="nc bnc" id="L107" title="All 2 branches missed.">                .selectedOfferMonthlyPayment(offer != null ? offer.getMonthlyPayment() : null)</span>
-<span class="nc bnc" id="L108" title="All 2 branches missed.">                .status(app.getStatus() != null ? app.getStatus().name() : null)</span>
-<span class="nc" id="L109">                .receivedAt(app.getCreatedAt())</span>
-<span class="nc" id="L110">                .submittedAt(app.getSubmittedAt())</span>
-<span class="nc" id="L111">                .lastUpdatedAt(app.getUpdatedAt())</span>
-<span class="nc" id="L112">                .documentsStatus(null) // Not needed for Story 4.2</span>
-<span class="nc" id="L113">                .approvalStatus(null) // Not needed for Story 4.2</span>
-<span class="nc" id="L114">                .actionItems(Collections.emptyList())</span>
-<span class="nc" id="L115">                .build();</span>
+<span class="fc" id="L98">            ApplicationQueueItem item = ApplicationQueueItem.builder()</span>
+<span class="fc" id="L99">                .applicationId(app.getId())</span>
+<span class="fc" id="L100">                .referenceNumber(null) // Not available in Application model</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">                .borrowerName(app.getBorrower() != null ? </span>
+<span class="pc" id="L102">                    (app.getBorrower().getFirstName() + &quot; &quot; + app.getBorrower().getLastName()) : &quot;N/A&quot;)</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">                .borrowerEmail(app.getBorrower() != null ? app.getBorrower().getEmail() : null)</span>
+<span class="fc" id="L104">                .loanAmount(app.getLoanAmount())</span>
+<span class="fc" id="L105">                .termMonths(app.getLoanTermMonths())</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">                .selectedOfferAPR(offer != null ? offer.getApr() : null)</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">                .selectedOfferMonthlyPayment(offer != null ? offer.getMonthlyPayment() : null)</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">                .status(app.getStatus() != null ? app.getStatus().name() : null)</span>
+<span class="fc" id="L109">                .receivedAt(app.getCreatedAt())</span>
+<span class="fc" id="L110">                .submittedAt(app.getSubmittedAt())</span>
+<span class="fc" id="L111">                .lastUpdatedAt(app.getUpdatedAt())</span>
+<span class="fc" id="L112">                .documentsStatus(null) // Not needed for Story 4.2</span>
+<span class="fc" id="L113">                .approvalStatus(null) // Not needed for Story 4.2</span>
+<span class="fc" id="L114">                .actionItems(Collections.emptyList())</span>
+<span class="fc" id="L115">                .build();</span>
 
-<span class="nc" id="L117">            items.add(item);</span>
-        }
+<span class="fc" id="L117">            items.add(item);</span>
+<span class="fc" id="L118">        }</span>
 
         // Apply sorting
-<span class="nc" id="L121">        applySorting(items, sortBy);</span>
+<span class="fc" id="L121">        applySorting(items, sortBy);</span>
 
         // Calculate new applications count (SUBMITTED status) for badge
-<span class="nc" id="L124">        int newApplicationsCount = (int) applications.stream()</span>
-<span class="nc bnc" id="L125" title="All 2 branches missed.">            .filter(app -&gt; app.getStatus() == ApplicationStatus.SUBMITTED)</span>
-<span class="nc" id="L126">            .count();</span>
+<span class="fc" id="L124">        int newApplicationsCount = (int) applications.stream()</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">            .filter(app -&gt; app.getStatus() == ApplicationStatus.SUBMITTED)</span>
+<span class="fc" id="L126">            .count();</span>
 
         // Apply pagination
-<span class="nc" id="L129">        int totalItems = items.size();</span>
-<span class="nc" id="L130">        int startIndex = page * PAGE_SIZE;</span>
-<span class="nc" id="L131">        int endIndex = Math.min(startIndex + PAGE_SIZE, totalItems);</span>
+<span class="fc" id="L129">        int totalItems = items.size();</span>
+<span class="fc" id="L130">        int startIndex = page * PAGE_SIZE;</span>
+<span class="fc" id="L131">        int endIndex = Math.min(startIndex + PAGE_SIZE, totalItems);</span>
         
-<span class="nc bnc" id="L133" title="All 2 branches missed.">        List&lt;ApplicationQueueItem&gt; paginatedItems = startIndex &lt; totalItems </span>
-<span class="nc" id="L134">            ? items.subList(startIndex, endIndex)</span>
-<span class="nc" id="L135">            : Collections.emptyList();</span>
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">        List&lt;ApplicationQueueItem&gt; paginatedItems = startIndex &lt; totalItems </span>
+<span class="fc" id="L134">            ? items.subList(startIndex, endIndex)</span>
+<span class="pc" id="L135">            : Collections.emptyList();</span>
 
         // Build response
-<span class="nc" id="L138">        ApplicationQueueMetrics metrics = ApplicationQueueMetrics.builder()</span>
-<span class="nc" id="L139">            .totalApplications(totalItems)</span>
-<span class="nc" id="L140">            .documentsAwaitingReview(newApplicationsCount) // Badge: count of SUBMITTED applications</span>
-<span class="nc" id="L141">            .approvedCount(0)</span>
-<span class="nc" id="L142">            .rejectedCount(0)</span>
-<span class="nc" id="L143">            .build();</span>
+<span class="fc" id="L138">        ApplicationQueueMetrics metrics = ApplicationQueueMetrics.builder()</span>
+<span class="fc" id="L139">            .totalApplications(totalItems)</span>
+<span class="fc" id="L140">            .documentsAwaitingReview(newApplicationsCount) // Badge: count of SUBMITTED applications</span>
+<span class="fc" id="L141">            .approvedCount(0)</span>
+<span class="fc" id="L142">            .rejectedCount(0)</span>
+<span class="fc" id="L143">            .build();</span>
 
-<span class="nc" id="L145">        ApplicationQueueResponse response = ApplicationQueueResponse.builder()</span>
-<span class="nc" id="L146">            .applications(paginatedItems)</span>
-<span class="nc" id="L147">            .totalCount(totalItems)</span>
-<span class="nc" id="L148">            .limit(PAGE_SIZE)</span>
-<span class="nc" id="L149">            .offset(startIndex)</span>
-<span class="nc bnc" id="L150" title="All 2 branches missed.">            .hasMore(endIndex &lt; totalItems)</span>
-<span class="nc" id="L151">            .queueMetrics(metrics)</span>
-<span class="nc" id="L152">            .retrievedAt(LocalDateTime.now())</span>
-<span class="nc" id="L153">            .build();</span>
+<span class="fc" id="L145">        ApplicationQueueResponse response = ApplicationQueueResponse.builder()</span>
+<span class="fc" id="L146">            .applications(paginatedItems)</span>
+<span class="fc" id="L147">            .totalCount(totalItems)</span>
+<span class="fc" id="L148">            .limit(PAGE_SIZE)</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">            .offset(startIndex)</span>
+<span class="fc" id="L150">            .hasMore(endIndex &lt; totalItems)</span>
+<span class="fc" id="L151">            .queueMetrics(metrics)</span>
+<span class="fc" id="L152">            .retrievedAt(LocalDateTime.now())</span>
+<span class="fc" id="L153">            .build();</span>
 
-<span class="nc" id="L155">        long duration = System.currentTimeMillis() - startTime;</span>
-<span class="nc" id="L156">        log.info(&quot;[BANK_ADMIN_QUEUE] Queue retrieved in {}ms: {} total items, page {}, {} items returned&quot;, </span>
-<span class="nc" id="L157">            duration, totalItems, page, paginatedItems.size());</span>
+<span class="fc" id="L155">        long duration = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L156">        log.info(&quot;[BANK_ADMIN_QUEUE] Queue retrieved in {}ms: {} total items, page {}, {} items returned&quot;, </span>
+<span class="fc" id="L157">            duration, totalItems, page, paginatedItems.size());</span>
 
-<span class="nc" id="L159">        return response;</span>
+<span class="fc" id="L159">        return response;</span>
     }
 
     private boolean matchesFilters(
@@ -169,48 +169,48 @@ public class BankAdminQueueService {
         BigDecimal amountTo
     ) {
         // Status filter
-<span class="nc bnc" id="L172" title="All 4 branches missed.">        if (statusFilters != null &amp;&amp; !statusFilters.isEmpty()) {</span>
-<span class="nc bnc" id="L173" title="All 2 branches missed.">            String appStatus = app.getStatus() != null ? app.getStatus().name() : null;</span>
-<span class="nc bnc" id="L174" title="All 4 branches missed.">            if (appStatus == null || !statusFilters.contains(appStatus)) {</span>
-<span class="nc" id="L175">                return false;</span>
+<span class="pc bpc" id="L172" title="1 of 4 branches missed.">        if (statusFilters != null &amp;&amp; !statusFilters.isEmpty()) {</span>
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">            String appStatus = app.getStatus() != null ? app.getStatus().name() : null;</span>
+<span class="pc bpc" id="L174" title="1 of 4 branches missed.">            if (appStatus == null || !statusFilters.contains(appStatus)) {</span>
+<span class="fc" id="L175">                return false;</span>
             }
         }
 
         // Loan type filter
-<span class="nc bnc" id="L180" title="All 4 branches missed.">        if (loanTypeFilters != null &amp;&amp; !loanTypeFilters.isEmpty()) {</span>
-<span class="nc" id="L181">            String loanType = app.getLoanType();</span>
-<span class="nc bnc" id="L182" title="All 4 branches missed.">            if (loanType == null || !loanTypeFilters.contains(loanType)) {</span>
-<span class="nc" id="L183">                return false;</span>
+<span class="pc bpc" id="L180" title="1 of 4 branches missed.">        if (loanTypeFilters != null &amp;&amp; !loanTypeFilters.isEmpty()) {</span>
+<span class="fc" id="L181">            String loanType = app.getLoanType();</span>
+<span class="pc bpc" id="L182" title="1 of 4 branches missed.">            if (loanType == null || !loanTypeFilters.contains(loanType)) {</span>
+<span class="fc" id="L183">                return false;</span>
             }
         }
 
         // Date range filter (using submittedAt)
-<span class="nc bnc" id="L188" title="All 4 branches missed.">        if (dateFrom != null &amp;&amp; app.getSubmittedAt() != null) {</span>
-<span class="nc" id="L189">            LocalDateTime dateFromTime = dateFrom.atStartOfDay();</span>
-<span class="nc bnc" id="L190" title="All 2 branches missed.">            if (app.getSubmittedAt().isBefore(dateFromTime)) {</span>
-<span class="nc" id="L191">                return false;</span>
+<span class="pc bpc" id="L188" title="1 of 4 branches missed.">        if (dateFrom != null &amp;&amp; app.getSubmittedAt() != null) {</span>
+<span class="fc" id="L189">            LocalDateTime dateFromTime = dateFrom.atStartOfDay();</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">            if (app.getSubmittedAt().isBefore(dateFromTime)) {</span>
+<span class="fc" id="L191">                return false;</span>
             }
         }
-<span class="nc bnc" id="L194" title="All 4 branches missed.">        if (dateTo != null &amp;&amp; app.getSubmittedAt() != null) {</span>
-<span class="nc" id="L195">            LocalDateTime dateToTime = dateTo.atTime(LocalTime.MAX);</span>
-<span class="nc bnc" id="L196" title="All 2 branches missed.">            if (app.getSubmittedAt().isAfter(dateToTime)) {</span>
+<span class="pc bpc" id="L194" title="1 of 4 branches missed.">        if (dateTo != null &amp;&amp; app.getSubmittedAt() != null) {</span>
+<span class="fc" id="L195">            LocalDateTime dateToTime = dateTo.atTime(LocalTime.MAX);</span>
+<span class="pc bpc" id="L196" title="1 of 2 branches missed.">            if (app.getSubmittedAt().isAfter(dateToTime)) {</span>
 <span class="nc" id="L197">                return false;</span>
             }
         }
 
         // Amount range filter
-<span class="nc bnc" id="L202" title="All 4 branches missed.">        if (amountFrom != null &amp;&amp; app.getLoanAmount() != null) {</span>
-<span class="nc bnc" id="L203" title="All 2 branches missed.">            if (app.getLoanAmount().compareTo(amountFrom) &lt; 0) {</span>
-<span class="nc" id="L204">                return false;</span>
+<span class="pc bpc" id="L202" title="1 of 4 branches missed.">        if (amountFrom != null &amp;&amp; app.getLoanAmount() != null) {</span>
+<span class="fc bfc" id="L203" title="All 2 branches covered.">            if (app.getLoanAmount().compareTo(amountFrom) &lt; 0) {</span>
+<span class="fc" id="L204">                return false;</span>
             }
         }
-<span class="nc bnc" id="L207" title="All 4 branches missed.">        if (amountTo != null &amp;&amp; app.getLoanAmount() != null) {</span>
-<span class="nc bnc" id="L208" title="All 2 branches missed.">            if (app.getLoanAmount().compareTo(amountTo) &gt; 0) {</span>
+<span class="pc bpc" id="L207" title="1 of 4 branches missed.">        if (amountTo != null &amp;&amp; app.getLoanAmount() != null) {</span>
+<span class="pc bpc" id="L208" title="1 of 2 branches missed.">            if (app.getLoanAmount().compareTo(amountTo) &gt; 0) {</span>
 <span class="nc" id="L209">                return false;</span>
             }
         }
 
-<span class="nc" id="L213">        return true;</span>
+<span class="fc" id="L213">        return true;</span>
     }
 
     private boolean matchesSearch(
@@ -220,75 +220,75 @@ public class BankAdminQueueService {
         String searchBorrowerName
     ) {
         // If no search criteria, match all
-<span class="nc bnc" id="L223" title="All 6 branches missed.">        if (searchApplicationId == null &amp;&amp; searchBorrowerEmail == null &amp;&amp; searchBorrowerName == null) {</span>
-<span class="nc" id="L224">            return true;</span>
+<span class="fc bfc" id="L223" title="All 6 branches covered.">        if (searchApplicationId == null &amp;&amp; searchBorrowerEmail == null &amp;&amp; searchBorrowerName == null) {</span>
+<span class="fc" id="L224">            return true;</span>
         }
 
         // Search by application ID (exact match)
-<span class="nc bnc" id="L228" title="All 4 branches missed.">        if (searchApplicationId != null &amp;&amp; !searchApplicationId.isBlank()) {</span>
-<span class="nc bnc" id="L229" title="All 2 branches missed.">            if (app.getId().toString().equals(searchApplicationId) ||</span>
-<span class="nc bnc" id="L230" title="All 2 branches missed.">                app.getId().toString().contains(searchApplicationId)) {</span>
-<span class="nc" id="L231">                return true;</span>
+<span class="pc bpc" id="L228" title="1 of 4 branches missed.">        if (searchApplicationId != null &amp;&amp; !searchApplicationId.isBlank()) {</span>
+<span class="pc bpc" id="L229" title="1 of 2 branches missed.">            if (app.getId().toString().equals(searchApplicationId) ||</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">                app.getId().toString().contains(searchApplicationId)) {</span>
+<span class="fc" id="L231">                return true;</span>
             }
         }
 
         // Search by borrower email (case-insensitive partial match)
-<span class="nc bnc" id="L236" title="All 6 branches missed.">        if (searchBorrowerEmail != null &amp;&amp; !searchBorrowerEmail.isBlank() &amp;&amp; app.getBorrower() != null) {</span>
-<span class="nc" id="L237">            String email = app.getBorrower().getEmail();</span>
-<span class="nc bnc" id="L238" title="All 4 branches missed.">            if (email != null &amp;&amp; email.toLowerCase().contains(searchBorrowerEmail.toLowerCase())) {</span>
-<span class="nc" id="L239">                return true;</span>
+<span class="pc bpc" id="L236" title="2 of 6 branches missed.">        if (searchBorrowerEmail != null &amp;&amp; !searchBorrowerEmail.isBlank() &amp;&amp; app.getBorrower() != null) {</span>
+<span class="fc" id="L237">            String email = app.getBorrower().getEmail();</span>
+<span class="pc bpc" id="L238" title="2 of 4 branches missed.">            if (email != null &amp;&amp; email.toLowerCase().contains(searchBorrowerEmail.toLowerCase())) {</span>
+<span class="fc" id="L239">                return true;</span>
             }
         }
 
         // Search by borrower name (case-insensitive partial match)
-<span class="nc bnc" id="L244" title="All 6 branches missed.">        if (searchBorrowerName != null &amp;&amp; !searchBorrowerName.isBlank() &amp;&amp; app.getBorrower() != null) {</span>
-<span class="nc" id="L245">            String fullName = (app.getBorrower().getFirstName() + &quot; &quot; + app.getBorrower().getLastName()).trim();</span>
-<span class="nc bnc" id="L246" title="All 4 branches missed.">            if (fullName != null &amp;&amp; !fullName.isBlank() &amp;&amp; </span>
-<span class="nc bnc" id="L247" title="All 2 branches missed.">                fullName.toLowerCase().contains(searchBorrowerName.toLowerCase())) {</span>
-<span class="nc" id="L248">                return true;</span>
+<span class="pc bpc" id="L244" title="2 of 6 branches missed.">        if (searchBorrowerName != null &amp;&amp; !searchBorrowerName.isBlank() &amp;&amp; app.getBorrower() != null) {</span>
+<span class="fc" id="L245">            String fullName = (app.getBorrower().getFirstName() + &quot; &quot; + app.getBorrower().getLastName()).trim();</span>
+<span class="pc bpc" id="L246" title="2 of 4 branches missed.">            if (fullName != null &amp;&amp; !fullName.isBlank() &amp;&amp; </span>
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">                fullName.toLowerCase().contains(searchBorrowerName.toLowerCase())) {</span>
+<span class="fc" id="L248">                return true;</span>
             }
         }
 
-<span class="nc" id="L252">        return false;</span>
+<span class="fc" id="L252">        return false;</span>
     }
 
     private void applySorting(List&lt;ApplicationQueueItem&gt; items, String sortBy) {
-<span class="nc bnc" id="L256" title="All 4 branches missed.">        if (sortBy == null || sortBy.isBlank()) {</span>
+<span class="pc bpc" id="L256" title="2 of 4 branches missed.">        if (sortBy == null || sortBy.isBlank()) {</span>
 <span class="nc" id="L257">            sortBy = &quot;NEWEST_FIRST&quot;;</span>
         }
 
-<span class="nc bnc" id="L260" title="All 5 branches missed.">        Comparator&lt;ApplicationQueueItem&gt; comparator = switch (sortBy.toUpperCase()) {</span>
-<span class="nc" id="L261">            case &quot;OLDEST_FIRST&quot; -&gt; Comparator.comparing(ApplicationQueueItem::getSubmittedAt, </span>
-<span class="nc" id="L262">                Comparator.nullsLast(Comparator.naturalOrder()));</span>
+<span class="pc bpc" id="L260" title="2 of 5 branches missed.">        Comparator&lt;ApplicationQueueItem&gt; comparator = switch (sortBy.toUpperCase()) {</span>
+<span class="fc" id="L261">            case &quot;OLDEST_FIRST&quot; -&gt; Comparator.comparing(ApplicationQueueItem::getSubmittedAt, </span>
+<span class="fc" id="L262">                Comparator.nullsLast(Comparator.naturalOrder()));</span>
 <span class="nc" id="L263">            case &quot;AMOUNT_LOW_HIGH&quot; -&gt; Comparator.comparing(ApplicationQueueItem::getLoanAmount, </span>
 <span class="nc" id="L264">                Comparator.nullsLast(Comparator.naturalOrder()));</span>
-<span class="nc" id="L265">            case &quot;AMOUNT_HIGH_LOW&quot; -&gt; Comparator.comparing(ApplicationQueueItem::getLoanAmount, </span>
-<span class="nc" id="L266">                Comparator.nullsFirst(Comparator.reverseOrder()));</span>
+<span class="fc" id="L265">            case &quot;AMOUNT_HIGH_LOW&quot; -&gt; Comparator.comparing(ApplicationQueueItem::getLoanAmount, </span>
+<span class="fc" id="L266">                Comparator.nullsFirst(Comparator.reverseOrder()));</span>
 <span class="nc" id="L267">            case &quot;STATUS&quot; -&gt; Comparator.comparing(ApplicationQueueItem::getStatus, </span>
 <span class="nc" id="L268">                Comparator.nullsLast(Comparator.naturalOrder()));</span>
             default -&gt; // NEWEST_FIRST
-<span class="nc" id="L270">                Comparator.comparing(ApplicationQueueItem::getSubmittedAt, </span>
-<span class="nc" id="L271">                    Comparator.nullsFirst(Comparator.reverseOrder()));</span>
+<span class="fc" id="L270">                Comparator.comparing(ApplicationQueueItem::getSubmittedAt, </span>
+<span class="fc" id="L271">                    Comparator.nullsFirst(Comparator.reverseOrder()));</span>
         };
 
-<span class="nc" id="L274">        items.sort(comparator);</span>
-<span class="nc" id="L275">    }</span>
+<span class="fc" id="L274">        items.sort(comparator);</span>
+<span class="fc" id="L275">    }</span>
 
     private ApplicationQueueResponse emptyResponse(Integer page) {
-<span class="nc" id="L278">        return ApplicationQueueResponse.builder()</span>
-<span class="nc" id="L279">            .applications(Collections.emptyList())</span>
-<span class="nc" id="L280">            .totalCount(0)</span>
-<span class="nc" id="L281">            .limit(PAGE_SIZE)</span>
-<span class="nc" id="L282">            .offset(page * PAGE_SIZE)</span>
-<span class="nc" id="L283">            .hasMore(false)</span>
-<span class="nc" id="L284">            .queueMetrics(ApplicationQueueMetrics.builder()</span>
-<span class="nc" id="L285">                .totalApplications(0)</span>
-<span class="nc" id="L286">                .documentsAwaitingReview(0)</span>
-<span class="nc" id="L287">                .approvedCount(0)</span>
-<span class="nc" id="L288">                .rejectedCount(0)</span>
-<span class="nc" id="L289">                .build())</span>
-<span class="nc" id="L290">            .retrievedAt(LocalDateTime.now())</span>
-<span class="nc" id="L291">            .build();</span>
+<span class="fc" id="L278">        return ApplicationQueueResponse.builder()</span>
+<span class="fc" id="L279">            .applications(Collections.emptyList())</span>
+<span class="fc" id="L280">            .totalCount(0)</span>
+<span class="fc" id="L281">            .limit(PAGE_SIZE)</span>
+<span class="fc" id="L282">            .offset(page * PAGE_SIZE)</span>
+<span class="fc" id="L283">            .hasMore(false)</span>
+<span class="fc" id="L284">            .queueMetrics(ApplicationQueueMetrics.builder()</span>
+<span class="fc" id="L285">                .totalApplications(0)</span>
+<span class="fc" id="L286">                .documentsAwaitingReview(0)</span>
+<span class="fc" id="L287">                .approvedCount(0)</span>
+<span class="fc" id="L288">                .rejectedCount(0)</span>
+<span class="fc" id="L289">                .build())</span>
+<span class="fc" id="L290">            .retrievedAt(LocalDateTime.now())</span>
+<span class="fc" id="L291">            .build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

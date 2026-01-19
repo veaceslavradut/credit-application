@@ -69,4 +69,5 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\ban
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\security\RBACIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\SpringContextIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\BorrowerHistoryControllerTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\shared\LegalDocumentIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\BorrowerNotificationIntegrationTest.java

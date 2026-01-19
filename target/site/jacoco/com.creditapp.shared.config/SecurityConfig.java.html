@@ -28,7 +28,7 @@ import org.springframework.beans.factory.ObjectProvider;
 <span class="nc" id="L28">        http</span>
 <span class="nc" id="L29">            .csrf(csrf -&gt; csrf.disable())</span>
 <span class="nc" id="L30">            .authorizeHttpRequests(auth -&gt; auth</span>
-<span class="nc" id="L31">                .requestMatchers(&quot;/api/auth/**&quot;, &quot;/api/health/**&quot;, &quot;/api/help/**&quot;, &quot;/api/borrower/scenario-calculator&quot;, &quot;/actuator/**&quot;).permitAll()</span>
+<span class="nc" id="L31">                .requestMatchers(&quot;/api/auth/**&quot;, &quot;/api/health/**&quot;, &quot;/api/help/**&quot;, &quot;/api/borrower/scenario-calculator&quot;, &quot;/api/legal/privacy-policy&quot;, &quot;/api/legal/terms-of-service&quot;, &quot;/actuator/**&quot;).permitAll()</span>
 <span class="nc" id="L32">                .anyRequest().authenticated()</span>
             )
 <span class="nc" id="L34">            .exceptionHandling(ex -&gt; ex.accessDeniedHandler(accessDeniedHandler));</span>

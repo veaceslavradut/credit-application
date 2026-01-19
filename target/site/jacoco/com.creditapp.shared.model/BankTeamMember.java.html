@@ -18,41 +18,41 @@ import java.util.UUID;
     @Index(name = &quot;idx_bank_team_members_email&quot;, columnList = &quot;email&quot;),
     @Index(name = &quot;idx_bank_team_members_status&quot;, columnList = &quot;status&quot;)
 })
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+<span class="nc bnc" id="L21" title="All 78 branches missed.">@Data</span>
+<span class="pc bpc" id="L22" title="3 of 8 branches missed.">@Builder</span>
+<span class="fc" id="L23">@NoArgsConstructor</span>
+<span class="fc" id="L24">@AllArgsConstructor</span>
 public class BankTeamMember {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+<span class="fc" id="L28">    private UUID id;</span>
 
     @Column(nullable = false)
-    private UUID bankId;
+<span class="nc" id="L31">    private UUID bankId;</span>
 
     @Column(nullable = false)
-    private String email;
+<span class="fc" id="L34">    private String email;</span>
 
     @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    @Builder.Default
-    private String status = &quot;ACTIVE&quot;;
+<span class="fc" id="L37">    private String name;</span>
 
     @Column(nullable = false)
     @Builder.Default
-    private LocalDateTime joinedDate = LocalDateTime.now();
-
-    private LocalDateTime lastLogin;
+<span class="fc" id="L41">    private String status = &quot;ACTIVE&quot;;</span>
 
     @Column(nullable = false)
     @Builder.Default
-    private LocalDateTime createdAt = LocalDateTime.now();
+<span class="fc" id="L45">    private LocalDateTime joinedDate = LocalDateTime.now();</span>
+
+<span class="fc" id="L47">    private LocalDateTime lastLogin;</span>
 
     @Column(nullable = false)
     @Builder.Default
-    private LocalDateTime updatedAt = LocalDateTime.now();
+<span class="pc" id="L51">    private LocalDateTime createdAt = LocalDateTime.now();</span>
+
+    @Column(nullable = false)
+    @Builder.Default
+<span class="pc" id="L55">    private LocalDateTime updatedAt = LocalDateTime.now();</span>
 
     @PreUpdate
     protected void onUpdate() {

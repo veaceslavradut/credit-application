@@ -47,7 +47,7 @@ class LegalDocumentServiceTest {
             .id(UUID.randomUUID())
             .documentType(DocumentType.PRIVACY_POLICY)
             .version(1)
-            .content("Privacy Policy: Data Collected. Purpose of use. Retention for 3 years. Contact: support@example.com")
+            .content("Privacy Policy. Data Collected section included. Purpose section included. Sharing and Disclosure section included. Retention for 3 years required. User Rights with access and deletion. Contact: support@example.com")
             .contentHash("hash123")
             .language("en")
             .status(LegalStatus.PUBLISHED)
@@ -82,12 +82,25 @@ class LegalDocumentServiceTest {
 
     @Test
     void testUpdateDocumentWithNewVersion() {
-        String newContent = "Updated Privacy Policy: Data Collected. Purpose. Retention for 3 years. Contact: support@example.com";
+        String newContent = "Updated Privacy Policy. Data Collected section included. Purpose section included. Sharing and Disclosure section included. Retention for 3 years required. User Rights with access and deletion. Contact: support@example.com";
         
         when(legalDocumentRepository.findAllByDocumentTypeOrderByVersionDesc(DocumentType.PRIVACY_POLICY))
             .thenReturn(List.of(privacyPolicyV1));
         when(legalDocumentRepository.save(any(LegalDocument.class)))
-            .thenAnswer(invocation -> invocation.getArgument(0));
+            .thenAnswer(invocation -> {
+                LegalDocument doc = invocation.getArgument(0);
+                // Simulate database ID assignment
+                return LegalDocument.builder()
+                    .id(UUID.randomUUID())
+                    .documentType(doc.getDocumentType())
+                    .version(doc.getVersion())
+                    .content(doc.getContent())
+                    .contentHash(doc.getContentHash())
+                    .language(doc.getLanguage())
+                    .status(doc.getStatus())
+                    .updatedBy(doc.getUpdatedBy())
+                    .build();
+            });
 
         LegalDocumentResponse response = legalDocumentService.updateDocument(
             DocumentType.PRIVACY_POLICY, newContent, false, userId);
@@ -103,12 +116,25 @@ class LegalDocumentServiceTest {
 
     @Test
     void testUpdateDocumentWithMaterialChange() {
-        String newContent = "Updated Privacy Policy: Data Collected. Purpose. Retention for 3 years. Contact: support@example.com";
+        String newContent = "Updated Privacy Policy. Data Collected section included. Purpose section included. Sharing and Disclosure section included. Retention for 3 years required. User Rights with access and deletion. Contact: support@example.com";
         
         when(legalDocumentRepository.findAllByDocumentTypeOrderByVersionDesc(DocumentType.PRIVACY_POLICY))
             .thenReturn(List.of(privacyPolicyV1));
         when(legalDocumentRepository.save(any(LegalDocument.class)))
-            .thenAnswer(invocation -> invocation.getArgument(0));
+            .thenAnswer(invocation -> {
+                LegalDocument doc = invocation.getArgument(0);
+                // Simulate database ID assignment
+                return LegalDocument.builder()
+                    .id(UUID.randomUUID())
+                    .documentType(doc.getDocumentType())
+                    .version(doc.getVersion())
+                    .content(doc.getContent())
+                    .contentHash(doc.getContentHash())
+                    .language(doc.getLanguage())
+                    .status(doc.getStatus())
+                    .updatedBy(doc.getUpdatedBy())
+                    .build();
+            });
 
         LegalDocumentResponse response = legalDocumentService.updateDocument(
             DocumentType.PRIVACY_POLICY, newContent, true, userId);

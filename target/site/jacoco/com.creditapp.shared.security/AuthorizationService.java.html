@@ -14,12 +14,12 @@ public class AuthorizationService {
     
     private final UserRepository userRepository;
     
-<span class="nc" id="L17">    public AuthorizationService(UserRepository userRepository) {</span>
-<span class="nc" id="L18">        this.userRepository = userRepository;</span>
-<span class="nc" id="L19">    }</span>
+<span class="fc" id="L17">    public AuthorizationService(UserRepository userRepository) {</span>
+<span class="fc" id="L18">        this.userRepository = userRepository;</span>
+<span class="fc" id="L19">    }</span>
 
     public boolean hasRole(String role) {
-<span class="nc bnc" id="L22" title="All 4 branches missed.">        return getCurrentUserRole() != null &amp;&amp; getCurrentUserRole().name().equals(role);</span>
+<span class="pc bpc" id="L22" title="1 of 4 branches missed.">        return getCurrentUserRole() != null &amp;&amp; getCurrentUserRole().name().equals(role);</span>
     }
     
     /**
@@ -27,71 +27,71 @@ public class AuthorizationService {
      * Throws IllegalStateException if organizationId not found.
      */
     public UUID getBankIdFromContext() {
-<span class="nc" id="L30">        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</span>
-<span class="nc bnc" id="L31" title="All 2 branches missed.">        if (authentication instanceof JwtAuthenticationToken) {</span>
-<span class="nc" id="L32">            JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;</span>
-<span class="nc" id="L33">            UUID organizationId = token.getOrganizationId();</span>
-<span class="nc bnc" id="L34" title="All 2 branches missed.">            if (organizationId != null) {</span>
-<span class="nc" id="L35">                return organizationId;</span>
+<span class="fc" id="L30">        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">        if (authentication instanceof JwtAuthenticationToken) {</span>
+<span class="fc" id="L32">            JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;</span>
+<span class="fc" id="L33">            UUID organizationId = token.getOrganizationId();</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">            if (organizationId != null) {</span>
+<span class="fc" id="L35">                return organizationId;</span>
             }
         }
 <span class="nc" id="L38">        throw new IllegalStateException(&quot;Bank ID not found in authentication context&quot;);</span>
     }
 
     public UUID getCurrentUserId() {
-<span class="nc" id="L42">        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</span>
-<span class="nc bnc" id="L43" title="All 2 branches missed.">        if (authentication instanceof JwtAuthenticationToken) {</span>
-<span class="nc" id="L44">            return ((JwtAuthenticationToken) authentication).getUserId();</span>
+<span class="fc" id="L42">        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        if (authentication instanceof JwtAuthenticationToken) {</span>
+<span class="fc" id="L44">            return ((JwtAuthenticationToken) authentication).getUserId();</span>
         }
         // For test purposes with @WithMockUser or other authentication types,
         // try to extract UUID from principal if it's stored as a custom attribute
-<span class="nc bnc" id="L48" title="All 4 branches missed.">        if (authentication != null &amp;&amp; authentication.getPrincipal() instanceof UUID) {</span>
+<span class="pc bpc" id="L48" title="1 of 4 branches missed.">        if (authentication != null &amp;&amp; authentication.getPrincipal() instanceof UUID) {</span>
 <span class="nc" id="L49">            return (UUID) authentication.getPrincipal();</span>
         }
         // Fallback for @WithMockUser - look up user by username (email)
-<span class="nc bnc" id="L52" title="All 4 branches missed.">        if (authentication != null &amp;&amp; authentication.getName() != null) {</span>
-<span class="nc" id="L53">            return userRepository.findByEmail(authentication.getName())</span>
-<span class="nc" id="L54">                    .map(user -&gt; user.getId())</span>
-<span class="nc" id="L55">                    .orElse(null);</span>
+<span class="pc bpc" id="L52" title="1 of 4 branches missed.">        if (authentication != null &amp;&amp; authentication.getName() != null) {</span>
+<span class="fc" id="L53">            return userRepository.findByEmail(authentication.getName())</span>
+<span class="fc" id="L54">                    .map(user -&gt; user.getId())</span>
+<span class="fc" id="L55">                    .orElse(null);</span>
         }
-<span class="nc" id="L57">        return null;</span>
+<span class="fc" id="L57">        return null;</span>
     }
 
     public String getCurrentUserEmail() {
-<span class="nc" id="L61">        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</span>
-<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (authentication instanceof JwtAuthenticationToken) {</span>
-<span class="nc" id="L63">            return ((JwtAuthenticationToken) authentication).getEmail();</span>
+<span class="fc" id="L61">        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (authentication instanceof JwtAuthenticationToken) {</span>
+<span class="fc" id="L63">            return ((JwtAuthenticationToken) authentication).getEmail();</span>
         }
-<span class="nc" id="L65">        return null;</span>
+<span class="fc" id="L65">        return null;</span>
     }
 
     public UserRole getCurrentUserRole() {
-<span class="nc" id="L69">        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</span>
-<span class="nc bnc" id="L70" title="All 4 branches missed.">        if (authentication != null &amp;&amp; authentication.getAuthorities() != null) {</span>
-<span class="nc" id="L71">            return authentication.getAuthorities().stream()</span>
-<span class="nc" id="L72">                .findFirst()</span>
-<span class="nc" id="L73">                .map(authority -&gt; {</span>
+<span class="fc" id="L69">        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</span>
+<span class="pc bpc" id="L70" title="1 of 4 branches missed.">        if (authentication != null &amp;&amp; authentication.getAuthorities() != null) {</span>
+<span class="fc" id="L71">            return authentication.getAuthorities().stream()</span>
+<span class="fc" id="L72">                .findFirst()</span>
+<span class="fc" id="L73">                .map(authority -&gt; {</span>
                     try {
-<span class="nc" id="L75">                        return UserRole.valueOf(authority.getAuthority());</span>
+<span class="fc" id="L75">                        return UserRole.valueOf(authority.getAuthority());</span>
 <span class="nc" id="L76">                    } catch (IllegalArgumentException e) {</span>
 <span class="nc" id="L77">                        return null;</span>
                     }
                 })
-<span class="nc" id="L80">                .orElse(null);</span>
+<span class="fc" id="L80">                .orElse(null);</span>
         }
-<span class="nc" id="L82">        return null;</span>
+<span class="fc" id="L82">        return null;</span>
     }
 
     public boolean isBorrower() {
-<span class="nc" id="L86">        return hasRole(&quot;BORROWER&quot;);</span>
+<span class="fc" id="L86">        return hasRole(&quot;BORROWER&quot;);</span>
     }
 
     public boolean isBankAdmin() {
-<span class="nc" id="L90">        return hasRole(&quot;BANK_ADMIN&quot;);</span>
+<span class="fc" id="L90">        return hasRole(&quot;BANK_ADMIN&quot;);</span>
     }
 
     public boolean isComplianceOfficer() {
-<span class="nc" id="L94">        return hasRole(&quot;COMPLIANCE_OFFICER&quot;);</span>
+<span class="fc" id="L94">        return hasRole(&quot;COMPLIANCE_OFFICER&quot;);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

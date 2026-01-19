@@ -25,8 +25,8 @@ import java.util.UUID;
  * Implements idempotency, calculation validation, and audit logging
  */
 @Service
-@RequiredArgsConstructor
-<span class="nc" id="L29">@Slf4j</span>
+<span class="fc" id="L28">@RequiredArgsConstructor</span>
+<span class="fc" id="L29">@Slf4j</span>
 public class BankOfferSubmissionService {
 
     private final OfferRepository offerRepository;
@@ -44,18 +44,18 @@ public class BankOfferSubmissionService {
      */
     @Transactional
     public OfferSubmissionResponse submitOffer(UUID bankId, UUID applicationId, OfferSubmissionRequest request) {
-<span class="nc" id="L47">        long startTime = System.currentTimeMillis();</span>
+<span class="fc" id="L47">        long startTime = System.currentTimeMillis();</span>
 
         // Verify application exists
-<span class="nc" id="L50">        Application application = applicationRepository.findById(applicationId)</span>
-<span class="nc" id="L51">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Application not found: &quot; + applicationId));</span>
+<span class="fc" id="L50">        Application application = applicationRepository.findById(applicationId)</span>
+<span class="fc" id="L51">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Application not found: &quot; + applicationId));</span>
 
         // Check for idempotency: existing offer from this bank for this application
-<span class="nc" id="L54">        Optional&lt;Offer&gt; existingOffer = offerRepository.findByApplicationIdAndBankId(applicationId, bankId);</span>
-<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (existingOffer.isPresent()) {</span>
-<span class="nc" id="L56">            log.info(&quot;Idempotent: Returning existing offer {} for app {} from bank {}&quot;, </span>
-<span class="nc" id="L57">                    existingOffer.get().getId(), applicationId, bankId);</span>
-<span class="nc" id="L58">            return buildResponse(existingOffer.get(), 200); // 200 OK for existing</span>
+<span class="fc" id="L54">        Optional&lt;Offer&gt; existingOffer = offerRepository.findByApplicationIdAndBankId(applicationId, bankId);</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        if (existingOffer.isPresent()) {</span>
+<span class="fc" id="L56">            log.info(&quot;Idempotent: Returning existing offer {} for app {} from bank {}&quot;, </span>
+<span class="fc" id="L57">                    existingOffer.get().getId(), applicationId, bankId);</span>
+<span class="fc" id="L58">            return buildResponse(existingOffer.get(), 200); // 200 OK for existing</span>
         }
 
         // Determine offer values
@@ -65,94 +65,94 @@ public class BankOfferSubmissionService {
         BigDecimal monthlyPayment;
         BigDecimal totalCost;
 
-<span class="nc bnc" id="L68" title="All 4 branches missed.">        if (request.getAcceptCalculatedOffer() != null &amp;&amp; request.getAcceptCalculatedOffer()) {</span>
+<span class="pc bpc" id="L68" title="1 of 4 branches missed.">        if (request.getAcceptCalculatedOffer() != null &amp;&amp; request.getAcceptCalculatedOffer()) {</span>
             // Use system-calculated offer AS-IS from Story 3.3
             // For now, use defaults (in real scenario, fetch from OfferCalculationService)
-<span class="nc" id="L71">            apr = new BigDecimal(&quot;10.5800&quot;);</span>
-<span class="nc" id="L72">            fees = new BigDecimal(&quot;150.00&quot;);</span>
-<span class="nc" id="L73">            processingTime = 5;</span>
-<span class="nc" id="L74">            monthlyPayment = CalculationUtils.calculateMonthlyPayment(</span>
-<span class="nc" id="L75">                    application.getLoanAmount(),</span>
-<span class="nc" id="L76">                    application.getLoanTermMonths(),</span>
-<span class="nc" id="L77">                    apr</span>
+<span class="fc" id="L71">            apr = new BigDecimal(&quot;10.5800&quot;);</span>
+<span class="fc" id="L72">            fees = new BigDecimal(&quot;150.00&quot;);</span>
+<span class="fc" id="L73">            processingTime = 5;</span>
+<span class="fc" id="L74">            monthlyPayment = CalculationUtils.calculateMonthlyPayment(</span>
+<span class="fc" id="L75">                    application.getLoanAmount(),</span>
+<span class="fc" id="L76">                    application.getLoanTermMonths(),</span>
+                    apr
             );
-<span class="nc" id="L79">            totalCost = monthlyPayment</span>
-<span class="nc" id="L80">                    .multiply(new BigDecimal(application.getLoanTermMonths()))</span>
-<span class="nc" id="L81">                    .add(fees);</span>
-<span class="nc" id="L82">        } else {</span>
+<span class="fc" id="L79">            totalCost = monthlyPayment</span>
+<span class="fc" id="L80">                    .multiply(new BigDecimal(application.getLoanTermMonths()))</span>
+<span class="fc" id="L81">                    .add(fees);</span>
+        } else {
             // Use overrides
-<span class="nc bnc" id="L84" title="All 2 branches missed.">            apr = request.getOverrideAPR() != null ? request.getOverrideAPR() : new BigDecimal(&quot;10.5800&quot;);</span>
-<span class="nc bnc" id="L85" title="All 2 branches missed.">            fees = request.getOverrideFees() != null ? request.getOverrideFees() : new BigDecimal(&quot;150.00&quot;);</span>
-<span class="nc bnc" id="L86" title="All 2 branches missed.">            processingTime = request.getOverrideProcessingTime() != null ? request.getOverrideProcessingTime() : 5;</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">            apr = request.getOverrideAPR() != null ? request.getOverrideAPR() : new BigDecimal(&quot;10.5800&quot;);</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">            fees = request.getOverrideFees() != null ? request.getOverrideFees() : new BigDecimal(&quot;150.00&quot;);</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">            processingTime = request.getOverrideProcessingTime() != null ? request.getOverrideProcessingTime() : 5;</span>
 
             // Validate APR range: 0.5% to 50%
-<span class="nc bnc" id="L89" title="All 4 branches missed.">            if (apr.compareTo(new BigDecimal(&quot;0.5&quot;)) &lt; 0 || apr.compareTo(new BigDecimal(&quot;50&quot;)) &gt; 0) {</span>
-<span class="nc" id="L90">                throw new IllegalArgumentException(&quot;APR must be between 0.5% and 50%, received: &quot; + apr);</span>
+<span class="fc bfc" id="L89" title="All 4 branches covered.">            if (apr.compareTo(new BigDecimal(&quot;0.5&quot;)) &lt; 0 || apr.compareTo(new BigDecimal(&quot;50&quot;)) &gt; 0) {</span>
+<span class="fc" id="L90">                throw new IllegalArgumentException(&quot;APR must be between 0.5% and 50%, received: &quot; + apr);</span>
             }
 
             // Recalculate monthly payment using Decision 2 formula
-<span class="nc" id="L94">            monthlyPayment = CalculationUtils.calculateMonthlyPayment(</span>
-<span class="nc" id="L95">                    application.getLoanAmount(),</span>
-<span class="nc" id="L96">                    application.getLoanTermMonths(),</span>
-<span class="nc" id="L97">                    apr</span>
+<span class="fc" id="L94">            monthlyPayment = CalculationUtils.calculateMonthlyPayment(</span>
+<span class="fc" id="L95">                    application.getLoanAmount(),</span>
+<span class="fc" id="L96">                    application.getLoanTermMonths(),</span>
+                    apr
             );
 
             // Total cost = (monthlyPayment  months) + fees
-<span class="nc" id="L101">            totalCost = monthlyPayment</span>
-<span class="nc" id="L102">                    .multiply(new BigDecimal(application.getLoanTermMonths()))</span>
-<span class="nc" id="L103">                    .add(fees);</span>
+<span class="fc" id="L101">            totalCost = monthlyPayment</span>
+<span class="fc" id="L102">                    .multiply(new BigDecimal(application.getLoanTermMonths()))</span>
+<span class="fc" id="L103">                    .add(fees);</span>
         }
 
         // Create new offer
-<span class="nc" id="L107">        Offer offer = new Offer();</span>
-<span class="nc" id="L108">        offer.setId(UUID.randomUUID());</span>
-<span class="nc" id="L109">        offer.setApplicationId(applicationId);</span>
-<span class="nc" id="L110">        offer.setBankId(bankId);</span>
-<span class="nc" id="L111">        offer.setApr(apr);</span>
-<span class="nc" id="L112">        offer.setMonthlyPayment(monthlyPayment);</span>
-<span class="nc" id="L113">        offer.setTotalCost(totalCost);</span>
-<span class="nc" id="L114">        offer.setOriginationFee(fees);</span>
-<span class="nc" id="L115">        offer.setProcessingTimeDays(processingTime);</span>
-<span class="nc" id="L116">        offer.setValidityPeriodDays(1);</span>
-<span class="nc" id="L117">        offer.setOfferStatus(OfferStatus.SUBMITTED);</span>
-<span class="nc" id="L118">        offer.setExpiresAt(LocalDateTime.now().plusDays(1));</span>
+<span class="fc" id="L107">        Offer offer = new Offer();</span>
+<span class="fc" id="L108">        offer.setId(UUID.randomUUID());</span>
+<span class="fc" id="L109">        offer.setApplicationId(applicationId);</span>
+<span class="fc" id="L110">        offer.setBankId(bankId);</span>
+<span class="fc" id="L111">        offer.setApr(apr);</span>
+<span class="fc" id="L112">        offer.setMonthlyPayment(monthlyPayment);</span>
+<span class="fc" id="L113">        offer.setTotalCost(totalCost);</span>
+<span class="fc" id="L114">        offer.setOriginationFee(fees);</span>
+<span class="fc" id="L115">        offer.setProcessingTimeDays(processingTime);</span>
+<span class="fc" id="L116">        offer.setValidityPeriodDays(1);</span>
+<span class="fc" id="L117">        offer.setOfferStatus(OfferStatus.SUBMITTED);</span>
+<span class="fc" id="L118">        offer.setExpiresAt(LocalDateTime.now().plusDays(1));</span>
 
         // Save offer
-<span class="nc" id="L121">        offer = offerRepository.save(offer);</span>
-<span class="nc" id="L122">        log.info(&quot;Created new offer {} for app {} from bank {} with APR={}&quot;, </span>
-<span class="nc" id="L123">                offer.getId(), applicationId, bankId, apr);</span>
+<span class="fc" id="L121">        offer = offerRepository.save(offer);</span>
+<span class="fc" id="L122">        log.info(&quot;Created new offer {} for app {} from bank {} with APR={}&quot;, </span>
+<span class="fc" id="L123">                offer.getId(), applicationId, bankId, apr);</span>
 
         // Log audit event
-<span class="nc" id="L126">        auditService.logAction(&quot;Offer&quot;, offer.getId(), AuditAction.OFFER_SUBMITTED);</span>
-<span class="nc" id="L127">        log.info(&quot;Audit logged: OFFER_SUBMITTED for offer {}&quot;, offer.getId());</span>
+<span class="fc" id="L126">        auditService.logAction(&quot;Offer&quot;, offer.getId(), AuditAction.OFFER_SUBMITTED);</span>
+<span class="fc" id="L127">        log.info(&quot;Audit logged: OFFER_SUBMITTED for offer {}&quot;, offer.getId());</span>
 
         // Queue email notification (async)
         // TODO: Implement email notification to borrower using EmailService
-<span class="nc" id="L131">        log.info(&quot;Email notification queued for application {}&quot;, applicationId);</span>
+<span class="fc" id="L131">        log.info(&quot;Email notification queued for application {}&quot;, applicationId);</span>
 
-<span class="nc" id="L133">        long elapsed = System.currentTimeMillis() - startTime;</span>
-<span class="nc" id="L134">        log.debug(&quot;Offer submission completed in {}ms&quot;, elapsed);</span>
-<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (elapsed &gt; 500) {</span>
+<span class="fc" id="L133">        long elapsed = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L134">        log.debug(&quot;Offer submission completed in {}ms&quot;, elapsed);</span>
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">        if (elapsed &gt; 500) {</span>
 <span class="nc" id="L136">            log.warn(&quot;Offer submission exceeded 500ms SLA: {}ms&quot;, elapsed);</span>
         }
 
-<span class="nc" id="L139">        return buildResponse(offer, 201); // 201 CREATED for new</span>
+<span class="fc" id="L139">        return buildResponse(offer, 201); // 201 CREATED for new</span>
     }
 
     /**
      * Build response DTO from offer entity
      */
     private OfferSubmissionResponse buildResponse(Offer offer, int httpStatus) {
-<span class="nc" id="L146">        return OfferSubmissionResponse.builder()</span>
-<span class="nc" id="L147">                .offerId(offer.getId())</span>
-<span class="nc" id="L148">                .apr(offer.getApr())</span>
-<span class="nc" id="L149">                .fees(offer.getOriginationFee())</span>
-<span class="nc" id="L150">                .processingTime(offer.getProcessingTimeDays())</span>
-<span class="nc" id="L151">                .monthlyPayment(offer.getMonthlyPayment())</span>
-<span class="nc" id="L152">                .totalCost(offer.getTotalCost())</span>
-<span class="nc" id="L153">                .submittedAt(offer.getCreatedAt())</span>
-<span class="nc" id="L154">                .httpStatus(httpStatus)</span>
-<span class="nc" id="L155">                .build();</span>
+<span class="fc" id="L146">        return OfferSubmissionResponse.builder()</span>
+<span class="fc" id="L147">                .offerId(offer.getId())</span>
+<span class="fc" id="L148">                .apr(offer.getApr())</span>
+<span class="fc" id="L149">                .fees(offer.getOriginationFee())</span>
+<span class="fc" id="L150">                .processingTime(offer.getProcessingTimeDays())</span>
+<span class="fc" id="L151">                .monthlyPayment(offer.getMonthlyPayment())</span>
+<span class="fc" id="L152">                .totalCost(offer.getTotalCost())</span>
+<span class="fc" id="L153">                .submittedAt(offer.getCreatedAt())</span>
+<span class="fc" id="L154">                .httpStatus(httpStatus)</span>
+<span class="fc" id="L155">                .build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

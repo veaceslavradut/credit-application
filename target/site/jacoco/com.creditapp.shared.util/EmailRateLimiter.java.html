@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit;
  * Uses Redis to track email send counts across application instances
  */
 @Component
-@RequiredArgsConstructor
-<span class="nc" id="L19">@Slf4j</span>
+<span class="fc" id="L18">@RequiredArgsConstructor</span>
+<span class="fc" id="L19">@Slf4j</span>
 public class EmailRateLimiter {
     
     private final RedisTemplate&lt;String, String&gt; redisTemplate;
@@ -24,7 +24,7 @@ public class EmailRateLimiter {
     @Value(&quot;${notification.rate-limit.emails-per-minute:100}&quot;)
     private int emailsPerMinute;
     
-<span class="nc" id="L27">    private static final DateTimeFormatter MINUTE_FORMATTER = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd-HH-mm&quot;);</span>
+<span class="fc" id="L27">    private static final DateTimeFormatter MINUTE_FORMATTER = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd-HH-mm&quot;);</span>
     
     /**
      * Check if rate limit allows sending another email

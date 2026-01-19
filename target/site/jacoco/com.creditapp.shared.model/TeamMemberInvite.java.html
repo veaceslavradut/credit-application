@@ -19,45 +19,45 @@ import java.util.UUID;
     @Index(name = &quot;idx_team_invites_token&quot;, columnList = &quot;invite_token&quot;, unique = true),
     @Index(name = &quot;idx_team_invites_status&quot;, columnList = &quot;status&quot;)
 })
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+<span class="pc bnc" id="L22" title="All 94 branches missed.">@Data</span>
+<span class="pc bpc" id="L23" title="2 of 6 branches missed.">@Builder</span>
+<span class="fc" id="L24">@NoArgsConstructor</span>
+<span class="fc" id="L25">@AllArgsConstructor</span>
 public class TeamMemberInvite {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+<span class="fc" id="L29">    private UUID id;</span>
 
     @Column(nullable = false)
-    private UUID bankId;
+<span class="fc" id="L32">    private UUID bankId;</span>
 
     @Column(nullable = false)
-    private String email;
+<span class="fc" id="L35">    private String email;</span>
 
     @Column(nullable = false)
-    private String name;
+<span class="fc" id="L38">    private String name;</span>
 
     @Column(nullable = false, unique = true)
-    private String inviteToken;
+<span class="nc" id="L41">    private String inviteToken;</span>
 
     @Column(nullable = false)
     @Builder.Default
-    private String status = &quot;PENDING&quot;;
+<span class="fc" id="L45">    private String status = &quot;PENDING&quot;;</span>
 
     @Column(nullable = false)
     @Builder.Default
-    private LocalDateTime sentAt = LocalDateTime.now();
+<span class="fc" id="L49">    private LocalDateTime sentAt = LocalDateTime.now();</span>
 
     @Column(nullable = false)
-    private LocalDateTime expiresAt;
+<span class="fc" id="L52">    private LocalDateTime expiresAt;</span>
 
-    private LocalDateTime acceptedAt;
+<span class="nc" id="L54">    private LocalDateTime acceptedAt;</span>
 
     @Column(nullable = false)
     @Builder.Default
-    private LocalDateTime createdAt = LocalDateTime.now();
+<span class="pc" id="L58">    private LocalDateTime createdAt = LocalDateTime.now();</span>
 
-    private LocalDateTime updatedAt;
+<span class="nc" id="L60">    private LocalDateTime updatedAt;</span>
 
     @PreUpdate
     protected void onUpdate() {
@@ -65,7 +65,7 @@ public class TeamMemberInvite {
 <span class="nc" id="L65">    }</span>
 
     public boolean isExpired() {
-<span class="nc" id="L68">        return LocalDateTime.now().isAfter(expiresAt);</span>
+<span class="fc" id="L68">        return LocalDateTime.now().isAfter(expiresAt);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

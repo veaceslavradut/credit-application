@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApplicationBankNotes.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.bank.model</a> &gt; <span class="el_source">ApplicationBankNotes.java</span></div><h1>ApplicationBankNotes.java</h1><pre class="source lang-java linenums">package com.creditapp.bank.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+/**
+ * Entity for storing internal notes about an application at the bank level.
+ * These notes are visible only to bank staff, not the borrower.
+ */
+@Entity
+@Table(name = &quot;application_bank_notes&quot;, indexes = {
+        @Index(name = &quot;idx_app_bank_notes_app_id&quot;, columnList = &quot;application_id&quot;),
+        @Index(name = &quot;idx_app_bank_notes_bank_id&quot;, columnList = &quot;bank_id&quot;)
+})
+<span class="nc bnc" id="L23" title="All 70 branches missed.">@Data</span>
+<span class="fc" id="L24">@NoArgsConstructor</span>
+<span class="nc" id="L25">@AllArgsConstructor</span>
+<span class="nc" id="L26">@Builder</span>
+public class ApplicationBankNotes {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+<span class="nc" id="L31">    private Long id;</span>
+
+    @Column(name = &quot;application_id&quot;, nullable = false)
+<span class="nc" id="L34">    private UUID applicationId;</span>
+
+    @Column(name = &quot;bank_id&quot;, nullable = false)
+<span class="nc" id="L37">    private UUID bankId;</span>
+
+    @Column(name = &quot;notes&quot;, columnDefinition = &quot;TEXT&quot;, length = 4000)
+<span class="nc" id="L40">    private String notes;</span>
+
+    @CreationTimestamp
+    @Column(name = &quot;created_at&quot;, nullable = false, updatable = false)
+<span class="nc" id="L44">    private LocalDateTime createdAt;</span>
+
+    @UpdateTimestamp
+    @Column(name = &quot;updated_at&quot;, nullable = false)
+<span class="nc" id="L48">    private LocalDateTime updatedAt;</span>
+
+    @Column(name = &quot;created_by&quot;, nullable = false)
+<span class="nc" id="L51">    private UUID createdBy;</span>
+
+    @Column(name = &quot;updated_by&quot;, nullable = false)
+<span class="nc" id="L54">    private UUID updatedBy;</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

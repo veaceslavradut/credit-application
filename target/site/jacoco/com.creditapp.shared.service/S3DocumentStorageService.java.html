@@ -17,16 +17,16 @@ import java.util.Map;
  * Service for interacting with AWS S3 for document storage.
  */
 @Service
-<span class="nc" id="L20">@Slf4j</span>
+<span class="fc" id="L20">@Slf4j</span>
 public class S3DocumentStorageService {
     
     private final S3Client s3Client;
     private final S3Configuration s3Configuration;
     
-<span class="nc" id="L26">    public S3DocumentStorageService(S3Client s3Client, S3Configuration s3Configuration) {</span>
-<span class="nc" id="L27">        this.s3Client = s3Client;</span>
-<span class="nc" id="L28">        this.s3Configuration = s3Configuration;</span>
-<span class="nc" id="L29">    }</span>
+<span class="fc" id="L26">    public S3DocumentStorageService(S3Client s3Client, S3Configuration s3Configuration) {</span>
+<span class="fc" id="L27">        this.s3Client = s3Client;</span>
+<span class="fc" id="L28">        this.s3Configuration = s3Configuration;</span>
+<span class="fc" id="L29">    }</span>
     
     /**
      * Upload file to S3.
@@ -134,12 +134,12 @@ public class S3DocumentStorageService {
         public final String etag;
         public final String versionId;
         
-<span class="nc" id="L137">        public S3ObjectMetadata(String bucketName, String key, String etag, String versionId) {</span>
-<span class="nc" id="L138">            this.bucketName = bucketName;</span>
-<span class="nc" id="L139">            this.key = key;</span>
-<span class="nc" id="L140">            this.etag = etag;</span>
-<span class="nc" id="L141">            this.versionId = versionId;</span>
-<span class="nc" id="L142">        }</span>
+<span class="fc" id="L137">        public S3ObjectMetadata(String bucketName, String key, String etag, String versionId) {</span>
+<span class="fc" id="L138">            this.bucketName = bucketName;</span>
+<span class="fc" id="L139">            this.key = key;</span>
+<span class="fc" id="L140">            this.etag = etag;</span>
+<span class="fc" id="L141">            this.versionId = versionId;</span>
+<span class="fc" id="L142">        }</span>
         
         public static S3ObjectMetadataBuilder builder() {
 <span class="nc" id="L145">            return new S3ObjectMetadataBuilder();</span>

@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class OfferExpirationScheduler {
     
-<span class="nc" id="L12">    private static final Logger logger = LoggerFactory.getLogger(OfferExpirationScheduler.class);</span>
+<span class="fc" id="L12">    private static final Logger logger = LoggerFactory.getLogger(OfferExpirationScheduler.class);</span>
     
     private final OfferExpirationService offerExpirationService;
     
-<span class="nc" id="L16">    public OfferExpirationScheduler(OfferExpirationService offerExpirationService) {</span>
-<span class="nc" id="L17">        this.offerExpirationService = offerExpirationService;</span>
-<span class="nc" id="L18">    }</span>
+<span class="fc" id="L16">    public OfferExpirationScheduler(OfferExpirationService offerExpirationService) {</span>
+<span class="fc" id="L17">        this.offerExpirationService = offerExpirationService;</span>
+<span class="fc" id="L18">    }</span>
     
     @Scheduled(cron = &quot;0 0 0 * * *&quot;, zone = &quot;UTC&quot;)
     public void expireOffersDaily() {
@@ -26,7 +26,7 @@ public class OfferExpirationScheduler {
 <span class="nc" id="L26">            logger.info(&quot;Scheduled offer expiration completed successfully. {} offers expired&quot;, expiredCount);</span>
 <span class="nc" id="L27">        } catch (Exception e) {</span>
 <span class="nc" id="L28">            logger.error(&quot;Scheduled offer expiration failed: {}&quot;, e.getMessage(), e);</span>
-        }
+<span class="nc" id="L29">        }</span>
 <span class="nc" id="L30">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
