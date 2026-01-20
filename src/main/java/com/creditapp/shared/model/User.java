@@ -1,6 +1,5 @@
 package com.creditapp.shared.model;
 
-import com.creditapp.shared.security.EncryptedAttributeConverter;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -15,27 +14,22 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "email", nullable = false, unique = true, length = 500)
-    @Convert(converter = EncryptedAttributeConverter.class)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    @Column(name = "first_name", length = 500)
-    @Convert(converter = EncryptedAttributeConverter.class)
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name", length = 500)
-    @Convert(converter = EncryptedAttributeConverter.class)
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "phone", length = 500)
-    @Convert(converter = EncryptedAttributeConverter.class)
+    @Column(name = "phone")
     private String phone;
 
-    @Column(name = "phone_number", length = 500)
-    @Convert(converter = EncryptedAttributeConverter.class)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @Column(name = "role", nullable = false)

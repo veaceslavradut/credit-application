@@ -13,6 +13,7 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\c
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\service\AuditServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\OfferComparisonTableServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\auth\UserProfileIntegrationTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\config\TestEncryptionConfig.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\config\TestRedisConfig.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\OfferSelectionServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\borrower\service\ApplicationSubmissionNotificationTest.java

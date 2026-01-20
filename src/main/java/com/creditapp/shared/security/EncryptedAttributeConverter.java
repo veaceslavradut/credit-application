@@ -9,8 +9,10 @@ import org.springframework.stereotype.Component;
 /**
  * JPA AttributeConverter for transparent encryption/decryption of PII fields.
  * Encrypts data before storing in database, decrypts after retrieval.
+ * 
+ * Note: autoApply=false to avoid breaking tests that don't have EncryptionService
  */
-@Converter
+@Converter(autoApply = false)
 @Component
 @RequiredArgsConstructor
 @Slf4j
