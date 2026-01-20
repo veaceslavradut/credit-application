@@ -162,18 +162,18 @@ public class ApplicationHistoryService {
     }
 
     private String determineExpirationStatus(List&lt;Offer&gt; offers) {
-<span class="pc bpc" id="L165" title="1 of 2 branches missed.">        if (offers.isEmpty()) {</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        if (offers.isEmpty()) {</span>
 <span class="fc" id="L166">            return &quot;no_offers&quot;;</span>
         }
         
-<span class="nc" id="L169">        LocalDateTime now = LocalDateTime.now();</span>
-<span class="nc" id="L170">        boolean hasActive = offers.stream().anyMatch(o -&gt; o.getExpiresAt().isAfter(now));</span>
-<span class="nc bnc" id="L171" title="All 4 branches missed.">        boolean hasExpired = offers.stream().anyMatch(o -&gt; o.getExpiresAt().isBefore(now) || o.getExpiresAt().isEqual(now));</span>
+<span class="fc" id="L169">        LocalDateTime now = LocalDateTime.now();</span>
+<span class="fc" id="L170">        boolean hasActive = offers.stream().anyMatch(o -&gt; o.getExpiresAt().isAfter(now));</span>
+<span class="pc bpc" id="L171" title="2 of 4 branches missed.">        boolean hasExpired = offers.stream().anyMatch(o -&gt; o.getExpiresAt().isBefore(now) || o.getExpiresAt().isEqual(now));</span>
         
-<span class="nc bnc" id="L173" title="All 4 branches missed.">        if (hasActive &amp;&amp; hasExpired) {</span>
+<span class="pc bpc" id="L173" title="2 of 4 branches missed.">        if (hasActive &amp;&amp; hasExpired) {</span>
 <span class="nc" id="L174">            return &quot;mixed&quot;;</span>
-<span class="nc bnc" id="L175" title="All 2 branches missed.">        } else if (hasActive) {</span>
-<span class="nc" id="L176">            return &quot;all_active&quot;;</span>
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">        } else if (hasActive) {</span>
+<span class="fc" id="L176">            return &quot;all_active&quot;;</span>
         } else {
 <span class="nc" id="L178">            return &quot;all_expired&quot;;</span>
         }

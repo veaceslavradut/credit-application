@@ -23,7 +23,8 @@ public class TestCacheConfig {
             "rateCards",
             "scenarioCalculations",
             "helpArticles",
-            "applicationDetails"
+            "applicationDetails",
+            "borrowerApplicationHistory"
         );
     }
 }

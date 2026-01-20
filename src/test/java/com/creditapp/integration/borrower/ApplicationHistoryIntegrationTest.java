@@ -39,7 +39,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Testcontainers
-@Disabled("ApplicationHistoryIntegrationTest disabled - requires OfferCalculationService mock")
 public class ApplicationHistoryIntegrationTest {
 
     @Container
@@ -80,24 +79,22 @@ public class ApplicationHistoryIntegrationTest {
         userRepository.deleteAll();
         organizationRepository.deleteAll();
 
-        borrowerId = UUID.randomUUID();
-        bankId = UUID.randomUUID();
-
+        // Create borrower user
         User borrower = new User();
-        borrower.setId(borrowerId);
-        borrower.setEmail("borrower@test.com");
+        borrower.setEmail("borrower-history@test.com");
         borrower.setPasswordHash(passwordEncoder.encode("Password123!"));
         borrower.setRole(UserRole.BORROWER);
-        borrower = userRepository.save(borrower);
-        userRepository.flush();
+        borrower.setEnabled(true);
+        borrower = userRepository.saveAndFlush(borrower);
+        borrowerId = borrower.getId();
 
+        // Create bank organization
         Organization bank = new Organization();
-        bank.setId(bankId);
         bank.setName("Test Bank");
         bank.setTaxId("123456789");
         bank.setCountryCode("US");
-        organizationRepository.save(bank);
-        organizationRepository.flush();
+        bank = organizationRepository.saveAndFlush(bank);
+        bankId = bank.getId();
 
         borrowerToken = jwtTokenService.generateToken(borrower);
     }
@@ -185,6 +182,7 @@ public class ApplicationHistoryIntegrationTest {
             offer.setTotalCost(BigDecimal.valueOf(10800));
             offer.setOriginationFee(BigDecimal.valueOf(100));
             offer.setInsuranceCost(BigDecimal.valueOf(50));
+            offer.setProcessingTimeDays(5);
             offer.setValidityPeriodDays(30);
             offer.setExpiresAt(LocalDateTime.now().plusDays(30));
             offer.setOfferSubmittedAt(LocalDateTime.now().minusDays(2));
@@ -222,6 +220,7 @@ public class ApplicationHistoryIntegrationTest {
         activeOffer.setTotalCost(BigDecimal.valueOf(10800));
         activeOffer.setOriginationFee(BigDecimal.valueOf(100));
         activeOffer.setInsuranceCost(BigDecimal.valueOf(50));
+        activeOffer.setProcessingTimeDays(5);
         activeOffer.setValidityPeriodDays(30);
         activeOffer.setExpiresAt(LocalDateTime.now().plusDays(30));
         activeOffer.setOfferSubmittedAt(LocalDateTime.now().minusDays(2));
