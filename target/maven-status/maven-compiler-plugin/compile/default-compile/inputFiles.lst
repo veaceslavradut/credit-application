@@ -31,6 +31,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\ser
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\DataAnonymizationService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\controller\BankAdminRateCardController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\EmailDeliveryLogRepository.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\DataRedactionService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\SignatureLogRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\model\EmailTemplate.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\ApplicationDocument.java
@@ -57,6 +58,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\ser
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\ApplicationDetailsResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\ApplicationStatusTransitionService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\ApplicationNotSubmittedException.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\EncryptedAttributeConverter.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\repository\LegalDocumentRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\LoanPreferenceDTO.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\model\RatePreference.java
@@ -94,6 +96,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\d
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\OfferDocumentsListResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\dto\UpdateProfileRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\ApplicationNotFoundException.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\EncryptionService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\auth\service\PasswordValidator.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\config\RedisConfig.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\ConsentWithdrawalRequest.java
@@ -241,6 +244,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\ser
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\InviteTeamMemberRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\DocumentStorageException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\BankProfileDTO.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\DecryptionException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\exception\NotificationNotFoundException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\service\OfferDocumentRetrievalService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\messaging\NotificationEventConsumer.java
@@ -306,6 +310,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\s
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\repository\ApplicationHistoryRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\NextStepsService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\controller\HealthController.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\EncryptionException.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\dto\UpdateLegalDocumentRequest.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\model\OfferDocument.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\controller\ScenarioCalculatorController.java

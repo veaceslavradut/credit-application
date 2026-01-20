@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ESignatureService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.service</a> &gt; <span class="el_source">ESignatureService.java</span></div><h1>ESignatureService.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.service;
 
 import com.creditapp.shared.config.ESignatureProviderConfig;
+import com.creditapp.shared.model.AuditAction;
 import com.creditapp.shared.model.Document;
 import com.creditapp.shared.model.SignatureLog;
 import com.creditapp.shared.model.SignatureStatus;
@@ -26,7 +27,7 @@ import java.util.UUID;
  */
 @Service
 @RequiredArgsConstructor
-<span class="nc" id="L29">@Slf4j</span>
+<span class="nc" id="L30">@Slf4j</span>
 public class ESignatureService {
     
     private final ESignatureProviderConfig providerConfig;
@@ -39,24 +40,24 @@ public class ESignatureService {
      * Phase 2: Creates DocuSign envelope, adds signers, sends for signature
      */
     public SignatureLog sendDocumentForSignature(Document document, UUID signerId, String signerEmail, String signerName) {
-        log.info(&quot;Phase 1 stub: sendDocumentForSignature called for document {} by signer {}&quot;, 
-                 document.getId(), signerId);
+<span class="nc" id="L43">        log.info(&quot;Phase 1 stub: sendDocumentForSignature called for document {} by signer {}&quot;, </span>
+<span class="nc" id="L44">                 document.getId(), signerId);</span>
         
         // Phase 1: Create audit event and return stub
-<span class="nc" id="L46">        auditService.logAction(&quot;DOCUMENT_SENT_FOR_SIGNATURE&quot;, </span>
-                             &quot;Document &quot; + document.getId() + &quot; sent for signature (Phase 1 stub)&quot;,
-                             document.getApplicationId().toString());
+<span class="nc" id="L47">        auditService.logAction(&quot;DOCUMENT&quot;, </span>
+<span class="nc" id="L48">                             document.getId(),</span>
+<span class="nc" id="L49">                             AuditAction.DOCUMENT_UPLOADED);</span>
         
         // Stub: Return PENDING signature log
-        SignatureLog log = SignatureLog.builder()
-                .id(UUID.randomUUID())
-                .documentId(document.getId())
-                .signerId(signerId)
-                .signatureStatus(SignatureStatus.PENDING)
-                .createdAt(LocalDateTime.now())
-                .build();
+<span class="nc" id="L52">        SignatureLog signatureLog = SignatureLog.builder()</span>
+<span class="nc" id="L53">                .id(UUID.randomUUID())</span>
+<span class="nc" id="L54">                .documentId(document.getId())</span>
+<span class="nc" id="L55">                .signerId(signerId)</span>
+<span class="nc" id="L56">                .signatureStatus(SignatureStatus.PENDING)</span>
+<span class="nc" id="L57">                .createdAt(LocalDateTime.now())</span>
+<span class="nc" id="L58">                .build();</span>
         
-        return log;
+<span class="nc" id="L60">        return signatureLog;</span>
     }
     
     /**
@@ -66,9 +67,9 @@ public class ESignatureService {
      * Phase 2: Queries DocuSign API for envelope status
      */
     public SignatureStatus checkSignatureStatus(String externalSignatureId) {
-<span class="nc" id="L69">        log.info(&quot;Phase 1 stub: checkSignatureStatus called for externalId {}&quot;, externalSignatureId);</span>
+<span class="nc" id="L70">        log.info(&quot;Phase 1 stub: checkSignatureStatus called for externalId {}&quot;, externalSignatureId);</span>
         // Stub: Always return PENDING
-<span class="nc" id="L71">        return SignatureStatus.PENDING;</span>
+<span class="nc" id="L72">        return SignatureStatus.PENDING;</span>
     }
     
     /**
@@ -78,9 +79,9 @@ public class ESignatureService {
      * Phase 2: Downloads certificate from DocuSign, verifies chain, stores document
      */
     public byte[] getSignedDocument(String externalSignatureId) {
-<span class="nc" id="L81">        log.info(&quot;Phase 1 stub: getSignedDocument called for externalId {}&quot;, externalSignatureId);</span>
+<span class="nc" id="L82">        log.info(&quot;Phase 1 stub: getSignedDocument called for externalId {}&quot;, externalSignatureId);</span>
         // Stub: Return null (not implemented)
-<span class="nc" id="L83">        return null;</span>
+<span class="nc" id="L84">        return null;</span>
     }
     
     /**
@@ -89,9 +90,9 @@ public class ESignatureService {
      * Phase 2 only: Processes webhook events from DocuSign
      */
     public void handleSignatureCallback(String eventJson) {
-<span class="nc" id="L92">        log.debug(&quot;Phase 1 stub: handleSignatureCallback - webhooks not implemented&quot;);</span>
+<span class="nc" id="L93">        log.debug(&quot;Phase 1 stub: handleSignatureCallback - webhooks not implemented&quot;);</span>
         // Stub: No-op in Phase 1
-<span class="nc" id="L94">    }</span>
+<span class="nc" id="L95">    }</span>
     
     /**
      * Validate DocuSign certificate chain
@@ -99,15 +100,15 @@ public class ESignatureService {
      * Phase 2 only: Verifies signature certificate validity
      */
     public boolean validateCertificate(byte[] certificateData) {
-<span class="nc" id="L102">        log.debug(&quot;Phase 1 stub: validateCertificate - validation not implemented&quot;);</span>
-<span class="nc" id="L103">        return false; // Stub: Not implemented</span>
+<span class="nc" id="L103">        log.debug(&quot;Phase 1 stub: validateCertificate - validation not implemented&quot;);</span>
+<span class="nc" id="L104">        return false; // Stub: Not implemented</span>
     }
     
     /**
      * Get provider configuration status
      */
     public boolean isConfigured() {
-<span class="nc" id="L110">        return providerConfig.isConfigured();</span>
+<span class="nc" id="L111">        return providerConfig.isConfigured();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

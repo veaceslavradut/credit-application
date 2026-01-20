@@ -54,12 +54,12 @@ public class SignatureLog {
     
     @PrePersist
     protected void onCreate() {
-<span class="pc bpc" id="L57" title="1 of 2 branches missed.">        if (createdAt == null) {</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (createdAt == null) {</span>
 <span class="nc" id="L58">            createdAt = LocalDateTime.now();</span>
         }
-<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        if (signatureStatus == null) {</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (signatureStatus == null) {</span>
 <span class="nc" id="L61">            signatureStatus = SignatureStatus.PENDING;</span>
         }
-<span class="fc" id="L63">    }</span>
+<span class="nc" id="L63">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

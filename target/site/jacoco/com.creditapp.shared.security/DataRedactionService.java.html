@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataRedactionService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.security</a> &gt; <span class="el_source">DataRedactionService.java</span></div><h1>DataRedactionService.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.security;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+/**
+ * Service for redacting PII from audit logs and other sensitive contexts.
+ * Ensures GDPR compliance by preventing PII leakage in logs.
+ */
+@Service
+<span class="fc" id="L15">@Slf4j</span>
+<span class="fc" id="L16">public class DataRedactionService {</span>
+
+    private static final String REDACTED = &quot;[REDACTED]&quot;;
+<span class="fc" id="L19">    private static final Pattern EMAIL_PATTERN = Pattern.compile(&quot;^[^@]+@(.+)$&quot;);</span>
+
+    /**
+     * Redacts email address, keeping only domain.
+     * Example: john.doe@example.com -&gt; ***@example.com
+     */
+    public String redactEmail(String email) {
+<span class="pc bpc" id="L26" title="1 of 4 branches missed.">        if (email == null || email.isEmpty()) {</span>
+<span class="fc" id="L27">            return email;</span>
+        }
+
+<span class="fc" id="L30">        var matcher = EMAIL_PATTERN.matcher(email);</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">        if (matcher.matches()) {</span>
+<span class="fc" id="L32">            return &quot;***@&quot; + matcher.group(1);</span>
+        }
+<span class="nc" id="L34">        return REDACTED;</span>
+    }
+
+    /**
+     * Redacts phone number completely.
+     */
+    public String redactPhone(String phone) {
+<span class="pc bpc" id="L41" title="2 of 4 branches missed.">        if (phone == null || phone.isEmpty()) {</span>
+<span class="nc" id="L42">            return phone;</span>
+        }
+<span class="fc" id="L44">        return REDACTED;</span>
+    }
+
+    /**
+     * Redacts name, keeping only first letter.
+     * Example: John Doe -&gt; J*** D***
+     */
+    public String redactName(String name) {
+<span class="pc bpc" id="L52" title="2 of 4 branches missed.">        if (name == null || name.isEmpty()) {</span>
+<span class="nc" id="L53">            return name;</span>
+        }
+
+<span class="fc" id="L56">        String[] parts = name.split(&quot;\\s+&quot;);</span>
+<span class="fc" id="L57">        StringBuilder redacted = new StringBuilder();</span>
+        
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        for (int i = 0; i &lt; parts.length; i++) {</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">            if (i &gt; 0) {</span>
+<span class="fc" id="L61">                redacted.append(&quot; &quot;);</span>
+            }
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">            if (parts[i].length() &gt; 0) {</span>
+<span class="fc" id="L64">                redacted.append(parts[i].charAt(0)).append(&quot;***&quot;);</span>
+            }
+        }
+        
+<span class="fc" id="L68">        return redacted.toString();</span>
+    }
+
+    /**
+     * Redacts address completely.
+     */
+    public String redactAddress(String address) {
+<span class="pc bpc" id="L75" title="2 of 4 branches missed.">        if (address == null || address.isEmpty()) {</span>
+<span class="nc" id="L76">            return address;</span>
+        }
+<span class="fc" id="L78">        return REDACTED;</span>
+    }
+
+    /**
+     * Redacts sensitive fields from audit log details map.
+     * Removes: email (redacted), phone, name, address, password, passwordHash, ssn
+     */
+    public Map&lt;String, Object&gt; redactAuditDetails(Map&lt;String, Object&gt; details) {
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (details == null) {</span>
+<span class="fc" id="L87">            return null;</span>
+        }
+
+<span class="fc" id="L90">        Map&lt;String, Object&gt; redacted = new HashMap&lt;&gt;(details);</span>
+
+        // Redact email (keep domain)
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        if (redacted.containsKey(&quot;email&quot;)) {</span>
+<span class="fc" id="L94">            redacted.put(&quot;email&quot;, redactEmail(String.valueOf(redacted.get(&quot;email&quot;))));</span>
+        }
+
+        // Remove sensitive fields completely
+<span class="fc" id="L98">        redacted.remove(&quot;phone&quot;);</span>
+<span class="fc" id="L99">        redacted.remove(&quot;phoneNumber&quot;);</span>
+<span class="fc" id="L100">        redacted.remove(&quot;name&quot;);</span>
+<span class="fc" id="L101">        redacted.remove(&quot;firstName&quot;);</span>
+<span class="fc" id="L102">        redacted.remove(&quot;lastName&quot;);</span>
+<span class="fc" id="L103">        redacted.remove(&quot;address&quot;);</span>
+<span class="fc" id="L104">        redacted.remove(&quot;password&quot;);</span>
+<span class="fc" id="L105">        redacted.remove(&quot;passwordHash&quot;);</span>
+<span class="fc" id="L106">        redacted.remove(&quot;ssn&quot;);</span>
+<span class="fc" id="L107">        redacted.remove(&quot;nationalId&quot;);</span>
+<span class="fc" id="L108">        redacted.remove(&quot;taxId&quot;);</span>
+
+<span class="fc" id="L110">        return redacted;</span>
+    }
+
+    /**
+     * Redacts sensitive query parameters from URLs.
+     */
+    public String redactUrl(String url) {
+<span class="pc bpc" id="L117" title="2 of 4 branches missed.">        if (url == null || url.isEmpty()) {</span>
+<span class="nc" id="L118">            return url;</span>
+        }
+
+        // Remove common sensitive query parameters
+<span class="fc" id="L122">        return url</span>
+<span class="fc" id="L123">            .replaceAll(&quot;([?&amp;])password=[^&amp;]*&quot;, &quot;$1password=&quot; + REDACTED)</span>
+<span class="fc" id="L124">            .replaceAll(&quot;([?&amp;])token=[^&amp;]*&quot;, &quot;$1token=&quot; + REDACTED)</span>
+<span class="fc" id="L125">            .replaceAll(&quot;([?&amp;])secret=[^&amp;]*&quot;, &quot;$1secret=&quot; + REDACTED)</span>
+<span class="fc" id="L126">            .replaceAll(&quot;([?&amp;])key=[^&amp;]*&quot;, &quot;$1key=&quot; + REDACTED);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

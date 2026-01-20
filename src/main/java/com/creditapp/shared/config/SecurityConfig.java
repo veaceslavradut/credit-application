@@ -27,6 +27,13 @@ public class SecurityConfig {
                                           ObjectProvider<JwtAuthenticationFilter> jwtFilterProvider) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
+            .headers(headers -> headers
+                .httpStrictTransportSecurity(hsts -> hsts
+                    .includeSubDomains(true)
+                    .preload(true)
+                    .maxAgeInSeconds(31536000)  // 1 year
+                )
+            )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**", "/api/health/**", "/api/help/**", "/api/borrower/scenario-calculator", "/api/legal/privacy-policy", "/api/legal/terms-of-service", "/actuator/**").permitAll()
                 .anyRequest().authenticated()

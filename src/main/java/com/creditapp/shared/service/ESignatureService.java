@@ -1,6 +1,7 @@
 package com.creditapp.shared.service;
 
 import com.creditapp.shared.config.ESignatureProviderConfig;
+import com.creditapp.shared.model.AuditAction;
 import com.creditapp.shared.model.Document;
 import com.creditapp.shared.model.SignatureLog;
 import com.creditapp.shared.model.SignatureStatus;
@@ -43,12 +44,12 @@ public class ESignatureService {
                  document.getId(), signerId);
         
         // Phase 1: Create audit event and return stub
-        auditService.logAction("DOCUMENT_SENT_FOR_SIGNATURE", 
-                             "Document " + document.getId() + " sent for signature (Phase 1 stub)",
-                             document.getApplicationId().toString());
+        auditService.logAction("DOCUMENT", 
+                             document.getId(),
+                             AuditAction.DOCUMENT_UPLOADED);
         
         // Stub: Return PENDING signature log
-        SignatureLog log = SignatureLog.builder()
+        SignatureLog signatureLog = SignatureLog.builder()
                 .id(UUID.randomUUID())
                 .documentId(document.getId())
                 .signerId(signerId)
@@ -56,7 +57,7 @@ public class ESignatureService {
                 .createdAt(LocalDateTime.now())
                 .build();
         
-        return log;
+        return signatureLog;
     }
     
     /**

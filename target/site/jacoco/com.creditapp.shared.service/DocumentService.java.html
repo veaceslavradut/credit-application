@@ -13,38 +13,38 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-<span class="fc" id="L16">@Slf4j</span>
+<span class="nc" id="L16">@Slf4j</span>
 public class DocumentService {
     
     private final DocumentRepository documentRepository;
     
     @Transactional(readOnly = true)
     public List&lt;Document&gt; findByApplicationId(UUID applicationId) {
-<span class="fc" id="L23">        log.debug(&quot;Fetching documents for application {}&quot;, applicationId);</span>
-<span class="fc" id="L24">        return documentRepository.findByApplicationId(applicationId);</span>
+<span class="nc" id="L23">        log.debug(&quot;Fetching documents for application {}&quot;, applicationId);</span>
+<span class="nc" id="L24">        return documentRepository.findByApplicationId(applicationId);</span>
     }
     
     @Transactional(readOnly = true)
     public List&lt;Document&gt; findByApplicationIdAndType(UUID applicationId, DocumentType type) {
-<span class="fc" id="L29">        log.debug(&quot;Fetching {} documents for application {}&quot;, type, applicationId);</span>
-<span class="fc" id="L30">        return documentRepository.findByApplicationIdAndDocumentType(applicationId, type);</span>
+<span class="nc" id="L29">        log.debug(&quot;Fetching {} documents for application {}&quot;, type, applicationId);</span>
+<span class="nc" id="L30">        return documentRepository.findByApplicationIdAndDocumentType(applicationId, type);</span>
     }
     
     @Transactional(readOnly = true)
     public Optional&lt;Document&gt; findById(UUID id) {
-<span class="fc" id="L35">        return documentRepository.findById(id);</span>
+<span class="nc" id="L35">        return documentRepository.findById(id);</span>
     }
     
     @Transactional
     public Document save(Document document) {
-<span class="fc" id="L40">        log.debug(&quot;Saving document: {}&quot;, document.getId());</span>
-<span class="fc" id="L41">        return documentRepository.save(document);</span>
+<span class="nc" id="L40">        log.debug(&quot;Saving document: {}&quot;, document.getId());</span>
+<span class="nc" id="L41">        return documentRepository.save(document);</span>
     }
     
     @Transactional
     public void delete(UUID id) {
-<span class="fc" id="L46">        log.debug(&quot;Deleting document: {}&quot;, id);</span>
-<span class="fc" id="L47">        documentRepository.deleteById(id);</span>
-<span class="fc" id="L48">    }</span>
+<span class="nc" id="L46">        log.debug(&quot;Deleting document: {}&quot;, id);</span>
+<span class="nc" id="L47">        documentRepository.deleteById(id);</span>
+<span class="nc" id="L48">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

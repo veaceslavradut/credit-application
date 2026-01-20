@@ -1,6 +1,8 @@
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\shared\DocumentServiceUnitTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\OfferRetrievalServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\BankOfferHistoryServiceTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\security\EncryptedAttributeConverterUnitTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\security\EncryptionIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\auth\model\UserEntityTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\BankAnalyticsServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\OfferHistoryServiceTest.java
@@ -43,6 +45,7 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\ban
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\compliance\service\ComplianceAuditServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\DataDeletionIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\BankDashboardServiceTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\security\DataRedactionServiceUnitTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\shared\DocumentIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ScenarioCalculatorIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\bank\BankMarketAnalysisIntegrationTest.java
@@ -69,6 +72,7 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\sha
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\ListApplicationsServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\OfferDocumentDownloadServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ApplicationHistoryIntegrationTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\security\EncryptionServiceUnitTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\BankAdminQueueServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\auth\LoginServiceUnitTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\shared\GDPRConsentServiceTest.java

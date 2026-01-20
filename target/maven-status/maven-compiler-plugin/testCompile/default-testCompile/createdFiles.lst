@@ -1,0 +1,6 @@
+com\creditapp\SpringContextIntegrationTest.class
+com\creditapp\shared\config\TestSecurityConfig.class
+com\creditapp\shared\config\TestRedisConfig.class
+com\creditapp\test\config\TestSecurityConfig.class
+com\creditapp\shared\config\TestCacheConfig.class
+com\creditapp\shared\controller\HealthControllerTest.class

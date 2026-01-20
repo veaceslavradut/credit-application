@@ -39,6 +39,14 @@ server:
   error:
     include-message: always
     include-binding-errors: always
+  ssl:
+    enabled: ${SSL_ENABLED:false}
+    key-store: ${SSL_KEYSTORE_PATH:classpath:keystore.p12}
+    key-store-password: ${SSL_KEYSTORE_PASSWORD:changeit}
+    key-store-type: PKCS12
+    protocol: TLSv1.3
+    enabled-protocols: TLSv1.3
+    ciphers: TLS_AES_256_GCM_SHA384,TLS_CHACHA20_POLY1305_SHA256
 
 management:
   endpoints:
@@ -91,6 +99,21 @@ app:
   audit:
     retention:
       days: 1095  # 3-year retention policy for audit logs
+  encryption:
+    provider: ${ENCRYPTION_PROVIDER:local}  # local, aws-kms, vault
+    kms:
+      region: ${AWS_REGION:eu-west-1}
+      key-id: ${KMS_KEY_ID:}
+    vault:
+      url: ${VAULT_URL:http://localhost:8200}
+      token: ${VAULT_TOKEN:}
+      mount: ${VAULT_MOUNT:transit}
+  s3:
+    documents-bucket: ${S3_DOCUMENTS_BUCKET:credit-app-documents}
+    region: ${AWS_S3_REGION:eu-west-1}
+  documents:
+    retention:
+      years: 3
 
 # Offer expiration configuration
 creditapp:

@@ -3,6 +3,7 @@ package com.creditapp.shared.service;
 import com.creditapp.shared.model.AuditAction;
 import com.creditapp.shared.model.AuditLog;
 import com.creditapp.shared.repository.AuditLogRepository;
+import com.creditapp.shared.security.DataRedactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -25,6 +26,7 @@ public class AuditService {
 
     private final AuditLogRepository auditLogRepository;
     private final RequestContextService requestContextService;
+    private final DataRedactionService dataRedactionService;
 
     // PII fields that should be sanitized from audit logs
     private static final Set<String> SENSITIVE_FIELDS = Set.of(
@@ -134,7 +136,10 @@ public class AuditService {
             return values;
         }
 
-        Map<String, Object> sanitized = new HashMap<>(values);
+        // First apply data redaction service for PII fields
+        Map<String, Object> sanitized = dataRedactionService.redactAuditDetails(values);
+        
+        // Then apply additional security-sensitive field redaction
         for (String sensitiveField : SENSITIVE_FIELDS) {
             if (sanitized.containsKey(sensitiveField)) {
                 sanitized.put(sensitiveField, "***REDACTED***");

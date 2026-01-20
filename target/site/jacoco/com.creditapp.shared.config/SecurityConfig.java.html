@@ -27,33 +27,40 @@ import org.springframework.beans.factory.ObjectProvider;
                                           ObjectProvider&lt;JwtAuthenticationFilter&gt; jwtFilterProvider) throws Exception {
 <span class="nc" id="L28">        http</span>
 <span class="nc" id="L29">            .csrf(csrf -&gt; csrf.disable())</span>
-<span class="nc" id="L30">            .authorizeHttpRequests(auth -&gt; auth</span>
-<span class="nc" id="L31">                .requestMatchers(&quot;/api/auth/**&quot;, &quot;/api/health/**&quot;, &quot;/api/help/**&quot;, &quot;/api/borrower/scenario-calculator&quot;, &quot;/api/legal/privacy-policy&quot;, &quot;/api/legal/terms-of-service&quot;, &quot;/actuator/**&quot;).permitAll()</span>
-<span class="nc" id="L32">                .anyRequest().authenticated()</span>
+<span class="nc" id="L30">            .headers(headers -&gt; headers</span>
+<span class="nc" id="L31">                .httpStrictTransportSecurity(hsts -&gt; hsts</span>
+<span class="nc" id="L32">                    .includeSubDomains(true)</span>
+<span class="nc" id="L33">                    .preload(true)</span>
+<span class="nc" id="L34">                    .maxAgeInSeconds(31536000)  // 1 year</span>
+<span class="nc" id="L35">                )</span>
             )
-<span class="nc" id="L34">            .exceptionHandling(ex -&gt; ex.accessDeniedHandler(accessDeniedHandler));</span>
+<span class="nc" id="L37">            .authorizeHttpRequests(auth -&gt; auth</span>
+<span class="nc" id="L38">                .requestMatchers(&quot;/api/auth/**&quot;, &quot;/api/health/**&quot;, &quot;/api/help/**&quot;, &quot;/api/borrower/scenario-calculator&quot;, &quot;/api/legal/privacy-policy&quot;, &quot;/api/legal/terms-of-service&quot;, &quot;/actuator/**&quot;).permitAll()</span>
+<span class="nc" id="L39">                .anyRequest().authenticated()</span>
+            )
+<span class="nc" id="L41">            .exceptionHandling(ex -&gt; ex.accessDeniedHandler(accessDeniedHandler));</span>
         
         // Only add JWT filter if available (not in test profile which uses @WithMockUser)
         // This allows Spring Security's test utilities to work properly
-<span class="nc" id="L38">        jwtFilterProvider.ifAvailable(filter -&gt; {</span>
+<span class="nc" id="L45">        jwtFilterProvider.ifAvailable(filter -&gt; {</span>
             try {
-<span class="nc" id="L40">                http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);</span>
-<span class="nc" id="L41">            } catch (Exception e) {</span>
-<span class="nc" id="L42">                throw new RuntimeException(e);</span>
+<span class="nc" id="L47">                http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);</span>
+<span class="nc" id="L48">            } catch (Exception e) {</span>
+<span class="nc" id="L49">                throw new RuntimeException(e);</span>
             }
-<span class="nc" id="L44">        });</span>
+<span class="nc" id="L51">        });</span>
         
-<span class="nc" id="L46">        return http.build();</span>
+<span class="nc" id="L53">        return http.build();</span>
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-<span class="nc" id="L51">        return new BCryptPasswordEncoder(12);</span>
+<span class="nc" id="L58">        return new BCryptPasswordEncoder(12);</span>
     }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter(JwtTokenService jwtTokenService) {
-<span class="nc" id="L56">        return new JwtAuthenticationFilter(jwtTokenService);</span>
+<span class="nc" id="L63">        return new JwtAuthenticationFilter(jwtTokenService);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
