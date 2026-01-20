@@ -6,8 +6,10 @@ import com.creditapp.borrower.dto.CreateApplicationRequest;
 import com.creditapp.borrower.dto.SubmitApplicationResponse;
 import com.creditapp.borrower.dto.UpdateApplicationRequest;
 import com.creditapp.borrower.dto.UpdateApplicationResponse;
+import com.creditapp.borrower.event.ApplicationSubmittedEvent;
 import com.creditapp.borrower.exception.ApplicationAlreadySubmittedException;
 import com.creditapp.borrower.exception.ApplicationCreationException;
+import com.creditapp.borrower.exception.ApplicationNotDraftException;
 import com.creditapp.borrower.exception.ApplicationNotFoundException;
 import com.creditapp.borrower.exception.ApplicationNotEditableException;
 import com.creditapp.borrower.exception.ApplicationStaleException;
@@ -38,6 +40,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.context.ApplicationEventPublisher;
+import java.time.LocalDateTime;
 
 /**
  * Service for application operations.
@@ -54,6 +58,7 @@ public class ApplicationService {
     private final UserRepository userRepository;
     private final OfferCalculationService offerCalculationService;
     private final GDPRConsentService consentService;
+    private final ApplicationEventPublisher eventPublisher;
 
     /**
      * Create a new application in DRAFT status.
@@ -225,9 +230,20 @@ public class ApplicationService {
 
         // Update status to SUBMITTED
         application.setStatus(ApplicationStatus.SUBMITTED);
+        application.setSubmittedAt(LocalDateTime.now());
         
         try {
             application = applicationRepository.save(application);
+
+            // Record history entry
+            ApplicationHistory history = ApplicationHistory.builder()
+                    .applicationId(applicationId)
+                    .oldStatus(ApplicationStatus.DRAFT)
+                    .newStatus(ApplicationStatus.SUBMITTED)
+                    .changedAt(LocalDateTime.now())
+                    .changeReason("Application submitted")
+                    .build();
+            applicationHistoryRepository.save(history);
 
             log.info("Application submitted: {} by borrower: {}", applicationId, borrowerId);
 
@@ -269,10 +285,16 @@ public class ApplicationService {
 
             return SubmitApplicationResponse.builder()
                     .id(application.getId())
+                    .loanType(application.getLoanType())
+                    .loanAmount(application.getLoanAmount())
+                    .loanTermMonths(application.getLoanTermMonths())
+                    .currency(application.getCurrency())
+                    .ratePreference(application.getRatePreference())
                     .status(application.getStatus().toString())
                     .submittedAt(application.getSubmittedAt())
+                    .createdAt(application.getCreatedAt())
+                    .version(application.getVersion())
                     .message("Application submitted successfully. Banks will review and contact you with offers.")
-                    .application(mapToDTO(application))
                     .build();
                     
         } catch (Exception e) {
@@ -448,4 +470,5 @@ public class ApplicationService {
         
         log.info("Consent validation passed for borrower: {}", borrowerId);
     }
+
 }
