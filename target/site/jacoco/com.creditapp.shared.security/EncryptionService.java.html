@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EncryptionService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.security</a> &gt; <span class="el_source">EncryptionService.java</span></div><h1>EncryptionService.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.security;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.Base64;
+
+/**
+ * AES-256-GCM encryption service for PII data at rest.
+ * Uses local encryption keys for Phase 1.
+ * Phase 2 will integrate with AWS KMS or HashiCorp Vault.
+ */
+@Service
+<span class="fc" id="L23">@Slf4j</span>
+public class EncryptionService {
+
+    private static final String ALGORITHM = &quot;AES/GCM/NoPadding&quot;;
+    private static final int GCM_TAG_LENGTH = 128;
+    private static final int GCM_IV_LENGTH = 12;
+    private static final int KEY_SIZE = 256;
+    
+    private final SecretKey encryptionKey;
+    private final SecureRandom secureRandom;
+
+    @Value(&quot;${app.encryption.provider:local}&quot;)
+    private String encryptionProvider;
+
+<span class="fc" id="L37">    public EncryptionService(@Value(&quot;${app.encryption.local-key:}&quot;) String localKey) {</span>
+<span class="fc" id="L38">        this.secureRandom = new SecureRandom();</span>
+        
+<span class="pc bpc" id="L40" title="2 of 4 branches missed.">        if (localKey != null &amp;&amp; !localKey.isEmpty()) {</span>
+            // Use provided key (base64 encoded)
+<span class="nc" id="L42">            byte[] decodedKey = Base64.getDecoder().decode(localKey);</span>
+<span class="nc" id="L43">            this.encryptionKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, &quot;AES&quot;);</span>
+<span class="nc" id="L44">        } else {</span>
+            // Generate new key for development
+<span class="fc" id="L46">            this.encryptionKey = generateKey();</span>
+<span class="fc" id="L47">            log.warn(&quot;Using generated encryption key. In production, provide app.encryption.local-key&quot;);</span>
+        }
+<span class="fc" id="L49">    }</span>
+
+    /**
+     * Encrypts plaintext using AES-256-GCM.
+     * Returns Base64 encoded: [IV (12 bytes)][Encrypted Data][Auth Tag (16 bytes)]
+     */
+    public String encrypt(String plaintext) {
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (plaintext == null) {</span>
+<span class="fc" id="L57">            return null;</span>
+        }
+
+        try {
+            // Generate random IV
+<span class="fc" id="L62">            byte[] iv = new byte[GCM_IV_LENGTH];</span>
+<span class="fc" id="L63">            secureRandom.nextBytes(iv);</span>
+
+            // Initialize cipher
+<span class="fc" id="L66">            Cipher cipher = Cipher.getInstance(ALGORITHM);</span>
+<span class="fc" id="L67">            GCMParameterSpec parameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH, iv);</span>
+<span class="fc" id="L68">            cipher.init(Cipher.ENCRYPT_MODE, encryptionKey, parameterSpec);</span>
+
+            // Encrypt
+<span class="fc" id="L71">            byte[] plainBytes = plaintext.getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L72">            byte[] ciphertext = cipher.doFinal(plainBytes);</span>
+
+            // Combine IV + ciphertext (includes auth tag)
+<span class="fc" id="L75">            ByteBuffer byteBuffer = ByteBuffer.allocate(iv.length + ciphertext.length);</span>
+<span class="fc" id="L76">            byteBuffer.put(iv);</span>
+<span class="fc" id="L77">            byteBuffer.put(ciphertext);</span>
+
+            // Return Base64 encoded
+<span class="fc" id="L80">            return Base64.getEncoder().encodeToString(byteBuffer.array());</span>
+
+<span class="nc" id="L82">        } catch (Exception e) {</span>
+<span class="nc" id="L83">            log.error(&quot;Encryption failed&quot;, e);</span>
+<span class="nc" id="L84">            throw new EncryptionException(&quot;Failed to encrypt data&quot;, e);</span>
+        }
+    }
+
+    /**
+     * Decrypts Base64 encoded ciphertext.
+     */
+    public String decrypt(String ciphertext) {
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        if (ciphertext == null) {</span>
+<span class="fc" id="L93">            return null;</span>
+        }
+
+        try {
+            // Decode Base64
+<span class="fc" id="L98">            byte[] decodedBytes = Base64.getDecoder().decode(ciphertext);</span>
+
+            // Extract IV and ciphertext
+<span class="fc" id="L101">            ByteBuffer byteBuffer = ByteBuffer.wrap(decodedBytes);</span>
+<span class="fc" id="L102">            byte[] iv = new byte[GCM_IV_LENGTH];</span>
+<span class="fc" id="L103">            byteBuffer.get(iv);</span>
+<span class="fc" id="L104">            byte[] encryptedBytes = new byte[byteBuffer.remaining()];</span>
+<span class="fc" id="L105">            byteBuffer.get(encryptedBytes);</span>
+
+            // Initialize cipher
+<span class="fc" id="L108">            Cipher cipher = Cipher.getInstance(ALGORITHM);</span>
+<span class="fc" id="L109">            GCMParameterSpec parameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH, iv);</span>
+<span class="fc" id="L110">            cipher.init(Cipher.DECRYPT_MODE, encryptionKey, parameterSpec);</span>
+
+            // Decrypt
+<span class="fc" id="L113">            byte[] plainBytes = cipher.doFinal(encryptedBytes);</span>
+<span class="fc" id="L114">            return new String(plainBytes, StandardCharsets.UTF_8);</span>
+
+<span class="fc" id="L116">        } catch (Exception e) {</span>
+<span class="fc" id="L117">            log.error(&quot;Decryption failed&quot;, e);</span>
+<span class="fc" id="L118">            throw new DecryptionException(&quot;Failed to decrypt data&quot;, e);</span>
+        }
+    }
+
+    /**
+     * Generates a new AES-256 key.
+     */
+    private SecretKey generateKey() {
+        try {
+<span class="fc" id="L127">            KeyGenerator keyGenerator = KeyGenerator.getInstance(&quot;AES&quot;);</span>
+<span class="fc" id="L128">            keyGenerator.init(KEY_SIZE, secureRandom);</span>
+<span class="fc" id="L129">            SecretKey key = keyGenerator.generateKey();</span>
+<span class="fc" id="L130">            log.info(&quot;Generated new AES-256 encryption key: {}&quot;, </span>
+<span class="fc" id="L131">                Base64.getEncoder().encodeToString(key.getEncoded()));</span>
+<span class="fc" id="L132">            return key;</span>
+<span class="nc" id="L133">        } catch (Exception e) {</span>
+<span class="nc" id="L134">            throw new EncryptionException(&quot;Failed to generate encryption key&quot;, e);</span>
+        }
+    }
+
+    public boolean isConfigured() {
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">        return encryptionKey != null;</span>
+    }
+
+    public String getProvider() {
+<span class="fc" id="L143">        return encryptionProvider;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -5,7 +5,7 @@ import com.creditapp.compliance.dto.AuditLogResponse;
 import com.creditapp.shared.model.AuditAction;
 import com.creditapp.shared.model.AuditLog;
 import com.creditapp.shared.repository.AuditLogRepository;
-import com.creditapp.shared.service.DataRedactionService;
+import com.creditapp.shared.service.SensitiveDataRedactionService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,7 +32,7 @@ public class ComplianceAuditServiceTest {
     private AuditLogRepository auditLogRepository;
 
     @Mock
-    private DataRedactionService dataRedactionService;
+    private SensitiveDataRedactionService dataRedactionService;
 
     @InjectMocks
     private ComplianceAuditService complianceAuditService;

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ComplianceChecklistController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.compliance.controller</a> &gt; <span class="el_source">ComplianceChecklistController.java</span></div><h1>ComplianceChecklistController.java</h1><pre class="source lang-java linenums">package com.creditapp.compliance.controller;
+
+import com.creditapp.compliance.dto.ComplianceChecklistResponse;
+import com.creditapp.compliance.dto.ComplianceChecklistUpdateRequest;
+import com.creditapp.compliance.service.ComplianceChecklistService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import java.util.UUID;
+
+@RestController
+@RequestMapping(&quot;/api/compliance/checklist&quot;)
+<span class="fc" id="L18">@RequiredArgsConstructor</span>
+<span class="fc" id="L19">@Slf4j</span>
+public class ComplianceChecklistController {
+    
+    private final ComplianceChecklistService complianceChecklistService;
+    
+    @GetMapping
+    @PreAuthorize(&quot;hasRole('COMPLIANCE_OFFICER')&quot;)
+    public ResponseEntity&lt;ComplianceChecklistResponse&gt; getComplianceChecklist() {
+<span class="fc" id="L27">        log.info(&quot;Retrieving compliance checklist&quot;);</span>
+<span class="fc" id="L28">        ComplianceChecklistResponse response = complianceChecklistService.getComplianceChecklist();</span>
+<span class="fc" id="L29">        return new ResponseEntity&lt;&gt;(response, HttpStatus.OK);</span>
+    }
+    
+    @PutMapping(&quot;/{itemId}&quot;)
+    @PreAuthorize(&quot;hasRole('COMPLIANCE_OFFICER')&quot;)
+    public ResponseEntity&lt;?&gt; updateChecklistItem(
+            @PathVariable UUID itemId,
+            @RequestBody ComplianceChecklistUpdateRequest request) {
+<span class="fc" id="L37">        log.info(&quot;Updating compliance checklist item: {}&quot;, itemId);</span>
+        
+        try {
+<span class="fc" id="L40">            var response = complianceChecklistService.updateChecklistItem(itemId, request);</span>
+<span class="fc" id="L41">            return new ResponseEntity&lt;&gt;(response, HttpStatus.OK);</span>
+<span class="nc" id="L42">        } catch (RuntimeException e) {</span>
+<span class="nc" id="L43">            log.error(&quot;Error updating compliance item: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L44">            return new ResponseEntity&lt;&gt;(</span>
+<span class="nc" id="L45">                new ErrorResponse(&quot;ERROR&quot;, e.getMessage()),</span>
+                HttpStatus.BAD_REQUEST
+            );
+        }
+    }
+    
+    @GetMapping(&quot;/submission-package&quot;)
+    @PreAuthorize(&quot;hasRole('COMPLIANCE_OFFICER')&quot;)
+    public ResponseEntity&lt;byte[]&gt; generateSubmissionPackage() {
+<span class="fc" id="L54">        log.info(&quot;Generating compliance submission package&quot;);</span>
+        
+        try {
+<span class="fc" id="L57">            byte[] pdfBytes = complianceChecklistService.generateSubmissionPackage();</span>
+            
+<span class="fc" id="L59">            return ResponseEntity.ok()</span>
+<span class="fc" id="L60">                .header(HttpHeaders.CONTENT_DISPOSITION, &quot;attachment; filename=compliance-submission-package.pdf&quot;)</span>
+<span class="fc" id="L61">                .contentType(MediaType.APPLICATION_PDF)</span>
+<span class="fc" id="L62">                .contentLength(pdfBytes.length)</span>
+<span class="fc" id="L63">                .body(pdfBytes);</span>
+<span class="nc" id="L64">        } catch (Exception e) {</span>
+<span class="nc" id="L65">            log.error(&quot;Error generating submission package: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L66">            return new ResponseEntity&lt;&gt;(HttpStatus.INTERNAL_SERVER_ERROR);</span>
+        }
+    }
+    
+    static class ErrorResponse {
+        private String status;
+        private String message;
+        
+<span class="nc" id="L74">        ErrorResponse(String status, String message) {</span>
+<span class="nc" id="L75">            this.status = status;</span>
+<span class="nc" id="L76">            this.message = message;</span>
+<span class="nc" id="L77">        }</span>
+        
+<span class="nc" id="L79">        public String getStatus() { return status; }</span>
+<span class="nc" id="L80">        public String getMessage() { return message; }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

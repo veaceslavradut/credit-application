@@ -22,7 +22,7 @@ public class ComplianceChecklistController {
     private final ComplianceChecklistService complianceChecklistService;
     
     @GetMapping
-    @PreAuthorize("hasAuthority('COMPLIANCE_OFFICER')")
+    @PreAuthorize("hasRole('COMPLIANCE_OFFICER')")
     public ResponseEntity<ComplianceChecklistResponse> getComplianceChecklist() {
         log.info("Retrieving compliance checklist");
         ComplianceChecklistResponse response = complianceChecklistService.getComplianceChecklist();
@@ -30,7 +30,7 @@ public class ComplianceChecklistController {
     }
     
     @PutMapping("/{itemId}")
-    @PreAuthorize("hasAuthority('COMPLIANCE_OFFICER')")
+    @PreAuthorize("hasRole('COMPLIANCE_OFFICER')")
     public ResponseEntity<?> updateChecklistItem(
             @PathVariable UUID itemId,
             @RequestBody ComplianceChecklistUpdateRequest request) {
@@ -49,7 +49,7 @@ public class ComplianceChecklistController {
     }
     
     @GetMapping("/submission-package")
-    @PreAuthorize("hasAuthority('COMPLIANCE_OFFICER')")
+    @PreAuthorize("hasRole('COMPLIANCE_OFFICER')")
     public ResponseEntity<byte[]> generateSubmissionPackage() {
         log.info("Generating compliance submission package");
         

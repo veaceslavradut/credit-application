@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LegalDocument.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.model</a> &gt; <span class="el_source">LegalDocument.java</span></div><h1>LegalDocument.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+/**
+ * JPA Entity for legal documents (Privacy Policy, Terms of Service)
+ * with version tracking and audit history
+ */
+@Entity
+@Table(name = &quot;legal_documents&quot;, indexes = {
+    @Index(name = &quot;idx_legal_documents_type_status_language&quot;, columnList = &quot;document_type,status,language&quot;),
+    @Index(name = &quot;idx_legal_documents_version&quot;, columnList = &quot;document_type,version&quot;)
+})
+<span class="nc bnc" id="L23" title="All 86 branches missed.">@Data</span>
+<span class="nc" id="L24">@NoArgsConstructor</span>
+<span class="fc" id="L25">@AllArgsConstructor</span>
+<span class="pc bpc" id="L26" title="2 of 4 branches missed.">@Builder</span>
+public class LegalDocument {
+
+    @Id
+<span class="fc" id="L30">    private UUID id;</span>
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+<span class="fc" id="L34">    private DocumentType documentType;</span>
+
+    @Column(nullable = false)
+<span class="fc" id="L37">    private Integer version;</span>
+
+    @Column(nullable = false, columnDefinition = &quot;TEXT&quot;)
+<span class="fc" id="L40">    private String content;</span>
+
+    @Column
+<span class="fc" id="L43">    private String contentHash;</span>
+
+    @Column(nullable = false, length = 10)
+    @Builder.Default
+<span class="fc" id="L47">    private String language = &quot;en&quot;;</span>
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+<span class="fc" id="L52">    private LegalStatus status = LegalStatus.DRAFT;</span>
+
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+<span class="nc" id="L56">    private LocalDateTime createdAt;</span>
+
+    @UpdateTimestamp
+    @Column(nullable = false)
+<span class="fc" id="L60">    private LocalDateTime updatedAt;</span>
+
+    @Column
+<span class="fc" id="L63">    private UUID updatedBy;</span>
+
+    @PrePersist
+    protected void onCreate() {
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        if (id == null) {</span>
+<span class="fc" id="L68">            id = UUID.randomUUID();</span>
+        }
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        if (version == null) {</span>
+<span class="nc" id="L71">            version = 1;</span>
+        }
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        if (status == null) {</span>
+<span class="nc" id="L74">            status = LegalStatus.DRAFT;</span>
+        }
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        if (language == null) {</span>
+<span class="nc" id="L77">            language = &quot;en&quot;;</span>
+        }
+<span class="fc" id="L79">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

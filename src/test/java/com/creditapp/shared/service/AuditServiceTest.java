@@ -3,6 +3,7 @@ package com.creditapp.shared.service;
 import com.creditapp.shared.model.AuditAction;
 import com.creditapp.shared.model.AuditLog;
 import com.creditapp.shared.repository.AuditLogRepository;
+import com.creditapp.shared.security.DataRedactionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +28,9 @@ class AuditServiceTest {
     @Mock
     private RequestContextService requestContextService;
 
+    @Mock
+    private DataRedactionService dataRedactionService;
+
     @InjectMocks
     private AuditService auditService;
 
@@ -39,6 +43,10 @@ class AuditServiceTest {
         testEntityId = UUID.randomUUID();
         testActorId = UUID.randomUUID();
         testEntityType = "Application";
+        
+        // Mock the dataRedactionService to return values as-is (no redaction)
+        // Using lenient() to allow some tests to not use this mock
+        lenient().when(dataRedactionService.redactAuditDetails(any())).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
     @Test

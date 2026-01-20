@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DocumentController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.controller</a> &gt; <span class="el_source">DocumentController.java</span></div><h1>DocumentController.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.controller;
+
+import com.creditapp.shared.model.Document;
+import com.creditapp.shared.model.DocumentType;
+import com.creditapp.shared.service.DocumentService;
+import com.creditapp.shared.service.ESignatureService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * Document Management REST Controller
+ * 
+ * Endpoints:
+ * - GET /documents - List documents for application
+ * - POST /documents/{id}/sign - Send for e-signature (Phase 1: 501 Not Implemented)
+ * - GET /documents/{id}/signature-status - Check signature status
+ */
+@RestController
+@RequestMapping(&quot;/api/borrower/documents&quot;)
+<span class="fc" id="L27">@RequiredArgsConstructor</span>
+<span class="fc" id="L28">@Slf4j</span>
+public class DocumentController {
+    
+    private final DocumentService documentService;
+    private final ESignatureService eSignatureService;
+    
+    /**
+     * GET /api/borrower/documents?applicationId={id}
+     * List all documents for an application
+     */
+    @GetMapping
+    @PreAuthorize(&quot;hasAuthority('BORROWER')&quot;)
+    public ResponseEntity&lt;List&lt;Document&gt;&gt; listDocuments(
+            @RequestParam UUID applicationId,
+            Authentication authentication) {
+<span class="nc" id="L43">        log.info(&quot;Listing documents for application {}&quot;, applicationId);</span>
+        
+<span class="nc" id="L45">        List&lt;Document&gt; documents = documentService.findByApplicationId(applicationId);</span>
+<span class="nc" id="L46">        return ResponseEntity.ok(documents);</span>
+    }
+    
+    /**
+     * GET /api/borrower/documents/{id}
+     * Get single document details
+     */
+    @GetMapping(&quot;/{id}&quot;)
+    @PreAuthorize(&quot;hasAuthority('BORROWER')&quot;)
+    public ResponseEntity&lt;Document&gt; getDocument(
+            @PathVariable UUID id,
+            Authentication authentication) {
+<span class="nc" id="L58">        log.info(&quot;Retrieving document {}&quot;, id);</span>
+        
+<span class="nc" id="L60">        Document document = documentService.findById(id)</span>
+<span class="nc" id="L61">                .orElseThrow(() -&gt; new RuntimeException(&quot;Document not found&quot;));</span>
+        
+<span class="nc" id="L63">        return ResponseEntity.ok(document);</span>
+    }
+    
+    /**
+     * POST /api/borrower/documents/{id}/sign
+     * Send document for e-signature
+     * 
+     * Phase 1: Returns 501 Not Implemented
+     * Phase 2: Integrates with DocuSign
+     */
+    @PostMapping(&quot;/{id}/sign&quot;)
+    @PreAuthorize(&quot;hasAuthority('BORROWER')&quot;)
+    public ResponseEntity&lt;?&gt; sendForSignature(
+            @PathVariable UUID id,
+            @RequestParam(required = false) String signerEmail,
+            Authentication authentication) {
+<span class="nc" id="L79">        log.info(&quot;Phase 1 stub: sendForSignature called for document {}&quot;, id);</span>
+        
+<span class="nc" id="L81">        return ResponseEntity</span>
+<span class="nc" id="L82">                .status(HttpStatus.NOT_IMPLEMENTED)</span>
+<span class="nc" id="L83">                .body(&quot;E-signature functionality not yet implemented (Phase 2)&quot;);</span>
+    }
+    
+    /**
+     * GET /api/borrower/documents/{documentId}/signature-status
+     * Get signature status
+     */
+    @GetMapping(&quot;/{documentId}/signature-status&quot;)
+    @PreAuthorize(&quot;hasAuthority('BORROWER')&quot;)
+    public ResponseEntity&lt;?&gt; getSignatureStatus(
+            @PathVariable UUID documentId,
+            Authentication authentication) {
+<span class="nc" id="L95">        log.info(&quot;Retrieving signature status for document {}&quot;, documentId);</span>
+        
+        try {
+            // Placeholder: Would query signature log
+<span class="nc" id="L99">            return ResponseEntity.ok().body(&quot;{\&quot;status\&quot;: \&quot;PENDING\&quot;, \&quot;message\&quot;: \&quot;Signature pending\&quot;}&quot;);</span>
+<span class="nc" id="L100">        } catch (Exception e) {</span>
+<span class="nc" id="L101">            log.error(&quot;Error retrieving signature status&quot;, e);</span>
+<span class="nc" id="L102">            return ResponseEntity</span>
+<span class="nc" id="L103">                    .status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="nc" id="L104">                    .body(&quot;Error retrieving signature status&quot;);</span>
+        }
+    }
+    
+    /**
+     * GET /api/borrower/applications/{applicationId}/documents
+     * Alternative endpoint: List documents by application
+     */
+    @GetMapping(&quot;/applications/{applicationId}&quot;)
+    @PreAuthorize(&quot;hasAuthority('BORROWER')&quot;)
+    public ResponseEntity&lt;List&lt;Document&gt;&gt; listApplicationDocuments(
+            @PathVariable UUID applicationId) {
+<span class="nc" id="L116">        log.info(&quot;Listing documents for application {}&quot;, applicationId);</span>
+        
+<span class="nc" id="L118">        List&lt;Document&gt; documents = documentService.findByApplicationId(applicationId);</span>
+<span class="nc" id="L119">        return ResponseEntity.ok(documents);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

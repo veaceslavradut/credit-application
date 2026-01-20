@@ -331,7 +331,6 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\compliance\dto\ComplianceChecklistItemResponse.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\DefaultRateCardService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\dto\OfferHistoryItem.java
-C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\DataRedactionService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\controller\BankOfferHistoryController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\controller\GDPRConsentController.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\ApplicationService.java
@@ -344,6 +343,7 @@ C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\m
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\bank\repository\ApplicationBankNotesRepository.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\service\WithdrawApplicationService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\WithdrawApplicationResponse.java
+C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\SensitiveDataRedactionService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\security\CustomAccessDeniedHandler.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\shared\service\DataExportService.java
 C:\Users\veaceslav.radut\credit-application\src\main\java\com\creditapp\borrower\dto\SelectOfferResponse.java

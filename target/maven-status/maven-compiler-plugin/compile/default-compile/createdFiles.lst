@@ -184,6 +184,7 @@ com\creditapp\shared\config\JwtConfig$Expiration.class
 com\creditapp\borrower\dto\StatusTransitionDTO.class
 com\creditapp\auth\dto\ChangePasswordResponse.class
 com\creditapp\shared\config\ESignatureProviderConfig$Provider.class
+com\creditapp\shared\service\SensitiveDataRedactionService.class
 com\creditapp\shared\service\AuditLogIntegrityService.class
 com\creditapp\auth\repository\UserRepository.class
 com\creditapp\borrower\dto\CalculateScenarioResponse$CalculateScenarioResponseBuilder.class
@@ -383,7 +384,6 @@ com\creditapp\bank\dto\ApplicationQueueRequest$ApplicationQueueRequestBuilder.cl
 com\creditapp\bank\dto\ApplicationStatusUpdateRequest.class
 com\creditapp\bank\controller\BankDashboardController.class
 com\creditapp\bank\dto\OfferHistoryFilter$OfferHistoryFilterBuilder.class
-com\creditapp\shared\service\DataRedactionService.class
 com\creditapp\borrower\model\RatePreference.class
 com\creditapp\borrower\dto\CreateApplicationRequest.class
 com\creditapp\shared\controller\HealthController.class

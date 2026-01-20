@@ -6,7 +6,7 @@ import com.creditapp.compliance.dto.AuditLogResponse;
 import com.creditapp.shared.model.AuditAction;
 import com.creditapp.shared.model.AuditLog;
 import com.creditapp.shared.repository.AuditLogRepository;
-import com.creditapp.shared.service.DataRedactionService;
+import com.creditapp.shared.service.SensitiveDataRedactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ComplianceAuditService {
     private final AuditLogRepository auditLogRepository;
-    private final DataRedactionService dataRedactionService;
+    private final SensitiveDataRedactionService dataRedactionService;
 
     public Page<AuditLogResponse> getAuditLogs(AuditLogFilterDTO filter) {
         int page = filter.getPage() != null ? filter.getPage() : 0;
