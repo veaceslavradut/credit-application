@@ -57,16 +57,20 @@ com\creditapp\bank\controller\BankApplicationQueueController.class
 com\creditapp\borrower\dto\OfferSummaryDTO.class
 com\creditapp\borrower\dto\SelectOfferResponse.class
 com\creditapp\borrower\model\BorrowerNotification$BorrowerNotificationBuilder.class
+com\creditapp\shared\model\ComplianceStatus.class
 com\creditapp\shared\dto\AuditLogDTO.class
 com\creditapp\borrower\model\ApplicationDetails.class
+com\creditapp\compliance\dto\ComplianceChecklistItemResponse.class
 com\creditapp\bank\service\BankOfferHistoryService.class
 com\creditapp\borrower\dto\SubmitApplicationResponse$SubmitApplicationResponseBuilder.class
 com\creditapp\bank\model\BankRateCard.class
 com\creditapp\common\exception\GlobalExceptionHandler.class
 com\creditapp\borrower\repository\ApplicationDetailsRepository.class
+com\creditapp\compliance\dto\ComplianceChecklistResponse$ComplianceChecklistResponseBuilder.class
 com\creditapp\bank\service\ApplicationQueueService.class
 com\creditapp\borrower\model\Currency.class
 com\creditapp\borrower\dto\UpdateApplicationResponse.class
+com\creditapp\compliance\dto\ComplianceChecklistUpdateRequest$ComplianceChecklistUpdateRequestBuilder.class
 com\creditapp\bank\service\BankRateCardService.class
 com\creditapp\bank\dto\EmploymentDetailsDTO$EmploymentDetailsDTOBuilder.class
 com\creditapp\borrower\dto\SavingsAnalysisDTO.class
@@ -114,6 +118,7 @@ com\creditapp\borrower\exception\ApplicationAlreadySubmittedException.class
 com\creditapp\bank\controller\BankOfferHistoryController.class
 com\creditapp\shared\service\DataExportService.class
 com\creditapp\compliance\dto\AuditLogExportDTO$AuditLogExportDTOBuilder.class
+com\creditapp\compliance\dto\ComplianceChecklistResponse.class
 com\creditapp\auth\controller\AuthController.class
 com\creditapp\shared\model\ExportFormat.class
 com\creditapp\borrower\exception\ApplicationNotFoundException.class
@@ -155,6 +160,7 @@ com\creditapp\shared\repository\EmailDeliveryLogRepository.class
 com\creditapp\shared\repository\GDPRConsentRepository.class
 com\creditapp\shared\config\RabbitMQConfig.class
 com\creditapp\shared\repository\LegalDocumentRepository.class
+com\creditapp\compliance\service\ComplianceChecklistService.class
 com\creditapp\shared\model\GDPRConsent$GDPRConsentBuilder.class
 com\creditapp\shared\service\ESignatureService.class
 com\creditapp\shared\repository\EmailTemplateRepository.class
@@ -184,6 +190,7 @@ com\creditapp\borrower\dto\CalculateScenarioResponse$CalculateScenarioResponseBu
 com\creditapp\bank\service\BankOfferSubmissionService.class
 com\creditapp\borrower\dto\UpdateApplicationResponse$UpdateApplicationResponseBuilder.class
 com\creditapp\bank\service\ApplicationQueueNotificationService.class
+com\creditapp\compliance\dto\ComplianceChecklistUpdateRequest.class
 com\creditapp\shared\model\EmailDeliveryLog$EmailDeliveryLogBuilder.class
 com\creditapp\auth\dto\BankRegistrationResponse.class
 com\creditapp\bank\dto\LoanRequestDetailsDTO.class
@@ -230,6 +237,7 @@ com\creditapp\borrower\exception\ApplicationNotEditableException.class
 com\creditapp\bank\repository\BankRateCardRepository.class
 com\creditapp\shared\config\SecurityConfig.class
 com\creditapp\shared\security\RequiresBankAdmin.class
+com\creditapp\compliance\controller\ComplianceChecklistController.class
 com\creditapp\compliance\dto\AuditLogResponse.class
 com\creditapp\borrower\dto\OfferComparisonResponse.class
 com\creditapp\shared\dto\UpdateLegalDocumentRequest$UpdateLegalDocumentRequestBuilder.class
@@ -261,6 +269,7 @@ com\creditapp\bank\dto\DeclineApplicationResponse.class
 com\creditapp\bank\dto\OfferSubmissionResponse$OfferSubmissionResponseBuilder.class
 com\creditapp\shared\repository\AuditLogRepository.class
 com\creditapp\borrower\dto\ConsentRequestDTO$ConsentRequestDTOBuilder.class
+com\creditapp\shared\model\ComplianceChecklistItem$ComplianceChecklistItemBuilder.class
 com\creditapp\shared\repository\DocumentRepository.class
 com\creditapp\bank\dto\ApplicationStatusUpdateResponse$ApplicationStatusUpdateResponseBuilder.class
 com\creditapp\shared\model\ApplicationQueueMetrics.class
@@ -304,6 +313,7 @@ com\creditapp\bank\dto\BankRateCardResponse.class
 com\creditapp\borrower\model\EmploymentStatus.class
 com\creditapp\shared\exception\NotFoundException.class
 com\creditapp\shared\repository\RefreshTokenRepository.class
+com\creditapp\shared\model\ComplianceChecklistItem.class
 com\creditapp\shared\security\EncryptionService.class
 com\creditapp\borrower\dto\SubmitApplicationRequest$SubmitApplicationRequestBuilder.class
 com\creditapp\borrower\exception\InvalidOfferException.class
@@ -332,6 +342,7 @@ com\creditapp\borrower\dto\SubmitApplicationRequest.class
 com\creditapp\bank\dto\InviteTeamMemberRequest.class
 com\creditapp\borrower\repository\LoanPreferenceRepository.class
 com\creditapp\auth\dto\LoginResponse$UserDTO.class
+com\creditapp\compliance\controller\ComplianceChecklistController$ErrorResponse.class
 com\creditapp\bank\dto\OfferDocumentMetadata.class
 com\creditapp\borrower\dto\ApplicationDetailsDTO.class
 com\creditapp\shared\service\MockEmailService$MockEmail.class
@@ -357,11 +368,13 @@ com\creditapp\borrower\service\OfferRetrievalService.class
 com\creditapp\bank\dto\DeclineApplicationRequest.class
 com\creditapp\shared\model\HelpArticle.class
 com\creditapp\shared\security\EncryptionException.class
+com\creditapp\shared\repository\ComplianceChecklistItemRepository.class
 com\creditapp\bank\repository\TeamMemberInviteRepository.class
 com\creditapp\bank\dto\AnalyticsTrendDTO$AnalyticsTrendDTOBuilder.class
 com\creditapp\borrower\exception\ApplicationCreationException.class
 com\creditapp\shared\interceptor\AuditInterceptor.class
 com\creditapp\borrower\service\ApplicationStatusTransitionService.class
+com\creditapp\compliance\dto\ComplianceChecklistItemResponse$ComplianceChecklistItemResponseBuilder.class
 com\creditapp\shared\service\DocumentStorageService.class
 com\creditapp\bank\dto\BorrowerDetailsDTO.class
 com\creditapp\borrower\dto\HelpFAQDTO$HelpFAQDTOBuilder.class

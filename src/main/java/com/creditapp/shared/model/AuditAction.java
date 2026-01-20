@@ -38,7 +38,8 @@ public enum AuditAction {
     DATA_DELETION_REQUESTED("Data deletion requested"),
     DATA_DELETION_CONFIRMED("Data deletion confirmed"),
     DATA_DELETION_COMPLETED("Data deletion completed"),
-    DATA_DELETION_CANCELLED("Data deletion cancelled");
+    DATA_DELETION_CANCELLED("Data deletion cancelled"),
+    COMPLIANCE_CHECKLIST_REVIEWED("Compliance checklist reviewed");
 
     private final String description;
 
