@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankAdminRateCardController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.bank.controller</a> &gt; <span class="el_source">BankAdminRateCardController.java</span></div><h1>BankAdminRateCardController.java</h1><pre class="source lang-java linenums">package com.creditapp.bank.controller;
+
+import com.creditapp.bank.dto.BankRateCardRequest;
+import com.creditapp.bank.dto.BankRateCardResponse;
+import com.creditapp.bank.service.BankRateCardService;
+import com.creditapp.shared.security.AuthorizationService;
+import jakarta.validation.Valid;
+import java.util.List;
+import java.util.UUID;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping(&quot;/api/bank/rate-cards&quot;)
+public class BankAdminRateCardController {
+    
+    private final BankRateCardService bankRateCardService;
+    private final AuthorizationService authorizationService;
+    
+<span class="nc" id="L28">    public BankAdminRateCardController(BankRateCardService bankRateCardService,</span>
+            AuthorizationService authorizationService) {
+<span class="nc" id="L30">        this.bankRateCardService = bankRateCardService;</span>
+<span class="nc" id="L31">        this.authorizationService = authorizationService;</span>
+<span class="nc" id="L32">    }</span>
+    
+    /**
+     * Creates a new rate card for the authenticated bank.
+     *
+     * @param request The rate card creation request
+     * @return ResponseEntity with status 201 (Created) and the created rate card
+     */
+    @PostMapping
+    @PreAuthorize(&quot;hasAuthority('BANK_ADMIN')&quot;)
+    public ResponseEntity&lt;BankRateCardResponse&gt; createRateCard(
+            @Valid @RequestBody BankRateCardRequest request) {
+<span class="nc" id="L44">        UUID bankId = authorizationService.getBankIdFromContext();</span>
+<span class="nc" id="L45">        BankRateCardResponse response = bankRateCardService.createRateCard(bankId, request);</span>
+<span class="nc" id="L46">        return ResponseEntity.status(HttpStatus.CREATED).body(response);</span>
+    }
+    
+    /**
+     * Retrieves all active rate cards for the authenticated bank.
+     *
+     * @return ResponseEntity with status 200 (OK) and list of rate cards
+     */
+    @GetMapping
+    @PreAuthorize(&quot;hasAuthority('BANK_ADMIN')&quot;)
+    public ResponseEntity&lt;List&lt;BankRateCardResponse&gt;&gt; getActiveRateCards() {
+<span class="nc" id="L57">        UUID bankId = authorizationService.getBankIdFromContext();</span>
+<span class="nc" id="L58">        List&lt;BankRateCardResponse&gt; response = bankRateCardService.getActiveRateCards(bankId);</span>
+<span class="nc" id="L59">        return ResponseEntity.ok(response);</span>
+    }
+    
+    /**
+     * Updates an existing rate card by creating a new version.
+     * The old card is marked as inactive (versioning).
+     *
+     * @param rateCardId The ID of the rate card to update
+     * @param request The rate card update request
+     * @return ResponseEntity with status 200 (OK) and the new rate card version
+     */
+    @PutMapping(&quot;/{rateCardId}&quot;)
+    @PreAuthorize(&quot;hasAuthority('BANK_ADMIN')&quot;)
+    public ResponseEntity&lt;BankRateCardResponse&gt; updateRateCard(
+            @PathVariable UUID rateCardId,
+            @Valid @RequestBody BankRateCardRequest request) {
+<span class="nc" id="L75">        UUID bankId = authorizationService.getBankIdFromContext();</span>
+<span class="nc" id="L76">        BankRateCardResponse response = bankRateCardService.updateRateCard(bankId, rateCardId, request);</span>
+<span class="nc" id="L77">        return ResponseEntity.ok(response);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LegalDocument.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.model</a> &gt; <span class="el_source">LegalDocument.java</span></div><h1>LegalDocument.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+/**
+ * JPA Entity for legal documents (Privacy Policy, Terms of Service)
+ * with version tracking and audit history
+ */
+@Entity
+@Table(name = &quot;legal_documents&quot;, indexes = {
+    @Index(name = &quot;idx_legal_documents_type_status_language&quot;, columnList = &quot;document_type,status,language&quot;),
+    @Index(name = &quot;idx_legal_documents_version&quot;, columnList = &quot;document_type,version&quot;)
+})
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class LegalDocument {
+
+    @Id
+    private UUID id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DocumentType documentType;
+
+    @Column(nullable = false)
+    private Integer version;
+
+    @Column(nullable = false, columnDefinition = &quot;TEXT&quot;)
+    private String content;
+
+    @Column
+    private String contentHash;
+
+    @Column(nullable = false, length = 10)
+    @Builder.Default
+    private String language = &quot;en&quot;;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private LegalStatus status = LegalStatus.DRAFT;
+
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
+
+    @Column
+    private UUID updatedBy;
+
+    @PrePersist
+    protected void onCreate() {
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (id == null) {</span>
+<span class="nc" id="L68">            id = UUID.randomUUID();</span>
+        }
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (version == null) {</span>
+<span class="nc" id="L71">            version = 1;</span>
+        }
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (status == null) {</span>
+<span class="nc" id="L74">            status = LegalStatus.DRAFT;</span>
+        }
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (language == null) {</span>
+<span class="nc" id="L77">            language = &quot;en&quot;;</span>
+        }
+<span class="nc" id="L79">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

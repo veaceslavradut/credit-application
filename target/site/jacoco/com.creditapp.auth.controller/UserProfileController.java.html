@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserProfileController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.auth.controller</a> &gt; <span class="el_source">UserProfileController.java</span></div><h1>UserProfileController.java</h1><pre class="source lang-java linenums">package com.creditapp.auth.controller;
+
+import com.creditapp.auth.dto.ChangePasswordRequest;
+import com.creditapp.auth.dto.ChangePasswordResponse;
+import com.creditapp.auth.dto.UpdateProfileRequest;
+import com.creditapp.auth.dto.UserProfileResponse;
+import com.creditapp.auth.service.ProfileService;
+import com.creditapp.shared.security.AuthorizationService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
+import java.util.UUID;
+
+@RestController
+@RequestMapping(&quot;/api/profile&quot;)
+@RequiredArgsConstructor
+<span class="nc" id="L21">@Slf4j</span>
+public class UserProfileController {
+    
+    private final ProfileService profileService;
+    private final AuthorizationService authorizationService;
+    
+    @GetMapping
+    @PreAuthorize(&quot;isAuthenticated()&quot;)
+    public ResponseEntity&lt;UserProfileResponse&gt; getProfile() {
+<span class="nc" id="L30">        UUID userId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L31">        log.info(&quot;User {} retrieved their profile&quot;, userId);</span>
+        
+<span class="nc" id="L33">        UserProfileResponse profile = profileService.getCurrentUserProfile(userId);</span>
+<span class="nc" id="L34">        return ResponseEntity.ok(profile);</span>
+    }
+    
+    @PutMapping
+    @PreAuthorize(&quot;isAuthenticated()&quot;)
+    public ResponseEntity&lt;UserProfileResponse&gt; updateProfile(@Valid @RequestBody UpdateProfileRequest request) {
+<span class="nc" id="L40">        UUID userId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L41">        log.info(&quot;User {} updating profile&quot;, userId);</span>
+        
+<span class="nc" id="L43">        UserProfileResponse updatedProfile = profileService.updateProfile(userId, request);</span>
+<span class="nc" id="L44">        return ResponseEntity.ok(updatedProfile);</span>
+    }
+    
+    @PutMapping(&quot;/change-password&quot;)
+    @PreAuthorize(&quot;isAuthenticated()&quot;)
+    public ResponseEntity&lt;ChangePasswordResponse&gt; changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+<span class="nc" id="L50">        UUID userId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L51">        log.info(&quot;User {} requested password change&quot;, userId);</span>
+        
+<span class="nc" id="L53">        ChangePasswordResponse response = profileService.changePassword(userId, request);</span>
+<span class="nc" id="L54">        return ResponseEntity.ok(response);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

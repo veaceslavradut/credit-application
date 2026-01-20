@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankApplicationQueueController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.bank.controller</a> &gt; <span class="el_source">BankApplicationQueueController.java</span></div><h1>BankApplicationQueueController.java</h1><pre class="source lang-java linenums">package com.creditapp.bank.controller;
+
+import com.creditapp.bank.dto.ApplicationQueueRequest;
+import com.creditapp.bank.dto.ApplicationQueueResponse;
+import com.creditapp.bank.dto.ApplicationStatusUpdateRequest;
+import com.creditapp.bank.dto.ApplicationStatusUpdateResponse;
+import com.creditapp.bank.service.ApplicationQueueService;
+import com.creditapp.bank.service.ApplicationStatusUpdateService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping(&quot;/api/bank/dashboard&quot;)
+public class BankApplicationQueueController {
+
+    private final ApplicationQueueService applicationQueueService;
+    private final ApplicationStatusUpdateService applicationStatusUpdateService;
+
+    @GetMapping(&quot;/application-queue&quot;)
+    @PreAuthorize(&quot;hasAuthority('BANK_OFFICER')&quot;)
+    public ResponseEntity&lt;ApplicationQueueResponse&gt; getApplicationQueue(
+        @RequestParam(&quot;bankId&quot;) UUID bankId,
+        @RequestParam(value = &quot;limit&quot;, required = false) @Min(1) @Max(100) Integer limit,
+        @RequestParam(value = &quot;offset&quot;, required = false) @Min(0) Integer offset,
+        @RequestParam(value = &quot;status&quot;, required = false) String status,
+        @RequestParam(value = &quot;aprMin&quot;, required = false) BigDecimal aprMin,
+        @RequestParam(value = &quot;aprMax&quot;, required = false) BigDecimal aprMax,
+        @RequestParam(value = &quot;loanAmountMin&quot;, required = false) BigDecimal loanAmountMin,
+        @RequestParam(value = &quot;loanAmountMax&quot;, required = false) BigDecimal loanAmountMax,
+        @RequestParam(value = &quot;dateRangeStart&quot;, required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateRangeStart,
+        @RequestParam(value = &quot;dateRangeEnd&quot;, required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateRangeEnd,
+        @RequestParam(value = &quot;sortBy&quot;, required = false) String sortBy,
+        @RequestParam(value = &quot;sortOrder&quot;, required = false) String sortOrder
+    ) {
+<span class="nc" id="L53">        ApplicationQueueRequest request = ApplicationQueueRequest.builder()</span>
+<span class="nc" id="L54">            .limit(limit)</span>
+<span class="nc" id="L55">            .offset(offset)</span>
+<span class="nc" id="L56">            .status(status)</span>
+<span class="nc" id="L57">            .aprMin(aprMin)</span>
+<span class="nc" id="L58">            .aprMax(aprMax)</span>
+<span class="nc" id="L59">            .loanAmountMin(loanAmountMin)</span>
+<span class="nc" id="L60">            .loanAmountMax(loanAmountMax)</span>
+<span class="nc" id="L61">            .dateRangeStart(dateRangeStart)</span>
+<span class="nc" id="L62">            .dateRangeEnd(dateRangeEnd)</span>
+<span class="nc" id="L63">            .sortBy(sortBy)</span>
+<span class="nc" id="L64">            .sortOrder(sortOrder)</span>
+<span class="nc" id="L65">            .build();</span>
+
+<span class="nc" id="L67">        ApplicationQueueResponse response = applicationQueueService.getApplicationQueue(bankId, request);</span>
+<span class="nc" id="L68">        return ResponseEntity.ok(response);</span>
+    }
+
+    @PutMapping(&quot;/applications/{applicationId}/status&quot;)
+    @PreAuthorize(&quot;hasAuthority('BANK_OFFICER')&quot;)
+    public ResponseEntity&lt;ApplicationStatusUpdateResponse&gt; updateApplicationStatus(
+        @PathVariable UUID applicationId,
+        @RequestParam(&quot;bankId&quot;) UUID bankId,
+        @Valid @RequestBody ApplicationStatusUpdateRequest request
+    ) {
+<span class="nc" id="L78">        ApplicationStatusUpdateResponse response = applicationStatusUpdateService.updateApplicationStatus(</span>
+<span class="nc" id="L79">            applicationId,</span>
+<span class="nc" id="L80">            bankId,</span>
+<span class="nc" id="L81">            request</span>
+        );
+<span class="nc" id="L83">        return ResponseEntity.ok(response);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

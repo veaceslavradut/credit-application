@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OfferRetrievalService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.borrower.service</a> &gt; <span class="el_source">OfferRetrievalService.java</span></div><h1>OfferRetrievalService.java</h1><pre class="source lang-java linenums">package com.creditapp.borrower.service;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.creditapp.bank.model.Offer;
+import com.creditapp.bank.model.OfferStatus;
+import com.creditapp.bank.repository.OfferRepository;
+import com.creditapp.borrower.dto.OfferComparisonDTO;
+import com.creditapp.borrower.exception.ApplicationNotSubmittedException;
+import com.creditapp.borrower.exception.ApplicationNotFoundException;
+import com.creditapp.borrower.exception.UnauthorizedException;
+import com.creditapp.borrower.model.Application;
+import com.creditapp.borrower.model.ApplicationStatus;
+import com.creditapp.shared.model.AuditAction;
+import com.creditapp.shared.model.Organization;
+import com.creditapp.borrower.repository.ApplicationRepository;
+import com.creditapp.shared.repository.OrganizationRepository;
+import com.creditapp.shared.service.AuditService;
+
+@Service
+public class OfferRetrievalService {
+
+<span class="nc" id="L34">    private static final Logger log = LoggerFactory.getLogger(OfferRetrievalService.class);</span>
+
+    private final OfferRepository offerRepository;
+    private final ApplicationRepository applicationRepository;
+    private final OrganizationRepository organizationRepository;
+    private final AuditService auditService;
+
+<span class="nc" id="L41">    public OfferRetrievalService(OfferRepository offerRepository,</span>
+                                 ApplicationRepository applicationRepository,
+                                 OrganizationRepository organizationRepository,
+                                 AuditService auditService) {
+<span class="nc" id="L45">        this.offerRepository = offerRepository;</span>
+<span class="nc" id="L46">        this.applicationRepository = applicationRepository;</span>
+<span class="nc" id="L47">        this.organizationRepository = organizationRepository;</span>
+<span class="nc" id="L48">        this.auditService = auditService;</span>
+<span class="nc" id="L49">    }</span>
+
+    @Transactional(readOnly = true)
+    public List&lt;OfferComparisonDTO&gt; getOffersForApplication(UUID applicationId, UUID borrowerId) {
+<span class="nc" id="L53">        Application application = applicationRepository.findById(applicationId)</span>
+<span class="nc" id="L54">            .orElseThrow(() -&gt; new ApplicationNotFoundException(&quot;Application not found with ID: &quot; + applicationId));</span>
+
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
+<span class="nc" id="L57">            log.warn(&quot;Unauthorized offer retrieval attempt: borrower {} tried to access application {} belonging to {}&quot;, </span>
+<span class="nc" id="L58">                borrowerId, applicationId, application.getBorrowerId());</span>
+<span class="nc" id="L59">            throw new UnauthorizedException(&quot;Borrower does not own this application&quot;);</span>
+        }
+
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (application.getStatus().compareTo(ApplicationStatus.SUBMITTED) &lt; 0) {</span>
+<span class="nc" id="L63">            log.warn(&quot;Attempt to retrieve offers for non-submitted application {}: status {}&quot;, </span>
+<span class="nc" id="L64">                applicationId, application.getStatus());</span>
+<span class="nc" id="L65">            throw new ApplicationNotSubmittedException(&quot;Application must be in SUBMITTED status or later to view offers&quot;);</span>
+        }
+
+        // Exclude both EXPIRED and EXPIRED_WITH_SELECTION offers from results
+<span class="nc" id="L69">        List&lt;Offer&gt; allOffers = offerRepository.findByApplicationId(applicationId);</span>
+<span class="nc" id="L70">        List&lt;Offer&gt; offers = allOffers.stream()</span>
+<span class="nc bnc" id="L71" title="All 4 branches missed.">            .filter(o -&gt; o.getOfferStatus() != OfferStatus.EXPIRED &amp;&amp; o.getOfferStatus() != OfferStatus.EXPIRED_WITH_SELECTION)</span>
+<span class="nc" id="L72">            .sorted((o1, o2) -&gt; o1.getApr().compareTo(o2.getApr()))</span>
+<span class="nc" id="L73">            .collect(Collectors.toList());</span>
+
+<span class="nc" id="L75">        log.info(&quot;Retrieved {} active offers for application {} (borrower {}) out of {} total&quot;, </span>
+<span class="nc" id="L76">            offers.size(), applicationId, borrowerId, allOffers.size());</span>
+
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (offers.isEmpty()) {</span>
+<span class="nc" id="L79">            log.info(&quot;All offers have expired for application {}&quot;, applicationId);</span>
+<span class="nc" id="L80">            auditService.logAction(&quot;Application&quot;, applicationId, AuditAction.APPLICATION_VIEWED);</span>
+            // Return empty list with metadata indicating offers have expired
+            // This will be used by API to suggest recalculation to borrower
+<span class="nc" id="L83">            return new ArrayList&lt;&gt;();</span>
+        }
+
+<span class="nc" id="L86">        List&lt;UUID&gt; bankIds = offers.stream()</span>
+<span class="nc" id="L87">            .map(Offer::getBankId)</span>
+<span class="nc" id="L88">            .distinct()</span>
+<span class="nc" id="L89">            .collect(Collectors.toList());</span>
+
+<span class="nc" id="L91">        List&lt;Organization&gt; banks = organizationRepository.findAllById(bankIds);</span>
+<span class="nc" id="L92">        Map&lt;UUID, Organization&gt; bankMap = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        for (Organization bank : banks) {</span>
+<span class="nc" id="L94">            bankMap.put(bank.getId(), bank);</span>
+        }
+
+<span class="nc" id="L97">        List&lt;OfferComparisonDTO&gt; result = offers.stream()</span>
+<span class="nc" id="L98">            .map(offer -&gt; convertToDTO(offer, bankMap.get(offer.getBankId())))</span>
+<span class="nc" id="L99">            .collect(Collectors.toList());</span>
+
+<span class="nc" id="L101">        log.debug(&quot;Converted {} offers to DTOs with bank information&quot;, result.size());</span>
+<span class="nc" id="L102">        auditService.logAction(&quot;Application&quot;, applicationId, AuditAction.APPLICATION_VIEWED);</span>
+
+<span class="nc" id="L104">        return result;</span>
+    }
+
+    private OfferComparisonDTO convertToDTO(Offer offer, Organization bank) {
+<span class="nc" id="L108">        List&lt;String&gt; documents = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L109" title="All 4 branches missed.">        if (offer.getRequiredDocuments() != null &amp;&amp; !offer.getRequiredDocuments().isEmpty()) {</span>
+<span class="nc" id="L110">            documents = Arrays.stream(offer.getRequiredDocuments().split(&quot;,&quot;))</span>
+<span class="nc" id="L111">                .map(String::trim)</span>
+<span class="nc" id="L112">                .collect(Collectors.toList());</span>
+        }
+
+<span class="nc bnc" id="L115" title="All 4 branches missed.">        String logoUrl = (bank != null &amp;&amp; bank.getLogoUrl() != null)</span>
+<span class="nc" id="L116">            ? bank.getLogoUrl()</span>
+<span class="nc" id="L117">            : &quot;https://api.creditapp.com/images/default-bank-logo.png&quot;;</span>
+
+<span class="nc" id="L119">        return new OfferComparisonDTO(</span>
+<span class="nc" id="L120">            offer.getId(),</span>
+<span class="nc" id="L121">            offer.getBankId(),</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">            bank != null ? bank.getName() : &quot;Unknown Bank&quot;,</span>
+<span class="nc" id="L123">            logoUrl,</span>
+<span class="nc" id="L124">            offer.getApr(),</span>
+<span class="nc" id="L125">            offer.getMonthlyPayment(),</span>
+<span class="nc" id="L126">            offer.getTotalCost(),</span>
+<span class="nc" id="L127">            offer.getOriginationFee(),</span>
+<span class="nc" id="L128">            offer.getInsuranceCost(),</span>
+<span class="nc" id="L129">            offer.getProcessingTimeDays(),</span>
+<span class="nc" id="L130">            offer.getValidityPeriodDays(),</span>
+<span class="nc" id="L131">            documents,</span>
+<span class="nc" id="L132">            offer.getExpiresAt(),</span>
+<span class="nc" id="L133">            offer.getOfferStatus().toString()</span>
+        );
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

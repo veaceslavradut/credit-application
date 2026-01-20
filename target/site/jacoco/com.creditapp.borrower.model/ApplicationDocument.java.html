@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApplicationDocument.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.borrower.model</a> &gt; <span class="el_source">ApplicationDocument.java</span></div><h1>ApplicationDocument.java</h1><pre class="source lang-java linenums">package com.creditapp.borrower.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+/**
+ * Entity representing a document uploaded by a borrower to support their loan application.
+ * Supports soft delete via deleted_at timestamp.
+ */
+@Entity
+@Table(name = &quot;application_documents&quot;, indexes = {
+        @Index(name = &quot;idx_documents_application_id&quot;, columnList = &quot;application_id&quot;),
+        @Index(name = &quot;idx_documents_upload_date&quot;, columnList = &quot;upload_date&quot;),
+        @Index(name = &quot;idx_documents_application_deleted&quot;, columnList = &quot;application_id, deleted_at&quot;)
+})
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ApplicationDocument {
+
+    @Id
+    private UUID id;
+
+    @Column(name = &quot;application_id&quot;, nullable = false)
+    private UUID applicationId;
+
+    @Column(name = &quot;document_type&quot;, nullable = false, length = 50)
+    @Enumerated(EnumType.STRING)
+    private DocumentType documentType;
+
+    @Column(name = &quot;original_filename&quot;, nullable = false)
+    private String originalFilename;
+
+    @Column(name = &quot;stored_filename&quot;, nullable = false, unique = true)
+    private String storedFilename;
+
+    @Column(name = &quot;file_size&quot;, nullable = false)
+    private Long fileSize;
+
+    @Column(name = &quot;mime_type&quot;, nullable = false, length = 100)
+    private String mimeType;
+
+    @Column(name = &quot;upload_date&quot;, nullable = false)
+    private LocalDateTime uploadDate;
+
+    @Column(name = &quot;deleted_at&quot;)
+    private LocalDateTime deletedAt;
+
+    @Column(name = &quot;uploaded_by_user_id&quot;)
+    private UUID uploadedByUserId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;application_id&quot;, insertable = false, updatable = false)
+    private Application application;
+
+    /**
+     * Check if this document has been soft-deleted.
+     */
+    public boolean isDeleted() {
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        return deletedAt != null;</span>
+    }
+
+    /**
+     * Mark this document as deleted (soft delete).
+     */
+    public void markAsDeleted() {
+<span class="nc" id="L71">        this.deletedAt = LocalDateTime.now();</span>
+<span class="nc" id="L72">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

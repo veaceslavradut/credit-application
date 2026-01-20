@@ -13,10 +13,7 @@ CREATE TABLE IF NOT EXISTS signature_logs (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     
     CONSTRAINT fk_signature_logs_document FOREIGN KEY (document_id) 
-        REFERENCES documents(id) ON DELETE CASCADE,
-    CONSTRAINT fk_signature_logs_signer FOREIGN KEY (signer_id) 
-        REFERENCES users(id) ON DELETE SET NULL,
-    CONSTRAINT check_signature_status CHECK (signature_status IN ('PENDING', 'SIGNED', 'REJECTED', 'EXPIRED'))
+        REFERENCES documents(id) ON DELETE CASCADE
 );
 
 -- Indexes for efficient queries

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuditLogArchivalJob.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.job</a> &gt; <span class="el_source">AuditLogArchivalJob.java</span></div><h1>AuditLogArchivalJob.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.job;
+
+import com.creditapp.shared.model.AuditLog;
+import com.creditapp.shared.repository.AuditLogRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Component
+@RequiredArgsConstructor
+<span class="nc" id="L16">@Slf4j</span>
+public class AuditLogArchivalJob {
+    private final AuditLogRepository auditLogRepository;
+
+    @Value(&quot;${app.audit.retention.days:1095}&quot;)
+    private Integer retentionDays;
+
+    @Scheduled(cron = &quot;0 0 2 1 * ?&quot;) // Monthly on 1st at 2 AM
+    public void archiveOldAuditLogs() {
+<span class="nc" id="L25">        log.info(&quot;Starting audit log archival job. Retention: {} days&quot;, retentionDays);</span>
+<span class="nc" id="L26">        LocalDateTime cutoffDate = LocalDateTime.now().minusDays(retentionDays);</span>
+<span class="nc" id="L27">        List&lt;AuditLog&gt; oldLogs = auditLogRepository.findByCreatedAtBetween(</span>
+<span class="nc" id="L28">                LocalDateTime.of(2000, 1, 1, 0, 0), cutoffDate</span>
+        );
+<span class="nc" id="L30">        log.info(&quot;Found {} audit logs older than retention period for archival&quot;, oldLogs.size());</span>
+        // In production: export to S3 Glacier or data warehouse
+        // For now: just log count (deletion prevented by DB trigger)
+<span class="nc" id="L33">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OfferExpirationEmailService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.shared.service</a> &gt; <span class="el_source">OfferExpirationEmailService.java</span></div><h1>OfferExpirationEmailService.java</h1><pre class="source lang-java linenums">package com.creditapp.shared.service;
+
+import com.creditapp.bank.model.Offer;
+import com.creditapp.borrower.model.Application;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+import java.util.UUID;
+
+/**
+ * Service for sending notifications when offers expire.
+ * Handles both borrower and bank notifications.
+ */
+<span class="nc" id="L15">@Slf4j</span>
+@Service
+public class OfferExpirationEmailService {
+
+    private final EmailService emailService;
+
+<span class="nc" id="L21">    public OfferExpirationEmailService(EmailService emailService) {</span>
+<span class="nc" id="L22">        this.emailService = emailService;</span>
+<span class="nc" id="L23">    }</span>
+
+    /**
+     * Send expiration notification to borrower when their selected offer expires.
+     * Non-blocking: runs asynchronously.
+     */
+    @Async
+    public void sendOfferExpiredToBorrower(UUID borrowerId, Offer offer, Application application) {
+        try {
+<span class="nc" id="L32">            String subject = &quot;Your selected loan offer has expired&quot;;</span>
+<span class="nc" id="L33">            StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L34">            sb.append(&quot;Dear Borrower,\n\n&quot;);</span>
+<span class="nc" id="L35">            sb.append(&quot;Unfortunately, the loan offer you selected has expired on &quot;).append(offer.getExpiresAt()).append(&quot;.\n\n&quot;);</span>
+<span class="nc" id="L36">            sb.append(&quot;Offer Details:\n&quot;);</span>
+<span class="nc" id="L37">            sb.append(&quot;Annual Percentage Rate (APR): &quot;).append(offer.getApr()).append(&quot;%\n&quot;);</span>
+<span class="nc" id="L38">            sb.append(&quot;Monthly Payment: &quot;).append(offer.getMonthlyPayment()).append(&quot;\n&quot;);</span>
+<span class="nc" id="L39">            sb.append(&quot;Total Cost: &quot;).append(offer.getTotalCost()).append(&quot;\n\n&quot;);</span>
+<span class="nc" id="L40">            sb.append(&quot;Next Steps:\n&quot;);</span>
+<span class="nc" id="L41">            sb.append(&quot;You can request new offers by visiting your account dashboard and clicking 'Recalculate Offers'.\n&quot;);</span>
+<span class="nc" id="L42">            sb.append(&quot;This will allow banks to provide you with fresh rates based on current market conditions.\n\n&quot;);</span>
+<span class="nc" id="L43">            sb.append(&quot;If you have any questions, please contact our support team.\n\n&quot;);</span>
+<span class="nc" id="L44">            sb.append(&quot;Best regards,\n&quot;);</span>
+<span class="nc" id="L45">            sb.append(&quot;Credit Application Team&quot;);</span>
+
+<span class="nc" id="L47">            String borrowerEmail = &quot;borrower@example.com&quot;;</span>
+<span class="nc" id="L48">            String textContent = &quot;Your selected offer has expired. Please recalculate offers to get fresh quotes.&quot;;</span>
+<span class="nc" id="L49">            emailService.sendEmail(borrowerEmail, subject, sb.toString(), textContent);</span>
+<span class="nc" id="L50">            log.info(&quot;Offer expiration email sent to borrower. BorrowerId: {}, OfferId: {}, ApplicationId: {}&quot;, </span>
+<span class="nc" id="L51">                    borrowerId, offer.getId(), application.getId());</span>
+<span class="nc" id="L52">        } catch (Exception e) {</span>
+<span class="nc" id="L53">            log.error(&quot;Failed to send offer expiration email to borrower. BorrowerId: {}, OfferId: {}, Error: {}&quot;,</span>
+<span class="nc" id="L54">                    borrowerId, offer.getId(), e.getMessage(), e);</span>
+        }
+<span class="nc" id="L56">    }</span>
+
+    /**
+     * Send expiration notification to bank when a borrower's selected offer expires.
+     * Non-blocking: runs asynchronously.
+     */
+    @Async
+    public void sendOfferExpiredToBank(UUID bankId, Offer offer, Application application) {
+        try {
+<span class="nc" id="L65">            String bankEmail = &quot;offers@bank.com&quot;;</span>
+
+<span class="nc" id="L67">            String subject = &quot;A borrower's selected offer has expired&quot;;</span>
+<span class="nc" id="L68">            StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L69">            sb.append(&quot;An alert: A borrower's selected offer has expired.\n\n&quot;);</span>
+<span class="nc" id="L70">            sb.append(&quot;Application ID: &quot;).append(offer.getApplicationId()).append(&quot;\n&quot;);</span>
+<span class="nc" id="L71">            sb.append(&quot;Offer ID: &quot;).append(offer.getId()).append(&quot;\n&quot;);</span>
+<span class="nc" id="L72">            sb.append(&quot;Offer APR: &quot;).append(offer.getApr()).append(&quot;%\n&quot;);</span>
+<span class="nc" id="L73">            sb.append(&quot;Monthly Payment: &quot;).append(offer.getMonthlyPayment()).append(&quot;\n&quot;);</span>
+<span class="nc" id="L74">            sb.append(&quot;Expiration Time: &quot;).append(offer.getExpiresAt()).append(&quot;\n\n&quot;);</span>
+<span class="nc" id="L75">            sb.append(&quot;What this means:\n&quot;);</span>
+<span class="nc" id="L76">            sb.append(&quot;The borrower's application status has been reverted to 'Submitted'.\n&quot;);</span>
+<span class="nc" id="L77">            sb.append(&quot;You may provide new offers if the borrower requests a recalculation.\n\n&quot;);</span>
+<span class="nc" id="L78">            sb.append(&quot;Best regards,\n&quot;);</span>
+<span class="nc" id="L79">            sb.append(&quot;Credit Application System&quot;);</span>
+
+<span class="nc" id="L81">            String textContent = &quot;A borrower's selected offer has expired. Application status reverted to Submitted.&quot;;</span>
+<span class="nc" id="L82">            emailService.sendEmail(bankEmail, subject, sb.toString(), textContent);</span>
+<span class="nc" id="L83">            log.info(&quot;Offer expiration notification sent to bank. BankId: {}, OfferId: {}, ApplicationId: {}&quot;,</span>
+<span class="nc" id="L84">                    bankId, offer.getId(), application.getId());</span>
+<span class="nc" id="L85">        } catch (Exception e) {</span>
+<span class="nc" id="L86">            log.error(&quot;Failed to send offer expiration email to bank. BankId: {}, OfferId: {}, Error: {}&quot;,</span>
+<span class="nc" id="L87">                    bankId, offer.getId(), e.getMessage(), e);</span>
+        }
+<span class="nc" id="L89">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
