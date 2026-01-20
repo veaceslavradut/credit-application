@@ -24,6 +24,9 @@ public class OfferComparisonTableRow {
     private String offerStatus;
     private String selectButtonState;
     private String expirationCountdown;
+    private String expirationHighlight;
+    private Boolean canResubmit;
+    private String resubmitUrl;
 
     // Constructors
     public OfferComparisonTableRow() {}
@@ -76,4 +79,13 @@ public class OfferComparisonTableRow {
 
     public String getExpirationCountdown() { return expirationCountdown; }
     public void setExpirationCountdown(String expirationCountdown) { this.expirationCountdown = expirationCountdown; }
+
+    public String getExpirationHighlight() { return expirationHighlight; }
+    public void setExpirationHighlight(String expirationHighlight) { this.expirationHighlight = expirationHighlight; }
+
+    public Boolean getCanResubmit() { return canResubmit; }
+    public void setCanResubmit(Boolean canResubmit) { this.canResubmit = canResubmit; }
+
+    public String getResubmitUrl() { return resubmitUrl; }
+    public void setResubmitUrl(String resubmitUrl) { this.resubmitUrl = resubmitUrl; }
 }

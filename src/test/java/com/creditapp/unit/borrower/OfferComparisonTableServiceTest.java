@@ -112,6 +112,108 @@ class OfferComparisonTableServiceTest {
         assertThat(response.getOffers().get(0).getApr()).isEqualByComparingTo(new BigDecimal("7.5"));
     }
 
+    @Test
+    void testDetermineExpirationHighlight_NormalWhenMoreThan24Hours() {
+        // Offer expiring in 25 hours
+        LocalDateTime expiresAt = LocalDateTime.now().plusHours(25);
+        String highlight = service.determineExpirationHighlight(expiresAt, OfferStatus.CALCULATED);
+        assertThat(highlight).isEqualTo("NORMAL");
+    }
+
+    @Test
+    void testDetermineExpirationHighlight_WarningOrangeWithin24Hours() {
+        // Offer expiring in 12 hours
+        LocalDateTime expiresAt = LocalDateTime.now().plusHours(12);
+        String highlight = service.determineExpirationHighlight(expiresAt, OfferStatus.CALCULATED);
+        assertThat(highlight).isEqualTo("WARNING_ORANGE");
+    }
+
+    @Test
+    void testDetermineExpirationHighlight_WarningOrangeAt24Hours() {
+        // Offer expiring in exactly 24 hours
+        LocalDateTime expiresAt = LocalDateTime.now().plusHours(24);
+        String highlight = service.determineExpirationHighlight(expiresAt, OfferStatus.CALCULATED);
+        assertThat(highlight).isEqualTo("WARNING_ORANGE");
+    }
+
+    @Test
+    void testDetermineExpirationHighlight_ExpiredRedWhenPastExpiration() {
+        // Offer expired 1 hour ago
+        LocalDateTime expiresAt = LocalDateTime.now().minusHours(1);
+        String highlight = service.determineExpirationHighlight(expiresAt, OfferStatus.CALCULATED);
+        assertThat(highlight).isEqualTo("EXPIRED_RED");
+    }
+
+    @Test
+    void testDetermineExpirationHighlight_ExpiredRedWithExpiredStatus() {
+        // Offer with EXPIRED status should show red regardless of time
+        LocalDateTime expiresAt = LocalDateTime.now().plusDays(10);
+        String highlight = service.determineExpirationHighlight(expiresAt, OfferStatus.EXPIRED);
+        assertThat(highlight).isEqualTo("EXPIRED_RED");
+    }
+
+    @Test
+    void testDetermineExpirationHighlight_ExpiredRedWithExpiredWithSelectionStatus() {
+        // Offer with EXPIRED_WITH_SELECTION status should show red
+        LocalDateTime expiresAt = LocalDateTime.now().plusDays(10);
+        String highlight = service.determineExpirationHighlight(expiresAt, OfferStatus.EXPIRED_WITH_SELECTION);
+        assertThat(highlight).isEqualTo("EXPIRED_RED");
+    }
+
+    @Test
+    void testGetOffersTable_IncludesExpirationHighlightAndResubmit() {
+        UUID applicationId = UUID.randomUUID();
+        UUID borrowerId = UUID.randomUUID();
+
+        Application application = createMockApplication(applicationId, borrowerId);
+        
+        // Create an expired offer
+        Offer expiredOffer = createMockOffer();
+        expiredOffer.setOfferStatus(OfferStatus.EXPIRED);
+        expiredOffer.setExpiresAt(LocalDateTime.now().minusHours(1));
+        
+        Page<Offer> offersPage = new PageImpl<>(List.of(expiredOffer));
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(offerRepository.findByApplicationId(eq(applicationId), any(Pageable.class))).thenReturn(offersPage);
+        when(organizationRepository.findAllById(any())).thenReturn(List.of(createMockBank()));
+
+        OfferComparisonTableRequest request = new OfferComparisonTableRequest();
+        OfferComparisonTableResponse response = service.getOffersTable(applicationId, borrowerId, request);
+
+        assertThat(response.getOffers()).hasSize(1);
+        assertThat(response.getOffers().get(0).getExpirationHighlight()).isEqualTo("EXPIRED_RED");
+        assertThat(response.getOffers().get(0).getCanResubmit()).isTrue();
+        assertThat(response.getOffers().get(0).getResubmitUrl()).startsWith("/api/bank/offers/");
+        assertThat(response.getOffers().get(0).getResubmitUrl()).endsWith("/resubmit");
+    }
+
+    @Test
+    void testGetOffersTable_NoResubmitUrlForNonExpiredOffers() {
+        UUID applicationId = UUID.randomUUID();
+        UUID borrowerId = UUID.randomUUID();
+
+        Application application = createMockApplication(applicationId, borrowerId);
+        
+        Offer offer = createMockOffer();
+        offer.setOfferStatus(OfferStatus.CALCULATED);
+        offer.setExpiresAt(LocalDateTime.now().plusDays(30));
+        
+        Page<Offer> offersPage = new PageImpl<>(List.of(offer));
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(offerRepository.findByApplicationId(eq(applicationId), any(Pageable.class))).thenReturn(offersPage);
+        when(organizationRepository.findAllById(any())).thenReturn(List.of(createMockBank()));
+
+        OfferComparisonTableRequest request = new OfferComparisonTableRequest();
+        OfferComparisonTableResponse response = service.getOffersTable(applicationId, borrowerId, request);
+
+        assertThat(response.getOffers()).hasSize(1);
+        assertThat(response.getOffers().get(0).getExpirationHighlight()).isEqualTo("NORMAL");
+        assertThat(response.getOffers().get(0).getCanResubmit()).isFalse();
+        assertThat(response.getOffers().get(0).getResubmitUrl()).isNull();
+    }
+
     private Application createMockApplication(UUID id, UUID borrowerId) {
         Application app = new Application();
         app.setId(id);

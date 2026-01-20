@@ -135,6 +135,15 @@ public class OfferComparisonTableService {
         row.setExpirationCountdown(calculateExpirationCountdown(offer.getExpiresAt()));
         row.setExpiresAt(offer.getExpiresAt());
         
+        // Task 7: Add dashboard expiration highlighting and resubmit support
+        row.setExpirationHighlight(determineExpirationHighlight(offer.getExpiresAt(), offer.getOfferStatus()));
+        boolean isExpired = offer.getOfferStatus() == OfferStatus.EXPIRED || 
+                            offer.getOfferStatus() == OfferStatus.EXPIRED_WITH_SELECTION;
+        row.setCanResubmit(isExpired);
+        if (isExpired) {
+            row.setResubmitUrl("/api/bank/offers/" + offer.getId() + "/resubmit");
+        }
+        
         // Include additional fields for full mode
         if ("full".equalsIgnoreCase(comparisonMode)) {
             row.setOriginationFee(offer.getOriginationFee());
@@ -200,6 +209,29 @@ public class OfferComparisonTableService {
         
         // Offer can be selected
         return "enabled";
+    }
+    
+    // Task 7: Package-private for testing
+    // Determines expiration highlight color based on time remaining
+    // NORMAL: > 24 hours remaining
+    // WARNING_ORANGE: 0-24 hours remaining (expiring soon)
+    // EXPIRED_RED: < 0 hours (already expired)
+    public String determineExpirationHighlight(LocalDateTime expiresAt, OfferStatus status) {
+        LocalDateTime now = LocalDateTime.now();
+        long hoursRemaining = Duration.between(now, expiresAt).toHours();
+        
+        // If already expired by status or by time
+        if (status == OfferStatus.EXPIRED || status == OfferStatus.EXPIRED_WITH_SELECTION || hoursRemaining < 0) {
+            return "EXPIRED_RED";
+        }
+        
+        // Warning orange for offers expiring within 24 hours
+        if (hoursRemaining <= 24) {
+            return "WARNING_ORANGE";
+        }
+        
+        // Normal for offers with more than 24 hours remaining
+        return "NORMAL";
     }
     
     private Map<String, Object> buildAppliedFilters(OfferComparisonTableRequest request) {
