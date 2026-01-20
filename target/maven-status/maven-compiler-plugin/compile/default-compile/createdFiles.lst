@@ -44,6 +44,7 @@ com\creditapp\borrower\model\ApplicationDetails$ApplicationDetailsBuilder.class
 com\creditapp\shared\repository\DeletionRequestRepository.class
 com\creditapp\borrower\model\Application.class
 com\creditapp\auth\dto\LoginRequest.class
+com\creditapp\shared\model\Notification$NotificationBuilder.class
 com\creditapp\shared\model\DataExport.class
 com\creditapp\auth\service\InvalidPasswordException.class
 com\creditapp\borrower\dto\WithdrawApplicationResponse.class
@@ -139,6 +140,7 @@ com\creditapp\borrower\dto\SubmitApplicationResponse.class
 com\creditapp\bank\controller\BankApplicationReviewController.class
 com\creditapp\bank\dto\LoanTypeBreakdownDTO$LoanTypeBreakdownDTOBuilder.class
 com\creditapp\bank\service\OfferService.class
+com\creditapp\shared\repository\NotificationRepository.class
 com\creditapp\borrower\dto\OfferHistoryResponse$OfferHistoryResponseBuilder.class
 com\creditapp\borrower\dto\ConsentRequestDTO.class
 com\creditapp\shared\model\DeletionRequest.class
@@ -215,6 +217,7 @@ com\creditapp\bank\dto\InviteTeamMemberResponse.class
 com\creditapp\shared\service\LegalDocumentService.class
 com\creditapp\bank\dto\OfferDocumentsListResponse$OfferDocumentsListResponseBuilder.class
 com\creditapp\shared\model\NotificationChannel.class
+com\creditapp\bank\controller\BankNotificationController.class
 com\creditapp\shared\service\RequestContextService.class
 com\creditapp\borrower\dto\DeletionRequestResponse.class
 com\creditapp\borrower\exception\OfferExpiredException.class
@@ -295,6 +298,7 @@ com\creditapp\borrower\dto\ConsentWithdrawalRequest.class
 com\creditapp\bank\dto\BankRateCardDTO.class
 com\creditapp\shared\service\SendGridEmailService.class
 com\creditapp\bank\controller\BankOfferResubmissionController.class
+com\creditapp\shared\model\Notification.class
 com\creditapp\auth\filter\JwtAuthenticationToken.class
 com\creditapp\bank\dto\MarketAnalysisDTO.class
 com\creditapp\auth\service\BankRegistrationService.class
@@ -346,6 +350,7 @@ com\creditapp\bank\service\OfferDocumentDownloadService.class
 com\creditapp\shared\service\DataExportEmailService.class
 com\creditapp\shared\model\HelpArticleStatus.class
 com\creditapp\bank\dto\UpdateBankProfileRequest$UpdateBankProfileRequestBuilder.class
+com\creditapp\bank\service\BankNotificationService.class
 com\creditapp\auth\exception\PasswordValidationException.class
 com\creditapp\borrower\dto\SubmitApplicationRequest.class
 com\creditapp\bank\dto\InviteTeamMemberRequest.class

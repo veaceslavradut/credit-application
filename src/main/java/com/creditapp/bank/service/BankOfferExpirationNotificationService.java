@@ -31,6 +31,7 @@ public class BankOfferExpirationNotificationService {
     private final ApplicationRepository applicationRepository;
     private final EmailService emailService;
     private final AuditService auditService;
+    private final BankNotificationService notificationService;
     
     @Value("${app.base-url:http://localhost:8080}")
     private String baseUrl;
@@ -98,6 +99,25 @@ public class BankOfferExpirationNotificationService {
             
             // Send email
             emailService.sendEmail(bank.getContactEmail(), subject, htmlContent.toString(), textContent);
+            
+            // Create in-portal notification
+            String notificationTitle = String.format("Offer Expiring in %d hours", hoursRemaining);
+            String notificationMessage = String.format(
+                    "Your offer for application %s (APR: %s%%, Payment: $%s) expires in %d hours. Take action to resubmit or review.",
+                    application.getId().toString().substring(0, 8),
+                    offer.getApr(),
+                    offer.getMonthlyPayment(),
+                    hoursRemaining
+            );
+            String notificationLink = String.format("/bank/offers/%s/resubmit", offer.getId());
+            
+            notificationService.createNotification(
+                    offer.getBankId(),
+                    "OFFER_EXPIRING",
+                    notificationTitle,
+                    notificationMessage,
+                    notificationLink
+            );
             
             // Create audit log
             auditService.logAction(

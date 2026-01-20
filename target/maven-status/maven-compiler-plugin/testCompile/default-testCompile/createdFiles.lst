@@ -15,6 +15,7 @@ com\creditapp\integration\bank\BankOfferHistoryIntegrationTest.class
 com\creditapp\unit\borrower\ApplicationUpdateServiceTest.class
 com\creditapp\unit\shared\LegalDocumentServiceTest.class
 com\creditapp\unit\bank\OfferDocumentUploadServiceTest.class
+com\creditapp\unit\batch\OfferExpirationWarningSchedulerTest.class
 com\creditapp\unit\compliance\ComplianceChecklistUnitTest.class
 com\creditapp\unit\borrower\OfferComparisonTableServiceTest.class
 com\creditapp\unit\borrower\ApplicationSubmissionServiceTest.class
