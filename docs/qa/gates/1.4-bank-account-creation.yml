@@ -1,0 +1,123 @@
+# Quality Gate: Story 1.4
+
+schema: 1
+story: "1.4"
+story_title: "Bank Account Creation & Admin Registration"
+gate: "CONCERNS"
+status_reason: "Core bank registration and activation workflow implemented with strong security (BCrypt, SecureRandom tokens, input validation). Database schema well-designed. Integration tests cover primary scenarios. However, test suite has 1 failure (unrelated feature), email service incomplete (MVP-only logging), and login authorization incomplete (depends on Story 1.5 completion)."
+reviewer: "Quinn (Test Architect)"
+updated: "2026-01-20T00:00:00Z"
+
+waiver: { active: false }
+
+top_issues:
+  - id: "TEST-001"
+    severity: high
+    finding: "Test suite failure: 1 of 580 tests failing in ApplicationRetrievalIntegrationTest (unrelated to Story 1.4 but blocks clean build)"
+    suggested_action: "Investigate and fix failing test to restore BUILD SUCCESS status"
+    suggested_owner: dev
+  - id: "IMPL-001"
+    severity: high
+    finding: "Email service incomplete: BankActivationEmailService MVP-only (logs instead of sending via SendGrid API)"
+    suggested_action: "Integrate SendGrid API or implement mock email service for testing"
+    suggested_owner: dev
+  - id: "IMPL-002"
+    severity: high
+    finding: "Login authorization incomplete: AC6 (ACTIVE banks only) not implemented - Task 9 blocked by Story 1.5 dependency"
+    suggested_action: "Complete Story 1.5 JWT authentication, then implement Task 9 authorization check"
+    suggested_owner: dev
+  - id: "TEST-002"
+    severity: medium
+    finding: "Missing admin login flow test: AC8 requires login verification post-activation"
+    suggested_action: "Add integration test for BANK_ADMIN login after bank activation"
+    suggested_owner: dev
+
+evidence:
+  tests_reviewed: 580
+  risks_identified: 4
+  implementation_coverage: "8 of 9 ACs implemented (AC6 pending Story 1.5)"
+  trace:
+    ac_covered: [1, 2, 3, 5, 7, 8, 9]
+    ac_partial: [4, 8]
+    ac_incomplete: [6]
+
+nfr_validation:
+  security:
+    status: PASS
+    notes: "BCrypt hashing correct (strength 12), SecureRandom tokens (32-char), @Email validation, alphanumeric registration number pattern, soft delete audit trail"
+  performance:
+    status: PASS
+    notes: "Email async via @Async prevents registration blocking. Proper database indexes on registrationNumber, activationToken, status"
+  reliability:
+    status: CONCERNS
+    notes: "Integration tests present but email service incomplete (MVP-only). Test suite failure must be resolved."
+  maintainability:
+    status: PASS
+    notes: "Clean Service/Controller/DTO separation, reusable components (ActivationTokenService, PasswordHasher from Story 1.3), comprehensive logging"
+
+quality_score: 82
+expires: "2026-02-03T00:00:00Z"
+
+recommendations:
+  immediate:
+    - action: "Fix ApplicationRetrievalIntegrationTest failure (1 of 580 tests) for clean build"
+      refs: ["mvn test output shows 'Status update 4' expected vs 'Status update 3' actual"]
+    - action: "Implement SendGrid API integration in BankActivationEmailService or mock for tests"
+      refs: ["src/main/java/com/creditapp/shared/service/BankActivationEmailService.java"]
+    - action: "Add admin login flow integration test for AC8 completion"
+      refs: ["src/test/java/com/creditapp/integration/auth/BankRegistrationIntegrationTest.java"]
+  next:
+    - action: "Complete Story 1.5 JWT authentication implementation"
+      refs: ["Prerequisite for Story 1.4 Task 9 (login authorization check)"]
+    - action: "Implement Task 9 BankActiveValidator and login authorization check"
+      refs: ["After Story 1.5 completion"]
+  future:
+    - action: "Add CAPTCHA for additional brute force protection on registration endpoint"
+      refs: ["src/main/java/com/creditapp/auth/controller/AuthController.java"]
+    - action: "Consider rate limiting per email address (in addition to IP-based)"
+      refs: ["RateLimitingInterceptor enhancement"]
+
+test_coverage:
+  integration_tests: 5
+  integration_tests_list:
+    - "registerBank_ValidRequest_ReturnsCreatedWithBankDetails"
+    - "registerBank_DuplicateRegistrationNumber_ReturnsConflict"
+    - "activateBank_ValidToken_UpdatesStatusToActive"
+    - "activateBank_InvalidToken_ReturnsNotFound"
+    - "activateBank_ExpiredToken_ReturnsBadRequest"
+    - "registerBank_InvalidEmail_ReturnsBadRequest"
+  unit_tests: 0
+  missing_tests:
+    - "BankRegistrationService unit tests"
+    - "ActivationTokenService unit tests"
+    - "Admin login flow verification"
+    - "Duplicate admin email error scenario"
+
+ac_implementation_matrix:
+  ac1_endpoint:
+    status: "PASS"
+    notes: "POST /api/auth/register-bank fully implemented with validation"
+  ac2_uniqueness:
+    status: "PASS"
+    notes: "UNIQUE constraint on registration_number, duplicate check in service"
+  ac3_admin_role:
+    status: "PASS"
+    notes: "BANK_ADMIN role assigned, linked to bank organization"
+  ac4_activation_email:
+    status: "PARTIAL"
+    notes: "Email service structure present; SendGrid integration MVP-only (logs instead of sending)"
+  ac5_status_workflow:
+    status: "PASS"
+    notes: "PENDING_ACTIVATION  ACTIVE state machine fully implemented"
+  ac6_active_login:
+    status: "INCOMPLETE"
+    notes: "Task 9 blocked by Story 1.5 prerequisite; no authorization check yet implemented"
+  ac7_soft_delete:
+    status: "IMPLEMENTED"
+    notes: "deleted_at field in schema; soft delete pattern supported"
+  ac8_integration_test:
+    status: "PARTIAL"
+    notes: "5 tests present; missing admin login flow test"
+  ac9_error_handling:
+    status: "PASS"
+    notes: "All error scenarios handled (409 duplicate, 400 validation, etc.)"

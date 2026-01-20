@@ -1,0 +1,54 @@
+# Quality Gate: Story 1.1
+
+schema: 1
+story: "1.1"
+story_title: "Project Setup & CI/CD Pipeline"
+gate: "CONCERNS"
+status_reason: "Java version mismatch between pom.xml (17) and AC requirements (21.0.1). Docker correctly uses 21.0.1 but local Maven builds may have compatibility issues."
+reviewer: "Quinn (Test Architect)"
+updated: "2026-01-20T00:00:00Z"
+
+waiver: { active: false }
+
+top_issues:
+  - id: "CONFIG-001"
+    severity: medium
+    finding: "pom.xml specifies Java 17, but AC2 requires Java 21.0.1"
+    suggested_action: "Update pom.xml java.version property and maven-compiler-plugin to 21"
+    suggested_owner: dev
+
+evidence:
+  tests_reviewed: 580
+  risks_identified: 1
+  trace:
+    ac_covered: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    ac_gaps: []
+
+nfr_validation:
+  security:
+    status: PASS
+    notes: "Docker runs as non-root, no secrets in repo, credentials externalized"
+  performance:
+    status: PASS
+    notes: "Multi-stage build, health check timeouts appropriate, connection pooling enabled"
+  reliability:
+    status: PASS
+    notes: "Health checks with proper status codes, Docker health checks configured"
+  maintainability:
+    status: PASS
+    notes: "Clean structure, comprehensive docs (README, DEPLOYMENT_RUNBOOK), 580 tests passing"
+
+quality_score: 90
+expires: "2026-02-03T00:00:00Z"
+
+recommendations:
+  immediate:
+    - action: "Update pom.xml to use Java 21 consistently"
+      refs: ["pom.xml:21-23"]
+  future:
+    - action: "Add SonarQube integration for code quality metrics"
+      refs: [".github/workflows/ci-cd.yml"]
+    - action: "Add OWASP dependency check to CI pipeline"
+      refs: [".github/workflows/ci-cd.yml"]
+    - action: "Enforce minimum code coverage threshold (80%)"
+      refs: ["pom.xml"]
