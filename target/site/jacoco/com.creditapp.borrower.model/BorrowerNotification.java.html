@@ -16,44 +16,44 @@ import java.util.UUID;
 
 @Entity
 @Table(name = &quot;borrower_notifications&quot;)
-<span class="pc bnc" id="L19" title="All 102 branches missed.">@Data</span>
-<span class="pc" id="L20">@Builder</span>
-<span class="fc" id="L21">@NoArgsConstructor</span>
-<span class="fc" id="L22">@AllArgsConstructor</span>
+<span class="nc bnc" id="L19" title="All 102 branches missed.">@Data</span>
+<span class="nc" id="L20">@Builder</span>
+<span class="nc" id="L21">@NoArgsConstructor</span>
+<span class="nc" id="L22">@AllArgsConstructor</span>
 public class BorrowerNotification {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-<span class="fc" id="L26">    private UUID id;</span>
+<span class="nc" id="L26">    private UUID id;</span>
 
     @Column(name = &quot;borrower_id&quot;, nullable = false)
-<span class="fc" id="L29">    private UUID borrowerId;</span>
+<span class="nc" id="L29">    private UUID borrowerId;</span>
 
     @Column(name = &quot;application_id&quot;)
-<span class="fc" id="L32">    private UUID applicationId;</span>
+<span class="nc" id="L32">    private UUID applicationId;</span>
 
     @Enumerated(EnumType.STRING)
     @Column(name = &quot;notification_type&quot;, nullable = false, length = 50)
-<span class="fc" id="L36">    private NotificationType notificationType;</span>
+<span class="nc" id="L36">    private NotificationType notificationType;</span>
 
     @Column(nullable = false)
-<span class="fc" id="L39">    private String subject;</span>
+<span class="nc" id="L39">    private String subject;</span>
 
     @Column(nullable = false, columnDefinition = &quot;TEXT&quot;)
-<span class="fc" id="L42">    private String message;</span>
+<span class="nc" id="L42">    private String message;</span>
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-<span class="fc" id="L46">    private NotificationChannel channel;</span>
+<span class="nc" id="L46">    private NotificationChannel channel;</span>
 
     @Column(name = &quot;sent_at&quot;, nullable = true)
-<span class="fc" id="L49">    private LocalDateTime sentAt;</span>
+<span class="nc" id="L49">    private LocalDateTime sentAt;</span>
 
     @Column(name = &quot;read_at&quot;)
-<span class="fc" id="L52">    private LocalDateTime readAt;</span>
+<span class="nc" id="L52">    private LocalDateTime readAt;</span>
 
     @Enumerated(EnumType.STRING)
     @Column(name = &quot;delivery_status&quot;, nullable = false, length = 20)
-<span class="fc" id="L56">    private DeliveryStatus deliveryStatus;</span>
+<span class="nc" id="L56">    private DeliveryStatus deliveryStatus;</span>
 
     @CreationTimestamp
     @Column(name = &quot;created_at&quot;, nullable = false, updatable = false)

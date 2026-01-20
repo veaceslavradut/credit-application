@@ -16,19 +16,19 @@ public class HelpContentController {
 
     private final HelpContentService helpContentService;
 
-<span class="fc" id="L19">    public HelpContentController(HelpContentService helpContentService) {</span>
-<span class="fc" id="L20">        this.helpContentService = helpContentService;</span>
-<span class="fc" id="L21">    }</span>
+<span class="nc" id="L19">    public HelpContentController(HelpContentService helpContentService) {</span>
+<span class="nc" id="L20">        this.helpContentService = helpContentService;</span>
+<span class="nc" id="L21">    }</span>
 
     @GetMapping(&quot;/api/help/topics&quot;)
     public ResponseEntity&lt;List&lt;HelpArticleListDTO&gt;&gt; listTopics(@RequestParam(name = &quot;language&quot;, defaultValue = &quot;en&quot;) String language) {
-<span class="fc" id="L25">        return ResponseEntity.ok(helpContentService.listHelpTopics(language));</span>
+<span class="nc" id="L25">        return ResponseEntity.ok(helpContentService.listHelpTopics(language));</span>
     }
 
     @GetMapping(&quot;/api/help/{topic}&quot;)
     public ResponseEntity&lt;HelpArticleDTO&gt; getArticle(@PathVariable(&quot;topic&quot;) String topic,
                                                      @RequestParam(name = &quot;language&quot;, defaultValue = &quot;en&quot;) String language) {
-<span class="fc" id="L31">        return ResponseEntity.ok(helpContentService.getHelpArticle(topic, language));</span>
+<span class="nc" id="L31">        return ResponseEntity.ok(helpContentService.getHelpArticle(topic, language));</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

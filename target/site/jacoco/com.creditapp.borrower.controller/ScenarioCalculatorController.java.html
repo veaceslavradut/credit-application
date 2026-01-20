@@ -14,8 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping(&quot;/api/borrower/scenario-calculator&quot;)
-<span class="fc" id="L17">@RequiredArgsConstructor</span>
-<span class="fc" id="L18">@Slf4j</span>
+<span class="nc" id="L17">@RequiredArgsConstructor</span>
+<span class="nc" id="L18">@Slf4j</span>
 public class ScenarioCalculatorController {
     
     private final ScenarioCalculatorService scenarioCalculatorService;
@@ -33,11 +33,11 @@ public class ScenarioCalculatorController {
     public ResponseEntity&lt;CalculateScenarioResponse&gt; calculateScenario(
             @Valid @RequestBody CalculateScenarioRequest request) {
         
-<span class="fc" id="L36">        log.info(&quot;Calculating scenario for loan amount: {}, term: {} months&quot;, </span>
-<span class="fc" id="L37">            request.getLoanAmount(), request.getTermMonths());</span>
+<span class="nc" id="L36">        log.info(&quot;Calculating scenario for loan amount: {}, term: {} months&quot;, </span>
+<span class="nc" id="L37">            request.getLoanAmount(), request.getTermMonths());</span>
         
-<span class="fc" id="L39">        CalculateScenarioResponse response = scenarioCalculatorService.calculateScenario(request);</span>
-<span class="fc" id="L40">        return ResponseEntity.ok(response);</span>
+<span class="nc" id="L39">        CalculateScenarioResponse response = scenarioCalculatorService.calculateScenario(request);</span>
+<span class="nc" id="L40">        return ResponseEntity.ok(response);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -14,19 +14,19 @@ import org.springframework.stereotype.Component;
  */
 @Converter(autoApply = false)
 @Component
-<span class="fc" id="L17">@RequiredArgsConstructor</span>
-<span class="fc" id="L18">@Slf4j</span>
+<span class="nc" id="L17">@RequiredArgsConstructor</span>
+<span class="nc" id="L18">@Slf4j</span>
 public class EncryptedAttributeConverter implements AttributeConverter&lt;String, String&gt; {
 
     private final EncryptionService encryptionService;
 
     @Override
     public String convertToDatabaseColumn(String attribute) {
-<span class="fc bfc" id="L25" title="All 2 branches covered.">        if (attribute == null) {</span>
-<span class="fc" id="L26">            return null;</span>
+<span class="nc bnc" id="L25" title="All 2 branches missed.">        if (attribute == null) {</span>
+<span class="nc" id="L26">            return null;</span>
         }
         try {
-<span class="fc" id="L29">            return encryptionService.encrypt(attribute);</span>
+<span class="nc" id="L29">            return encryptionService.encrypt(attribute);</span>
 <span class="nc" id="L30">        } catch (Exception e) {</span>
 <span class="nc" id="L31">            log.error(&quot;Failed to encrypt attribute&quot;, e);</span>
 <span class="nc" id="L32">            throw new EncryptionException(&quot;Failed to encrypt attribute&quot;, e);</span>
@@ -35,14 +35,14 @@ public class EncryptedAttributeConverter implements AttributeConverter&lt;String
 
     @Override
     public String convertToEntityAttribute(String dbData) {
-<span class="fc bfc" id="L38" title="All 2 branches covered.">        if (dbData == null) {</span>
-<span class="fc" id="L39">            return null;</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        if (dbData == null) {</span>
+<span class="nc" id="L39">            return null;</span>
         }
         try {
-<span class="fc" id="L42">            return encryptionService.decrypt(dbData);</span>
-<span class="fc" id="L43">        } catch (DecryptionException e) {</span>
-<span class="fc" id="L44">            log.error(&quot;Failed to decrypt attribute&quot;, e);</span>
-<span class="fc" id="L45">            throw e;  // Re-throw original exception</span>
+<span class="nc" id="L42">            return encryptionService.decrypt(dbData);</span>
+<span class="nc" id="L43">        } catch (DecryptionException e) {</span>
+<span class="nc" id="L44">            log.error(&quot;Failed to decrypt attribute&quot;, e);</span>
+<span class="nc" id="L45">            throw e;  // Re-throw original exception</span>
 <span class="nc" id="L46">        } catch (Exception e) {</span>
 <span class="nc" id="L47">            log.error(&quot;Failed to decrypt attribute&quot;, e);</span>
 <span class="nc" id="L48">            throw new DecryptionException(&quot;Failed to decrypt attribute&quot;, e);</span>

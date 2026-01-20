@@ -23,18 +23,18 @@ import org.springframework.data.domain.Sort;
     }
     
     public static Pageable validateAndGetPageable(int limit, int offset, Sort sort) {
-<span class="pc bpc" id="L26" title="1 of 2 branches missed.">        if (limit &lt; 1) {</span>
+<span class="nc bnc" id="L26" title="All 2 branches missed.">        if (limit &lt; 1) {</span>
 <span class="nc" id="L27">            limit = 20;</span>
-<span class="pc bpc" id="L28" title="1 of 2 branches missed.">        } else if (limit &gt; MAX_PAGE_SIZE) {</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">        } else if (limit &gt; MAX_PAGE_SIZE) {</span>
 <span class="nc" id="L29">            limit = MAX_PAGE_SIZE;</span>
         }
         
-<span class="pc bpc" id="L32" title="1 of 2 branches missed.">        if (offset &lt; 0) {</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        if (offset &lt; 0) {</span>
 <span class="nc" id="L33">            offset = 0;</span>
         }
         
-<span class="fc" id="L36">        int pageNumber = offset / limit;</span>
-<span class="fc" id="L37">        return PageRequest.of(pageNumber, limit, sort);</span>
+<span class="nc" id="L36">        int pageNumber = offset / limit;</span>
+<span class="nc" id="L37">        return PageRequest.of(pageNumber, limit, sort);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

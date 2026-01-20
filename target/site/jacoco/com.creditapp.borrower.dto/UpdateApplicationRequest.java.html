@@ -8,24 +8,24 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-<span class="pc bnc" id="L11" title="All 54 branches missed.">@Data</span>
-<span class="fc" id="L12">@NoArgsConstructor</span>
-<span class="fc" id="L13">@AllArgsConstructor</span>
-<span class="pc" id="L14">@Builder</span>
+<span class="nc bnc" id="L11" title="All 54 branches missed.">@Data</span>
+<span class="nc" id="L12">@NoArgsConstructor</span>
+<span class="nc" id="L13">@AllArgsConstructor</span>
+<span class="nc" id="L14">@Builder</span>
 public class UpdateApplicationRequest {
 
     @DecimalMin(value = &quot;100&quot;, message = &quot;Loan amount must be at least 100&quot;)
     @DecimalMax(value = &quot;1000000&quot;, message = &quot;Loan amount cannot exceed 1000000&quot;)
-<span class="fc" id="L19">    private BigDecimal loanAmount;</span>
+<span class="nc" id="L19">    private BigDecimal loanAmount;</span>
 
     @Min(value = 6, message = &quot;Loan term must be at least 6 months&quot;)
     @Max(value = 360, message = &quot;Loan term cannot exceed 360 months&quot;)
-<span class="fc" id="L23">    private Integer loanTermMonths;</span>
+<span class="nc" id="L23">    private Integer loanTermMonths;</span>
 
-<span class="fc" id="L25">    private String loanType;</span>
-<span class="fc" id="L26">    private String currency;</span>
-<span class="fc" id="L27">    private String ratePreference;</span>
+<span class="nc" id="L25">    private String loanType;</span>
+<span class="nc" id="L26">    private String currency;</span>
+<span class="nc" id="L27">    private String ratePreference;</span>
 
-<span class="fc" id="L29">    private ApplicationDetailsDTO applicationDetails;</span>
+<span class="nc" id="L29">    private ApplicationDetailsDTO applicationDetails;</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

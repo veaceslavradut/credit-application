@@ -15,9 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-<span class="fc" id="L18">@Slf4j</span>
+<span class="nc" id="L18">@Slf4j</span>
 @Service
-<span class="fc" id="L20">@RequiredArgsConstructor</span>
+<span class="nc" id="L20">@RequiredArgsConstructor</span>
 @Transactional
 public class BankOfferWithdrawalService {
 
@@ -26,29 +26,29 @@ public class BankOfferWithdrawalService {
     private final NotificationService notificationService;
 
     public WithdrawOfferResponse withdrawOffer(UUID bankId, UUID offerId) {
-<span class="fc" id="L29">        log.info(&quot;Withdrawing offer {} for bank {}&quot;, offerId, bankId);</span>
+<span class="nc" id="L29">        log.info(&quot;Withdrawing offer {} for bank {}&quot;, offerId, bankId);</span>
 
         // Fetch Offer
-<span class="fc" id="L32">        Offer offer = offerRepository.findById(offerId)</span>
-<span class="fc" id="L33">                .orElseThrow(() -&gt; new NotFoundException(&quot;Offer not found: &quot; + offerId));</span>
+<span class="nc" id="L32">        Offer offer = offerRepository.findById(offerId)</span>
+<span class="nc" id="L33">                .orElseThrow(() -&gt; new NotFoundException(&quot;Offer not found: &quot; + offerId));</span>
 
         // Verify bank submitted this offer
-<span class="fc bfc" id="L36" title="All 2 branches covered.">        if (!offer.getBankId().equals(bankId)) {</span>
-<span class="fc" id="L37">            throw new IllegalArgumentException(&quot;Bank &quot; + bankId + &quot; is not authorized to withdraw this offer&quot;);</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">        if (!offer.getBankId().equals(bankId)) {</span>
+<span class="nc" id="L37">            throw new IllegalArgumentException(&quot;Bank &quot; + bankId + &quot; is not authorized to withdraw this offer&quot;);</span>
         }
 
         // Verify offer status != ACCEPTED
-<span class="fc bfc" id="L41" title="All 2 branches covered.">        if (offer.getOfferStatus() == OfferStatus.ACCEPTED) {</span>
-<span class="fc" id="L42">            throw new IllegalStateException(</span>
-<span class="fc" id="L43">                    &quot;Cannot withdraw accepted offer. Offer status: &quot; + offer.getOfferStatus());</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        if (offer.getOfferStatus() == OfferStatus.ACCEPTED) {</span>
+<span class="nc" id="L42">            throw new IllegalStateException(</span>
+<span class="nc" id="L43">                    &quot;Cannot withdraw accepted offer. Offer status: &quot; + offer.getOfferStatus());</span>
         }
 
         // Update offer status
-<span class="fc" id="L47">        offer.setOfferStatus(OfferStatus.WITHDRAWN);</span>
-<span class="fc" id="L48">        Offer updatedOffer = offerRepository.save(offer);</span>
+<span class="nc" id="L47">        offer.setOfferStatus(OfferStatus.WITHDRAWN);</span>
+<span class="nc" id="L48">        Offer updatedOffer = offerRepository.save(offer);</span>
 
         // Create audit log
-<span class="fc" id="L51">        auditService.logAction(</span>
+<span class="nc" id="L51">        auditService.logAction(</span>
                 &quot;OFFER&quot;,
                 offerId,
                 com.creditapp.shared.model.AuditAction.OFFER_WITHDRAWN
@@ -56,25 +56,25 @@ public class BankOfferWithdrawalService {
 
         // Queue email notification
         try {
-<span class="fc" id="L59">            notificationService.createNotification(</span>
-<span class="fc" id="L60">                    offer.getApplicationId(),</span>
-<span class="fc" id="L61">                    offer.getApplicationId(),</span>
+<span class="nc" id="L59">            notificationService.createNotification(</span>
+<span class="nc" id="L60">                    offer.getApplicationId(),</span>
+<span class="nc" id="L61">                    offer.getApplicationId(),</span>
                     com.creditapp.shared.model.NotificationType.APPLICATION_WITHDRAWN,
                     &quot;Offer Update&quot;,
                     &quot;The offer has been withdrawn by the bank&quot;
             );
 <span class="nc" id="L66">        } catch (Exception e) {</span>
 <span class="nc" id="L67">            log.error(&quot;Failed to send withdrawal notification&quot;, e);</span>
-<span class="fc" id="L68">        }</span>
+<span class="nc" id="L68">        }</span>
 
-<span class="fc" id="L70">        LocalDateTime withdrawnAt = LocalDateTime.now();</span>
-<span class="fc" id="L71">        log.info(&quot;Offer {} withdrawn successfully at {}&quot;, offerId, withdrawnAt);</span>
+<span class="nc" id="L70">        LocalDateTime withdrawnAt = LocalDateTime.now();</span>
+<span class="nc" id="L71">        log.info(&quot;Offer {} withdrawn successfully at {}&quot;, offerId, withdrawnAt);</span>
 
-<span class="fc" id="L73">        return WithdrawOfferResponse.builder()</span>
-<span class="fc" id="L74">                .offerId(offerId)</span>
-<span class="fc" id="L75">                .status(updatedOffer.getOfferStatus())</span>
-<span class="fc" id="L76">                .withdrawnAt(withdrawnAt)</span>
-<span class="fc" id="L77">                .build();</span>
+<span class="nc" id="L73">        return WithdrawOfferResponse.builder()</span>
+<span class="nc" id="L74">                .offerId(offerId)</span>
+<span class="nc" id="L75">                .status(updatedOffer.getOfferStatus())</span>
+<span class="nc" id="L76">                .withdrawnAt(withdrawnAt)</span>
+<span class="nc" id="L77">                .build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

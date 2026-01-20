@@ -10,43 +10,43 @@ import java.util.UUID;
 
 @Entity
 @Table(name = &quot;data_exports&quot;)
-<span class="pc bnc" id="L13" title="All 94 branches missed.">@Data</span>
-<span class="pc" id="L14">@Builder</span>
-<span class="fc" id="L15">@NoArgsConstructor</span>
-<span class="fc" id="L16">@AllArgsConstructor</span>
+<span class="nc bnc" id="L13" title="All 94 branches missed.">@Data</span>
+<span class="nc" id="L14">@Builder</span>
+<span class="nc" id="L15">@NoArgsConstructor</span>
+<span class="nc" id="L16">@AllArgsConstructor</span>
 public class DataExport {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-<span class="fc" id="L20">    private UUID id;</span>
+<span class="nc" id="L20">    private UUID id;</span>
 
     @Column(nullable = false)
-<span class="fc" id="L23">    private UUID borrowerId;</span>
+<span class="nc" id="L23">    private UUID borrowerId;</span>
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-<span class="fc" id="L27">    private ExportStatus status;</span>
+<span class="nc" id="L27">    private ExportStatus status;</span>
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-<span class="fc" id="L31">    private ExportFormat format;</span>
+<span class="nc" id="L31">    private ExportFormat format;</span>
 
     @Column(length = 500)
 <span class="nc" id="L34">    private String fileUrl;</span>
 
     @Column(length = 50, unique = true)
-<span class="fc" id="L37">    private String downloadToken;</span>
+<span class="nc" id="L37">    private String downloadToken;</span>
 
-<span class="fc" id="L39">    private LocalDateTime downloadTokenExpiresAt;</span>
+<span class="nc" id="L39">    private LocalDateTime downloadTokenExpiresAt;</span>
 
     @Column(nullable = false)
-<span class="fc" id="L42">    private LocalDateTime requestedAt;</span>
+<span class="nc" id="L42">    private LocalDateTime requestedAt;</span>
 
-<span class="fc" id="L44">    private LocalDateTime completedAt;</span>
+<span class="nc" id="L44">    private LocalDateTime completedAt;</span>
 
     @Column(length = 45)
 <span class="nc" id="L47">    private String createdByIp;</span>
 
-<span class="fc" id="L49">    private LocalDateTime expiresAt;</span>
+<span class="nc" id="L49">    private LocalDateTime expiresAt;</span>
 
     @PrePersist
     protected void onCreate() {

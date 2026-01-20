@@ -21,55 +21,55 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-<span class="fc" id="L24">@RequiredArgsConstructor</span>
+<span class="nc" id="L24">@RequiredArgsConstructor</span>
 public class ComplianceAuditService {
     private final AuditLogRepository auditLogRepository;
     private final SensitiveDataRedactionService dataRedactionService;
 
     public Page&lt;AuditLogResponse&gt; getAuditLogs(AuditLogFilterDTO filter) {
-<span class="pc bpc" id="L30" title="1 of 2 branches missed.">        int page = filter.getPage() != null ? filter.getPage() : 0;</span>
-<span class="pc bpc" id="L31" title="1 of 2 branches missed.">        int size = filter.getSize() != null ? Math.min(filter.getSize(), 1000) : 100;</span>
-<span class="fc" id="L32">        PageRequest pr = PageRequest.of(page, size);</span>
+<span class="nc bnc" id="L30" title="All 2 branches missed.">        int page = filter.getPage() != null ? filter.getPage() : 0;</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">        int size = filter.getSize() != null ? Math.min(filter.getSize(), 1000) : 100;</span>
+<span class="nc" id="L32">        PageRequest pr = PageRequest.of(page, size);</span>
 
         Page&lt;AuditLog&gt; raw;
-<span class="fc bfc" id="L35" title="All 2 branches covered.">        if (filter.getUserId() != null) {</span>
-<span class="fc" id="L36">            raw = auditLogRepository.findByActorIdOrderByCreatedAtDesc(filter.getUserId(), pr);</span>
-<span class="pc bpc" id="L37" title="1 of 2 branches missed.">        } else if (filter.getAction() != null) {</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        if (filter.getUserId() != null) {</span>
+<span class="nc" id="L36">            raw = auditLogRepository.findByActorIdOrderByCreatedAtDesc(filter.getUserId(), pr);</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        } else if (filter.getAction() != null) {</span>
 <span class="nc" id="L38">            AuditAction act = AuditAction.valueOf(filter.getAction());</span>
 <span class="nc" id="L39">            raw = auditLogRepository.findByEntityTypeAndActionOrderByCreatedAtDesc(&quot;*&quot;, act, pr); // placeholder entityType</span>
-<span class="pc bpc" id="L40" title="3 of 4 branches missed.">        } else if (filter.getDateFrom() != null &amp;&amp; filter.getDateTo() != null) {</span>
+<span class="nc bnc" id="L40" title="All 4 branches missed.">        } else if (filter.getDateFrom() != null &amp;&amp; filter.getDateTo() != null) {</span>
 <span class="nc" id="L41">            LocalDateTime from = filter.getDateFrom().atStartOfDay();</span>
 <span class="nc" id="L42">            LocalDateTime to = filter.getDateTo().atTime(23, 59, 59);</span>
 <span class="nc" id="L43">            raw = auditLogRepository.findByCreatedAtBetweenOrderByCreatedAtDesc(from, to, pr);</span>
-<span class="pc bpc" id="L44" title="1 of 2 branches missed.">        } else if (filter.getResult() != null) {</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        } else if (filter.getResult() != null) {</span>
 <span class="nc" id="L45">            raw = auditLogRepository.findByResultOrderByCreatedAtDesc(filter.getResult(), pr);</span>
         } else {
             // default: date range last 30 days
-<span class="fc" id="L48">            LocalDateTime to = LocalDateTime.now();</span>
-<span class="fc" id="L49">            LocalDateTime from = to.minusDays(30);</span>
-<span class="fc" id="L50">            raw = auditLogRepository.findByCreatedAtBetweenOrderByCreatedAtDesc(from, to, pr);</span>
+<span class="nc" id="L48">            LocalDateTime to = LocalDateTime.now();</span>
+<span class="nc" id="L49">            LocalDateTime from = to.minusDays(30);</span>
+<span class="nc" id="L50">            raw = auditLogRepository.findByCreatedAtBetweenOrderByCreatedAtDesc(from, to, pr);</span>
         }
 
-<span class="fc" id="L53">        List&lt;AuditLogResponse&gt; mapped = raw.getContent().stream().map(this::mapToResponse).collect(Collectors.toList());</span>
-<span class="fc" id="L54">        return new PageImpl&lt;&gt;(mapped, pr, raw.getTotalElements());</span>
+<span class="nc" id="L53">        List&lt;AuditLogResponse&gt; mapped = raw.getContent().stream().map(this::mapToResponse).collect(Collectors.toList());</span>
+<span class="nc" id="L54">        return new PageImpl&lt;&gt;(mapped, pr, raw.getTotalElements());</span>
     }
 
     public byte[] exportAuditLogsAsCSV(AuditLogFilterDTO filter) {
-<span class="fc" id="L58">        Page&lt;AuditLogResponse&gt; page = getAuditLogs(filter);</span>
-<span class="fc" id="L59">        StringBuilder sb = new StringBuilder();</span>
-<span class="fc" id="L60">        sb.append(&quot;Timestamp,User ID,Action,Result,IP Address,User Agent,Resource Type,Resource ID\n&quot;);</span>
-<span class="fc bfc" id="L61" title="All 2 branches covered.">        for (AuditLogResponse r : page.getContent()) {</span>
-<span class="fc" id="L62">            sb.append(Objects.toString(r.getTimestamp(), &quot;&quot;)).append(',')</span>
-<span class="fc" id="L63">              .append(Objects.toString(r.getUserId(), &quot;&quot;)).append(',')</span>
-<span class="fc" id="L64">              .append(Objects.toString(r.getAction(), &quot;&quot;)).append(',')</span>
-<span class="fc" id="L65">              .append(Objects.toString(r.getResult(), &quot;&quot;)).append(',')</span>
-<span class="fc" id="L66">              .append(escapeCsv(Objects.toString(r.getIpAddress(), &quot;&quot;))).append(',')</span>
-<span class="fc" id="L67">              .append(escapeCsv(Objects.toString(r.getUserAgent(), &quot;&quot;))).append(',')</span>
-<span class="fc" id="L68">              .append(escapeCsv(Objects.toString(r.getResourceType(), &quot;&quot;))).append(',')</span>
-<span class="fc" id="L69">              .append(Objects.toString(r.getResourceId(), &quot;&quot;))</span>
-<span class="fc" id="L70">              .append('\n');</span>
-<span class="fc" id="L71">        }</span>
-<span class="fc" id="L72">        return sb.toString().getBytes();</span>
+<span class="nc" id="L58">        Page&lt;AuditLogResponse&gt; page = getAuditLogs(filter);</span>
+<span class="nc" id="L59">        StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L60">        sb.append(&quot;Timestamp,User ID,Action,Result,IP Address,User Agent,Resource Type,Resource ID\n&quot;);</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        for (AuditLogResponse r : page.getContent()) {</span>
+<span class="nc" id="L62">            sb.append(Objects.toString(r.getTimestamp(), &quot;&quot;)).append(',')</span>
+<span class="nc" id="L63">              .append(Objects.toString(r.getUserId(), &quot;&quot;)).append(',')</span>
+<span class="nc" id="L64">              .append(Objects.toString(r.getAction(), &quot;&quot;)).append(',')</span>
+<span class="nc" id="L65">              .append(Objects.toString(r.getResult(), &quot;&quot;)).append(',')</span>
+<span class="nc" id="L66">              .append(escapeCsv(Objects.toString(r.getIpAddress(), &quot;&quot;))).append(',')</span>
+<span class="nc" id="L67">              .append(escapeCsv(Objects.toString(r.getUserAgent(), &quot;&quot;))).append(',')</span>
+<span class="nc" id="L68">              .append(escapeCsv(Objects.toString(r.getResourceType(), &quot;&quot;))).append(',')</span>
+<span class="nc" id="L69">              .append(Objects.toString(r.getResourceId(), &quot;&quot;))</span>
+<span class="nc" id="L70">              .append('\n');</span>
+<span class="nc" id="L71">        }</span>
+<span class="nc" id="L72">        return sb.toString().getBytes();</span>
     }
 
     public List&lt;AuditLogResponse&gt; getAuditLogsByUser(UUID userId, LocalDate from, LocalDate to) {
@@ -92,26 +92,26 @@ public class ComplianceAuditService {
     }
 
     private AuditLogResponse mapToResponse(AuditLog a) {
-<span class="fc" id="L95">        return AuditLogResponse.builder()</span>
-<span class="fc" id="L96">                .id(a.getId())</span>
-<span class="fc" id="L97">                .userId(a.getActorId())</span>
-<span class="fc" id="L98">                .action(a.getAction())</span>
-<span class="fc" id="L99">                .result(a.getResult())</span>
-<span class="fc" id="L100">                .timestamp(a.getCreatedAt())</span>
-<span class="fc" id="L101">                .ipAddress(a.getIpAddress())</span>
-<span class="fc" id="L102">                .userAgent(a.getUserAgent())</span>
-<span class="fc" id="L103">                .resourceType(a.getEntityType())</span>
-<span class="fc" id="L104">                .resourceId(a.getEntityId())</span>
-<span class="fc" id="L105">                .details(dataRedactionService.redactSensitiveData(a.getNewValues()))</span>
-<span class="fc" id="L106">                .build();</span>
+<span class="nc" id="L95">        return AuditLogResponse.builder()</span>
+<span class="nc" id="L96">                .id(a.getId())</span>
+<span class="nc" id="L97">                .userId(a.getActorId())</span>
+<span class="nc" id="L98">                .action(a.getAction())</span>
+<span class="nc" id="L99">                .result(a.getResult())</span>
+<span class="nc" id="L100">                .timestamp(a.getCreatedAt())</span>
+<span class="nc" id="L101">                .ipAddress(a.getIpAddress())</span>
+<span class="nc" id="L102">                .userAgent(a.getUserAgent())</span>
+<span class="nc" id="L103">                .resourceType(a.getEntityType())</span>
+<span class="nc" id="L104">                .resourceId(a.getEntityId())</span>
+<span class="nc" id="L105">                .details(dataRedactionService.redactSensitiveData(a.getNewValues()))</span>
+<span class="nc" id="L106">                .build();</span>
     }
 
     private String escapeCsv(String s) {
-<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (s == null) return &quot;&quot;;</span>
-<span class="pc bpc" id="L111" title="2 of 4 branches missed.">        if (s.contains(&quot;,&quot;) || s.contains(&quot;\&quot;&quot;)) {</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (s == null) return &quot;&quot;;</span>
+<span class="nc bnc" id="L111" title="All 4 branches missed.">        if (s.contains(&quot;,&quot;) || s.contains(&quot;\&quot;&quot;)) {</span>
 <span class="nc" id="L112">            return '&quot;' + s.replace(&quot;\&quot;&quot;, &quot;\&quot;\&quot;&quot;) + '&quot;';</span>
         }
-<span class="fc" id="L114">        return s;</span>
+<span class="nc" id="L114">        return s;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

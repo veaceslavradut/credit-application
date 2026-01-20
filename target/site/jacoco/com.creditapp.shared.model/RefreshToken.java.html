@@ -24,8 +24,8 @@ public class RefreshToken {
     @Column(name = &quot;expires_at&quot;, nullable = false)
     private LocalDateTime expiresAt;
     
-<span class="pc" id="L27">    @Column(name = &quot;revoked&quot;, nullable = false)</span>
-<span class="pc" id="L28">    private Boolean revoked = false;</span>
+<span class="nc" id="L27">    @Column(name = &quot;revoked&quot;, nullable = false)</span>
+<span class="nc" id="L28">    private Boolean revoked = false;</span>
     
     @Column(name = &quot;revoked_at&quot;)
     private LocalDateTime revokedAt;
@@ -34,7 +34,7 @@ public class RefreshToken {
     @Column(name = &quot;created_at&quot;, nullable = false, updatable = false)
     private LocalDateTime createdAt;
     
-<span class="fc" id="L37">    public RefreshToken() {}</span>
+<span class="nc" id="L37">    public RefreshToken() {}</span>
     
 <span class="nc" id="L39">    public RefreshToken(UUID userId, String token, LocalDateTime expiresAt) {</span>
 <span class="nc" id="L40">        this.userId = userId;</span>

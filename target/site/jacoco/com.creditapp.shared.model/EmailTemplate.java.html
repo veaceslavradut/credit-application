@@ -19,9 +19,9 @@ import java.util.UUID;
 @Table(name = &quot;email_templates&quot;, 
        uniqueConstraints = @UniqueConstraint(columnNames = &quot;template_name&quot;))
 <span class="nc bnc" id="L21" title="All 78 branches missed.">@Data</span>
-<span class="fc" id="L22">@NoArgsConstructor</span>
+<span class="nc" id="L22">@NoArgsConstructor</span>
 <span class="nc" id="L23">@AllArgsConstructor</span>
-<span class="pc bnc" id="L24" title="All 2 branches missed.">@Builder</span>
+<span class="nc bnc" id="L24" title="All 2 branches missed.">@Builder</span>
 public class EmailTemplate {
     
     @Id
@@ -49,7 +49,7 @@ public class EmailTemplate {
     
     @Builder.Default
     @Column(nullable = false)
-<span class="pc" id="L52">    private Boolean active = true;</span>
+<span class="nc" id="L52">    private Boolean active = true;</span>
     
     @CreationTimestamp
     @Column(name = &quot;created_at&quot;, nullable = false, updatable = false)

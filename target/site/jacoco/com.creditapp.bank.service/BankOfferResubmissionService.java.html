@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankOfferResubmissionService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.bank.service</a> &gt; <span class="el_source">BankOfferResubmissionService.java</span></div><h1>BankOfferResubmissionService.java</h1><pre class="source lang-java linenums">package com.creditapp.bank.service;
+
+import com.creditapp.bank.dto.ResubmitOfferFormResponse;
+import com.creditapp.bank.dto.ResubmitOfferRequest;
+import com.creditapp.bank.dto.ResubmitOfferResponse;
+import com.creditapp.bank.model.Offer;
+import com.creditapp.bank.model.OfferStatus;
+import com.creditapp.bank.repository.OfferRepository;
+import com.creditapp.borrower.model.Application;
+import com.creditapp.borrower.repository.ApplicationRepository;
+import com.creditapp.shared.model.AuditAction;
+import com.creditapp.shared.service.AuditService;
+import com.creditapp.shared.service.EmailService;
+import com.creditapp.shared.util.CalculationUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+/**
+ * Service for offer resubmission functionality
+ * Story 4.6: Offer Expiration Notification - Tasks 5 &amp; 6
+ */
+@Service
+<span class="nc" id="L29">@RequiredArgsConstructor</span>
+<span class="nc" id="L30">@Slf4j</span>
+public class BankOfferResubmissionService {
+
+    private final OfferRepository offerRepository;
+    private final ApplicationRepository applicationRepository;
+    private final EmailService emailService;
+    private final AuditService auditService;
+
+    /**
+     * Get resubmit form with previous offer details pre-filled
+     * Task 5: GET /api/bank/offers/{offerId}/resubmit
+     */
+    public ResubmitOfferFormResponse getResubmitForm(UUID offerId, UUID bankId) {
+<span class="nc" id="L43">        log.info(&quot;Getting resubmit form for offer {}&quot;, offerId);</span>
+
+        // Fetch offer
+<span class="nc" id="L46">        Offer offer = offerRepository.findById(offerId)</span>
+<span class="nc" id="L47">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Offer not found: &quot; + offerId));</span>
+
+        // Verify bank ownership
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (!offer.getBankId().equals(bankId)) {</span>
+<span class="nc" id="L51">            throw new SecurityException(&quot;Bank &quot; + bankId + &quot; is not authorized to resubmit offer &quot; + offerId);</span>
+        }
+
+        // Fetch application context
+<span class="nc" id="L55">        Application application = applicationRepository.findById(offer.getApplicationId())</span>
+<span class="nc" id="L56">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Application not found: &quot; + offer.getApplicationId()));</span>
+
+        // Check expiration status
+<span class="nc" id="L59">        LocalDateTime now = LocalDateTime.now();</span>
+<span class="nc bnc" id="L60" title="All 4 branches missed.">        boolean isExpired = offer.getExpiresAt() != null &amp;&amp; offer.getExpiresAt().isBefore(now);</span>
+        
+<span class="nc" id="L62">        String warningMessage = null;</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (isExpired) {</span>
+<span class="nc" id="L64">            warningMessage = &quot;This offer has expired. Resubmitting will create a new offer with a fresh expiration date.&quot;;</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        } else if (offer.getExpiresAt() != null) {</span>
+<span class="nc" id="L66">            long hoursRemaining = java.time.Duration.between(now, offer.getExpiresAt()).toHours();</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">            if (hoursRemaining &lt; 24) {</span>
+<span class="nc" id="L68">                warningMessage = String.format(&quot;This offer expires in %d hours. Consider resubmitting to extend the validity period.&quot;, hoursRemaining);</span>
+            }
+        }
+
+<span class="nc" id="L72">        return ResubmitOfferFormResponse.builder()</span>
+<span class="nc" id="L73">                .offerId(offer.getId())</span>
+<span class="nc" id="L74">                .applicationId(offer.getApplicationId())</span>
+<span class="nc" id="L75">                .bankId(offer.getBankId())</span>
+<span class="nc" id="L76">                .previousApr(offer.getApr())</span>
+<span class="nc" id="L77">                .previousOriginationFee(offer.getOriginationFee())</span>
+<span class="nc" id="L78">                .previousProcessingTimeDays(offer.getProcessingTimeDays())</span>
+<span class="nc" id="L79">                .previousValidityPeriodDays(offer.getValidityPeriodDays())</span>
+<span class="nc" id="L80">                .previousMonthlyPayment(offer.getMonthlyPayment())</span>
+<span class="nc" id="L81">                .previousTotalCost(offer.getTotalCost())</span>
+<span class="nc" id="L82">                .loanAmount(application.getLoanAmount())</span>
+<span class="nc" id="L83">                .loanTermMonths(application.getLoanTermMonths())</span>
+<span class="nc" id="L84">                .expiresAt(offer.getExpiresAt())</span>
+<span class="nc" id="L85">                .isExpired(isExpired)</span>
+<span class="nc" id="L86">                .warningMessage(warningMessage)</span>
+<span class="nc" id="L87">                .build();</span>
+    }
+
+    /**
+     * Process offer resubmission with updated values
+     * Task 6: POST /api/bank/offers/{offerId}/resubmit
+     */
+    @Transactional
+    public ResubmitOfferResponse resubmitOffer(UUID offerId, UUID bankId, ResubmitOfferRequest request) {
+<span class="nc" id="L96">        log.info(&quot;Resubmitting offer {} with updated values&quot;, offerId);</span>
+
+        // Fetch old offer
+<span class="nc" id="L99">        Offer oldOffer = offerRepository.findById(offerId)</span>
+<span class="nc" id="L100">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Offer not found: &quot; + offerId));</span>
+
+        // Verify bank ownership
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        if (!oldOffer.getBankId().equals(bankId)) {</span>
+<span class="nc" id="L104">            throw new SecurityException(&quot;Bank &quot; + bankId + &quot; is not authorized to resubmit offer &quot; + offerId);</span>
+        }
+
+        // Fetch application
+<span class="nc" id="L108">        Application application = applicationRepository.findById(oldOffer.getApplicationId())</span>
+<span class="nc" id="L109">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Application not found: &quot; + oldOffer.getApplicationId()));</span>
+
+        // Validate APR range
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        if (request.getApr().compareTo(new BigDecimal(&quot;0.5&quot;)) &lt; 0 || </span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">            request.getApr().compareTo(new BigDecimal(&quot;50.0&quot;)) &gt; 0) {</span>
+<span class="nc" id="L114">            throw new IllegalArgumentException(&quot;APR must be between 0.5% and 50%&quot;);</span>
+        }
+
+        // Recalculate monthly payment and total cost
+<span class="nc" id="L118">        BigDecimal monthlyPayment = CalculationUtils.calculateMonthlyPayment(</span>
+<span class="nc" id="L119">                application.getLoanAmount(),</span>
+<span class="nc" id="L120">                application.getLoanTermMonths(),</span>
+<span class="nc" id="L121">                request.getApr()</span>
+        );
+
+<span class="nc" id="L124">        BigDecimal totalCost = monthlyPayment</span>
+<span class="nc" id="L125">                .multiply(new BigDecimal(application.getLoanTermMonths()))</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">                .add(request.getOriginationFee() != null ? request.getOriginationFee() : BigDecimal.ZERO);</span>
+
+        // Create new offer
+<span class="nc" id="L129">        Offer newOffer = new Offer();</span>
+<span class="nc" id="L130">        newOffer.setId(UUID.randomUUID());</span>
+<span class="nc" id="L131">        newOffer.setApplicationId(oldOffer.getApplicationId());</span>
+<span class="nc" id="L132">        newOffer.setBankId(oldOffer.getBankId());</span>
+<span class="nc" id="L133">        newOffer.setOfferStatus(OfferStatus.SUBMITTED);</span>
+<span class="nc" id="L134">        newOffer.setApr(request.getApr());</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">        newOffer.setOriginationFee(request.getOriginationFee() != null ? request.getOriginationFee() : oldOffer.getOriginationFee());</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">        newOffer.setProcessingTimeDays(request.getProcessingTimeDays() != null ? request.getProcessingTimeDays() : oldOffer.getProcessingTimeDays());</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        newOffer.setValidityPeriodDays(request.getValidityPeriodDays() != null ? request.getValidityPeriodDays() : 1);</span>
+<span class="nc" id="L138">        newOffer.setMonthlyPayment(monthlyPayment);</span>
+<span class="nc" id="L139">        newOffer.setTotalCost(totalCost);</span>
+<span class="nc" id="L140">        newOffer.setInsuranceCost(oldOffer.getInsuranceCost());</span>
+<span class="nc" id="L141">        newOffer.setNotified(false); // Reset notification flag</span>
+        
+        // Set new expiration date
+<span class="nc" id="L144">        LocalDateTime newExpiresAt = LocalDateTime.now().plusDays(newOffer.getValidityPeriodDays());</span>
+<span class="nc" id="L145">        newOffer.setExpiresAt(newExpiresAt);</span>
+
+        // Save new offer
+<span class="nc" id="L148">        offerRepository.save(newOffer);</span>
+<span class="nc" id="L149">        log.info(&quot;Created new offer {} for resubmission&quot;, newOffer.getId());</span>
+
+        // Mark old offer as EXPIRED
+<span class="nc" id="L152">        oldOffer.setOfferStatus(OfferStatus.EXPIRED);</span>
+<span class="nc" id="L153">        offerRepository.save(oldOffer);</span>
+<span class="nc" id="L154">        log.info(&quot;Marked old offer {} as EXPIRED&quot;, oldOffer.getId());</span>
+
+        // Send email to borrower
+<span class="nc" id="L157">        String borrowerNotificationStatus = &quot;SENT&quot;;</span>
+        try {
+            // Get borrower email from User relationship
+<span class="nc" id="L160">            application.getBorrower(); // Force lazy load</span>
+<span class="nc" id="L161">            String borrowerEmail = application.getBorrower().getEmail();</span>
+<span class="nc" id="L162">            String subject = &quot;Updated Loan Offer from Bank&quot;; // In real scenario, fetch bank name</span>
+<span class="nc" id="L163">            String htmlBody = buildResubmitEmailHtml(application, newOffer);</span>
+<span class="nc" id="L164">            String textBody = buildResubmitEmailText(application, newOffer);</span>
+
+<span class="nc" id="L166">            emailService.sendEmail(borrowerEmail, subject, htmlBody, textBody);</span>
+<span class="nc" id="L167">            log.info(&quot;Sent resubmit notification email to borrower {}&quot;, borrowerEmail);</span>
+<span class="nc" id="L168">        } catch (Exception e) {</span>
+<span class="nc" id="L169">            log.error(&quot;Failed to send resubmit notification email&quot;, e);</span>
+<span class="nc" id="L170">            borrowerNotificationStatus = &quot;FAILED: &quot; + e.getMessage();</span>
+<span class="nc" id="L171">        }</span>
+
+        // Audit log
+<span class="nc" id="L174">        auditService.logAction(</span>
+                &quot;Offer&quot;,
+<span class="nc" id="L176">                newOffer.getId(),</span>
+                AuditAction.OFFER_RESUBMITTED,
+                bankId,
+                &quot;BANK_ADMIN&quot;
+        );
+
+<span class="nc" id="L182">        return ResubmitOfferResponse.builder()</span>
+<span class="nc" id="L183">                .newOfferId(newOffer.getId())</span>
+<span class="nc" id="L184">                .oldOfferId(oldOffer.getId())</span>
+<span class="nc" id="L185">                .applicationId(newOffer.getApplicationId())</span>
+<span class="nc" id="L186">                .apr(newOffer.getApr())</span>
+<span class="nc" id="L187">                .originationFee(newOffer.getOriginationFee())</span>
+<span class="nc" id="L188">                .processingTimeDays(newOffer.getProcessingTimeDays())</span>
+<span class="nc" id="L189">                .validityPeriodDays(newOffer.getValidityPeriodDays())</span>
+<span class="nc" id="L190">                .monthlyPayment(newOffer.getMonthlyPayment())</span>
+<span class="nc" id="L191">                .totalCost(newOffer.getTotalCost())</span>
+<span class="nc" id="L192">                .expiresAt(newOffer.getExpiresAt())</span>
+<span class="nc" id="L193">                .status(&quot;SUBMITTED&quot;)</span>
+<span class="nc" id="L194">                .borrowerNotificationStatus(borrowerNotificationStatus)</span>
+<span class="nc" id="L195">                .message(&quot;Offer successfully resubmitted with updated values&quot;)</span>
+<span class="nc" id="L196">                .build();</span>
+    }
+
+    private String buildResubmitEmailHtml(Application application, Offer newOffer) {
+<span class="nc" id="L200">        return String.format(&quot;&quot;&quot;</span>
+                &lt;html&gt;
+                &lt;body&gt;
+                    &lt;h2&gt;Updated Loan Offer&lt;/h2&gt;
+                    &lt;p&gt;Good news! A bank has updated their offer for your loan application.&lt;/p&gt;
+                    
+                    &lt;h3&gt;Application Details:&lt;/h3&gt;
+                    &lt;ul&gt;
+                        &lt;li&gt;Loan Amount: $%,.2f&lt;/li&gt;
+                        &lt;li&gt;Term: %d months&lt;/li&gt;
+                    &lt;/ul&gt;
+                    
+                    &lt;h3&gt;Updated Offer:&lt;/h3&gt;
+                    &lt;ul&gt;
+                        &lt;li&gt;&lt;strong&gt;APR: %.2f%%&lt;/strong&gt;&lt;/li&gt;
+                        &lt;li&gt;Monthly Payment: $%,.2f&lt;/li&gt;
+                        &lt;li&gt;Total Cost: $%,.2f&lt;/li&gt;
+                        &lt;li&gt;Processing Time: %d days&lt;/li&gt;
+                        &lt;li&gt;Expires: %s&lt;/li&gt;
+                    &lt;/ul&gt;
+                    
+                    &lt;p&gt;
+                        &lt;a href=&quot;%s&quot; style=&quot;background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; display: inline-block;&quot;&gt;
+                            View Offer
+                        &lt;/a&gt;
+                    &lt;/p&gt;
+                    
+                    &lt;p&gt;This offer is valid until %s. Please review and compare it with other offers.&lt;/p&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+                &quot;&quot;&quot;,
+<span class="nc" id="L231">                application.getLoanAmount(),</span>
+<span class="nc" id="L232">                application.getLoanTermMonths(),</span>
+<span class="nc" id="L233">                newOffer.getApr(),</span>
+<span class="nc" id="L234">                newOffer.getMonthlyPayment(),</span>
+<span class="nc" id="L235">                newOffer.getTotalCost(),</span>
+<span class="nc" id="L236">                newOffer.getProcessingTimeDays(),</span>
+<span class="nc" id="L237">                newOffer.getExpiresAt(),</span>
+<span class="nc" id="L238">                &quot;https://creditapp.com/applications/&quot; + application.getId() + &quot;/offers&quot;,</span>
+<span class="nc" id="L239">                newOffer.getExpiresAt()</span>
+        );
+    }
+
+    private String buildResubmitEmailText(Application application, Offer newOffer) {
+<span class="nc" id="L244">        return String.format(&quot;&quot;&quot;</span>
+                Updated Loan Offer
+                
+                Good news! A bank has updated their offer for your loan application.
+                
+                Application Details:
+                - Loan Amount: $%,.2f
+                - Term: %d months
+                
+                Updated Offer:
+                - APR: %.2f%%
+                - Monthly Payment: $%,.2f
+                - Total Cost: $%,.2f
+                - Processing Time: %d days
+                - Expires: %s
+                
+                View offer: https://creditapp.com/applications/%s/offers
+                
+                This offer is valid until %s. Please review and compare it with other offers.
+                &quot;&quot;&quot;,
+<span class="nc" id="L264">                application.getLoanAmount(),</span>
+<span class="nc" id="L265">                application.getLoanTermMonths(),</span>
+<span class="nc" id="L266">                newOffer.getApr(),</span>
+<span class="nc" id="L267">                newOffer.getMonthlyPayment(),</span>
+<span class="nc" id="L268">                newOffer.getTotalCost(),</span>
+<span class="nc" id="L269">                newOffer.getProcessingTimeDays(),</span>
+<span class="nc" id="L270">                newOffer.getExpiresAt(),</span>
+<span class="nc" id="L271">                application.getId(),</span>
+<span class="nc" id="L272">                newOffer.getExpiresAt()</span>
+        );
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

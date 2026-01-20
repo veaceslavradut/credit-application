@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Component
-<span class="fc" id="L16">@RequiredArgsConstructor</span>
-<span class="fc" id="L17">@Slf4j</span>
+<span class="nc" id="L16">@RequiredArgsConstructor</span>
+<span class="nc" id="L17">@Slf4j</span>
 public class DataDeletionJob {
     
     private final DeletionRequestRepository deletionRequestRepository;
@@ -23,11 +23,11 @@ public class DataDeletionJob {
     @Scheduled(fixedRate = 3600000)
     @Transactional
     public void processPendingDeletions() {
-<span class="fc" id="L26">        log.info(&quot;Starting scheduled data deletion job&quot;);</span>
+<span class="nc" id="L26">        log.info(&quot;Starting scheduled data deletion job&quot;);</span>
         try {
-<span class="fc" id="L28">            List&lt;DeletionRequest&gt; confirmedRequests = deletionRequestRepository.findByStatusOrderByRequestedAtAsc(DeletionStatus.CONFIRMED);</span>
-<span class="fc" id="L29">            log.info(&quot;Found {} confirmed deletion requests to process&quot;, confirmedRequests.size());</span>
-<span class="pc bpc" id="L30" title="1 of 2 branches missed.">            for (DeletionRequest request : confirmedRequests) {</span>
+<span class="nc" id="L28">            List&lt;DeletionRequest&gt; confirmedRequests = deletionRequestRepository.findByStatusOrderByRequestedAtAsc(DeletionStatus.CONFIRMED);</span>
+<span class="nc" id="L29">            log.info(&quot;Found {} confirmed deletion requests to process&quot;, confirmedRequests.size());</span>
+<span class="nc bnc" id="L30" title="All 2 branches missed.">            for (DeletionRequest request : confirmedRequests) {</span>
                 try {
 <span class="nc" id="L32">                    log.info(&quot;Processing deletion request: {}&quot;, request.getId());</span>
 <span class="nc" id="L33">                    dataDeletionService.executeDataDeletion(request.getId());</span>
@@ -36,10 +36,10 @@ public class DataDeletionJob {
 <span class="nc" id="L36">                    log.error(&quot;Error processing deletion request: {}&quot;, request.getId(), e);</span>
 <span class="nc" id="L37">                }</span>
 <span class="nc" id="L38">            }</span>
-<span class="fc" id="L39">            log.info(&quot;Scheduled data deletion job completed&quot;);</span>
+<span class="nc" id="L39">            log.info(&quot;Scheduled data deletion job completed&quot;);</span>
 <span class="nc" id="L40">        } catch (Exception e) {</span>
 <span class="nc" id="L41">            log.error(&quot;Error in scheduled data deletion job&quot;, e);</span>
-<span class="fc" id="L42">        }</span>
-<span class="fc" id="L43">    }</span>
+<span class="nc" id="L42">        }</span>
+<span class="nc" id="L43">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

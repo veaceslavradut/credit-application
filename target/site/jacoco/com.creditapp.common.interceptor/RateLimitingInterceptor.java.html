@@ -13,13 +13,13 @@ public class RateLimitingInterceptor implements HandlerInterceptor {
 
     private final StringRedisTemplate redisTemplate;
 
-<span class="fc" id="L16">    public RateLimitingInterceptor(StringRedisTemplate redisTemplate) {</span>
-<span class="fc" id="L17">        this.redisTemplate = redisTemplate;</span>
-<span class="fc" id="L18">    }</span>
+<span class="nc" id="L16">    public RateLimitingInterceptor(StringRedisTemplate redisTemplate) {</span>
+<span class="nc" id="L17">        this.redisTemplate = redisTemplate;</span>
+<span class="nc" id="L18">    }</span>
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
-<span class="pc bpc" id="L22" title="3 of 4 branches missed.">        if (request.getRequestURI().equals(&quot;/api/auth/register&quot;) &amp;&amp; request.getMethod().equals(&quot;POST&quot;)) {</span>
+<span class="nc bnc" id="L22" title="All 4 branches missed.">        if (request.getRequestURI().equals(&quot;/api/auth/register&quot;) &amp;&amp; request.getMethod().equals(&quot;POST&quot;)) {</span>
 <span class="nc" id="L23">            String clientIp = getClientIp(request);</span>
 <span class="nc" id="L24">            String key = &quot;rate_limit:registration:&quot; + clientIp;</span>
 <span class="nc" id="L25">            String countStr = redisTemplate.opsForValue().get(key);</span>
@@ -40,7 +40,7 @@ public class RateLimitingInterceptor implements HandlerInterceptor {
                 }
             }
         }
-<span class="fc" id="L43">        return true;</span>
+<span class="nc" id="L43">        return true;</span>
     }
 
     private String getClientIp(HttpServletRequest request) {

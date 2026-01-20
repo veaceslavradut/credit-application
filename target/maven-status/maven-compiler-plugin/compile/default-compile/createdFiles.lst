@@ -79,6 +79,7 @@ com\creditapp\auth\service\LoginService.class
 com\creditapp\shared\util\LoginRateLimiter.class
 com\creditapp\shared\model\SignatureStatus.class
 com\creditapp\shared\service\RequestContextService$RequestContext.class
+com\creditapp\bank\dto\ResubmitOfferFormResponse$ResubmitOfferFormResponseBuilder.class
 com\creditapp\bank\dto\BankOfferSubmissionRequest.class
 com\creditapp\borrower\dto\OfferComparisonTableRequest.class
 com\creditapp\bank\dto\LoanRequestDetailsDTO$LoanRequestDetailsDTOBuilder.class
@@ -117,6 +118,7 @@ com\creditapp\bank\dto\OfferDocumentUploadRequest.class
 com\creditapp\shared\model\DeletionStatus.class
 com\creditapp\borrower\exception\ApplicationAlreadySubmittedException.class
 com\creditapp\bank\controller\BankOfferHistoryController.class
+com\creditapp\bank\service\BankOfferExpirationNotificationService.class
 com\creditapp\shared\service\DataExportService.class
 com\creditapp\compliance\dto\AuditLogExportDTO$AuditLogExportDTOBuilder.class
 com\creditapp\compliance\dto\ComplianceChecklistResponse.class
@@ -176,11 +178,13 @@ com\creditapp\shared\security\RateLimited.class
 com\creditapp\shared\service\HelpContentService.class
 com\creditapp\bank\dto\MyBankRateCardDTO.class
 com\creditapp\shared\service\BankActivationEmailService.class
+com\creditapp\bank\dto\ResubmitOfferRequest$ResubmitOfferRequestBuilder.class
 com\creditapp\shared\model\AuditAction.class
 com\creditapp\auth\exception\DuplicateBankRegistrationException.class
 com\creditapp\shared\util\RateLimiter.class
 com\creditapp\shared\model\UserRole.class
 com\creditapp\borrower\dto\HelpFAQDTO.class
+com\creditapp\bank\service\BankOfferResubmissionService.class
 com\creditapp\shared\config\JwtConfig$Expiration.class
 com\creditapp\borrower\dto\StatusTransitionDTO.class
 com\creditapp\auth\dto\ChangePasswordResponse.class
@@ -290,6 +294,7 @@ com\creditapp\borrower\model\ApplicationDocument.class
 com\creditapp\borrower\dto\ConsentWithdrawalRequest.class
 com\creditapp\bank\dto\BankRateCardDTO.class
 com\creditapp\shared\service\SendGridEmailService.class
+com\creditapp\bank\controller\BankOfferResubmissionController.class
 com\creditapp\auth\filter\JwtAuthenticationToken.class
 com\creditapp\bank\dto\MarketAnalysisDTO.class
 com\creditapp\auth\service\BankRegistrationService.class
@@ -315,6 +320,7 @@ com\creditapp\shared\validator\APRValidator.class
 com\creditapp\bank\dto\BankRateCardResponse.class
 com\creditapp\borrower\model\EmploymentStatus.class
 com\creditapp\shared\exception\NotFoundException.class
+com\creditapp\batch\OfferExpirationWarningScheduler.class
 com\creditapp\shared\repository\RefreshTokenRepository.class
 com\creditapp\shared\model\ComplianceChecklistItem.class
 com\creditapp\shared\security\EncryptionService.class
@@ -349,6 +355,7 @@ com\creditapp\compliance\controller\ComplianceChecklistController$ErrorResponse.
 com\creditapp\bank\dto\OfferDocumentMetadata.class
 com\creditapp\borrower\dto\ApplicationDetailsDTO.class
 com\creditapp\shared\service\MockEmailService$MockEmail.class
+com\creditapp\bank\dto\ResubmitOfferResponse.class
 com\creditapp\compliance\dto\AuditLogResponse$AuditLogResponseBuilder.class
 com\creditapp\shared\model\BankTeamMember.class
 com\creditapp\borrower\dto\CalculateScenarioRequest$CalculateScenarioRequestBuilder.class
@@ -445,6 +452,7 @@ com\creditapp\auth\service\PasswordValidator.class
 com\creditapp\borrower\service\OfferHistoryService.class
 com\creditapp\shared\dto\LegalDocumentListDTO$LegalDocumentListDTOBuilder.class
 com\creditapp\shared\listener\EmailNotificationListener.class
+com\creditapp\bank\dto\ResubmitOfferFormResponse.class
 com\creditapp\bank\repository\ApplicationBankNotesRepository.class
 com\creditapp\shared\dto\EmailMetricsDTO$EmailMetricsDTOBuilder.class
 com\creditapp\shared\dto\LegalDocumentListDTO.class
@@ -461,6 +469,7 @@ com\creditapp\shared\model\User.class
 com\creditapp\bank\exception\InvalidRateCardException.class
 com\creditapp\shared\security\RateLimitingAspect.class
 com\creditapp\bank\dto\TeamMemberDTO$TeamMemberDTOBuilder.class
+com\creditapp\bank\dto\ResubmitOfferResponse$ResubmitOfferResponseBuilder.class
 com\creditapp\bank\dto\OfferHistoryResponse.class
 com\creditapp\bank\model\CalculationType.class
 com\creditapp\borrower\exception\FileSizeExceededException.class
@@ -484,6 +493,7 @@ com\creditapp\bank\dto\OfferCalculationLogDTO.class
 com\creditapp\borrower\dto\SelectOfferRequest.class
 com\creditapp\borrower\exception\ApplicationStaleException.class
 com\creditapp\shared\dto\NotificationEvent.class
+com\creditapp\bank\dto\ResubmitOfferRequest.class
 com\creditapp\borrower\model\ApplicationHistory$ApplicationHistoryBuilder.class
 com\creditapp\auth\dto\LoginResponse.class
 com\creditapp\borrower\dto\HelpSectionDTO$HelpSectionDTOBuilder.class

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-<span class="fc" id="L28">@RequiredArgsConstructor</span>
+<span class="nc" id="L28">@RequiredArgsConstructor</span>
 @RequestMapping(&quot;/api/bank/dashboard&quot;)
 public class BankApplicationQueueController {
 
@@ -50,22 +50,22 @@ public class BankApplicationQueueController {
         @RequestParam(value = &quot;sortBy&quot;, required = false) String sortBy,
         @RequestParam(value = &quot;sortOrder&quot;, required = false) String sortOrder
     ) {
-<span class="fc" id="L53">        ApplicationQueueRequest request = ApplicationQueueRequest.builder()</span>
-<span class="fc" id="L54">            .limit(limit)</span>
-<span class="fc" id="L55">            .offset(offset)</span>
-<span class="fc" id="L56">            .status(status)</span>
-<span class="fc" id="L57">            .aprMin(aprMin)</span>
-<span class="fc" id="L58">            .aprMax(aprMax)</span>
-<span class="fc" id="L59">            .loanAmountMin(loanAmountMin)</span>
-<span class="fc" id="L60">            .loanAmountMax(loanAmountMax)</span>
-<span class="fc" id="L61">            .dateRangeStart(dateRangeStart)</span>
-<span class="fc" id="L62">            .dateRangeEnd(dateRangeEnd)</span>
-<span class="fc" id="L63">            .sortBy(sortBy)</span>
-<span class="fc" id="L64">            .sortOrder(sortOrder)</span>
-<span class="fc" id="L65">            .build();</span>
+<span class="nc" id="L53">        ApplicationQueueRequest request = ApplicationQueueRequest.builder()</span>
+<span class="nc" id="L54">            .limit(limit)</span>
+<span class="nc" id="L55">            .offset(offset)</span>
+<span class="nc" id="L56">            .status(status)</span>
+<span class="nc" id="L57">            .aprMin(aprMin)</span>
+<span class="nc" id="L58">            .aprMax(aprMax)</span>
+<span class="nc" id="L59">            .loanAmountMin(loanAmountMin)</span>
+<span class="nc" id="L60">            .loanAmountMax(loanAmountMax)</span>
+<span class="nc" id="L61">            .dateRangeStart(dateRangeStart)</span>
+<span class="nc" id="L62">            .dateRangeEnd(dateRangeEnd)</span>
+<span class="nc" id="L63">            .sortBy(sortBy)</span>
+<span class="nc" id="L64">            .sortOrder(sortOrder)</span>
+<span class="nc" id="L65">            .build();</span>
 
-<span class="fc" id="L67">        ApplicationQueueResponse response = applicationQueueService.getApplicationQueue(bankId, request);</span>
-<span class="fc" id="L68">        return ResponseEntity.ok(response);</span>
+<span class="nc" id="L67">        ApplicationQueueResponse response = applicationQueueService.getApplicationQueue(bankId, request);</span>
+<span class="nc" id="L68">        return ResponseEntity.ok(response);</span>
     }
 
     @PutMapping(&quot;/applications/{applicationId}/status&quot;)
@@ -75,12 +75,12 @@ public class BankApplicationQueueController {
         @RequestParam(&quot;bankId&quot;) UUID bankId,
         @Valid @RequestBody ApplicationStatusUpdateRequest request
     ) {
-<span class="fc" id="L78">        ApplicationStatusUpdateResponse response = applicationStatusUpdateService.updateApplicationStatus(</span>
+<span class="nc" id="L78">        ApplicationStatusUpdateResponse response = applicationStatusUpdateService.updateApplicationStatus(</span>
             applicationId,
             bankId,
             request
         );
-<span class="fc" id="L83">        return ResponseEntity.ok(response);</span>
+<span class="nc" id="L83">        return ResponseEntity.ok(response);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

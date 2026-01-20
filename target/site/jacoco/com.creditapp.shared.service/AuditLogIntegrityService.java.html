@@ -8,27 +8,27 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 @Service
-<span class="fc" id="L11">public class AuditLogIntegrityService {</span>
+<span class="nc" id="L11">public class AuditLogIntegrityService {</span>
     public String calculateHash(AuditLog entry) {
         try {
-<span class="fc" id="L14">            MessageDigest digest = MessageDigest.getInstance(&quot;SHA-256&quot;);</span>
-<span class="fc" id="L15">            String payload = String.join(&quot;|&quot;,</span>
-<span class="fc" id="L16">                    String.valueOf(entry.getActorId()),</span>
-<span class="fc" id="L17">                    String.valueOf(entry.getAction()),</span>
-<span class="fc" id="L18">                    String.valueOf(entry.getCreatedAt()),</span>
-<span class="fc" id="L19">                    String.valueOf(entry.getEntityId())</span>
+<span class="nc" id="L14">            MessageDigest digest = MessageDigest.getInstance(&quot;SHA-256&quot;);</span>
+<span class="nc" id="L15">            String payload = String.join(&quot;|&quot;,</span>
+<span class="nc" id="L16">                    String.valueOf(entry.getActorId()),</span>
+<span class="nc" id="L17">                    String.valueOf(entry.getAction()),</span>
+<span class="nc" id="L18">                    String.valueOf(entry.getCreatedAt()),</span>
+<span class="nc" id="L19">                    String.valueOf(entry.getEntityId())</span>
             );
-<span class="fc" id="L21">            byte[] hash = digest.digest(payload.getBytes(StandardCharsets.UTF_8));</span>
-<span class="fc" id="L22">            StringBuilder sb = new StringBuilder();</span>
-<span class="fc bfc" id="L23" title="All 2 branches covered.">            for (byte b : hash) sb.append(String.format(&quot;%02x&quot;, b));</span>
-<span class="fc" id="L24">            return sb.toString();</span>
+<span class="nc" id="L21">            byte[] hash = digest.digest(payload.getBytes(StandardCharsets.UTF_8));</span>
+<span class="nc" id="L22">            StringBuilder sb = new StringBuilder();</span>
+<span class="nc bnc" id="L23" title="All 2 branches missed.">            for (byte b : hash) sb.append(String.format(&quot;%02x&quot;, b));</span>
+<span class="nc" id="L24">            return sb.toString();</span>
 <span class="nc" id="L25">        } catch (NoSuchAlgorithmException e) {</span>
 <span class="nc" id="L26">            throw new RuntimeException(&quot;Hash algorithm not available&quot;, e);</span>
         }
     }
 
     public boolean verifyIntegrity(AuditLog entry, String expectedHash) {
-<span class="fc" id="L31">        return calculateHash(entry).equals(expectedHash);</span>
+<span class="nc" id="L31">        return calculateHash(entry).equals(expectedHash);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

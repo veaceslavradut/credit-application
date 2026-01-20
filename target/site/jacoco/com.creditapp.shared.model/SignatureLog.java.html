@@ -17,15 +17,15 @@ import java.util.UUID;
     @Index(name = &quot;idx_signature_logs_created_at&quot;, columnList = &quot;created_at&quot;)
 })
 <span class="nc bnc" id="L19" title="All 78 branches missed.">@Data</span>
-<span class="fc" id="L20">@NoArgsConstructor</span>
-<span class="fc" id="L21">@AllArgsConstructor</span>
-<span class="pc" id="L22">@Builder</span>
+<span class="nc" id="L20">@NoArgsConstructor</span>
+<span class="nc" id="L21">@AllArgsConstructor</span>
+<span class="nc" id="L22">@Builder</span>
 public class SignatureLog {
     
     @Id
     @GeneratedValue(generator = &quot;UUID&quot;)
     @GenericGenerator(name = &quot;UUID&quot;, strategy = &quot;org.hibernate.id.UUIDGenerator&quot;)
-<span class="fc" id="L28">    private UUID id;</span>
+<span class="nc" id="L28">    private UUID id;</span>
     
     @Column(name = &quot;document_id&quot;, nullable = false)
 <span class="nc" id="L31">    private UUID documentId;</span>
@@ -44,7 +44,7 @@ public class SignatureLog {
     
     @Enumerated(EnumType.STRING)
     @Column(name = &quot;signature_status&quot;, nullable = false)
-<span class="fc" id="L47">    private SignatureStatus signatureStatus;</span>
+<span class="nc" id="L47">    private SignatureStatus signatureStatus;</span>
     
     @Column(name = &quot;signature_id_external&quot;, length = 255)
 <span class="nc" id="L50">    private String signatureIdExternal;</span>
@@ -54,12 +54,12 @@ public class SignatureLog {
     
     @PrePersist
     protected void onCreate() {
-<span class="pc bpc" id="L57" title="1 of 2 branches missed.">        if (createdAt == null) {</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (createdAt == null) {</span>
 <span class="nc" id="L58">            createdAt = LocalDateTime.now();</span>
         }
-<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        if (signatureStatus == null) {</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (signatureStatus == null) {</span>
 <span class="nc" id="L61">            signatureStatus = SignatureStatus.PENDING;</span>
         }
-<span class="fc" id="L63">    }</span>
+<span class="nc" id="L63">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -68,11 +68,11 @@ class OfferExpirationWarningSchedulerTest {
         bankId = UUID.randomUUID();
         applicationId = UUID.randomUUID();
         
-        // Mock metrics
+        // Mock metrics - use lenient() for stubs that aren't used in all tests
         when(meterRegistry.counter("creditapp.offers.expiration_warnings.sent")).thenReturn(sentCounter);
         when(meterRegistry.counter("creditapp.offers.expiration_warnings.failed")).thenReturn(failedCounter);
-        when(meterRegistry.counter("creditapp.scheduler.offer-expiration-warning.errors")).thenReturn(errorCounter);
-        when(meterRegistry.timer("creditapp.scheduler.offer-expiration-warning.duration")).thenReturn(timer);
+        lenient().when(meterRegistry.counter("creditapp.scheduler.offer-expiration-warning.errors")).thenReturn(errorCounter);
+        lenient().when(meterRegistry.timer("creditapp.scheduler.offer-expiration-warning.duration")).thenReturn(timer);
     }
     
     @Test
@@ -189,13 +189,15 @@ class OfferExpirationWarningSchedulerTest {
         when(offerRepository.findOffersExpiringSoon(any(), any()))
                 .thenReturn(Arrays.asList(offer1, offer2, offer3));
         
-        // Simulate one failure
+        // Simulate one failure - must specify exact offer instance
+        doNothing().when(notificationService).notifyBankOfExpiration(offer1);
         doThrow(new RuntimeException("Email error")).when(notificationService).notifyBankOfExpiration(offer2);
+        doNothing().when(notificationService).notifyBankOfExpiration(offer3);
         
         // Act
         scheduler.checkExpiringOffers();
         
-        // Assert
+        // Assert - scheduler calls increment once with the total count
         verify(sentCounter, times(1)).increment(2.0); // 2 successful
         verify(failedCounter, times(1)).increment(1.0); // 1 failed
     }

@@ -18,26 +18,26 @@ import java.util.UUID;
         @Index(name = &quot;idx_actor_id&quot;, columnList = &quot;actor_id&quot;),
         @Index(name = &quot;idx_created_at&quot;, columnList = &quot;created_at&quot;)
 })
-<span class="pc bnc" id="L21" title="All 102 branches missed.">@Data</span>
-<span class="fc" id="L22">@NoArgsConstructor</span>
+<span class="nc bnc" id="L21" title="All 102 branches missed.">@Data</span>
+<span class="nc" id="L22">@NoArgsConstructor</span>
 <span class="nc" id="L23">@AllArgsConstructor</span>
 public class AuditLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-<span class="fc" id="L27">    private Long id;</span>
+<span class="nc" id="L27">    private Long id;</span>
 
     @Column(name = &quot;entity_type&quot;, nullable = false)
-<span class="fc" id="L30">    private String entityType;</span>
+<span class="nc" id="L30">    private String entityType;</span>
 
     @Column(name = &quot;entity_id&quot;, nullable = false)
-<span class="fc" id="L33">    private UUID entityId;</span>
+<span class="nc" id="L33">    private UUID entityId;</span>
 
     @Enumerated(EnumType.STRING)
     @Column(name = &quot;action&quot;, nullable = false)
-<span class="fc" id="L37">    private AuditAction action;</span>
+<span class="nc" id="L37">    private AuditAction action;</span>
 
     @Column(name = &quot;actor_id&quot;)
-<span class="fc" id="L40">    private UUID actorId;</span>
+<span class="nc" id="L40">    private UUID actorId;</span>
 
     @Column(name = &quot;actor_role&quot;)
 <span class="nc" id="L43">    private String actorRole;</span>
@@ -48,35 +48,35 @@ public class AuditLog {
 
     @Type(JsonBinaryType.class)
     @Column(name = &quot;new_values&quot;, columnDefinition = &quot;jsonb&quot;)
-<span class="fc" id="L51">    private Map&lt;String, Object&gt; newValues;</span>
+<span class="nc" id="L51">    private Map&lt;String, Object&gt; newValues;</span>
 
     @Column(name = &quot;ip_address&quot;)
-<span class="fc" id="L54">    private String ipAddress;</span>
+<span class="nc" id="L54">    private String ipAddress;</span>
 
     @Column(name = &quot;user_agent&quot;)
-<span class="fc" id="L57">    private String userAgent;</span>
+<span class="nc" id="L57">    private String userAgent;</span>
 
     @Column(name = &quot;result&quot;, nullable = false)
-<span class="fc" id="L60">    private String result;</span>
+<span class="nc" id="L60">    private String result;</span>
 
     @CreationTimestamp
     @Column(name = &quot;created_at&quot;, nullable = false, updatable = false)
-<span class="fc" id="L64">    private LocalDateTime createdAt;</span>
+<span class="nc" id="L64">    private LocalDateTime createdAt;</span>
 
     public AuditLog(String entityType, UUID entityId, AuditAction action,
                    UUID actorId, String actorRole,
                    Map&lt;String, Object&gt; oldValues, Map&lt;String, Object&gt; newValues,
-<span class="fc" id="L69">                   String ipAddress, String userAgent, String result) {</span>
-<span class="fc" id="L70">        this.entityType = entityType;</span>
-<span class="fc" id="L71">        this.entityId = entityId;</span>
-<span class="fc" id="L72">        this.action = action;</span>
-<span class="fc" id="L73">        this.actorId = actorId;</span>
-<span class="fc" id="L74">        this.actorRole = actorRole;</span>
-<span class="fc" id="L75">        this.oldValues = oldValues;</span>
-<span class="fc" id="L76">        this.newValues = newValues;</span>
-<span class="fc" id="L77">        this.ipAddress = ipAddress;</span>
-<span class="fc" id="L78">        this.userAgent = userAgent;</span>
-<span class="fc" id="L79">        this.result = result;</span>
-<span class="fc" id="L80">    }</span>
+<span class="nc" id="L69">                   String ipAddress, String userAgent, String result) {</span>
+<span class="nc" id="L70">        this.entityType = entityType;</span>
+<span class="nc" id="L71">        this.entityId = entityId;</span>
+<span class="nc" id="L72">        this.action = action;</span>
+<span class="nc" id="L73">        this.actorId = actorId;</span>
+<span class="nc" id="L74">        this.actorRole = actorRole;</span>
+<span class="nc" id="L75">        this.oldValues = oldValues;</span>
+<span class="nc" id="L76">        this.newValues = newValues;</span>
+<span class="nc" id="L77">        this.ipAddress = ipAddress;</span>
+<span class="nc" id="L78">        this.userAgent = userAgent;</span>
+<span class="nc" id="L79">        this.result = result;</span>
+<span class="nc" id="L80">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

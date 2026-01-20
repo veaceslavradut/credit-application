@@ -10,26 +10,26 @@ import java.util.UUID;
 
 @Entity
 @Table(name = &quot;deletion_requests&quot;)
-<span class="pc bnc" id="L13" title="All 94 branches missed.">@Data</span>
-<span class="pc" id="L14">@Builder</span>
-<span class="fc" id="L15">@NoArgsConstructor</span>
-<span class="fc" id="L16">@AllArgsConstructor</span>
+<span class="nc bnc" id="L13" title="All 94 branches missed.">@Data</span>
+<span class="nc" id="L14">@Builder</span>
+<span class="nc" id="L15">@NoArgsConstructor</span>
+<span class="nc" id="L16">@AllArgsConstructor</span>
 public class DeletionRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-<span class="fc" id="L20">    private UUID id;</span>
+<span class="nc" id="L20">    private UUID id;</span>
 
     @Column(nullable = false)
-<span class="fc" id="L23">    private UUID borrowerId;</span>
+<span class="nc" id="L23">    private UUID borrowerId;</span>
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-<span class="fc" id="L27">    private DeletionStatus status;</span>
+<span class="nc" id="L27">    private DeletionStatus status;</span>
 
     @Column(length = 255, unique = true)
 <span class="nc" id="L30">    private String confirmationToken;</span>
 
-<span class="fc" id="L32">    private LocalDateTime confirmationTokenExpiresAt;</span>
+<span class="nc" id="L32">    private LocalDateTime confirmationTokenExpiresAt;</span>
 
     @Column(nullable = false)
 <span class="nc" id="L35">    private LocalDateTime requestedAt;</span>
@@ -48,12 +48,12 @@ public class DeletionRequest {
 
     @PrePersist
     protected void onCreate() {
-<span class="fc" id="L51">        createdAt = LocalDateTime.now();</span>
-<span class="fc" id="L52">        updatedAt = LocalDateTime.now();</span>
-<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (requestedAt == null) {</span>
+<span class="nc" id="L51">        createdAt = LocalDateTime.now();</span>
+<span class="nc" id="L52">        updatedAt = LocalDateTime.now();</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if (requestedAt == null) {</span>
 <span class="nc" id="L54">            requestedAt = LocalDateTime.now();</span>
         }
-<span class="fc" id="L56">    }</span>
+<span class="nc" id="L56">    }</span>
 
     @PreUpdate
     protected void onUpdate() {

@@ -19,8 +19,8 @@ import java.util.List;
  * Runs every hour.
  */
 @Component
-@RequiredArgsConstructor
-<span class="nc" id="L23">@Slf4j</span>
+<span class="fc" id="L22">@RequiredArgsConstructor</span>
+<span class="fc" id="L23">@Slf4j</span>
 public class OfferExpirationWarningScheduler {
     
     private final OfferRepository offerRepository;
@@ -34,53 +34,53 @@ public class OfferExpirationWarningScheduler {
     @Scheduled(fixedRate = 3600000)
     @Transactional
     public void checkExpiringOffers() {
-<span class="nc" id="L37">        log.info(&quot;Starting offer expiration warning batch job at {}&quot;, LocalDateTime.now());</span>
-<span class="nc" id="L38">        long startTime = System.currentTimeMillis();</span>
+<span class="fc" id="L37">        log.info(&quot;Starting offer expiration warning batch job at {}&quot;, LocalDateTime.now());</span>
+<span class="fc" id="L38">        long startTime = System.currentTimeMillis();</span>
         
         try {
-<span class="nc" id="L41">            LocalDateTime now = LocalDateTime.now();</span>
-<span class="nc" id="L42">            LocalDateTime expirationWindow = now.plusHours(24);</span>
+<span class="fc" id="L41">            LocalDateTime now = LocalDateTime.now();</span>
+<span class="fc" id="L42">            LocalDateTime expirationWindow = now.plusHours(24);</span>
             
             // Query offers expiring within 24 hours that haven't been notified
-<span class="nc" id="L45">            List&lt;Offer&gt; expiringOffers = offerRepository.findOffersExpiringSoon(now, expirationWindow);</span>
+<span class="fc" id="L45">            List&lt;Offer&gt; expiringOffers = offerRepository.findOffersExpiringSoon(now, expirationWindow);</span>
             
-<span class="nc" id="L47">            log.info(&quot;Found {} offers expiring within 24 hours&quot;, expiringOffers.size());</span>
+<span class="fc" id="L47">            log.info(&quot;Found {} offers expiring within 24 hours&quot;, expiringOffers.size());</span>
             
-<span class="nc" id="L49">            int notifiedCount = 0;</span>
-<span class="nc" id="L50">            int failedCount = 0;</span>
+<span class="fc" id="L49">            int notifiedCount = 0;</span>
+<span class="fc" id="L50">            int failedCount = 0;</span>
             
-<span class="nc bnc" id="L52" title="All 2 branches missed.">            for (Offer offer : expiringOffers) {</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">            for (Offer offer : expiringOffers) {</span>
                 try {
                     // Send notification (async)
-<span class="nc" id="L55">                    notificationService.notifyBankOfExpiration(offer);</span>
+<span class="fc" id="L55">                    notificationService.notifyBankOfExpiration(offer);</span>
                     
                     // Mark as notified
-<span class="nc" id="L58">                    offer.setNotified(true);</span>
-<span class="nc" id="L59">                    offerRepository.save(offer);</span>
+<span class="fc" id="L58">                    offer.setNotified(true);</span>
+<span class="fc" id="L59">                    offerRepository.save(offer);</span>
                     
-<span class="nc" id="L61">                    notifiedCount++;</span>
-<span class="nc" id="L62">                    log.debug(&quot;Notified bank for offer {}. Expires at: {}&quot;, offer.getId(), offer.getExpiresAt());</span>
-<span class="nc" id="L63">                } catch (Exception e) {</span>
-<span class="nc" id="L64">                    failedCount++;</span>
-<span class="nc" id="L65">                    log.error(&quot;Failed to notify bank for offer {}: {}&quot;, offer.getId(), e.getMessage(), e);</span>
-                }
-            }
+<span class="fc" id="L61">                    notifiedCount++;</span>
+<span class="fc" id="L62">                    log.debug(&quot;Notified bank for offer {}. Expires at: {}&quot;, offer.getId(), offer.getExpiresAt());</span>
+<span class="fc" id="L63">                } catch (Exception e) {</span>
+<span class="fc" id="L64">                    failedCount++;</span>
+<span class="fc" id="L65">                    log.error(&quot;Failed to notify bank for offer {}: {}&quot;, offer.getId(), e.getMessage(), e);</span>
+<span class="fc" id="L66">                }</span>
+<span class="fc" id="L67">            }</span>
             
-<span class="nc" id="L69">            long duration = System.currentTimeMillis() - startTime;</span>
+<span class="fc" id="L69">            long duration = System.currentTimeMillis() - startTime;</span>
             
             // Metrics
-<span class="nc" id="L72">            meterRegistry.counter(&quot;creditapp.offers.expiration_warnings.sent&quot;).increment(notifiedCount);</span>
-<span class="nc" id="L73">            meterRegistry.counter(&quot;creditapp.offers.expiration_warnings.failed&quot;).increment(failedCount);</span>
-<span class="nc" id="L74">            meterRegistry.timer(&quot;creditapp.scheduler.offer-expiration-warning.duration&quot;)</span>
-<span class="nc" id="L75">                    .record(duration, java.util.concurrent.TimeUnit.MILLISECONDS);</span>
+<span class="fc" id="L72">            meterRegistry.counter(&quot;creditapp.offers.expiration_warnings.sent&quot;).increment(notifiedCount);</span>
+<span class="fc" id="L73">            meterRegistry.counter(&quot;creditapp.offers.expiration_warnings.failed&quot;).increment(failedCount);</span>
+<span class="fc" id="L74">            meterRegistry.timer(&quot;creditapp.scheduler.offer-expiration-warning.duration&quot;)</span>
+<span class="fc" id="L75">                    .record(duration, java.util.concurrent.TimeUnit.MILLISECONDS);</span>
             
-<span class="nc" id="L77">            log.info(&quot;Offer expiration warning batch job completed. Notified: {}, Failed: {}, Duration: {}ms&quot;,</span>
-<span class="nc" id="L78">                    notifiedCount, failedCount, duration);</span>
+<span class="fc" id="L77">            log.info(&quot;Offer expiration warning batch job completed. Notified: {}, Failed: {}, Duration: {}ms&quot;,</span>
+<span class="fc" id="L78">                    notifiedCount, failedCount, duration);</span>
                     
 <span class="nc" id="L80">        } catch (Exception e) {</span>
 <span class="nc" id="L81">            log.error(&quot;Offer expiration warning batch job failed: {}&quot;, e.getMessage(), e);</span>
 <span class="nc" id="L82">            meterRegistry.counter(&quot;creditapp.scheduler.offer-expiration-warning.errors&quot;).increment();</span>
-        }
-<span class="nc" id="L84">    }</span>
+<span class="fc" id="L83">        }</span>
+<span class="fc" id="L84">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

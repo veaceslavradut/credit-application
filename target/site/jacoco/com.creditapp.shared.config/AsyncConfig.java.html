@@ -8,30 +8,30 @@ import java.util.concurrent.Executor;
 
 @Configuration
 @EnableAsync
-<span class="fc" id="L11">public class AsyncConfig {</span>
+<span class="nc" id="L11">public class AsyncConfig {</span>
 
     @Bean(name = &quot;taskExecutor&quot;)
     public Executor taskExecutor() {
-<span class="fc" id="L15">        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();</span>
-<span class="fc" id="L16">        executor.setCorePoolSize(2);</span>
-<span class="fc" id="L17">        executor.setMaxPoolSize(5);</span>
-<span class="fc" id="L18">        executor.setQueueCapacity(10);</span>
-<span class="fc" id="L19">        executor.setThreadNamePrefix(&quot;async-&quot;);</span>
-<span class="fc" id="L20">        executor.initialize();</span>
-<span class="fc" id="L21">        return executor;</span>
+<span class="nc" id="L15">        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();</span>
+<span class="nc" id="L16">        executor.setCorePoolSize(2);</span>
+<span class="nc" id="L17">        executor.setMaxPoolSize(5);</span>
+<span class="nc" id="L18">        executor.setQueueCapacity(10);</span>
+<span class="nc" id="L19">        executor.setThreadNamePrefix(&quot;async-&quot;);</span>
+<span class="nc" id="L20">        executor.initialize();</span>
+<span class="nc" id="L21">        return executor;</span>
     }
 
     @Bean(name = &quot;dataExportExecutor&quot;)
     public Executor dataExportExecutor() {
-<span class="fc" id="L26">        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();</span>
-<span class="fc" id="L27">        executor.setCorePoolSize(2);</span>
-<span class="fc" id="L28">        executor.setMaxPoolSize(5);</span>
-<span class="fc" id="L29">        executor.setQueueCapacity(20);</span>
-<span class="fc" id="L30">        executor.setThreadNamePrefix(&quot;export-&quot;);</span>
-<span class="fc" id="L31">        executor.setAwaitTerminationSeconds(300);</span>
-<span class="fc" id="L32">        executor.setWaitForTasksToCompleteOnShutdown(true);</span>
-<span class="fc" id="L33">        executor.initialize();</span>
-<span class="fc" id="L34">        return executor;</span>
+<span class="nc" id="L26">        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();</span>
+<span class="nc" id="L27">        executor.setCorePoolSize(2);</span>
+<span class="nc" id="L28">        executor.setMaxPoolSize(5);</span>
+<span class="nc" id="L29">        executor.setQueueCapacity(20);</span>
+<span class="nc" id="L30">        executor.setThreadNamePrefix(&quot;export-&quot;);</span>
+<span class="nc" id="L31">        executor.setAwaitTerminationSeconds(300);</span>
+<span class="nc" id="L32">        executor.setWaitForTasksToCompleteOnShutdown(true);</span>
+<span class="nc" id="L33">        executor.initialize();</span>
+<span class="nc" id="L34">        return executor;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -8,22 +8,22 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 @Service
-<span class="fc" id="L11">@Slf4j</span>
-<span class="fc" id="L12">public class DataAnonymizationService {</span>
+<span class="nc" id="L11">@Slf4j</span>
+<span class="nc" id="L12">public class DataAnonymizationService {</span>
     
     private static final int HASH_LENGTH = 8;
     private static final String ANONYMIZED_EMAIL_DOMAIN = &quot;@deleted.local&quot;;
     private static final String ANONYMIZED_NAME_PREFIX = &quot;Deleted User &quot;;
     
     public String hashForAnonymity(String input) {
-<span class="fc bfc" id="L19" title="All 4 branches covered.">        if (input == null || input.isEmpty()) {</span>
-<span class="fc" id="L20">            return generateRandomHash();</span>
+<span class="nc bnc" id="L19" title="All 4 branches missed.">        if (input == null || input.isEmpty()) {</span>
+<span class="nc" id="L20">            return generateRandomHash();</span>
         }
         
         try {
-<span class="fc" id="L24">            MessageDigest digest = MessageDigest.getInstance(&quot;SHA-256&quot;);</span>
-<span class="fc" id="L25">            byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));</span>
-<span class="fc" id="L26">            return bytesToHex(hash).substring(0, HASH_LENGTH);</span>
+<span class="nc" id="L24">            MessageDigest digest = MessageDigest.getInstance(&quot;SHA-256&quot;);</span>
+<span class="nc" id="L25">            byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));</span>
+<span class="nc" id="L26">            return bytesToHex(hash).substring(0, HASH_LENGTH);</span>
 <span class="nc" id="L27">        } catch (NoSuchAlgorithmException e) {</span>
 <span class="nc" id="L28">            log.error(&quot;Failed to hash input for anonymization&quot;, e);</span>
 <span class="nc" id="L29">            return generateRandomHash();</span>
@@ -31,25 +31,25 @@ import java.security.NoSuchAlgorithmException;
     }
     
     public String anonymizeName(String originalName) {
-<span class="fc" id="L34">        String hash = hashForAnonymity(originalName);</span>
-<span class="fc" id="L35">        return ANONYMIZED_NAME_PREFIX + hash;</span>
+<span class="nc" id="L34">        String hash = hashForAnonymity(originalName);</span>
+<span class="nc" id="L35">        return ANONYMIZED_NAME_PREFIX + hash;</span>
     }
     
     public String anonymizeEmail(String originalEmail) {
-<span class="fc" id="L39">        String hash = hashForAnonymity(originalEmail);</span>
-<span class="fc" id="L40">        return hash + ANONYMIZED_EMAIL_DOMAIN;</span>
+<span class="nc" id="L39">        String hash = hashForAnonymity(originalEmail);</span>
+<span class="nc" id="L40">        return hash + ANONYMIZED_EMAIL_DOMAIN;</span>
     }
     
     private String generateRandomHash() {
-<span class="fc" id="L44">        return Long.toHexString(System.nanoTime()).substring(0, HASH_LENGTH);</span>
+<span class="nc" id="L44">        return Long.toHexString(System.nanoTime()).substring(0, HASH_LENGTH);</span>
     }
     
     private String bytesToHex(byte[] bytes) {
-<span class="fc" id="L48">        StringBuilder sb = new StringBuilder();</span>
-<span class="fc bfc" id="L49" title="All 2 branches covered.">        for (byte b : bytes) {</span>
-<span class="fc" id="L50">            sb.append(String.format(&quot;%02x&quot;, b));</span>
+<span class="nc" id="L48">        StringBuilder sb = new StringBuilder();</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        for (byte b : bytes) {</span>
+<span class="nc" id="L50">            sb.append(String.format(&quot;%02x&quot;, b));</span>
         }
-<span class="fc" id="L52">        return sb.toString();</span>
+<span class="nc" id="L52">        return sb.toString();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

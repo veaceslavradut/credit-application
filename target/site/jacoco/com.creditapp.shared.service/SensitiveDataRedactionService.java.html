@@ -6,27 +6,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-<span class="fc" id="L9">public class SensitiveDataRedactionService {</span>
+<span class="nc" id="L9">public class SensitiveDataRedactionService {</span>
     public Map&lt;String, Object&gt; redactSensitiveData(Map&lt;String, Object&gt; details) {
-<span class="pc bpc" id="L11" title="1 of 2 branches missed.">        if (details == null) return null;</span>
-<span class="fc" id="L12">        Map&lt;String, Object&gt; redacted = new HashMap&lt;&gt;(details);</span>
-<span class="fc" id="L13">        redacted.replaceAll((k, v) -&gt; {</span>
-<span class="fc bfc" id="L14" title="All 2 branches covered.">            if (v instanceof String) {</span>
-<span class="fc" id="L15">                String s = (String) v;</span>
-<span class="fc bfc" id="L16" title="All 2 branches covered.">                if (s.matches(&quot;(?i).*[0-9]{3}[- ]?[0-9]{2}[- ]?[0-9]{4}.*&quot;)) { // SSN-like</span>
-<span class="fc" id="L17">                    return &quot;***REDACTED***&quot;;</span>
+<span class="nc bnc" id="L11" title="All 2 branches missed.">        if (details == null) return null;</span>
+<span class="nc" id="L12">        Map&lt;String, Object&gt; redacted = new HashMap&lt;&gt;(details);</span>
+<span class="nc" id="L13">        redacted.replaceAll((k, v) -&gt; {</span>
+<span class="nc bnc" id="L14" title="All 2 branches missed.">            if (v instanceof String) {</span>
+<span class="nc" id="L15">                String s = (String) v;</span>
+<span class="nc bnc" id="L16" title="All 2 branches missed.">                if (s.matches(&quot;(?i).*[0-9]{3}[- ]?[0-9]{2}[- ]?[0-9]{4}.*&quot;)) { // SSN-like</span>
+<span class="nc" id="L17">                    return &quot;***REDACTED***&quot;;</span>
                 }
-<span class="pc bpc" id="L19" title="1 of 2 branches missed.">                if (s.matches(&quot;(?i).*\\b[0-9]{10,16}\\b.*&quot;)) { // card/phone-like</span>
+<span class="nc bnc" id="L19" title="All 2 branches missed.">                if (s.matches(&quot;(?i).*\\b[0-9]{10,16}\\b.*&quot;)) { // card/phone-like</span>
 <span class="nc" id="L20">                    return &quot;***REDACTED***&quot;;</span>
                 }
-<span class="fc bfc" id="L22" title="All 2 branches covered.">                if (s.matches(&quot;(?i)^.+@.+$&quot;)) { // email</span>
-<span class="fc" id="L23">                    String domain = s.substring(s.indexOf('@'));</span>
-<span class="fc" id="L24">                    return &quot;***@&quot; + domain.substring(1);</span>
+<span class="nc bnc" id="L22" title="All 2 branches missed.">                if (s.matches(&quot;(?i)^.+@.+$&quot;)) { // email</span>
+<span class="nc" id="L23">                    String domain = s.substring(s.indexOf('@'));</span>
+<span class="nc" id="L24">                    return &quot;***@&quot; + domain.substring(1);</span>
                 }
             }
-<span class="fc" id="L27">            return v;</span>
+<span class="nc" id="L27">            return v;</span>
         });
-<span class="fc" id="L29">        return redacted;</span>
+<span class="nc" id="L29">        return redacted;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

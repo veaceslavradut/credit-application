@@ -11,14 +11,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final RateLimitingInterceptor rateLimitingInterceptor;
 
-<span class="fc" id="L14">    public WebMvcConfig(RateLimitingInterceptor rateLimitingInterceptor) {</span>
-<span class="fc" id="L15">        this.rateLimitingInterceptor = rateLimitingInterceptor;</span>
-<span class="fc" id="L16">    }</span>
+<span class="nc" id="L14">    public WebMvcConfig(RateLimitingInterceptor rateLimitingInterceptor) {</span>
+<span class="nc" id="L15">        this.rateLimitingInterceptor = rateLimitingInterceptor;</span>
+<span class="nc" id="L16">    }</span>
 
     @Override
     @SuppressWarnings(&quot;null&quot;)
     public void addInterceptors(@NonNull InterceptorRegistry registry) {
-<span class="fc" id="L21">        registry.addInterceptor(rateLimitingInterceptor);</span>
-<span class="fc" id="L22">    }</span>
+<span class="nc" id="L21">        registry.addInterceptor(rateLimitingInterceptor);</span>
+<span class="nc" id="L22">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

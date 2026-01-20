@@ -25,31 +25,32 @@
 <span class="nc" id="L25">    OFFER_SELECTION_FAILED(&quot;Offer selection failed&quot;),</span>
 <span class="nc" id="L26">    OFFER_WITHDRAWN(&quot;Offer withdrawn by bank&quot;),</span>
 <span class="nc" id="L27">    OFFER_EXPIRATION_NOTIFICATION_SENT(&quot;Offer expiration notification sent&quot;),</span>
-<span class="nc" id="L28">    APPLICATION_VIEWED(&quot;Application viewed&quot;),</span>
-<span class="nc" id="L29">    ROLE_ASSIGNED(&quot;Role assigned&quot;),</span>
-<span class="nc" id="L30">    NOTIFICATION_SENT(&quot;Notification sent&quot;),</span>
-<span class="nc" id="L31">    RATE_CARD_CREATED(&quot;Rate card created&quot;),</span>
-<span class="nc" id="L32">    RATE_CARD_UPDATED(&quot;Rate card updated&quot;),</span>
-<span class="nc" id="L33">    CONSENT_GRANTED(&quot;Consent granted&quot;),</span>
-<span class="nc" id="L34">    CONSENT_WITHDRAWN(&quot;Consent withdrawn&quot;),</span>
-<span class="nc" id="L35">    LEGAL_DOCUMENT_UPDATED(&quot;Legal document updated&quot;),</span>
-<span class="nc" id="L36">    DATA_EXPORT_REQUESTED(&quot;Data export requested&quot;),</span>
-<span class="nc" id="L37">    DATA_EXPORT_COMPLETED(&quot;Data export completed&quot;),</span>
-<span class="nc" id="L38">    DATA_EXPORT_DOWNLOADED(&quot;Data export downloaded&quot;),</span>
-<span class="nc" id="L39">    DATA_DELETION_REQUESTED(&quot;Data deletion requested&quot;),</span>
-<span class="nc" id="L40">    DATA_DELETION_CONFIRMED(&quot;Data deletion confirmed&quot;),</span>
-<span class="nc" id="L41">    DATA_DELETION_COMPLETED(&quot;Data deletion completed&quot;),</span>
-<span class="nc" id="L42">    DATA_DELETION_CANCELLED(&quot;Data deletion cancelled&quot;),</span>
-<span class="nc" id="L43">    COMPLIANCE_CHECKLIST_REVIEWED(&quot;Compliance checklist reviewed&quot;);</span>
+<span class="nc" id="L28">    OFFER_RESUBMITTED(&quot;Offer resubmitted with updated values&quot;),</span>
+<span class="nc" id="L29">    APPLICATION_VIEWED(&quot;Application viewed&quot;),</span>
+<span class="nc" id="L30">    ROLE_ASSIGNED(&quot;Role assigned&quot;),</span>
+<span class="nc" id="L31">    NOTIFICATION_SENT(&quot;Notification sent&quot;),</span>
+<span class="nc" id="L32">    RATE_CARD_CREATED(&quot;Rate card created&quot;),</span>
+<span class="nc" id="L33">    RATE_CARD_UPDATED(&quot;Rate card updated&quot;),</span>
+<span class="nc" id="L34">    CONSENT_GRANTED(&quot;Consent granted&quot;),</span>
+<span class="nc" id="L35">    CONSENT_WITHDRAWN(&quot;Consent withdrawn&quot;),</span>
+<span class="nc" id="L36">    LEGAL_DOCUMENT_UPDATED(&quot;Legal document updated&quot;),</span>
+<span class="nc" id="L37">    DATA_EXPORT_REQUESTED(&quot;Data export requested&quot;),</span>
+<span class="nc" id="L38">    DATA_EXPORT_COMPLETED(&quot;Data export completed&quot;),</span>
+<span class="nc" id="L39">    DATA_EXPORT_DOWNLOADED(&quot;Data export downloaded&quot;),</span>
+<span class="nc" id="L40">    DATA_DELETION_REQUESTED(&quot;Data deletion requested&quot;),</span>
+<span class="nc" id="L41">    DATA_DELETION_CONFIRMED(&quot;Data deletion confirmed&quot;),</span>
+<span class="nc" id="L42">    DATA_DELETION_COMPLETED(&quot;Data deletion completed&quot;),</span>
+<span class="nc" id="L43">    DATA_DELETION_CANCELLED(&quot;Data deletion cancelled&quot;),</span>
+<span class="nc" id="L44">    COMPLIANCE_CHECKLIST_REVIEWED(&quot;Compliance checklist reviewed&quot;);</span>
 
     private final String description;
 
-<span class="nc" id="L47">    AuditAction(String description) {</span>
-<span class="nc" id="L48">        this.description = description;</span>
-<span class="nc" id="L49">    }</span>
+<span class="nc" id="L48">    AuditAction(String description) {</span>
+<span class="nc" id="L49">        this.description = description;</span>
+<span class="nc" id="L50">    }</span>
 
     public String getDescription() {
-<span class="nc" id="L52">        return description;</span>
+<span class="nc" id="L53">        return description;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

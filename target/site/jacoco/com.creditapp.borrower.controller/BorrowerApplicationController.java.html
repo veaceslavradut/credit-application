@@ -38,8 +38,8 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping(&quot;/api/borrower/applications&quot;)
-<span class="fc" id="L41">@RequiredArgsConstructor</span>
-<span class="fc" id="L42">@Slf4j</span>
+<span class="nc" id="L41">@RequiredArgsConstructor</span>
+<span class="nc" id="L42">@Slf4j</span>
 public class BorrowerApplicationController {
 
     private final ApplicationService applicationService;
@@ -56,17 +56,17 @@ public class BorrowerApplicationController {
     @PreAuthorize(&quot;hasAuthority('BORROWER')&quot;)
     @RateLimited(action = &quot;CREATE_APPLICATION&quot;, limitPerMinute = 1)
     public ResponseEntity&lt;ApplicationDTO&gt; createApplication(@Valid @RequestBody CreateApplicationRequest request) {
-<span class="fc" id="L59">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L59">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
         
-<span class="fc" id="L61">        log.info(&quot;Creating application for borrower: {}, loanType: {}, loanAmount: {}&quot;, </span>
-<span class="fc" id="L62">                borrowerId, request.getLoanType(), request.getLoanAmount());</span>
+<span class="nc" id="L61">        log.info(&quot;Creating application for borrower: {}, loanType: {}, loanAmount: {}&quot;, </span>
+<span class="nc" id="L62">                borrowerId, request.getLoanType(), request.getLoanAmount());</span>
         
-<span class="fc" id="L64">        ApplicationDTO application = applicationService.createApplication(borrowerId, request);</span>
+<span class="nc" id="L64">        ApplicationDTO application = applicationService.createApplication(borrowerId, request);</span>
         
-<span class="fc" id="L66">        log.info(&quot;Application created successfully: {} for borrower: {}&quot;, </span>
-<span class="fc" id="L67">                application.getId(), borrowerId);</span>
+<span class="nc" id="L66">        log.info(&quot;Application created successfully: {} for borrower: {}&quot;, </span>
+<span class="nc" id="L67">                application.getId(), borrowerId);</span>
         
-<span class="fc" id="L69">        return ResponseEntity.status(HttpStatus.CREATED).body(application);</span>
+<span class="nc" id="L69">        return ResponseEntity.status(HttpStatus.CREATED).body(application);</span>
     }
 
     /**
@@ -77,10 +77,10 @@ public class BorrowerApplicationController {
     public ResponseEntity&lt;Page&lt;ApplicationDTO&gt;&gt; listApplications(
             @RequestParam(defaultValue = &quot;0&quot;) int page,
             @RequestParam(defaultValue = &quot;10&quot;) int size) {
-<span class="fc" id="L80">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
-<span class="fc" id="L81">        Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);</span>
-<span class="fc" id="L82">        Page&lt;ApplicationDTO&gt; applications = applicationService.listApplicationsByBorrower(borrowerId, pageable);</span>
-<span class="fc" id="L83">        return ResponseEntity.ok(applications);</span>
+<span class="nc" id="L80">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L81">        Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);</span>
+<span class="nc" id="L82">        Page&lt;ApplicationDTO&gt; applications = applicationService.listApplicationsByBorrower(borrowerId, pageable);</span>
+<span class="nc" id="L83">        return ResponseEntity.ok(applications);</span>
     }
 
     /**
@@ -89,9 +89,9 @@ public class BorrowerApplicationController {
     @GetMapping(&quot;/{applicationId}&quot;)
     @PreAuthorize(&quot;hasAuthority('BORROWER')&quot;)
     public ResponseEntity&lt;ApplicationDTO&gt; getApplication(@PathVariable UUID applicationId) {
-<span class="fc" id="L92">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
-<span class="fc" id="L93">        ApplicationDTO application = applicationService.getApplication(applicationId, borrowerId);</span>
-<span class="fc" id="L94">        return ResponseEntity.ok(application);</span>
+<span class="nc" id="L92">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L93">        ApplicationDTO application = applicationService.getApplication(applicationId, borrowerId);</span>
+<span class="nc" id="L94">        return ResponseEntity.ok(application);</span>
     }
 
     /**
@@ -103,17 +103,17 @@ public class BorrowerApplicationController {
             @PathVariable UUID applicationId,
             @RequestParam(defaultValue = &quot;0&quot;) int page,
             @RequestParam(defaultValue = &quot;20&quot;) int size) {
-<span class="fc" id="L106">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L106">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
         
         // If pagination params provided, return paginated response
-<span class="fc bfc" id="L109" title="All 4 branches covered.">        if (page &gt; 0 || size != 20) {</span>
+<span class="nc bnc" id="L109" title="All 4 branches missed.">        if (page &gt; 0 || size != 20) {</span>
             try {
-<span class="fc" id="L111">                Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size, </span>
-<span class="fc" id="L112">                    org.springframework.data.domain.Sort.by(&quot;changedAt&quot;).descending());</span>
-<span class="fc" id="L113">                Page&lt;ApplicationHistoryDTO&gt; history = applicationService.getApplicationHistory(applicationId, borrowerId, pageable);</span>
-<span class="fc" id="L114">                log.debug(&quot;Retrieved paginated history for application {}, page: {}, size: {}, total elements: {}&quot;, </span>
-<span class="fc" id="L115">                    applicationId, page, size, history.getTotalElements());</span>
-<span class="fc" id="L116">                return ResponseEntity.ok(history);</span>
+<span class="nc" id="L111">                Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size, </span>
+<span class="nc" id="L112">                    org.springframework.data.domain.Sort.by(&quot;changedAt&quot;).descending());</span>
+<span class="nc" id="L113">                Page&lt;ApplicationHistoryDTO&gt; history = applicationService.getApplicationHistory(applicationId, borrowerId, pageable);</span>
+<span class="nc" id="L114">                log.debug(&quot;Retrieved paginated history for application {}, page: {}, size: {}, total elements: {}&quot;, </span>
+<span class="nc" id="L115">                    applicationId, page, size, history.getTotalElements());</span>
+<span class="nc" id="L116">                return ResponseEntity.ok(history);</span>
 <span class="nc" id="L117">            } catch (Exception e) {</span>
 <span class="nc" id="L118">                log.error(&quot;Error retrieving paginated history for application {}&quot;, applicationId, e);</span>
 <span class="nc" id="L119">                throw e;</span>
@@ -121,8 +121,8 @@ public class BorrowerApplicationController {
         }
         
         // Otherwise return non-paginated list for backwards compatibility
-<span class="fc" id="L124">        List&lt;ApplicationHistoryDTO&gt; history = applicationService.getApplicationHistory(applicationId, borrowerId);</span>
-<span class="fc" id="L125">        return ResponseEntity.ok(history);</span>
+<span class="nc" id="L124">        List&lt;ApplicationHistoryDTO&gt; history = applicationService.getApplicationHistory(applicationId, borrowerId);</span>
+<span class="nc" id="L125">        return ResponseEntity.ok(history);</span>
     }
 
     /**
@@ -134,16 +134,16 @@ public class BorrowerApplicationController {
     public ResponseEntity&lt;UpdateApplicationResponse&gt; updateApplication(
             @PathVariable UUID applicationId,
             @Valid @RequestBody UpdateApplicationRequest request) {
-<span class="fc" id="L137">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L137">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
         
-<span class="fc" id="L139">        log.info(&quot;Updating application: {} for borrower: {}&quot;, applicationId, borrowerId);</span>
+<span class="nc" id="L139">        log.info(&quot;Updating application: {} for borrower: {}&quot;, applicationId, borrowerId);</span>
         
-<span class="fc" id="L141">        UpdateApplicationResponse response = applicationService.updateApplication(applicationId, borrowerId, request);</span>
+<span class="nc" id="L141">        UpdateApplicationResponse response = applicationService.updateApplication(applicationId, borrowerId, request);</span>
         
-<span class="fc" id="L143">        log.info(&quot;Application updated successfully: {} by borrower: {}, fields: {}&quot;, </span>
-<span class="fc" id="L144">                applicationId, borrowerId, response.getEditedFields());</span>
+<span class="nc" id="L143">        log.info(&quot;Application updated successfully: {} by borrower: {}, fields: {}&quot;, </span>
+<span class="nc" id="L144">                applicationId, borrowerId, response.getEditedFields());</span>
         
-<span class="fc" id="L146">        return ResponseEntity.ok(response);</span>
+<span class="nc" id="L146">        return ResponseEntity.ok(response);</span>
     }
 
     /**
@@ -155,15 +155,15 @@ public class BorrowerApplicationController {
     public ResponseEntity&lt;SubmitApplicationResponse&gt; submitApplication(
             @PathVariable UUID applicationId,
             @RequestBody(required = false) SubmitApplicationRequest request) {
-<span class="fc" id="L158">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L158">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
         
-<span class="fc" id="L160">        log.info(&quot;Submitting application: {} for borrower: {}&quot;, applicationId, borrowerId);</span>
+<span class="nc" id="L160">        log.info(&quot;Submitting application: {} for borrower: {}&quot;, applicationId, borrowerId);</span>
         
-<span class="fc" id="L162">        SubmitApplicationResponse response = applicationService.submitApplication(applicationId, borrowerId);</span>
+<span class="nc" id="L162">        SubmitApplicationResponse response = applicationService.submitApplication(applicationId, borrowerId);</span>
         
-<span class="fc" id="L164">        log.info(&quot;Application submitted successfully: {} by borrower: {}&quot;, applicationId, borrowerId);</span>
+<span class="nc" id="L164">        log.info(&quot;Application submitted successfully: {} by borrower: {}&quot;, applicationId, borrowerId);</span>
         
-<span class="fc" id="L166">        return ResponseEntity.ok(response);</span>
+<span class="nc" id="L166">        return ResponseEntity.ok(response);</span>
     }
 
     /**
@@ -232,16 +232,16 @@ public class BorrowerApplicationController {
     @PreAuthorize(&quot;hasAuthority('BORROWER')&quot;)
     public ResponseEntity&lt;ApplicationStatusDTO&gt; getApplicationStatus(
             @PathVariable UUID applicationId) {
-<span class="fc" id="L235">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L235">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
         
-<span class="fc" id="L237">        log.info(&quot;Retrieving status for application: {} by borrower: {}&quot;, applicationId, borrowerId);</span>
+<span class="nc" id="L237">        log.info(&quot;Retrieving status for application: {} by borrower: {}&quot;, applicationId, borrowerId);</span>
         
-<span class="fc" id="L239">        ApplicationStatusDTO status = statusTrackingService.getApplicationStatus(applicationId, borrowerId);</span>
+<span class="nc" id="L239">        ApplicationStatusDTO status = statusTrackingService.getApplicationStatus(applicationId, borrowerId);</span>
         
-<span class="fc" id="L241">        log.info(&quot;Status retrieved successfully for application: {} - current status: {}&quot;, </span>
-<span class="fc" id="L242">                applicationId, status.getCurrentStatus());</span>
+<span class="nc" id="L241">        log.info(&quot;Status retrieved successfully for application: {} - current status: {}&quot;, </span>
+<span class="nc" id="L242">                applicationId, status.getCurrentStatus());</span>
         
-<span class="fc" id="L244">        return ResponseEntity.ok(status);</span>
+<span class="nc" id="L244">        return ResponseEntity.ok(status);</span>
     }
 
     /**

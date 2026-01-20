@@ -16,28 +16,28 @@ import java.util.UUID;
     @Index(name = &quot;idx_documents_created_at&quot;, columnList = &quot;created_at&quot;)
 })
 <span class="nc bnc" id="L18" title="All 70 branches missed.">@Data</span>
-<span class="fc" id="L19">@NoArgsConstructor</span>
-<span class="fc" id="L20">@AllArgsConstructor</span>
-<span class="pc" id="L21">@Builder</span>
+<span class="nc" id="L19">@NoArgsConstructor</span>
+<span class="nc" id="L20">@AllArgsConstructor</span>
+<span class="nc" id="L21">@Builder</span>
 public class Document {
     
     @Id
     @GeneratedValue(generator = &quot;UUID&quot;)
     @GenericGenerator(name = &quot;UUID&quot;, strategy = &quot;org.hibernate.id.UUIDGenerator&quot;)
-<span class="fc" id="L27">    private UUID id;</span>
+<span class="nc" id="L27">    private UUID id;</span>
     
     @Column(name = &quot;application_id&quot;, nullable = false)
 <span class="nc" id="L30">    private UUID applicationId;</span>
     
     @Enumerated(EnumType.STRING)
     @Column(name = &quot;document_type&quot;, nullable = false)
-<span class="fc" id="L34">    private DocumentType documentType;</span>
+<span class="nc" id="L34">    private DocumentType documentType;</span>
     
     @Column(name = &quot;file_url&quot;, length = 500)
-<span class="fc" id="L37">    private String fileUrl;</span>
+<span class="nc" id="L37">    private String fileUrl;</span>
     
     @Column(name = &quot;document_name&quot;, nullable = false, length = 255)
-<span class="fc" id="L40">    private String documentName;</span>
+<span class="nc" id="L40">    private String documentName;</span>
     
     @Column(name = &quot;created_at&quot;, nullable = false)
 <span class="nc" id="L43">    private LocalDateTime createdAt;</span>
@@ -50,9 +50,9 @@ public class Document {
     
     @PrePersist
     protected void onCreate() {
-<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (createdAt == null) {</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if (createdAt == null) {</span>
 <span class="nc" id="L54">            createdAt = LocalDateTime.now();</span>
         }
-<span class="fc" id="L56">    }</span>
+<span class="nc" id="L56">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -8,23 +8,23 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-<span class="fc" id="L11">public class RedisConfig {</span>
+<span class="nc" id="L11">public class RedisConfig {</span>
 
     @Bean
     public RedisTemplate&lt;String, Object&gt; redisTemplate(RedisConnectionFactory connectionFactory) {
-<span class="fc" id="L15">        RedisTemplate&lt;String, Object&gt; template = new RedisTemplate&lt;&gt;();</span>
-<span class="fc" id="L16">        template.setConnectionFactory(connectionFactory);</span>
+<span class="nc" id="L15">        RedisTemplate&lt;String, Object&gt; template = new RedisTemplate&lt;&gt;();</span>
+<span class="nc" id="L16">        template.setConnectionFactory(connectionFactory);</span>
         
         // Use String serializer for keys
-<span class="fc" id="L19">        template.setKeySerializer(new StringRedisSerializer());</span>
-<span class="fc" id="L20">        template.setHashKeySerializer(new StringRedisSerializer());</span>
+<span class="nc" id="L19">        template.setKeySerializer(new StringRedisSerializer());</span>
+<span class="nc" id="L20">        template.setHashKeySerializer(new StringRedisSerializer());</span>
         
         // Use JSON serializer for values
-<span class="fc" id="L23">        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());</span>
-<span class="fc" id="L24">        template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());</span>
+<span class="nc" id="L23">        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());</span>
+<span class="nc" id="L24">        template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());</span>
         
-<span class="fc" id="L26">        template.afterPropertiesSet();</span>
-<span class="fc" id="L27">        return template;</span>
+<span class="nc" id="L26">        template.afterPropertiesSet();</span>
+<span class="nc" id="L27">        return template;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

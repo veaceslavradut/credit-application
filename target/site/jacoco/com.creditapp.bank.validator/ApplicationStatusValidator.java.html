@@ -5,24 +5,24 @@ import com.creditapp.borrower.model.ApplicationStatus;
 <span class="nc" id="L5">public class ApplicationStatusValidator {</span>
 
     public static boolean isValidTransition(ApplicationStatus from, ApplicationStatus to) {
-<span class="pc bpc" id="L8" title="2 of 4 branches missed.">        if (from == null || to == null) {</span>
+<span class="nc bnc" id="L8" title="All 4 branches missed.">        if (from == null || to == null) {</span>
 <span class="nc" id="L9">            return false;</span>
         }
-<span class="pc bpc" id="L11" title="1 of 2 branches missed.">        if (from.equals(to)) {</span>
+<span class="nc bnc" id="L11" title="All 2 branches missed.">        if (from.equals(to)) {</span>
 <span class="nc" id="L12">            return false;</span>
         }
 
-<span class="pc bpc" id="L15" title="3 of 5 branches missed.">        return switch (from) {</span>
-<span class="pc bpc" id="L16" title="3 of 4 branches missed.">            case OFFERS_AVAILABLE -&gt; to == ApplicationStatus.ACCEPTED || to == ApplicationStatus.REJECTED;</span>
+<span class="nc bnc" id="L15" title="All 5 branches missed.">        return switch (from) {</span>
+<span class="nc bnc" id="L16" title="All 4 branches missed.">            case OFFERS_AVAILABLE -&gt; to == ApplicationStatus.ACCEPTED || to == ApplicationStatus.REJECTED;</span>
 <span class="nc bnc" id="L17" title="All 4 branches missed.">            case ACCEPTED -&gt; to == ApplicationStatus.COMPLETED || to == ApplicationStatus.REJECTED;</span>
 <span class="nc bnc" id="L18" title="All 4 branches missed.">            case UNDER_REVIEW -&gt; to == ApplicationStatus.OFFERS_AVAILABLE || to == ApplicationStatus.REJECTED;</span>
 <span class="nc bnc" id="L19" title="All 4 branches missed.">            case SUBMITTED -&gt; to == ApplicationStatus.UNDER_REVIEW || to == ApplicationStatus.REJECTED;</span>
-<span class="fc" id="L20">            default -&gt; false;</span>
+<span class="nc" id="L20">            default -&gt; false;</span>
         };
     }
 
     public static String getTransitionErrorMessage(ApplicationStatus from, ApplicationStatus to) {
-<span class="fc" id="L25">        return String.format(&quot;Invalid status transition from %s to %s&quot;, from, to);</span>
+<span class="nc" id="L25">        return String.format(&quot;Invalid status transition from %s to %s&quot;, from, to);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

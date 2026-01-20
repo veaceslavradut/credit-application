@@ -5,12 +5,12 @@ import com.creditapp.borrower.model.LoanType;
 import java.math.BigDecimal;
 import java.util.List;
 
-<span class="fc" id="L8">public record MarketVisualizationDTO(</span>
+<span class="nc" id="L8">public record MarketVisualizationDTO(</span>
         List&lt;MarketVisualizationDTO.AprComparisonItem&gt; aprComparisons,
         List&lt;MarketVisualizationDTO.FeeComparisonItem&gt; feeComparisons,
         List&lt;MarketVisualizationDTO.ProcessingTimeComparisonItem&gt; processingComparisons
 ) {
-<span class="fc" id="L13">    public record AprComparisonItem(</span>
+<span class="nc" id="L13">    public record AprComparisonItem(</span>
             LoanType loanType,
             Currency currency,
             BigDecimal myApr,
@@ -19,7 +19,7 @@ import java.util.List;
             BigDecimal marketMaxApr
     ) {}
 
-<span class="fc" id="L22">    public record FeeComparisonItem(</span>
+<span class="nc" id="L22">    public record FeeComparisonItem(</span>
             LoanType loanType,
             Currency currency,
             BigDecimal myOriginationFeePercent,
@@ -28,7 +28,7 @@ import java.util.List;
             BigDecimal marketAvgInsurancePercent
     ) {}
 
-<span class="fc" id="L31">    public record ProcessingTimeComparisonItem(</span>
+<span class="nc" id="L31">    public record ProcessingTimeComparisonItem(</span>
             LoanType loanType,
             Currency currency,
             Integer myProcessingDays,

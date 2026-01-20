@@ -14,37 +14,37 @@ import java.util.UUID;
 @Table(name = &quot;gdpr_consents&quot;, indexes = {
     @Index(name = &quot;idx_gdpr_consents_borrower_type&quot;, columnList = &quot;borrower_id,consent_type&quot;)
 })
-<span class="pc bnc" id="L17" title="All 78 branches missed.">@Data</span>
-<span class="fc" id="L18">@NoArgsConstructor</span>
-<span class="fc" id="L19">@AllArgsConstructor</span>
-<span class="pc" id="L20">@Builder</span>
+<span class="nc bnc" id="L17" title="All 78 branches missed.">@Data</span>
+<span class="nc" id="L18">@NoArgsConstructor</span>
+<span class="nc" id="L19">@AllArgsConstructor</span>
+<span class="nc" id="L20">@Builder</span>
 public class GDPRConsent {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-<span class="fc" id="L25">    private UUID id;</span>
+<span class="nc" id="L25">    private UUID id;</span>
     
     @Column(nullable = false)
-<span class="fc" id="L28">    private UUID borrowerId;</span>
+<span class="nc" id="L28">    private UUID borrowerId;</span>
     
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-<span class="fc" id="L32">    private ConsentType consentType;</span>
+<span class="nc" id="L32">    private ConsentType consentType;</span>
     
     @Column(nullable = false)
-<span class="fc" id="L35">    private LocalDateTime consentedAt;</span>
+<span class="nc" id="L35">    private LocalDateTime consentedAt;</span>
     
     @Column(nullable = true)
-<span class="fc" id="L38">    private LocalDateTime withdrawnAt;</span>
+<span class="nc" id="L38">    private LocalDateTime withdrawnAt;</span>
     
     @Column(name = &quot;ip_address&quot;, length = 45)
-<span class="fc" id="L41">    private String ipAddress;</span>
+<span class="nc" id="L41">    private String ipAddress;</span>
     
     @Column(columnDefinition = &quot;TEXT&quot;)
 <span class="nc" id="L44">    private String userAgent;</span>
     
-<span class="fc" id="L46">    @Column(nullable = false)</span>
-<span class="fc" id="L47">    private Integer version = 1;</span>
+<span class="nc" id="L46">    @Column(nullable = false)</span>
+<span class="nc" id="L47">    private Integer version = 1;</span>
     
     @CreationTimestamp
     @Column(nullable = false)

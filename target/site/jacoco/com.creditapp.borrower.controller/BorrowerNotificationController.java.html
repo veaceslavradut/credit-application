@@ -17,8 +17,8 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(&quot;/api/borrower/notifications&quot;)
-<span class="fc" id="L20">@RequiredArgsConstructor</span>
-<span class="fc" id="L21">@Slf4j</span>
+<span class="nc" id="L20">@RequiredArgsConstructor</span>
+<span class="nc" id="L21">@Slf4j</span>
 public class BorrowerNotificationController {
     private final NotificationService notificationService;
     private final AuthorizationService authorizationService;
@@ -30,35 +30,35 @@ public class BorrowerNotificationController {
             @RequestParam(defaultValue = &quot;20&quot;) int size,
             @RequestParam(required = false) Boolean read) {
         
-<span class="fc" id="L33">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
-<span class="fc" id="L34">        log.info(&quot;Fetching notifications for borrower: {}, page: {}, size: {}, read: {}&quot;, </span>
-<span class="fc" id="L35">                borrowerId, page, size, read);</span>
+<span class="nc" id="L33">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L34">        log.info(&quot;Fetching notifications for borrower: {}, page: {}, size: {}, read: {}&quot;, </span>
+<span class="nc" id="L35">                borrowerId, page, size, read);</span>
         
-<span class="fc" id="L37">        Pageable pageable = PageRequest.of(page, size, Sort.by(&quot;sentAt&quot;).descending());</span>
+<span class="nc" id="L37">        Pageable pageable = PageRequest.of(page, size, Sort.by(&quot;sentAt&quot;).descending());</span>
         
         Page&lt;NotificationDTO&gt; notifications;
-<span class="fc bfc" id="L40" title="All 2 branches covered.">        if (read != null) {</span>
-<span class="fc bfc" id="L41" title="All 2 branches covered.">            if (read) {</span>
-<span class="fc" id="L42">                notifications = notificationService.getReadNotifications(borrowerId, pageable);</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if (read != null) {</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">            if (read) {</span>
+<span class="nc" id="L42">                notifications = notificationService.getReadNotifications(borrowerId, pageable);</span>
             } else {
-<span class="fc" id="L44">                notifications = notificationService.getUnreadNotifications(borrowerId, pageable);</span>
+<span class="nc" id="L44">                notifications = notificationService.getUnreadNotifications(borrowerId, pageable);</span>
             }
         } else {
-<span class="fc" id="L47">            notifications = notificationService.getNotifications(borrowerId, pageable);</span>
+<span class="nc" id="L47">            notifications = notificationService.getNotifications(borrowerId, pageable);</span>
         }
         
-<span class="fc" id="L50">        return ResponseEntity.ok(notifications);</span>
+<span class="nc" id="L50">        return ResponseEntity.ok(notifications);</span>
     }
 
     @PutMapping(&quot;/{notificationId}/read&quot;)
     @PreAuthorize(&quot;hasAuthority('BORROWER')&quot;)
     public ResponseEntity&lt;Void&gt; markAsRead(@PathVariable UUID notificationId) {
-<span class="fc" id="L56">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
-<span class="fc" id="L57">        log.info(&quot;Marking notification as read: {}, borrower: {}&quot;, notificationId, borrowerId);</span>
+<span class="nc" id="L56">        UUID borrowerId = authorizationService.getCurrentUserId();</span>
+<span class="nc" id="L57">        log.info(&quot;Marking notification as read: {}, borrower: {}&quot;, notificationId, borrowerId);</span>
         
-<span class="fc" id="L59">        notificationService.markAsRead(notificationId, borrowerId);</span>
+<span class="nc" id="L59">        notificationService.markAsRead(notificationId, borrowerId);</span>
         
-<span class="fc" id="L61">        return ResponseEntity.noContent().build();</span>
+<span class="nc" id="L61">        return ResponseEntity.noContent().build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

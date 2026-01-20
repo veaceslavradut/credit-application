@@ -22,8 +22,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-<span class="fc" id="L25">@RequiredArgsConstructor</span>
-<span class="fc" id="L26">@Slf4j</span>
+<span class="nc" id="L25">@RequiredArgsConstructor</span>
+<span class="nc" id="L26">@Slf4j</span>
 public class DataExportService {
     private static final int TOKEN_BYTES = 32;
     private static final long EXPIRY_HOURS = 24;
@@ -38,103 +38,103 @@ public class DataExportService {
     
     @Transactional
     public DataExportResponse initiateExport(UUID borrowerId, ExportFormat format, String ipAddress) {
-<span class="fc" id="L41">        log.info(&quot;Initiating data export for borrower: {}&quot;, borrowerId);</span>
+<span class="nc" id="L41">        log.info(&quot;Initiating data export for borrower: {}&quot;, borrowerId);</span>
         
-<span class="fc" id="L43">        String downloadToken = generateToken();</span>
-<span class="fc" id="L44">        LocalDateTime expiresAt = LocalDateTime.now().plusHours(EXPIRY_HOURS);</span>
+<span class="nc" id="L43">        String downloadToken = generateToken();</span>
+<span class="nc" id="L44">        LocalDateTime expiresAt = LocalDateTime.now().plusHours(EXPIRY_HOURS);</span>
         
-<span class="fc" id="L46">        DataExport export = DataExport.builder()</span>
-<span class="fc" id="L47">            .borrowerId(borrowerId)</span>
-<span class="fc" id="L48">            .status(ExportStatus.PENDING)</span>
-<span class="fc" id="L49">            .format(format)</span>
-<span class="fc" id="L50">            .downloadToken(downloadToken)</span>
-<span class="fc" id="L51">            .downloadTokenExpiresAt(expiresAt)</span>
-<span class="fc" id="L52">            .createdByIp(ipAddress)</span>
-<span class="fc" id="L53">            .expiresAt(expiresAt)</span>
-<span class="fc" id="L54">            .build();</span>
+<span class="nc" id="L46">        DataExport export = DataExport.builder()</span>
+<span class="nc" id="L47">            .borrowerId(borrowerId)</span>
+<span class="nc" id="L48">            .status(ExportStatus.PENDING)</span>
+<span class="nc" id="L49">            .format(format)</span>
+<span class="nc" id="L50">            .downloadToken(downloadToken)</span>
+<span class="nc" id="L51">            .downloadTokenExpiresAt(expiresAt)</span>
+<span class="nc" id="L52">            .createdByIp(ipAddress)</span>
+<span class="nc" id="L53">            .expiresAt(expiresAt)</span>
+<span class="nc" id="L54">            .build();</span>
         
-<span class="fc" id="L56">        DataExport saved = dataExportRepository.save(export);</span>
+<span class="nc" id="L56">        DataExport saved = dataExportRepository.save(export);</span>
         
-<span class="fc" id="L58">        auditService.logAction(&quot;DataExport&quot;, saved.getId(), AuditAction.DATA_EXPORT_REQUESTED);</span>
+<span class="nc" id="L58">        auditService.logAction(&quot;DataExport&quot;, saved.getId(), AuditAction.DATA_EXPORT_REQUESTED);</span>
         
-<span class="fc" id="L60">        log.info(&quot;Data export created: {}&quot;, saved.getId());</span>
+<span class="nc" id="L60">        log.info(&quot;Data export created: {}&quot;, saved.getId());</span>
         
         // Queue async job for export generation
-<span class="fc" id="L63">        generateExportFileAsync(saved.getId());</span>
+<span class="nc" id="L63">        generateExportFileAsync(saved.getId());</span>
         
-<span class="fc" id="L65">        return DataExportResponse.builder()</span>
-<span class="fc" id="L66">            .exportId(saved.getId())</span>
-<span class="fc" id="L67">            .status(saved.getStatus())</span>
-<span class="fc" id="L68">            .format(saved.getFormat())</span>
-<span class="fc" id="L69">            .message(&quot;Export requested. Download link sent to email.&quot;)</span>
-<span class="fc" id="L70">            .requestedAt(saved.getRequestedAt())</span>
-<span class="fc" id="L71">            .expiresAt(saved.getExpiresAt())</span>
-<span class="fc" id="L72">            .build();</span>
+<span class="nc" id="L65">        return DataExportResponse.builder()</span>
+<span class="nc" id="L66">            .exportId(saved.getId())</span>
+<span class="nc" id="L67">            .status(saved.getStatus())</span>
+<span class="nc" id="L68">            .format(saved.getFormat())</span>
+<span class="nc" id="L69">            .message(&quot;Export requested. Download link sent to email.&quot;)</span>
+<span class="nc" id="L70">            .requestedAt(saved.getRequestedAt())</span>
+<span class="nc" id="L71">            .expiresAt(saved.getExpiresAt())</span>
+<span class="nc" id="L72">            .build();</span>
     }
     
     @Transactional
     public byte[] downloadExport(String downloadToken, UUID borrowerId) {
-<span class="fc" id="L77">        log.info(&quot;Attempting export download&quot;);</span>
+<span class="nc" id="L77">        log.info(&quot;Attempting export download&quot;);</span>
         
-<span class="fc" id="L79">        Optional&lt;DataExport&gt; exportOpt = dataExportRepository.findByDownloadToken(downloadToken);</span>
-<span class="pc bpc" id="L80" title="1 of 2 branches missed.">        if (exportOpt.isEmpty()) {</span>
+<span class="nc" id="L79">        Optional&lt;DataExport&gt; exportOpt = dataExportRepository.findByDownloadToken(downloadToken);</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        if (exportOpt.isEmpty()) {</span>
 <span class="nc" id="L81">            throw new RuntimeException(&quot;Export not found&quot;);</span>
         }
         
-<span class="fc" id="L84">        DataExport export = exportOpt.get();</span>
+<span class="nc" id="L84">        DataExport export = exportOpt.get();</span>
         
-<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (!export.getBorrowerId().equals(borrowerId)) {</span>
-<span class="fc" id="L87">            throw new RuntimeException(&quot;Forbidden&quot;);</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (!export.getBorrowerId().equals(borrowerId)) {</span>
+<span class="nc" id="L87">            throw new RuntimeException(&quot;Forbidden&quot;);</span>
         }
         
-<span class="fc bfc" id="L90" title="All 2 branches covered.">        if (export.getDownloadTokenExpiresAt().isBefore(LocalDateTime.now())) {</span>
-<span class="fc" id="L91">            throw new RuntimeException(&quot;Token expired&quot;);</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (export.getDownloadTokenExpiresAt().isBefore(LocalDateTime.now())) {</span>
+<span class="nc" id="L91">            throw new RuntimeException(&quot;Token expired&quot;);</span>
         }
         
-<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (export.getStatus() != ExportStatus.COMPLETED) {</span>
-<span class="fc" id="L95">            throw new RuntimeException(&quot;Export not ready&quot;);</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (export.getStatus() != ExportStatus.COMPLETED) {</span>
+<span class="nc" id="L95">            throw new RuntimeException(&quot;Export not ready&quot;);</span>
         }
         
-<span class="fc" id="L98">        export.setDownloadToken(null);</span>
-<span class="fc" id="L99">        DataExport updated = dataExportRepository.save(export);</span>
+<span class="nc" id="L98">        export.setDownloadToken(null);</span>
+<span class="nc" id="L99">        DataExport updated = dataExportRepository.save(export);</span>
         
-<span class="fc" id="L101">        auditService.logAction(&quot;DataExport&quot;, updated.getId(), AuditAction.DATA_EXPORT_DOWNLOADED);</span>
+<span class="nc" id="L101">        auditService.logAction(&quot;DataExport&quot;, updated.getId(), AuditAction.DATA_EXPORT_DOWNLOADED);</span>
         
-<span class="fc" id="L103">        return new byte[]{};</span>
+<span class="nc" id="L103">        return new byte[]{};</span>
     }
     
     public DataExportResponse getExportStatus(UUID exportId, UUID borrowerId) {
-<span class="fc" id="L107">        Optional&lt;DataExport&gt; exportOpt = dataExportRepository.findById(exportId);</span>
-<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        if (exportOpt.isEmpty()) {</span>
+<span class="nc" id="L107">        Optional&lt;DataExport&gt; exportOpt = dataExportRepository.findById(exportId);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (exportOpt.isEmpty()) {</span>
 <span class="nc" id="L109">            throw new RuntimeException(&quot;Export not found&quot;);</span>
         }
         
-<span class="fc" id="L112">        DataExport export = exportOpt.get();</span>
-<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (!export.getBorrowerId().equals(borrowerId)) {</span>
-<span class="fc" id="L114">            throw new RuntimeException(&quot;Forbidden&quot;);</span>
+<span class="nc" id="L112">        DataExport export = exportOpt.get();</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (!export.getBorrowerId().equals(borrowerId)) {</span>
+<span class="nc" id="L114">            throw new RuntimeException(&quot;Forbidden&quot;);</span>
         }
         
-<span class="fc" id="L117">        return DataExportResponse.builder()</span>
-<span class="fc" id="L118">            .exportId(export.getId())</span>
-<span class="fc" id="L119">            .status(export.getStatus())</span>
-<span class="fc" id="L120">            .format(export.getFormat())</span>
-<span class="fc" id="L121">            .requestedAt(export.getRequestedAt())</span>
-<span class="fc" id="L122">            .completedAt(export.getCompletedAt())</span>
-<span class="fc" id="L123">            .expiresAt(export.getExpiresAt())</span>
-<span class="fc" id="L124">            .build();</span>
+<span class="nc" id="L117">        return DataExportResponse.builder()</span>
+<span class="nc" id="L118">            .exportId(export.getId())</span>
+<span class="nc" id="L119">            .status(export.getStatus())</span>
+<span class="nc" id="L120">            .format(export.getFormat())</span>
+<span class="nc" id="L121">            .requestedAt(export.getRequestedAt())</span>
+<span class="nc" id="L122">            .completedAt(export.getCompletedAt())</span>
+<span class="nc" id="L123">            .expiresAt(export.getExpiresAt())</span>
+<span class="nc" id="L124">            .build();</span>
     }
     
     @Async(&quot;dataExportExecutor&quot;)
     @Transactional
     public void generateExportFileAsync(UUID exportId) {
-<span class="fc" id="L130">        long startTime = System.currentTimeMillis();</span>
-<span class="fc" id="L131">        log.info(&quot;Starting async export file generation for export: {}&quot;, exportId);</span>
+<span class="nc" id="L130">        long startTime = System.currentTimeMillis();</span>
+<span class="nc" id="L131">        log.info(&quot;Starting async export file generation for export: {}&quot;, exportId);</span>
         
         try {
-<span class="fc" id="L134">            Optional&lt;DataExport&gt; exportOpt = dataExportRepository.findById(exportId);</span>
-<span class="pc bpc" id="L135" title="1 of 2 branches missed.">            if (exportOpt.isEmpty()) {</span>
-<span class="fc" id="L136">                log.error(&quot;Export not found: {}&quot;, exportId);</span>
-<span class="fc" id="L137">                return;</span>
+<span class="nc" id="L134">            Optional&lt;DataExport&gt; exportOpt = dataExportRepository.findById(exportId);</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">            if (exportOpt.isEmpty()) {</span>
+<span class="nc" id="L136">                log.error(&quot;Export not found: {}&quot;, exportId);</span>
+<span class="nc" id="L137">                return;</span>
             }
             
 <span class="nc" id="L140">            DataExport export = exportOpt.get();</span>
@@ -196,10 +196,10 @@ public class DataExportService {
 <span class="nc" id="L196">    }</span>
     
     private String generateToken() {
-<span class="fc" id="L199">        SecureRandom random = new SecureRandom();</span>
-<span class="fc" id="L200">        byte[] tokenBytes = new byte[TOKEN_BYTES];</span>
-<span class="fc" id="L201">        random.nextBytes(tokenBytes);</span>
-<span class="fc" id="L202">        return Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);</span>
+<span class="nc" id="L199">        SecureRandom random = new SecureRandom();</span>
+<span class="nc" id="L200">        byte[] tokenBytes = new byte[TOKEN_BYTES];</span>
+<span class="nc" id="L201">        random.nextBytes(tokenBytes);</span>
+<span class="nc" id="L202">        return Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);</span>
     }
     
     private void sendExportReadyEmail(DataExport export) {
