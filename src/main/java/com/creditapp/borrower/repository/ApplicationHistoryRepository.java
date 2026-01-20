@@ -1,6 +1,8 @@
 package com.creditapp.borrower.repository;
 
 import com.creditapp.borrower.model.ApplicationHistory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -26,4 +28,12 @@ public interface ApplicationHistoryRepository extends JpaRepository<ApplicationH
      * @return list of history entries ordered by changed_at DESC
      */
     List<ApplicationHistory> findByApplicationIdOrderByChangedAtDesc(UUID applicationId);
+
+    /**
+     * Find paginated history entries for an application ordered by change date descending.
+     * @param applicationId the application ID
+     * @param pageable the pagination parameters
+     * @return paginated history entries ordered by changed_at DESC
+     */
+    Page<ApplicationHistory> findByApplicationIdOrderByChangedAtDesc(UUID applicationId, Pageable pageable);
 }

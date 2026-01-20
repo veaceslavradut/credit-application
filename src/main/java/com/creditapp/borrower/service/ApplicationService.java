@@ -14,6 +14,7 @@ import com.creditapp.borrower.exception.ApplicationStaleException;
 import com.creditapp.borrower.exception.InvalidApplicationException;
 import com.creditapp.borrower.exception.SubmissionValidationException;
 import com.creditapp.borrower.model.Application;
+import com.creditapp.borrower.model.ApplicationHistory;
 import com.creditapp.borrower.model.ApplicationStatus;
 import com.creditapp.borrower.repository.ApplicationHistoryRepository;
 import com.creditapp.borrower.repository.ApplicationRepository;
@@ -147,6 +148,26 @@ public class ApplicationService {
                 .stream()
                 .map(this::mapHistoryToDTO)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Get application status history with pagination.
+     */
+    public Page<ApplicationHistoryDTO> getApplicationHistory(UUID applicationId, UUID borrowerId, Pageable pageable) {
+        // Verify borrower owns the application
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ApplicationNotFoundException(
+                        "Application not found: " + applicationId));
+
+        if (!application.getBorrowerId().equals(borrowerId)) {
+            throw new ApplicationNotFoundException(
+                    "Access denied to application: " + applicationId);
+        }
+
+        Page<ApplicationHistory> historyPage = applicationHistoryRepository
+                .findByApplicationIdOrderByChangedAtDesc(applicationId, pageable);
+        
+        return historyPage.map(this::mapHistoryToDTO);
     }
 
     /**

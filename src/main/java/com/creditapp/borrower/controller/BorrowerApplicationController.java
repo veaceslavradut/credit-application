@@ -95,12 +95,32 @@ public class BorrowerApplicationController {
     }
 
     /**
-     * Get the status change history of an application.
+     * Get the status change history of an application with pagination.
      */
     @GetMapping("/{applicationId}/history")
     @PreAuthorize("hasAuthority('BORROWER')")
-    public ResponseEntity<List<ApplicationHistoryDTO>> getApplicationHistory(@PathVariable UUID applicationId) {
+    public ResponseEntity<?> getApplicationHistory(
+            @PathVariable UUID applicationId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
         UUID borrowerId = authorizationService.getCurrentUserId();
+        
+        // If pagination params provided, return paginated response
+        if (page > 0 || size != 20) {
+            try {
+                Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size, 
+                    org.springframework.data.domain.Sort.by("changedAt").descending());
+                Page<ApplicationHistoryDTO> history = applicationService.getApplicationHistory(applicationId, borrowerId, pageable);
+                log.debug("Retrieved paginated history for application {}, page: {}, size: {}, total elements: {}", 
+                    applicationId, page, size, history.getTotalElements());
+                return ResponseEntity.ok(history);
+            } catch (Exception e) {
+                log.error("Error retrieving paginated history for application {}", applicationId, e);
+                throw e;
+            }
+        }
+        
+        // Otherwise return non-paginated list for backwards compatibility
         List<ApplicationHistoryDTO> history = applicationService.getApplicationHistory(applicationId, borrowerId);
         return ResponseEntity.ok(history);
     }
