@@ -66,7 +66,8 @@ class ApplicationUpdateServiceTest {
                 notificationService,
                 userRepository,
                 mock(com.creditapp.bank.service.OfferCalculationService.class),
-                mock(com.creditapp.shared.service.GDPRConsentService.class)
+                mock(com.creditapp.shared.service.GDPRConsentService.class),
+                mock(org.springframework.context.ApplicationEventPublisher.class)
         );
 
         borrowerId = UUID.randomUUID();

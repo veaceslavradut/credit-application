@@ -77,6 +77,9 @@ public class Offer {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+    
+    @Column(name = "notified", nullable = false)
+    private boolean notified = false;
 
     // Constructors
     public Offer() {}
@@ -251,6 +254,14 @@ public class Offer {
 
     public void setOfficeNotes(String officeNotes) {
         this.officeNotes = officeNotes;
+    }
+
+    public boolean isNotified() {
+        return notified;
+    }
+
+    public void setNotified(boolean notified) {
+        this.notified = notified;
     }
 
     /**

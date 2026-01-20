@@ -2,6 +2,7 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\sha
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\OfferRetrievalServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\BankOfferHistoryServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\security\EncryptedAttributeConverterUnitTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ApplicationSubmissionIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\security\EncryptionIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\compliance\ComplianceChecklistUnitTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\auth\model\UserEntityTest.java
@@ -32,7 +33,9 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bor
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\shared\model\OrganizationEntityTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\bank\BankSettingsIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\borrower\service\ApplicationServiceTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ApplicationRetrievalIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\service\DataDeletionServiceTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\ApplicationUpdateIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\borrower\ApplicationHistoryServiceTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\bank\OfferDocumentIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\bank\OfferDocumentRetrievalServiceTest.java
@@ -67,6 +70,7 @@ C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integrat
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\shared\config\TestCacheConfig.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\GDPRConsentIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\compliance\ComplianceChecklistIntegrationTest.java
+C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\unit\batch\OfferExpirationWarningSchedulerTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\borrower\HelpContentIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\bank\BankRateCardIntegrationTest.java
 C:\Users\veaceslav.radut\credit-application\src\test\java\com\creditapp\integration\notification\NotificationServiceIntegrationTest.java

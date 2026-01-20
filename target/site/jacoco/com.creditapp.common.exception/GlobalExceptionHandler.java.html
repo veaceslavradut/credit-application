@@ -189,12 +189,12 @@ import java.util.Map;
 
     @ExceptionHandler(ApplicationNotEditableException.class)
     public ResponseEntity&lt;?&gt; handleApplicationNotEditable(ApplicationNotEditableException ex, WebRequest request) {
-<span class="nc" id="L192">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L193">        response.put(&quot;error&quot;, &quot;Conflict&quot;);</span>
-<span class="nc" id="L194">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="nc" id="L195">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L196">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L197">        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);</span>
+<span class="fc" id="L192">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L193">        response.put(&quot;error&quot;, &quot;Conflict&quot;);</span>
+<span class="fc" id="L194">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="fc" id="L195">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="fc" id="L196">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="fc" id="L197">        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);</span>
     }
 
     @ExceptionHandler(ApplicationStaleException.class)
@@ -210,138 +210,138 @@ import java.util.Map;
 
     @ExceptionHandler(ApplicationAlreadySubmittedException.class)
     public ResponseEntity&lt;?&gt; handleApplicationAlreadySubmitted(ApplicationAlreadySubmittedException ex, WebRequest request) {
-<span class="nc" id="L213">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L214">        response.put(&quot;error&quot;, &quot;Application Already Submitted&quot;);</span>
-<span class="nc" id="L215">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="nc" id="L216">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L217">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L218">        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);</span>
+<span class="fc" id="L213">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L214">        response.put(&quot;error&quot;, &quot;Application Already Submitted&quot;);</span>
+<span class="fc" id="L215">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="fc" id="L216">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="fc" id="L217">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="fc" id="L218">        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);</span>
+    }
+
+    @ExceptionHandler(com.creditapp.borrower.exception.ApplicationNotDraftException.class)
+    public ResponseEntity&lt;?&gt; handleApplicationNotDraft(com.creditapp.borrower.exception.ApplicationNotDraftException ex, WebRequest request) {
+<span class="nc" id="L223">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L224">        response.put(&quot;error&quot;, &quot;Bad Request&quot;);</span>
+<span class="nc" id="L225">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L226">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L227">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L228">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
     }
 
     @ExceptionHandler(ApplicationNotWithdrawableException.class)
     public ResponseEntity&lt;?&gt; handleApplicationNotWithdrawable(ApplicationNotWithdrawableException ex, WebRequest request) {
-<span class="nc" id="L223">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L224">        response.put(&quot;error&quot;, &quot;Cannot Withdraw&quot;);</span>
-<span class="nc" id="L225">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="nc" id="L226">        response.put(&quot;currentStatus&quot;, ex.getCurrentStatus());</span>
-<span class="nc" id="L227">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L228">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L229">        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);</span>
+<span class="nc" id="L233">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L234">        response.put(&quot;error&quot;, &quot;Cannot Withdraw&quot;);</span>
+<span class="nc" id="L235">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L236">        response.put(&quot;currentStatus&quot;, ex.getCurrentStatus());</span>
+<span class="nc" id="L237">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L238">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L239">        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);</span>
     }
 
     @ExceptionHandler(SubmissionValidationException.class)
     public ResponseEntity&lt;?&gt; handleSubmissionValidation(SubmissionValidationException ex, WebRequest request) {
-<span class="nc" id="L234">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L235">        response.put(&quot;error&quot;, &quot;Submission Validation Failed&quot;);</span>
-<span class="nc" id="L236">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="nc" id="L237">        response.put(&quot;missingFields&quot;, ex.getMissingFields());</span>
-<span class="nc" id="L238">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L239">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L240">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
+<span class="nc" id="L244">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L245">        response.put(&quot;error&quot;, &quot;Submission Validation Failed&quot;);</span>
+<span class="nc" id="L246">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L247">        response.put(&quot;missingFields&quot;, ex.getMissingFields());</span>
+<span class="nc" id="L248">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L249">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L250">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
     }
 
     @ExceptionHandler(RateLimitExceededException.class)
     public ResponseEntity&lt;?&gt; handleRateLimitExceeded(RateLimitExceededException ex, WebRequest request) {
-<span class="nc" id="L245">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L246">        response.put(&quot;error&quot;, &quot;Rate Limit Exceeded&quot;);</span>
-<span class="nc" id="L247">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="nc" id="L248">        response.put(&quot;retryAfter&quot;, ex.getRetryAfterSeconds());</span>
-<span class="nc" id="L249">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L250">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L251">        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(response);</span>
+<span class="nc" id="L255">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L256">        response.put(&quot;error&quot;, &quot;Rate Limit Exceeded&quot;);</span>
+<span class="nc" id="L257">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L258">        response.put(&quot;retryAfter&quot;, ex.getRetryAfterSeconds());</span>
+<span class="nc" id="L259">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L260">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L261">        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(response);</span>
     }
 
     @ExceptionHandler(InvalidDocumentException.class)
     public ResponseEntity&lt;?&gt; handleInvalidDocument(InvalidDocumentException ex, WebRequest request) {
-<span class="nc" id="L256">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L257">        response.put(&quot;error&quot;, &quot;Invalid Document&quot;);</span>
-<span class="nc" id="L258">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="nc" id="L259">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L260">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L261">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
+<span class="nc" id="L266">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L267">        response.put(&quot;error&quot;, &quot;Invalid Document&quot;);</span>
+<span class="nc" id="L268">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L269">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L270">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L271">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
     }
     @ExceptionHandler(RateCardNotFoundException.class)
     public ResponseEntity&lt;?&gt; handleRateCardNotFound(RateCardNotFoundException ex, WebRequest request) {
-<span class="fc" id="L265">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L266">        response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
-<span class="fc" id="L267">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="fc" id="L268">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="fc" id="L269">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="fc" id="L270">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
+<span class="fc" id="L275">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L276">        response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
+<span class="fc" id="L277">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="fc" id="L278">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="fc" id="L279">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="fc" id="L280">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
     }
 
     @ExceptionHandler(InvalidRateCardException.class)
     public ResponseEntity&lt;?&gt; handleInvalidRateCard(InvalidRateCardException ex, WebRequest request) {
-<span class="nc" id="L275">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L276">        response.put(&quot;error&quot;, &quot;Bad Request&quot;);</span>
-<span class="nc" id="L277">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="nc" id="L278">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L279">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L280">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
+<span class="nc" id="L285">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L286">        response.put(&quot;error&quot;, &quot;Bad Request&quot;);</span>
+<span class="nc" id="L287">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L288">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L289">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L290">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
     }
 
     @ExceptionHandler(DuplicateRateCardException.class)
     public ResponseEntity&lt;?&gt; handleDuplicateRateCard(DuplicateRateCardException ex, WebRequest request) {
-<span class="nc" id="L285">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L286">        response.put(&quot;error&quot;, &quot;Conflict&quot;);</span>
-<span class="nc" id="L287">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="nc" id="L288">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L289">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L290">        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);</span>
+<span class="nc" id="L295">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L296">        response.put(&quot;error&quot;, &quot;Conflict&quot;);</span>
+<span class="nc" id="L297">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L298">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L299">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L300">        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);</span>
     }
     @ExceptionHandler(FileSizeExceededException.class)
     public ResponseEntity&lt;?&gt; handleFileSizeExceeded(FileSizeExceededException ex, WebRequest request) {
-<span class="nc" id="L294">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L295">        response.put(&quot;error&quot;, &quot;Payload Too Large&quot;);</span>
-<span class="nc" id="L296">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="nc" id="L297">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L298">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L299">        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(response);</span>
+<span class="nc" id="L304">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L305">        response.put(&quot;error&quot;, &quot;Payload Too Large&quot;);</span>
+<span class="nc" id="L306">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L307">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L308">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L309">        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(response);</span>
     }
 
     @ExceptionHandler(ApplicationLockedException.class)
     public ResponseEntity&lt;?&gt; handleApplicationLocked(ApplicationLockedException ex, WebRequest request) {
-<span class="nc" id="L304">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L305">        response.put(&quot;error&quot;, &quot;Application Locked&quot;);</span>
-<span class="nc" id="L306">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="nc" id="L307">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L308">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L309">        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);</span>
+<span class="nc" id="L314">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L315">        response.put(&quot;error&quot;, &quot;Application Locked&quot;);</span>
+<span class="nc" id="L316">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L317">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L318">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L319">        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);</span>
     }
 
     @ExceptionHandler(DocumentStorageException.class)
     public ResponseEntity&lt;?&gt; handleDocumentStorage(DocumentStorageException ex, WebRequest request) {
-<span class="nc" id="L314">        logger.error(&quot;Document storage error&quot;, ex);</span>
-<span class="nc" id="L315">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L316">        response.put(&quot;error&quot;, &quot;Storage Error&quot;);</span>
-<span class="nc" id="L317">        response.put(&quot;message&quot;, &quot;Failed to store document. Please try again.&quot;);</span>
-<span class="nc" id="L318">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L319">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L320">        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);</span>
+<span class="nc" id="L324">        logger.error(&quot;Document storage error&quot;, ex);</span>
+<span class="nc" id="L325">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L326">        response.put(&quot;error&quot;, &quot;Storage Error&quot;);</span>
+<span class="nc" id="L327">        response.put(&quot;message&quot;, &quot;Failed to store document. Please try again.&quot;);</span>
+<span class="nc" id="L328">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L329">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L330">        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);</span>
     }
 
     @ExceptionHandler(DocumentNotFoundException.class)
     public ResponseEntity&lt;?&gt; handleDocumentNotFound(DocumentNotFoundException ex, WebRequest request) {
-<span class="nc" id="L325">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L326">        response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
-<span class="nc" id="L327">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="nc" id="L328">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L329">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L330">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
+<span class="nc" id="L335">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L336">        response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
+<span class="nc" id="L337">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L338">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L339">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L340">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
     }
 
     @ExceptionHandler(NotificationNotFoundException.class)
     public ResponseEntity&lt;?&gt; handleNotificationNotFound(NotificationNotFoundException ex, WebRequest request) {
-<span class="fc" id="L335">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L336">        response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
-<span class="fc" id="L337">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="fc" id="L338">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="fc" id="L339">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="fc" id="L340">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
-    }
-
-    @ExceptionHandler(com.creditapp.borrower.exception.ApplicationNotFoundException.class)
-    public ResponseEntity&lt;?&gt; handleApplicationNotFound(com.creditapp.borrower.exception.ApplicationNotFoundException ex, WebRequest request) {
 <span class="fc" id="L345">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
 <span class="fc" id="L346">        response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
 <span class="fc" id="L347">        response.put(&quot;message&quot;, ex.getMessage());</span>
@@ -350,15 +350,25 @@ import java.util.Map;
 <span class="fc" id="L350">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
     }
 
+    @ExceptionHandler(com.creditapp.borrower.exception.ApplicationNotFoundException.class)
+    public ResponseEntity&lt;?&gt; handleApplicationNotFound(com.creditapp.borrower.exception.ApplicationNotFoundException ex, WebRequest request) {
+<span class="fc" id="L355">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L356">        response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
+<span class="fc" id="L357">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="fc" id="L358">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="fc" id="L359">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="fc" id="L360">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
+    }
+
     @ExceptionHandler(OfferCalculationException.class)
     public ResponseEntity&lt;?&gt; handleOfferCalculationException(OfferCalculationException ex, WebRequest request) {
-<span class="nc" id="L355">        logger.error(&quot;Offer calculation error&quot;, ex);</span>
-<span class="nc" id="L356">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L357">        response.put(&quot;error&quot;, &quot;Internal Server Error&quot;);</span>
-<span class="nc" id="L358">        response.put(&quot;message&quot;, &quot;Offer calculation failed. Please try again later.&quot;);</span>
-<span class="nc" id="L359">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L360">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L361">        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);</span>
+<span class="nc" id="L365">        logger.error(&quot;Offer calculation error&quot;, ex);</span>
+<span class="nc" id="L366">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L367">        response.put(&quot;error&quot;, &quot;Internal Server Error&quot;);</span>
+<span class="nc" id="L368">        response.put(&quot;message&quot;, &quot;Offer calculation failed. Please try again later.&quot;);</span>
+<span class="nc" id="L369">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L370">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L371">        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);</span>
     }
 
     // DO NOT handle AccessDeniedException here - let Spring Security's CustomAccessDeniedHandler handle it
@@ -366,72 +376,72 @@ import java.util.Map;
 
     @ExceptionHandler(OfferExpiredException.class)
     public ResponseEntity&lt;?&gt; handleOfferExpired(OfferExpiredException ex, WebRequest request) {
-<span class="fc" id="L369">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L370">        response.put(&quot;error&quot;, &quot;Offer Expired&quot;);</span>
-<span class="fc" id="L371">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="fc" id="L372">        response.put(&quot;expiresAt&quot;, ex.getExpiresAt());</span>
-<span class="fc" id="L373">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="fc" id="L374">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="fc" id="L375">        return ResponseEntity.status(HttpStatus.GONE).body(response);</span>
+<span class="fc" id="L379">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L380">        response.put(&quot;error&quot;, &quot;Offer Expired&quot;);</span>
+<span class="fc" id="L381">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="fc" id="L382">        response.put(&quot;expiresAt&quot;, ex.getExpiresAt());</span>
+<span class="fc" id="L383">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="fc" id="L384">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="fc" id="L385">        return ResponseEntity.status(HttpStatus.GONE).body(response);</span>
     }
 
     @ExceptionHandler(InvalidOfferException.class)
     public ResponseEntity&lt;?&gt; handleInvalidOffer(InvalidOfferException ex, WebRequest request) {
-<span class="fc" id="L380">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L381">        response.put(&quot;error&quot;, &quot;Invalid Offer&quot;);</span>
-<span class="fc" id="L382">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="fc" id="L383">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="fc" id="L384">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="fc" id="L390">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L391">        response.put(&quot;error&quot;, &quot;Invalid Offer&quot;);</span>
+<span class="fc" id="L392">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="fc" id="L393">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="fc" id="L394">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
         
         // Check message to determine appropriate status code
-<span class="fc" id="L387">        String message = ex.getMessage();</span>
-<span class="pc bpc" id="L388" title="1 of 2 branches missed.">        if (message != null) {</span>
-<span class="fc bfc" id="L389" title="All 2 branches covered.">            if (message.contains(&quot;Application not found&quot;)) {</span>
-<span class="fc" id="L390">                response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
-<span class="fc" id="L391">                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
-<span class="fc bfc" id="L392" title="All 2 branches covered.">            } else if (message.contains(&quot;Unauthorized access&quot;)) {</span>
-<span class="fc" id="L393">                response.put(&quot;error&quot;, &quot;Forbidden&quot;);</span>
-<span class="fc" id="L394">                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);</span>
+<span class="fc" id="L397">        String message = ex.getMessage();</span>
+<span class="pc bpc" id="L398" title="1 of 2 branches missed.">        if (message != null) {</span>
+<span class="fc bfc" id="L399" title="All 2 branches covered.">            if (message.contains(&quot;Application not found&quot;)) {</span>
+<span class="fc" id="L400">                response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
+<span class="fc" id="L401">                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
+<span class="fc bfc" id="L402" title="All 2 branches covered.">            } else if (message.contains(&quot;Unauthorized access&quot;)) {</span>
+<span class="fc" id="L403">                response.put(&quot;error&quot;, &quot;Forbidden&quot;);</span>
+<span class="fc" id="L404">                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);</span>
             }
         }
         
-<span class="fc" id="L398">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
+<span class="fc" id="L408">        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);</span>
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity&lt;?&gt; handleEntityNotFound(EntityNotFoundException ex, WebRequest request) {
-<span class="nc" id="L403">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L404">        response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
-<span class="nc" id="L405">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="nc" id="L406">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L407">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L408">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
+<span class="nc" id="L413">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L414">        response.put(&quot;error&quot;, &quot;Not Found&quot;);</span>
+<span class="nc" id="L415">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L416">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L417">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L418">        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);</span>
     }
 
     @ExceptionHandler(InsufficientMarketDataException.class)
     public ResponseEntity&lt;?&gt; handleInsufficientMarketData(InsufficientMarketDataException ex, WebRequest request) {
-<span class="fc" id="L413">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L414">        response.put(&quot;error&quot;, &quot;Precondition Failed&quot;);</span>
-<span class="fc" id="L415">        response.put(&quot;message&quot;, ex.getMessage());</span>
-<span class="fc" id="L416">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="fc" id="L417">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="fc" id="L418">        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(response);</span>
+<span class="fc" id="L423">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L424">        response.put(&quot;error&quot;, &quot;Precondition Failed&quot;);</span>
+<span class="fc" id="L425">        response.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="fc" id="L426">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="fc" id="L427">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="fc" id="L428">        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(response);</span>
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity&lt;?&gt; handleGlobalException(Exception ex, WebRequest request) {
         // Rethrow AccessDeniedException so Spring Security can handle it properly
-<span class="pc bpc" id="L424" title="1 of 2 branches missed.">        if (ex instanceof AccessDeniedException) {</span>
-<span class="fc" id="L425">            throw (AccessDeniedException) ex;</span>
+<span class="pc bpc" id="L434" title="1 of 2 branches missed.">        if (ex instanceof AccessDeniedException) {</span>
+<span class="fc" id="L435">            throw (AccessDeniedException) ex;</span>
         }
         
-<span class="nc" id="L428">        logger.error(&quot;Unexpected error&quot;, ex);</span>
-<span class="nc" id="L429">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L430">        response.put(&quot;error&quot;, &quot;Internal Server Error&quot;);</span>
-<span class="nc" id="L431">        response.put(&quot;message&quot;, &quot;An unexpected error occurred&quot;);</span>
-<span class="nc" id="L432">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
-<span class="nc" id="L433">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
-<span class="nc" id="L434">        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);</span>
+<span class="nc" id="L438">        logger.error(&quot;Unexpected error&quot;, ex);</span>
+<span class="nc" id="L439">        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L440">        response.put(&quot;error&quot;, &quot;Internal Server Error&quot;);</span>
+<span class="nc" id="L441">        response.put(&quot;message&quot;, &quot;An unexpected error occurred&quot;);</span>
+<span class="nc" id="L442">        response.put(&quot;timestamp&quot;, LocalDateTime.now().toString());</span>
+<span class="nc" id="L443">        response.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L444">        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

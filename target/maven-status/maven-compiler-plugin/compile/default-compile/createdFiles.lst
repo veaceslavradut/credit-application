@@ -90,6 +90,7 @@ com\creditapp\borrower\exception\DocumentStorageException.class
 com\creditapp\bank\dto\ApplicationDetailsResponse$ApplicationDetailsResponseBuilder.class
 com\creditapp\borrower\repository\ApplicationRepository.class
 com\creditapp\shared\service\DataDeletionService.class
+com\creditapp\borrower\service\ApplicationNotificationService.class
 com\creditapp\auth\dto\ChangePasswordRequest.class
 com\creditapp\bank\controller\BankAdminRateCardController.class
 com\creditapp\bank\dto\TeamMemberDTO.class
@@ -257,6 +258,7 @@ com\creditapp\bank\service\OfferCalculationService$OfferCalculationResult.class
 com\creditapp\bank\dto\AnalyticsMetricsDTO.class
 com\creditapp\common\interceptor\RateLimitingInterceptor.class
 com\creditapp\shared\service\JwtTokenService.class
+com\creditapp\borrower\exception\ApplicationNotDraftException.class
 com\creditapp\bank\validator\ApplicationStatusValidator$1.class
 com\creditapp\shared\model\NotificationType.class
 com\creditapp\borrower\model\ApplicationStatus.class
@@ -462,6 +464,7 @@ com\creditapp\bank\dto\TeamMemberDTO$TeamMemberDTOBuilder.class
 com\creditapp\bank\dto\OfferHistoryResponse.class
 com\creditapp\bank\model\CalculationType.class
 com\creditapp\borrower\exception\FileSizeExceededException.class
+com\creditapp\borrower\event\ApplicationSubmittedEvent.class
 com\creditapp\borrower\repository\BorrowerNotificationRepository.class
 com\creditapp\auth\dto\BankRegistrationRequest.class
 com\creditapp\bank\service\BankApplicationDetailsService.class

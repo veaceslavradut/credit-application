@@ -218,6 +218,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
+    @ExceptionHandler(com.creditapp.borrower.exception.ApplicationNotDraftException.class)
+    public ResponseEntity<?> handleApplicationNotDraft(com.creditapp.borrower.exception.ApplicationNotDraftException ex, WebRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Bad Request");
+        response.put("message", ex.getMessage());
+        response.put("timestamp", LocalDateTime.now().toString());
+        response.put("path", request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @ExceptionHandler(ApplicationNotWithdrawableException.class)
     public ResponseEntity<?> handleApplicationNotWithdrawable(ApplicationNotWithdrawableException ex, WebRequest request) {
         Map<String, Object> response = new HashMap<>();

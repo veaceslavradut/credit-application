@@ -39,6 +39,7 @@ com\creditapp\shared\service\DataExportServiceTest.class
 com\creditapp\unit\bank\ApplicationStatusUpdateServiceTest.class
 com\creditapp\unit\bank\BankMarketAnalysisServiceTest.class
 com\creditapp\unit\borrower\BorrowerNotificationUnitTest.class
+com\creditapp\integration\borrower\ApplicationUpdateIntegrationTest.class
 com\creditapp\integration\bank\BankAnalyticsIntegrationTest.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$3.class
 com\creditapp\shared\service\AuditLogIntegrityServiceTest.class
@@ -53,6 +54,7 @@ com\creditapp\SpringContextIntegrationTest.class
 com\creditapp\unit\bank\BankApplicationQueueControllerTest.class
 com\creditapp\integration\borrower\HelpContentIntegrationTest.class
 com\creditapp\integration\security\RBACIntegrationTest.class
+com\creditapp\integration\borrower\ApplicationRetrievalIntegrationTest.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$2.class
 com\creditapp\integration\borrower\ApplicationStatusTrackingIntegrationTest.class
 com\creditapp\unit\shared\model\OrganizationEntityTest.class
@@ -74,6 +76,7 @@ com\creditapp\integration\shared\LegalDocumentIntegrationTest.class
 com\creditapp\unit\auth\model\UserEntityTest.class
 com\creditapp\integration\bank\BankMarketAnalysisIntegrationTest.class
 com\creditapp\integration\auth\BankRegistrationIntegrationTest.class
+com\creditapp\integration\borrower\ApplicationSubmissionIntegrationTest.class
 com\creditapp\unit\bank\OfferDocumentControllerTest.class
 com\creditapp\integration\borrower\ApplicationDocumentIntegrationTest$1.class
 com\creditapp\unit\shared\DocumentServiceUnitTest.class

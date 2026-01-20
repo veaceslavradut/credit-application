@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class SubmitApplicationRequest {
-    private Boolean confirmationFlag;
+    // Request body can be empty for submission
+    // Placeholder for potential future fields like submission notes
 }

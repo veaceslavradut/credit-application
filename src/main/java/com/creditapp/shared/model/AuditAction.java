@@ -24,6 +24,7 @@ public enum AuditAction {
     OFFER_DESELECTED("Offer deselected by borrower"),
     OFFER_SELECTION_FAILED("Offer selection failed"),
     OFFER_WITHDRAWN("Offer withdrawn by bank"),
+    OFFER_EXPIRATION_NOTIFICATION_SENT("Offer expiration notification sent"),
     APPLICATION_VIEWED("Application viewed"),
     ROLE_ASSIGNED("Role assigned"),
     NOTIFICATION_SENT("Notification sent"),

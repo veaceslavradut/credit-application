@@ -1,0 +1,89 @@
+-------------------------------------------------------------------------------
+Test set: com.creditapp.unit.batch.OfferExpirationWarningSchedulerTest
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 1, Errors: 6, Skipped: 0, Time elapsed: 4.479 s <<< FAILURE! -- in com.creditapp.unit.batch.OfferExpirationWarningSchedulerTest
+com.creditapp.unit.batch.OfferExpirationWarningSchedulerTest.checkExpiringOffers_NotificationFails_ContinuesWithOthers -- Time elapsed: 4.187 s <<< ERROR!
+org.mockito.exceptions.misusing.UnnecessaryStubbingException: 
+
+Unnecessary stubbings detected.
+Clean & maintainable test code requires zero unnecessary code.
+Following stubbings are unnecessary (click to navigate to relevant line of code):
+  1. -> at com.creditapp.unit.batch.OfferExpirationWarningSchedulerTest.setUp(OfferExpirationWarningSchedulerTest.java:74)
+Please remove unnecessary stubbings or use 'lenient' strictness. More info: javadoc for UnnecessaryStubbingException class.
+	at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:197)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+com.creditapp.unit.batch.OfferExpirationWarningSchedulerTest.checkExpiringOffers_MultipleOffers_SendsAllNotifications -- Time elapsed: 0.016 s <<< ERROR!
+org.mockito.exceptions.misusing.UnnecessaryStubbingException: 
+
+Unnecessary stubbings detected.
+Clean & maintainable test code requires zero unnecessary code.
+Following stubbings are unnecessary (click to navigate to relevant line of code):
+  1. -> at com.creditapp.unit.batch.OfferExpirationWarningSchedulerTest.setUp(OfferExpirationWarningSchedulerTest.java:74)
+Please remove unnecessary stubbings or use 'lenient' strictness. More info: javadoc for UnnecessaryStubbingException class.
+	at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:197)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+com.creditapp.unit.batch.OfferExpirationWarningSchedulerTest.checkExpiringOffers_NoOffersExpiring_DoesNothing -- Time elapsed: 0.015 s <<< ERROR!
+org.mockito.exceptions.misusing.UnnecessaryStubbingException: 
+
+Unnecessary stubbings detected.
+Clean & maintainable test code requires zero unnecessary code.
+Following stubbings are unnecessary (click to navigate to relevant line of code):
+  1. -> at com.creditapp.unit.batch.OfferExpirationWarningSchedulerTest.setUp(OfferExpirationWarningSchedulerTest.java:74)
+Please remove unnecessary stubbings or use 'lenient' strictness. More info: javadoc for UnnecessaryStubbingException class.
+	at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:197)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+com.creditapp.unit.batch.OfferExpirationWarningSchedulerTest.checkExpiringOffers_QueryUsesCorrectTimeWindow -- Time elapsed: 0.028 s <<< ERROR!
+org.mockito.exceptions.misusing.UnnecessaryStubbingException: 
+
+Unnecessary stubbings detected.
+Clean & maintainable test code requires zero unnecessary code.
+Following stubbings are unnecessary (click to navigate to relevant line of code):
+  1. -> at com.creditapp.unit.batch.OfferExpirationWarningSchedulerTest.setUp(OfferExpirationWarningSchedulerTest.java:74)
+Please remove unnecessary stubbings or use 'lenient' strictness. More info: javadoc for UnnecessaryStubbingException class.
+	at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:197)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+com.creditapp.unit.batch.OfferExpirationWarningSchedulerTest.checkExpiringOffers_OnlyProcessesNonNotifiedOffers -- Time elapsed: 0.011 s <<< ERROR!
+org.mockito.exceptions.misusing.UnnecessaryStubbingException: 
+
+Unnecessary stubbings detected.
+Clean & maintainable test code requires zero unnecessary code.
+Following stubbings are unnecessary (click to navigate to relevant line of code):
+  1. -> at com.creditapp.unit.batch.OfferExpirationWarningSchedulerTest.setUp(OfferExpirationWarningSchedulerTest.java:74)
+Please remove unnecessary stubbings or use 'lenient' strictness. More info: javadoc for UnnecessaryStubbingException class.
+	at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:197)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+com.creditapp.unit.batch.OfferExpirationWarningSchedulerTest.checkExpiringOffers_UpdatesMetrics -- Time elapsed: 0.067 s <<< FAILURE!
+Argument(s) are different! Wanted:
+sentCounter.increment(2.0d);
+-> at com.creditapp.unit.batch.OfferExpirationWarningSchedulerTest.checkExpiringOffers_UpdatesMetrics(OfferExpirationWarningSchedulerTest.java:199)
+Actual invocations have different arguments:
+sentCounter.increment(1.0d);
+-> at com.creditapp.batch.OfferExpirationWarningScheduler.checkExpiringOffers(OfferExpirationWarningScheduler.java:72)
+
+	at com.creditapp.unit.batch.OfferExpirationWarningSchedulerTest.checkExpiringOffers_UpdatesMetrics(OfferExpirationWarningSchedulerTest.java:199)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+com.creditapp.unit.batch.OfferExpirationWarningSchedulerTest.checkExpiringOffers_SingleOffer_SendsNotification -- Time elapsed: 0.010 s <<< ERROR!
+org.mockito.exceptions.misusing.UnnecessaryStubbingException: 
+
+Unnecessary stubbings detected.
+Clean & maintainable test code requires zero unnecessary code.
+Following stubbings are unnecessary (click to navigate to relevant line of code):
+  1. -> at com.creditapp.unit.batch.OfferExpirationWarningSchedulerTest.setUp(OfferExpirationWarningSchedulerTest.java:74)
+Please remove unnecessary stubbings or use 'lenient' strictness. More info: javadoc for UnnecessaryStubbingException class.
+	at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:197)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+

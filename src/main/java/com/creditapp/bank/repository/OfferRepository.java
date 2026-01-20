@@ -21,6 +21,17 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
     List<Offer> findByApplicationIdOrderByAprAsc(UUID applicationId);
     
     /**
+     * Find offers expiring within a time window that haven't been notified yet.
+     * Used by Story 4.6 batch job to send expiration warnings.
+     * 
+     * @param now Current timestamp
+     * @param expirationWindow Future timestamp (e.g., now + 24 hours)
+     * @return List of offers expiring soon that need notification
+     */
+    @Query("SELECT o FROM Offer o WHERE o.expiresAt > :now AND o.expiresAt <= :expirationWindow AND o.notified = false AND o.offerStatus IN ('CALCULATED', 'SUBMITTED', 'ACCEPTED')")
+    List<Offer> findOffersExpiringSoon(@Param("now") LocalDateTime now, @Param("expirationWindow") LocalDateTime expirationWindow);
+    
+    /**
      * Retrieve offers by bank with pagination for dashboard queues.
      */
     @Query("SELECT o FROM Offer o WHERE o.bankId = :bankId ORDER BY o.createdAt DESC")

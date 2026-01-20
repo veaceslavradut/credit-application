@@ -44,7 +44,18 @@ class ApplicationSubmissionServiceTest {
     @Mock
     private GDPRConsentService consentService;
 
-    @InjectMocks
+    @Mock
+    private com.creditapp.auth.repository.UserRepository userRepository;
+
+    @Mock
+    private com.creditapp.bank.service.OfferCalculationService offerCalculationService;
+
+    @Mock
+    private com.creditapp.shared.service.NotificationService notificationService;
+
+    @Mock
+    private org.springframework.context.ApplicationEventPublisher eventPublisher;
+
     private ApplicationService applicationService;
 
     private UUID applicationId;
@@ -68,6 +79,18 @@ class ApplicationSubmissionServiceTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
+        // Initialize ApplicationService with all required dependencies
+        applicationService = new ApplicationService(
+                applicationRepository,
+                applicationHistoryRepository,
+                auditService,
+                notificationService,
+                userRepository,
+                offerCalculationService,
+                consentService,
+                eventPublisher
+        );
+
         // Mock default consent behavior
         lenient().when(consentService.isConsentGiven(any(UUID.class), eq(ConsentType.DATA_COLLECTION))).thenReturn(true);
         lenient().when(consentService.isConsentGiven(any(UUID.class), eq(ConsentType.BANK_SHARING))).thenReturn(true);
@@ -84,7 +107,6 @@ class ApplicationSubmissionServiceTest {
         assertEquals(applicationId, response.getId());
         assertEquals("SUBMITTED", response.getStatus());
         assertNotNull(response.getMessage());
-        assertNotNull(response.getApplication());
         verify(applicationRepository).save(any(Application.class));
     }
 
@@ -202,17 +224,16 @@ class ApplicationSubmissionServiceTest {
     }
 
     @Test
-    void testSubmitApplicationResponseIncludesFullApplicationDetails() {
+    void testSubmitApplicationResponseIncludesCorrectData() {
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(testApplication));
         when(applicationRepository.save(any(Application.class))).thenReturn(testApplication);
 
         SubmitApplicationResponse response = applicationService.submitApplication(applicationId, borrowerId);
 
-        assertNotNull(response.getApplication());
-        assertEquals(applicationId, response.getApplication().getId());
-        assertEquals("PERSONAL", response.getApplication().getLoanType());
-        assertEquals(new BigDecimal("25000"), response.getApplication().getLoanAmount());
-        assertEquals(36, response.getApplication().getLoanTermMonths());
-        assertEquals("EUR", response.getApplication().getCurrency());
+        assertEquals(applicationId, response.getId());
+        assertEquals("PERSONAL", response.getLoanType());
+        assertEquals(new BigDecimal("25000"), response.getLoanAmount());
+        assertEquals(36, response.getLoanTermMonths());
+        assertEquals("EUR", response.getCurrency());
     }
 }
