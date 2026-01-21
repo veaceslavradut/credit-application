@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankRateCardRequest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.bank.dto</a> &gt; <span class="el_source">BankRateCardRequest.java</span></div><h1>BankRateCardRequest.java</h1><pre class="source lang-java linenums">package com.creditapp.bank.dto;
+
+import com.creditapp.borrower.model.Currency;
+import com.creditapp.borrower.model.LoanType;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
+
+public class BankRateCardRequest {
+    
+    @NotNull(message = &quot;Loan type is required&quot;)
+    private LoanType loanType;
+    
+    @NotNull(message = &quot;Currency is required&quot;)
+    private Currency currency;
+    
+    @NotNull(message = &quot;Minimum loan amount is required&quot;)
+    @DecimalMin(value = &quot;100&quot;, message = &quot;Minimum loan amount must be at least 100&quot;)
+    @DecimalMax(value = &quot;1000000&quot;, message = &quot;Minimum loan amount cannot exceed 1,000,000&quot;)
+    private BigDecimal minLoanAmount;
+    
+    @NotNull(message = &quot;Maximum loan amount is required&quot;)
+    @DecimalMin(value = &quot;100&quot;, message = &quot;Maximum loan amount must be at least 100&quot;)
+    @DecimalMax(value = &quot;1000000&quot;, message = &quot;Maximum loan amount cannot exceed 1,000,000&quot;)
+    private BigDecimal maxLoanAmount;
+    
+    @NotNull(message = &quot;Base APR is required&quot;)
+    @DecimalMin(value = &quot;0.5&quot;, message = &quot;Base APR must be at least 0.5%&quot;)
+    @DecimalMax(value = &quot;50&quot;, message = &quot;Base APR cannot exceed 50%&quot;)
+    private BigDecimal baseApr;
+    
+    @NotNull(message = &quot;APR adjustment range is required&quot;)
+    @DecimalMin(value = &quot;0&quot;, message = &quot;APR adjustment range cannot be negative&quot;)
+    @DecimalMax(value = &quot;5&quot;, message = &quot;APR adjustment range cannot exceed 5%&quot;)
+    private BigDecimal aprAdjustmentRange;
+    
+    @NotNull(message = &quot;Origination fee percentage is required&quot;)
+    @DecimalMin(value = &quot;0&quot;, message = &quot;Origination fee percentage cannot be negative&quot;)
+    @DecimalMax(value = &quot;10&quot;, message = &quot;Origination fee percentage cannot exceed 10%&quot;)
+    private BigDecimal originationFeePercent;
+    
+    @NotNull(message = &quot;Insurance percentage is required&quot;)
+    @DecimalMin(value = &quot;0&quot;, message = &quot;Insurance percentage cannot be negative&quot;)
+    @DecimalMax(value = &quot;5&quot;, message = &quot;Insurance percentage cannot exceed 5%&quot;)
+    private BigDecimal insurancePercent;
+    
+    // Constructors
+<span class="fc" id="L49">    public BankRateCardRequest() {}</span>
+    
+    public BankRateCardRequest(LoanType loanType, Currency currency, BigDecimal minLoanAmount,
+            BigDecimal maxLoanAmount, BigDecimal baseApr, BigDecimal aprAdjustmentRange,
+<span class="fc" id="L53">            BigDecimal originationFeePercent, BigDecimal insurancePercent) {</span>
+<span class="fc" id="L54">        this.loanType = loanType;</span>
+<span class="fc" id="L55">        this.currency = currency;</span>
+<span class="fc" id="L56">        this.minLoanAmount = minLoanAmount;</span>
+<span class="fc" id="L57">        this.maxLoanAmount = maxLoanAmount;</span>
+<span class="fc" id="L58">        this.baseApr = baseApr;</span>
+<span class="fc" id="L59">        this.aprAdjustmentRange = aprAdjustmentRange;</span>
+<span class="fc" id="L60">        this.originationFeePercent = originationFeePercent;</span>
+<span class="fc" id="L61">        this.insurancePercent = insurancePercent;</span>
+<span class="fc" id="L62">    }</span>
+    
+    // Getters and Setters
+    public LoanType getLoanType() {
+<span class="fc" id="L66">        return loanType;</span>
+    }
+    
+    public void setLoanType(LoanType loanType) {
+<span class="fc" id="L70">        this.loanType = loanType;</span>
+<span class="fc" id="L71">    }</span>
+    
+    public Currency getCurrency() {
+<span class="fc" id="L74">        return currency;</span>
+    }
+    
+    public void setCurrency(Currency currency) {
+<span class="fc" id="L78">        this.currency = currency;</span>
+<span class="fc" id="L79">    }</span>
+    
+    public BigDecimal getMinLoanAmount() {
+<span class="fc" id="L82">        return minLoanAmount;</span>
+    }
+    
+    public void setMinLoanAmount(BigDecimal minLoanAmount) {
+<span class="fc" id="L86">        this.minLoanAmount = minLoanAmount;</span>
+<span class="fc" id="L87">    }</span>
+    
+    public BigDecimal getMaxLoanAmount() {
+<span class="fc" id="L90">        return maxLoanAmount;</span>
+    }
+    
+    public void setMaxLoanAmount(BigDecimal maxLoanAmount) {
+<span class="fc" id="L94">        this.maxLoanAmount = maxLoanAmount;</span>
+<span class="fc" id="L95">    }</span>
+    
+    public BigDecimal getBaseApr() {
+<span class="fc" id="L98">        return baseApr;</span>
+    }
+    
+    public void setBaseApr(BigDecimal baseApr) {
+<span class="fc" id="L102">        this.baseApr = baseApr;</span>
+<span class="fc" id="L103">    }</span>
+    
+    public BigDecimal getAprAdjustmentRange() {
+<span class="fc" id="L106">        return aprAdjustmentRange;</span>
+    }
+    
+    public void setAprAdjustmentRange(BigDecimal aprAdjustmentRange) {
+<span class="fc" id="L110">        this.aprAdjustmentRange = aprAdjustmentRange;</span>
+<span class="fc" id="L111">    }</span>
+    
+    public BigDecimal getOriginationFeePercent() {
+<span class="fc" id="L114">        return originationFeePercent;</span>
+    }
+    
+    public void setOriginationFeePercent(BigDecimal originationFeePercent) {
+<span class="fc" id="L118">        this.originationFeePercent = originationFeePercent;</span>
+<span class="fc" id="L119">    }</span>
+    
+    public BigDecimal getInsurancePercent() {
+<span class="fc" id="L122">        return insurancePercent;</span>
+    }
+    
+    public void setInsurancePercent(BigDecimal insurancePercent) {
+<span class="fc" id="L126">        this.insurancePercent = insurancePercent;</span>
+<span class="fc" id="L127">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

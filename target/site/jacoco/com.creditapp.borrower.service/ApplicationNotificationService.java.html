@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApplicationNotificationService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.borrower.service</a> &gt; <span class="el_source">ApplicationNotificationService.java</span></div><h1>ApplicationNotificationService.java</h1><pre class="source lang-java linenums">package com.creditapp.borrower.service;
+
+import com.creditapp.borrower.event.ApplicationSubmittedEvent;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+/**
+ * Service to notify banks when new applications are submitted.
+ * Listens for ApplicationSubmittedEvent and sends notifications to all active banks.
+ * 
+ * NOTE: This is a simplified implementation for Story 2.5. 
+ * Full bank notification logic will be implemented in Epic 4.
+ */
+@Service
+<span class="fc" id="L18">@RequiredArgsConstructor</span>
+<span class="fc" id="L19">@Slf4j</span>
+public class ApplicationNotificationService {
+
+    /**
+     * Handle application submitted events by notifying all active banks.
+     * This method runs asynchronously to avoid blocking the submission response.
+     */
+    @Async
+    @EventListener
+    public void onApplicationSubmitted(ApplicationSubmittedEvent event) {
+<span class="nc" id="L29">        log.info(&quot;Processing application submitted event for application: {}&quot;, event.getApplicationId());</span>
+
+        try {
+            // TODO: In Epic 4, fetch all active banks and send real notifications
+            // For now, just log the notification
+<span class="nc" id="L34">            log.info(&quot;Would notify banks about new application: {} - Borrower: {}, Loan: {} {} for {} months, Loan Type: {}, Submitted: {}&quot;,</span>
+<span class="nc" id="L35">                    event.getApplicationId(),</span>
+<span class="nc" id="L36">                    event.getBorrowerId(),</span>
+<span class="nc" id="L37">                    event.getLoanAmount(),</span>
+<span class="nc" id="L38">                    event.getCurrency(),</span>
+<span class="nc" id="L39">                    event.getLoanTermMonths(),</span>
+<span class="nc" id="L40">                    event.getLoanType(),</span>
+<span class="nc" id="L41">                    event.getSubmittedAt());</span>
+
+<span class="nc" id="L43">            log.info(&quot;Application {} is now available in bank queue (placeholder)&quot;, event.getApplicationId());</span>
+
+<span class="nc" id="L45">        } catch (Exception e) {</span>
+<span class="nc" id="L46">            log.error(&quot;Error processing application submitted event for application {}: {}&quot;, </span>
+<span class="nc" id="L47">                    event.getApplicationId(), e.getMessage(), e);</span>
+<span class="nc" id="L48">        }</span>
+<span class="nc" id="L49">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -15,11 +15,19 @@ logs/
 *.log
 npm-debug.log*
 
-# Build output
-build/*.txt
+# Database backups
+backups/
+backup_*.sql
+*.sql.gz
 
-# Environment variables
+# Docker volumes (if using local bind mounts)
+postgres_data/
+redis_data/
+
+# Environment files
 .env
+.env.local
+.env.*.local
 
 # System files
 .DS_Store

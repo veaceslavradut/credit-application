@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApplicationDocumentService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.borrower.service</a> &gt; <span class="el_source">ApplicationDocumentService.java</span></div><h1>ApplicationDocumentService.java</h1><pre class="source lang-java linenums">package com.creditapp.borrower.service;
+
+import com.creditapp.borrower.dto.DocumentDTO;
+import com.creditapp.borrower.exception.*;
+import com.creditapp.borrower.model.Application;
+import com.creditapp.borrower.model.ApplicationDocument;
+import com.creditapp.borrower.model.ApplicationStatus;
+import com.creditapp.borrower.model.DocumentType;
+import com.creditapp.borrower.repository.ApplicationDocumentRepository;
+import com.creditapp.borrower.repository.ApplicationRepository;
+import com.creditapp.shared.audit.BusinessAudit;
+import com.creditapp.shared.model.AuditAction;
+import com.creditapp.shared.service.DocumentStorageService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+/**
+ * Service for managing document uploads for loan applications.
+ */
+@Service
+<span class="fc" id="L31">@RequiredArgsConstructor</span>
+<span class="fc" id="L32">@Slf4j</span>
+public class ApplicationDocumentService {
+
+    private final ApplicationRepository applicationRepository;
+    private final ApplicationDocumentRepository documentRepository;
+    private final DocumentStorageService storageService;
+
+    // File size limits
+    private static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+    private static final long MAX_TOTAL_SIZE = 50 * 1024 * 1024; // 50 MB
+
+    // Allowed MIME types
+<span class="fc" id="L44">    private static final Set&lt;String&gt; ALLOWED_MIME_TYPES = Set.of(</span>
+            &quot;application/pdf&quot;,
+            &quot;image/jpeg&quot;,
+            &quot;image/jpg&quot;,
+            &quot;image/png&quot;,
+            &quot;application/msword&quot;,
+            &quot;application/vnd.openxmlformats-officedocument.wordprocessingml.document&quot;
+    );
+
+    /**
+     * Upload a document to an application.
+     */
+    @Transactional
+    @BusinessAudit(action = AuditAction.DOCUMENT_UPLOADED, entityType = &quot;ApplicationDocument&quot;)
+    public DocumentDTO uploadDocument(UUID applicationId, UUID borrowerId, MultipartFile file, DocumentType documentType) {
+<span class="nc" id="L59">        log.info(&quot;Uploading document for application {}, borrower {}, type {}&quot;, applicationId, borrowerId, documentType);</span>
+
+        // Verify application exists and borrower owns it
+<span class="nc" id="L62">        Application application = applicationRepository.findById(applicationId)</span>
+<span class="nc" id="L63">                .orElseThrow(() -&gt; new ApplicationNotFoundException(&quot;Application not found: &quot; + applicationId));</span>
+
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
+<span class="nc" id="L66">            log.warn(&quot;Access denied: borrower {} attempted to upload to application {}&quot;, borrowerId, applicationId);</span>
+<span class="nc" id="L67">            throw new ApplicationNotFoundException(&quot;Application not found: &quot; + applicationId);</span>
+        }
+
+        // Verify application status allows uploads
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        if (!isApplicationEditable(application.getStatus())) {</span>
+<span class="nc" id="L72">            throw new ApplicationLockedException(</span>
+<span class="nc" id="L73">                    &quot;Documents cannot be uploaded to applications with status: &quot; + application.getStatus());</span>
+        }
+
+        // Validate file
+<span class="nc" id="L77">        validateFile(file);</span>
+
+        // Check total size limit
+<span class="nc" id="L80">        long currentTotalSize = documentRepository.calculateTotalFileSizeForApplication(applicationId);</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (currentTotalSize + file.getSize() &gt; MAX_TOTAL_SIZE) {</span>
+<span class="nc" id="L82">            throw new FileSizeExceededException(</span>
+<span class="nc" id="L83">                    String.format(&quot;Total document size would exceed limit of %d MB&quot;, MAX_TOTAL_SIZE / (1024 * 1024)));</span>
+        }
+
+        // Generate unique stored filename
+<span class="nc" id="L87">        String storedFilename = UUID.randomUUID().toString() + getFileExtension(file.getOriginalFilename());</span>
+
+        // Store file
+        try {
+<span class="nc" id="L91">            storageService.storeFile(file.getInputStream(), storedFilename, file.getContentType());</span>
+<span class="nc" id="L92">        } catch (IOException e) {</span>
+<span class="nc" id="L93">            throw new DocumentStorageException(&quot;Failed to read file content&quot;, e);</span>
+<span class="nc" id="L94">        }</span>
+
+        // Create document entity
+<span class="nc" id="L97">        ApplicationDocument document = ApplicationDocument.builder()</span>
+<span class="nc" id="L98">                .id(UUID.randomUUID())</span>
+<span class="nc" id="L99">                .applicationId(applicationId)</span>
+<span class="nc" id="L100">                .documentType(documentType)</span>
+<span class="nc" id="L101">                .originalFilename(file.getOriginalFilename())</span>
+<span class="nc" id="L102">                .storedFilename(storedFilename)</span>
+<span class="nc" id="L103">                .fileSize(file.getSize())</span>
+<span class="nc" id="L104">                .mimeType(file.getContentType())</span>
+<span class="nc" id="L105">                .uploadDate(LocalDateTime.now())</span>
+<span class="nc" id="L106">                .uploadedByUserId(borrowerId)</span>
+<span class="nc" id="L107">                .build();</span>
+
+<span class="nc" id="L109">        document = documentRepository.save(document);</span>
+
+<span class="nc" id="L111">        log.info(&quot;Document uploaded successfully: {} for application {}&quot;, document.getId(), applicationId);</span>
+
+<span class="nc" id="L113">        return toDTO(document);</span>
+    }
+
+    /**
+     * Delete a document (soft delete).
+     */
+    @Transactional
+    @BusinessAudit(action = AuditAction.DOCUMENT_DELETED, entityType = &quot;ApplicationDocument&quot;)
+    public void deleteDocument(UUID applicationId, UUID borrowerId, UUID documentId) {
+<span class="nc" id="L122">        log.info(&quot;Deleting document {} from application {}, borrower {}&quot;, documentId, applicationId, borrowerId);</span>
+
+        // Verify application exists and borrower owns it
+<span class="nc" id="L125">        Application application = applicationRepository.findById(applicationId)</span>
+<span class="nc" id="L126">                .orElseThrow(() -&gt; new ApplicationNotFoundException(&quot;Application not found: &quot; + applicationId));</span>
+
+<span class="nc bnc" id="L128" title="All 2 branches missed.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
+<span class="nc" id="L129">            log.warn(&quot;Access denied: borrower {} attempted to delete document from application {}&quot;, borrowerId, applicationId);</span>
+<span class="nc" id="L130">            throw new ApplicationNotFoundException(&quot;Application not found: &quot; + applicationId);</span>
+        }
+
+        // Find document
+<span class="nc" id="L134">        ApplicationDocument document = documentRepository.findByIdAndApplicationIdAndDeletedAtIsNull(documentId, applicationId)</span>
+<span class="nc" id="L135">                .orElseThrow(() -&gt; new DocumentNotFoundException(&quot;Document not found: &quot; + documentId));</span>
+
+        // Soft delete
+<span class="nc" id="L138">        document.markAsDeleted();</span>
+<span class="nc" id="L139">        documentRepository.save(document);</span>
+
+<span class="nc" id="L141">        log.info(&quot;Document {} marked as deleted&quot;, documentId);</span>
+<span class="nc" id="L142">    }</span>
+
+    /**
+     * List all active documents for an application.
+     */
+    @Transactional(readOnly = true)
+    public List&lt;DocumentDTO&gt; listDocuments(UUID applicationId, UUID borrowerId) {
+<span class="nc" id="L149">        log.info(&quot;Listing documents for application {}, borrower {}&quot;, applicationId, borrowerId);</span>
+
+        // Verify application exists and borrower owns it
+<span class="nc" id="L152">        Application application = applicationRepository.findById(applicationId)</span>
+<span class="nc" id="L153">                .orElseThrow(() -&gt; new ApplicationNotFoundException(&quot;Application not found: &quot; + applicationId));</span>
+
+<span class="nc bnc" id="L155" title="All 2 branches missed.">        if (!application.getBorrowerId().equals(borrowerId)) {</span>
+<span class="nc" id="L156">            log.warn(&quot;Access denied: borrower {} attempted to list documents for application {}&quot;, borrowerId, applicationId);</span>
+<span class="nc" id="L157">            throw new ApplicationNotFoundException(&quot;Application not found: &quot; + applicationId);</span>
+        }
+
+<span class="nc" id="L160">        List&lt;ApplicationDocument&gt; documents = documentRepository.findByApplicationIdAndDeletedAtIsNull(applicationId);</span>
+
+<span class="nc" id="L162">        return documents.stream()</span>
+<span class="nc" id="L163">                .map(this::toDTO)</span>
+<span class="nc" id="L164">                .collect(Collectors.toList());</span>
+    }
+
+    /**
+     * Check if application status allows document uploads.
+     */
+    private boolean isApplicationEditable(ApplicationStatus status) {
+<span class="nc bnc" id="L171" title="All 4 branches missed.">        return status == ApplicationStatus.DRAFT || status == ApplicationStatus.SUBMITTED;</span>
+    }
+
+    /**
+     * Validate uploaded file.
+     */
+    private void validateFile(MultipartFile file) {
+<span class="nc bnc" id="L178" title="All 4 branches missed.">        if (file == null || file.isEmpty()) {</span>
+<span class="nc" id="L179">            throw new InvalidDocumentException(&quot;File is required&quot;);</span>
+        }
+
+<span class="nc bnc" id="L182" title="All 2 branches missed.">        if (file.getSize() &gt; MAX_FILE_SIZE) {</span>
+<span class="nc" id="L183">            throw new FileSizeExceededException(</span>
+<span class="nc" id="L184">                    String.format(&quot;File size exceeds limit of %d MB&quot;, MAX_FILE_SIZE / (1024 * 1024)));</span>
+        }
+
+<span class="nc" id="L187">        String mimeType = file.getContentType();</span>
+<span class="nc bnc" id="L188" title="All 4 branches missed.">        if (mimeType == null || !ALLOWED_MIME_TYPES.contains(mimeType.toLowerCase())) {</span>
+<span class="nc" id="L189">            throw new InvalidDocumentException(</span>
+                    &quot;Invalid file type. Allowed types: PDF, JPG, PNG, DOC, DOCX&quot;);
+        }
+<span class="nc" id="L192">    }</span>
+
+    /**
+     * Get file extension from filename.
+     */
+    private String getFileExtension(String filename) {
+<span class="nc bnc" id="L198" title="All 4 branches missed.">        if (filename == null || !filename.contains(&quot;.&quot;)) {</span>
+<span class="nc" id="L199">            return &quot;&quot;;</span>
+        }
+<span class="nc" id="L201">        return filename.substring(filename.lastIndexOf(&quot;.&quot;));</span>
+    }
+
+    /**
+     * Convert entity to DTO.
+     */
+    private DocumentDTO toDTO(ApplicationDocument document) {
+<span class="nc" id="L208">        return DocumentDTO.builder()</span>
+<span class="nc" id="L209">                .id(document.getId())</span>
+<span class="nc" id="L210">                .applicationId(document.getApplicationId())</span>
+<span class="nc" id="L211">                .documentType(document.getDocumentType())</span>
+<span class="nc" id="L212">                .originalFilename(document.getOriginalFilename())</span>
+<span class="nc" id="L213">                .fileSize(document.getFileSize())</span>
+<span class="nc" id="L214">                .uploadDate(document.getUploadDate())</span>
+<span class="nc" id="L215">                .uploadedByUserId(document.getUploadedByUserId())</span>
+<span class="nc" id="L216">                .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

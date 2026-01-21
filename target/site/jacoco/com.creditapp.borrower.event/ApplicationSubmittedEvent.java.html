@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApplicationSubmittedEvent.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.borrower.event</a> &gt; <span class="el_source">ApplicationSubmittedEvent.java</span></div><h1>ApplicationSubmittedEvent.java</h1><pre class="source lang-java linenums">package com.creditapp.borrower.event;
+
+import org.springframework.context.ApplicationEvent;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+public class ApplicationSubmittedEvent extends ApplicationEvent {
+    private final UUID applicationId;
+    private final UUID borrowerId;
+    private final String loanType;
+    private final BigDecimal loanAmount;
+    private final Integer loanTermMonths;
+    private final String currency;
+    private final LocalDateTime submittedAt;
+    
+    public ApplicationSubmittedEvent(Object source, UUID applicationId, UUID borrowerId,
+                                     String loanType, BigDecimal loanAmount, 
+                                     Integer loanTermMonths, String currency,
+                                     LocalDateTime submittedAt) {
+<span class="nc" id="L22">        super(source);</span>
+<span class="nc" id="L23">        this.applicationId = applicationId;</span>
+<span class="nc" id="L24">        this.borrowerId = borrowerId;</span>
+<span class="nc" id="L25">        this.loanType = loanType;</span>
+<span class="nc" id="L26">        this.loanAmount = loanAmount;</span>
+<span class="nc" id="L27">        this.loanTermMonths = loanTermMonths;</span>
+<span class="nc" id="L28">        this.currency = currency;</span>
+<span class="nc" id="L29">        this.submittedAt = submittedAt;</span>
+<span class="nc" id="L30">    }</span>
+
+    public UUID getApplicationId() {
+<span class="nc" id="L33">        return applicationId;</span>
+    }
+
+    public UUID getBorrowerId() {
+<span class="nc" id="L37">        return borrowerId;</span>
+    }
+
+    public String getLoanType() {
+<span class="nc" id="L41">        return loanType;</span>
+    }
+
+    public BigDecimal getLoanAmount() {
+<span class="nc" id="L45">        return loanAmount;</span>
+    }
+
+    public Integer getLoanTermMonths() {
+<span class="nc" id="L49">        return loanTermMonths;</span>
+    }
+
+    public String getCurrency() {
+<span class="nc" id="L53">        return currency;</span>
+    }
+
+    public LocalDateTime getSubmittedAt() {
+<span class="nc" id="L57">        return submittedAt;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

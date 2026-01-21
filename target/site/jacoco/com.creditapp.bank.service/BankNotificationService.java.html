@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankNotificationService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Credit Application Platform</a> &gt; <a href="index.source.html" class="el_package">com.creditapp.bank.service</a> &gt; <span class="el_source">BankNotificationService.java</span></div><h1>BankNotificationService.java</h1><pre class="source lang-java linenums">package com.creditapp.bank.service;
+
+import com.creditapp.shared.model.Notification;
+import com.creditapp.shared.repository.NotificationRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * Service for managing in-portal notifications
+ * Story 4.6: Offer Expiration Notification - Task 4
+ */
+@Service
+<span class="fc" id="L21">@RequiredArgsConstructor</span>
+<span class="fc" id="L22">@Slf4j</span>
+public class BankNotificationService {
+    
+    private final NotificationRepository notificationRepository;
+    
+    /**
+     * Create a new notification for a bank
+     */
+    @Transactional
+    public Notification createNotification(UUID bankId, String type, String title, String message, String link) {
+<span class="nc" id="L32">        log.info(&quot;Creating notification for bank {}: type={}, title={}&quot;, bankId, type, title);</span>
+        
+<span class="nc" id="L34">        Notification notification = Notification.builder()</span>
+<span class="nc" id="L35">                .bankId(bankId)</span>
+<span class="nc" id="L36">                .type(type)</span>
+<span class="nc" id="L37">                .title(title)</span>
+<span class="nc" id="L38">                .message(message)</span>
+<span class="nc" id="L39">                .link(link)</span>
+<span class="nc" id="L40">                .build();</span>
+        
+<span class="nc" id="L42">        return notificationRepository.save(notification);</span>
+    }
+    
+    /**
+     * Get all notifications for a bank with pagination
+     */
+    public Page&lt;Notification&gt; getNotifications(UUID bankId, Pageable pageable) {
+<span class="nc" id="L49">        return notificationRepository.findByBankIdOrderByCreatedAtDesc(bankId, pageable);</span>
+    }
+    
+    /**
+     * Get unread notifications for a bank
+     */
+    public List&lt;Notification&gt; getUnreadNotifications(UUID bankId) {
+<span class="nc" id="L56">        return notificationRepository.findUnreadByBankId(bankId);</span>
+    }
+    
+    /**
+     * Count unread notifications for a bank
+     */
+    public Long countUnread(UUID bankId) {
+<span class="nc" id="L63">        return notificationRepository.countUnreadByBankId(bankId);</span>
+    }
+    
+    /**
+     * Mark notification as read
+     */
+    @Transactional
+    public void markAsRead(UUID notificationId, UUID bankId) {
+<span class="nc" id="L71">        notificationRepository.findById(notificationId).ifPresent(notification -&gt; {</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">            if (notification.getBankId().equals(bankId)) {</span>
+<span class="nc" id="L73">                notification.markAsRead();</span>
+<span class="nc" id="L74">                notificationRepository.save(notification);</span>
+<span class="nc" id="L75">                log.info(&quot;Marked notification {} as read for bank {}&quot;, notificationId, bankId);</span>
+            } else {
+<span class="nc" id="L77">                log.warn(&quot;Bank {} attempted to mark notification {} owned by another bank&quot;, </span>
+                        bankId, notificationId);
+            }
+<span class="nc" id="L80">        });</span>
+<span class="nc" id="L81">    }</span>
+    
+    /**
+     * Mark all notifications as read for a bank
+     */
+    @Transactional
+    public int markAllAsRead(UUID bankId) {
+<span class="nc" id="L88">        List&lt;Notification&gt; unreadNotifications = notificationRepository.findUnreadByBankId(bankId);</span>
+<span class="nc" id="L89">        unreadNotifications.forEach(Notification::markAsRead);</span>
+<span class="nc" id="L90">        notificationRepository.saveAll(unreadNotifications);</span>
+<span class="nc" id="L91">        log.info(&quot;Marked {} notifications as read for bank {}&quot;, unreadNotifications.size(), bankId);</span>
+<span class="nc" id="L92">        return unreadNotifications.size();</span>
+    }
+    
+    /**
+     * Delete old notifications (for maintenance)
+     */
+    @Transactional
+    public void deleteOldNotifications(int daysToKeep) {
+<span class="nc" id="L100">        LocalDateTime cutoffDate = LocalDateTime.now().minusDays(daysToKeep);</span>
+<span class="nc" id="L101">        notificationRepository.deleteOlderThan(cutoffDate);</span>
+<span class="nc" id="L102">        log.info(&quot;Deleted notifications older than {}&quot;, cutoffDate);</span>
+<span class="nc" id="L103">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
